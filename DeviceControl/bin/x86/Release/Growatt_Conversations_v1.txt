@@ -1,0 +1,31 @@
+# other commands are available, but only these will be used.
+# This version is based on firmware version S.1.8 (S=multi PPT, G=single PPT)
+# All Growatt responses start with 23 3F. 
+# DMF - Protocol supplied by Sorin
+
+:getSerial $END;   		//2S command - check if inverter exists at given address by getting its serial number
+S 3F 23 $InvAdr(BYTE[1]) 32 53 00 $CheckSum16(BYTE[2]) $END;
+R 23 3F $InvAdr(BYTE[1]) 32 53 0A $END;
+E $SerialNo(BYTE[10]) $CheckSumGW(BYTE[2]) $END;
+
+:getInverterDetails $END;	//2C command - Power rating, Model, Firmware version, Manufacturer
+S 3F 23 $InvAdr(BYTE[1]) 32 43 00 $CheckSum16(BYTE[2]) $END;
+R 23 3F $InvAdr(BYTE[1]) 32 43 1F $END;
+E $PhaseInd(BYTE[1]) $VARating(BYTE[4]) $NPV(BYTE[2]) $Model(BYTE[2]) $FW(BYTE[5]) $Manuf(BYTE[17]) $CheckSumGW(BYTE[2]) $END;
+
+:getInstValues1Ph $END;		//2A command 1-phase inverters - All instantaneous data (Pac Low word, Current voltage, frequency, Error details if an error occurs
+S 3F 23 $InvAdr(BYTE[1]) 32 41 00 $CheckSum16(BYTE[2]) $END;
+R 23 3F $InvAdr(BYTE[1]) 32 41 23 $END;
+E $Status(BYTE[1]) $VPV1(BYTE[2]) $VPV2(BYTE[2]) $PPv(BYTE[2]) $VAC(BYTE[2]) $IAC(BYTE[2]) $FAC(BYTE[2]) $PACLo(BYTE[2]) $ErrorRegisters(BYTE[14]) $ErrCode(BYTE[2]) $Temp(BYTE[2]) $ATest(BYTE[2]) $CheckSumGW(BYTE[2]) $END;
+
+:getInstValues3Ph $END;		//2A command 3-phase inverters - All instantaneous data (Pac Low+high words, Current voltage, frequency, Error details if an error occurs
+S 3F 23 $InvAdr(BYTE[1]) 32 41 00 $CheckSum16(BYTE[2]) $END;
+R 23 3F $InvAdr(BYTE[1]) 32 41 25 $END;
+E $Status(BYTE[1]) $VPV1(BYTE[2]) $VPV2(BYTE[2]) $PPv(BYTE[2]) $VAC(BYTE[2]) $IAC(BYTE[2]) $FAC(BYTE[2]) $PACLo(BYTE[2]) $ErrorRegisters(BYTE[14]) $ErrCode(BYTE[2]) $Temp(BYTE[2]) $ATest(BYTE[2]) $PACHi(BYTE[2]) $CheckSumGW(BYTE[2]) $END;
+
+:getTotals $END;		//2B Cumulative totals (daily and lifetime)
+S 3F 23 $InvAdr(BYTE[1]) 32 42 00 $CheckSum16(BYTE[2]) $END;
+R 23 3F $InvAdr(BYTE[1]) 32 42 15 $END;
+E $Ignore(BYTE[1]) $EPVToday(BYTE[2]) $EPVTotal(BYTE[4]) $EACToday(BYTE[2]) $EACTotal(BYTE[4]) $TimeTotal(BYTE[4]) $Ignore1(BYTE[4]) $CheckSumGW(BYTE[2]) $END;
+
+

@@ -1,0 +1,142 @@
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\settings_template_SE_SQLite.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\DeviceManagement_v02.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_CC128.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_CMS.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_Fronius.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_Growatt.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_JFY.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_KLNE.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_Samil.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_SunnyRoo.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_Xantrex.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\PVMonitor.exe.config
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\PVMonitor.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\PVMonitor.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\EnergyDisplayControls.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\GenThreadManager.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\PVSettings.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\GenericConnector.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Conversations.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\LsaWrapper.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\InTheHand.Net.Personal.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\EnergyDisplayControls.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\GenThreadManager.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\PVSettings.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\GenericConnector.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Conversations.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\LsaWrapper.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\InTheHand.Net.Personal.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\MainWindow.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\App.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\PVMonitor_MarkupCompile.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\PVMonitor_MarkupCompile.lref
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\MainWindow.baml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\PVMonitor.g.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\PVMonitor.Properties.Resources.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\GenerateResource.read.1.tlog
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\GenerateResource.write.1.tlog
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\PVMonitor.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\PVMonitor.pdb
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\settings_template_SE_SQLite.xml
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\DeviceManagement_v02.xml
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_CC128.xml
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_CMS.xml
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_Fronius.xml
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_Growatt.xml
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_JFY.xml
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_KLNE.xml
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_Samil.xml
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_SunnyRoo.xml
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Device_Xantrex.xml
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\PVMonitor.exe.config
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\PVMonitor.exe
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\PVMonitor.pdb
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\EnergyDisplayControls.dll
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\GenThreadManager.dll
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\PVSettings.dll
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Utilities.dll
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Conversations.dll
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\GenericConnector.dll
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\LsaWrapper.dll
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Mischel.Synchronization.dll
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\DeviceStream.dll
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\InTheHand.Net.Personal.dll
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\EnergyDisplayControls.pdb
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\GenThreadManager.pdb
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\PVSettings.pdb
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Utilities.pdb
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Conversations.pdb
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\GenericConnector.pdb
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\LsaWrapper.pdb
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\Mischel.Synchronization.pdb
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\DeviceStream.pdb
+D:\pvbeancounter\trunk\PVMonitor\bin\x86\Debug\InTheHand.Net.Personal.xml
+D:\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\PVMonitor.csprojResolveAssemblyReference.cache
+D:\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\MainWindow.g.cs
+D:\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\App.g.cs
+D:\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+D:\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\PVMonitor_MarkupCompile.cache
+D:\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\PVMonitor_MarkupCompile.lref
+D:\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\MainWindow.baml
+D:\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\PVMonitor.g.resources
+D:\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\PVMonitor.Properties.Resources.resources
+D:\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\PVMonitor.csproj.GenerateResource.Cache
+D:\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\PVMonitor.exe
+D:\pvbeancounter\trunk\PVMonitor\obj\x86\Debug\PVMonitor.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\settings_template_SE_SQLite.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\DeviceManagement_v02.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Device_CC128.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Device_CMS.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Device_Consolidation.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Device_DeltaSolivia.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Device_Fronius.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Device_Growatt.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Device_JFY.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Device_KLNE.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Device_Samil.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Device_SMA_SunnyExplorer.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Device_SunnyRoo.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Device_Xantrex.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\PVMonitor3.ico
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\PVMonitor.exe.config
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\PVMonitor.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\PVMonitor.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\EnergyDisplayControls.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\GenThreadManager.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\PVSettings.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Conversations.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\GenericConnector.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\LsaWrapper.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\EnergyDisplayControls.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\GenThreadManager.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\PVSettings.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Conversations.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\GenericConnector.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\LsaWrapper.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\bin\x86\Debug\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\obj\x86\Debug\PVMonitor.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\obj\x86\Debug\MainWindow.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\obj\x86\Debug\App.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\obj\x86\Debug\PVMonitor_Content.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\obj\x86\Debug\PVMonitor_MarkupCompile.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\obj\x86\Debug\PVMonitor_MarkupCompile.lref
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\obj\x86\Debug\MainWindow.baml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\obj\x86\Debug\PVMonitor.g.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\obj\x86\Debug\PVMonitor.Properties.Resources.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\obj\x86\Debug\PVMonitor.csproj.GenerateResource.Cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\obj\x86\Debug\PVMonitor.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVMonitor\obj\x86\Debug\PVMonitor.pdb

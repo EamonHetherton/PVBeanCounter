@@ -1,0 +1,311 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<devices>
+  <device>
+    <devicetype value="Inverter" />
+    <specification value="Sunspec Alliance" />
+    <version value="C1.4_I1.0" />
+    <endian value="Big" />
+    <block>
+      <name value="Identity_1" />
+      <type value="Identity" />
+      <commandid value="3" />
+      <base value="39999" />
+      <altbase value="49999" />
+      <register>
+        <content value="Identifier" />
+        <id value="1" />
+        <type value="byte" />
+        <size value="4" />
+        <registervalue value="0x53756e53" />
+        <verifyvalue value="true" />
+      </register>
+      <register Content="BlockId">
+        <content value="BlockId" />
+        <id value="3" />
+        <type value="uint16" />
+        <registervalue value="1" />
+        <verifyvalue value="true" />
+      </register>
+      <register>
+        <content value="EndBlockRegisters" />
+        <isendblockoffset value="true" />
+        <id value="4" />
+        <type value="uint16" />
+      </register>
+    </block>
+    <block>
+      <name value="Identity_2" />
+      <type value="Identity" />
+      <commandid value="3" />
+      <previousbase value="true" />
+      <register>
+        <content value="Manufacturer" />
+        <id value="5" />
+        <type value="cstring" />
+        <size value="32" />
+      </register>
+      <register>
+        <content value="Model" />
+        <id value="21" />
+        <type value="cstring" />
+        <size value="32" />
+      </register>
+      <register Content="SerialNo">
+        <content value="SerialNo" />
+        <id value="53" />
+        <type value="cstring" />
+        <size value="32" />
+      </register>
+    </block>
+    <block>
+      <name value="Marker" />
+      <type value="Marker" />
+      <commandid value="3" />
+      <relativebase value="true" />
+      <register>
+        <content value="BlockId" />
+        <id value="1" />
+        <type value="byte" />
+        <size value="2" />
+        <ismarkeridentifier value="true" />
+        <lastblockvalue value="0xFFFF" />
+      </register>
+      <register>
+        <content value="BlockLength" />
+        <id value="2" />
+        <type value="uint16" />
+        <isendblockoffset value="true" />
+      </register>
+    </block>
+    <block>
+      <name value="Inverter Data" />
+      <type value="Reading" />
+      <commandid value="3" />
+      <optional value="true" />
+      <previousbase value="true" />
+      <register>
+        <content value="BlockId" />
+        <id value="1" />
+        <type value="uint16" />
+        <matchmarkeridentifier value="true" />
+        <valuelist>
+          <option name="Single Phase" value="101" />
+          <option name="Split Phase" value="102" />
+          <option name="Three Phase" value="103" />
+        </valuelist>
+      </register>
+      <register>
+        <content value="BlockLength" />
+        <id value="2" />
+        <type value="uint16" />
+      </register>
+      <register>
+        <content value="EnergyTotalAC" />
+        <id value="25" />
+        <type value="uint32" />
+        <scaleref value="EnergyTotalACScale" />
+      </register>
+      <register>
+        <content value="EnergyTotalACScale" />
+        <id value="27" />
+        <type value="uint16" />
+      </register>
+    </block>
+  </device>
+  <device>
+    <devicetype value="Inverter" />
+    <specification value="Growatt Extra" />
+    <version value="01" />
+    <endian value="Big" />
+    <block>
+      <name value="Identity_1" />
+      <type value="Identity" />
+      <commandid value="3" />
+      <base value="-1" />
+      <islastblock value="true" />
+      <register>
+        <content value="Manufacturer" />
+        <id value="5" />
+        <type value="string" />
+        <size value="32" />
+      </register>
+    </block>
+    <block>
+      <name value="Identity_2" />
+      <type value="Identity" />
+      <commandid value="3" />
+      <base value="-1" />
+      <islastblock value="true" />
+      <register>
+        <content value="Model" />
+        <id value="21" />
+        <type value="string" />
+        <size value="32" />
+      </register>
+    </block>
+    <block>
+      <name value="Identity_3" />
+      <type value="Identity" />
+      <commandid value="3" />
+      <base value="-1" />
+      <islastblock value="true" />
+      <register>
+        <content value="SerialNo" />
+        <id value="53" />
+        <type value="string" />
+        <size value="32" />
+      </register>
+    </block>
+    <block>
+      <name value="Inverter Data" />
+      <type value="Reading" />
+      <commandid value="4" />
+      <base value="-1" />
+      <islastblock value="true" />
+      <register>
+        <content value="Status" />
+        <id value="1" />
+        <type value="byte" />
+      </register>
+      <register>
+        <content value="PowerPV" />
+        <id value="2" />
+        <type value="uint32" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="VoltsPV1" />
+        <id value="4" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="CurrentPV1" />
+        <id value="5" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="PowerPV1" />
+        <id value="6" />
+        <type value="uint32" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="VoltsPV2" />
+        <id value="8" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="CurrentPV2" />
+        <id value="9" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="PowerPV2" />
+        <id value="10" />
+        <type value="uint32" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="PowerAC" />
+        <id value="12" />
+        <type value="uint32" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="Frequency" />
+        <id value="14" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="VoltsAC1" />
+        <id value="15" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="CurrentAC1" />
+        <id value="16" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="PowerAC1" />
+        <id value="17" />
+        <type value="uint32" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="VoltsAC2" />
+        <id value="19" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="CurrentAC2" />
+        <id value="20" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="PowerAC2" />
+        <id value="21" />
+        <type value="uint32" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="VoltsAC3" />
+        <id value="23" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="CurrentAC3" />
+        <id value="24" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="PowerAC3" />
+        <id value="25" />
+        <type value="uint32" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="EnergyTodayAC" />
+        <id value="27" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="EnergyTotalAC" />
+        <id value="28" />
+        <type value="uint32" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="TimeTotal" />
+        <id value="30" />
+        <type value="uint32" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="Temperature" />
+        <id value="32" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="ErrorCode" />
+        <id value="40" />
+        <type value="uint16" />
+      </register>
+    </block>
+  </device>
+
+</devices>
+

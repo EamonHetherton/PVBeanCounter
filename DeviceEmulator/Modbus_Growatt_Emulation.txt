@@ -1,0 +1,7 @@
+﻿:ReadQuery $END;
+R 01 $END;
+E $Command(BYTE[1]) $StartRegister(BYTE[2]) $Registers(BYTE[2]) $CheckSum16(BYTE[2]) $END;
+:SerialNo $END;
+S 01 03 0E 39 38 37 36 35 34 33 32 31 30 00 00 F1 33 $CheckSum16(BYTE[2]) $END; 
+:Reading $END;
+S 01 04 52 00 00 $PowerPV(BYTE[4]) $VoltagePV1(BYTE[2]) $CurrentPV1(BYTE[2]) $PowerPV1(BYTE[4]) $DUMMY1(BYTE[8]) $PowerAC(BYTE[4]) $Freq(BYTE[2]) $VoltageAC1(BYTE[2]) $CurrentAC1(BYTE[2]) $PowerAC1(BYTE[4]) $DUMMY2(BYTE[16]) 00 00 $EnergyToday(BYTE[2]) $EnergyTotal(BYTE[4]) $DUMMY3(BYTE[22]) $CheckSum16(BYTE[2]) $END; 

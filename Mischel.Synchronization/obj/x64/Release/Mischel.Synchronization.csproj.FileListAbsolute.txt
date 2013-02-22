@@ -1,0 +1,19 @@
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\WaitableTimer\Mischel.Synchronization\bin\x64\Release\Mischel.Synchronization.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\WaitableTimer\Mischel.Synchronization\bin\x64\Release\Mischel.Synchronization.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\WaitableTimer\Mischel.Synchronization\obj\x64\Release\ResolveAssemblyReference.cache
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\WaitableTimer\Mischel.Synchronization\obj\x64\Release\Mischel.Synchronization.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\WaitableTimer\Mischel.Synchronization\obj\x64\Release\Mischel.Synchronization.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Mischel.Synchronization\bin\x64\Release\Mischel.Synchronization.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Mischel.Synchronization\bin\x64\Release\Mischel.Synchronization.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Mischel.Synchronization\obj\x64\Release\ResolveAssemblyReference.cache
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Mischel.Synchronization\obj\x64\Release\Mischel.Synchronization.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Mischel.Synchronization\obj\x64\Release\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Mischel.Synchronization\bin\x64\Release\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Mischel.Synchronization\bin\x64\Release\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Mischel.Synchronization\obj\x64\Release\ResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Mischel.Synchronization\obj\x64\Release\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Mischel.Synchronization\obj\x64\Release\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Mischel.Synchronization\bin\x64\Release\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Mischel.Synchronization\bin\x64\Release\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Mischel.Synchronization\obj\x64\Release\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Mischel.Synchronization\obj\x64\Release\Mischel.Synchronization.pdb

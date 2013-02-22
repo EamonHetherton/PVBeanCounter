@@ -1,0 +1,25 @@
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\obj\x86\Release\ResolveAssemblyReference.cache
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\settings_template_SE_SQLite.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\settings_template_SE_Access.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\settings_template_SE_MySql.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\PVRecords_Test.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\PVRecords_Test.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\GenericConnector.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\PVInverterManagement.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\PVService.exe
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\PVSettings.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\Utilities.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\Mischel.Synchronization.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\GenericConnector.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\PVInverterManagement.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\PVService.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\PVSettings.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\Utilities.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\Mischel.Synchronization.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\PVService_Accessor.exe
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\PVInverterManagement_Accessor.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\PVService_Accessor.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\bin\x86\Release\PVInverterManagement_Accessor.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\obj\x86\Release\PVRecords_Test.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\obj\x86\Release\PVRecords_Test.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVRecords_Test\obj\x86\Release\ResolveAssemblyReference.cache

@@ -1,0 +1,28 @@
+﻿:ReadCommand $END;
+R 01 $END;
+E $Command(BYTE[1]) $END;
+:RegisterRequest $END;
+E $StartRegister(BYTE[2]) $Registers(BYTE[2]) $CheckSum16(BYTE[2]) $END;
+:SetRegisters_1 $END;
+E $StartRegister(BYTE[2]) $Registers(BYTE[2]) $DataSize(BYTE[1]) $END;
+:SetRegisters_2 $END;
+E $Data(BYTE[2]) $CheckSum16(BYTE[2]) $END;
+:Identity $END;
+S 01 03 3C $Model(BYTE[20]) 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 $SerialNo(BYTE[20]) $CheckSum16(BYTE[2]) $END; 
+:Status $END;
+S 01 03 02 $Status(BYTE[2]) $CheckSum16(BYTE[2]) $END;
+:InverterDC $END;
+S 01 03 08 $VoltsPV1(BYTE[4]) $CurrentPV1(BYTE[4]) $CheckSum16(BYTE[2]) $END;
+:InverterAC $END;
+S 01 03 0E $VoltsAC1(BYTE[4]) $CurrentAC1(BYTE[4]) $Frequency(BYTE[2]) $PowerAC(BYTE[4]) $CheckSum16(BYTE[2]) $END;
+:Temperature $END;
+S 01 03 02 $Temperature(BYTE[2]) $CheckSum16(BYTE[2]) $END;
+:ErrorCount $END;
+S 01 03 02 $ErrorCount(BYTE[2]) $CheckSum16(BYTE[2]) $END;
+:ErrorDetail $END;
+S 01 03 30 $ErrorValue(BYTE[8]) $ErrorDesc(BYTE[40]) $CheckSum16(BYTE[2]) $END;
+:EnergyHistory $END;
+S 01 03 0E $HistoryId(BYTE[2]) $Energy(BYTE[4]) $PeakPower(BYTE[4]) $HarvestTime(BYTE[4]) $CheckSum16(BYTE[2]) $END;
+:SetRegistersConfirm $END;
+S 01 10 $StartRegister(BYTE[2]) $Registers(BYTE[2]) $CheckSum16(BYTE[2]) $END;
+

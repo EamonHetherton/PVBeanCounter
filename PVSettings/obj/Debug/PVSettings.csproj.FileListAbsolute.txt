@@ -1,0 +1,8 @@
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVSettings\bin\Debug\settings_template_SE_SQLite.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVSettings\bin\Debug\settings_template_SE_Access.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVSettings\bin\Debug\settings_template_SE_MySql.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVSettings\bin\Debug\PVSettings.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVSettings\bin\Debug\PVSettings.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVSettings\obj\Debug\ResolveAssemblyReference.cache
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVSettings\obj\Debug\PVSettings.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVSettings\obj\Debug\PVSettings.pdb

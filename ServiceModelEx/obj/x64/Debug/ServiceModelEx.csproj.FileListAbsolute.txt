@@ -1,0 +1,5 @@
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\ServiceModelEx\bin\x64\Debug\ServiceModelEx.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\ServiceModelEx\bin\x64\Debug\ServiceModelEx.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\ServiceModelEx\obj\x64\Debug\ResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\ServiceModelEx\obj\x64\Debug\ServiceModelEx.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\ServiceModelEx\obj\x64\Debug\ServiceModelEx.pdb

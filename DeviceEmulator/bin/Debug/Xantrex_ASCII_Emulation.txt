@@ -1,0 +1,4 @@
+﻿:ReadRequest $END;
+E $Request(DYNAMICBYTE) 0D $END;
+:SendResponse $END;
+S $Response(BYTE) 0D $END;

@@ -1,0 +1,287 @@
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\settings_template_SE_SQLite.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\settings_template_SE_Access.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\settings_template_SE_MySql.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVService.exe.config
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVService.exe
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVService.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\GenericConnector.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVInverterManagement.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVSettings.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Utilities.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Conversations.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\DeviceStream.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Mischel.Synchronization.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\GenericConnector.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVInverterManagement.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVSettings.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Utilities.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Conversations.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\DeviceStream.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Mischel.Synchronization.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\obj\x86\Debug\PVService.ProjectInstaller.resources
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\obj\x86\Debug\PVService.PVService.resources
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\obj\x86\Debug\GenerateResource.read.1.tlog
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\obj\x86\Debug\GenerateResource.write.1.tlog
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\obj\x86\Debug\PVService.exe
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\obj\x86\Debug\PVService.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\obj\x86\Debug\PVService.ProjectInstaller.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\obj\x86\Debug\PVService.PVService.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\obj\x86\Debug\GenerateResource.read.1.tlog
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\obj\x86\Debug\GenerateResource.write.1.tlog
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\settings_template_SE_SQLite.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\DeviceManagement_v02.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Device_CC128.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Device_CMS.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Device_Fronius.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Device_Growatt.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Device_JFY.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Device_KLNE.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Device_Samil.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Device_SunnyRoo.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Device_Xantrex.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVService.exe.config
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVService.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVService.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\DeviceControl.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\GenericConnector.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVBCInterfaces.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVSettings.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\GenThreadManager.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Conversations.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Device.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Algorithms.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVInverterManagement.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\LsaWrapper.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\DeviceDataRecorders.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\InTheHand.Net.Personal.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\DeviceControl.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\GenericConnector.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVBCInterfaces.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVSettings.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\GenThreadManager.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Conversations.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Device.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Algorithms.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVInverterManagement.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\LsaWrapper.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\DeviceDataRecorders.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\InTheHand.Net.Personal.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\obj\x86\Debug\PVService.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\obj\x86\Debug\PVService.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\settings_template_SE_SQLite.xml
+D:\pvbeancounter\trunk\PVService\bin\Debug\DeviceManagement_v02.xml
+D:\pvbeancounter\trunk\PVService\bin\Debug\Device_CC128.xml
+D:\pvbeancounter\trunk\PVService\bin\Debug\Device_CMS.xml
+D:\pvbeancounter\trunk\PVService\bin\Debug\Device_Fronius.xml
+D:\pvbeancounter\trunk\PVService\bin\Debug\Device_Growatt.xml
+D:\pvbeancounter\trunk\PVService\bin\Debug\Device_JFY.xml
+D:\pvbeancounter\trunk\PVService\bin\Debug\Device_KLNE.xml
+D:\pvbeancounter\trunk\PVService\bin\Debug\Device_Samil.xml
+D:\pvbeancounter\trunk\PVService\bin\Debug\Device_SunnyRoo.xml
+D:\pvbeancounter\trunk\PVService\bin\Debug\Device_Xantrex.xml
+D:\pvbeancounter\trunk\PVService\bin\Debug\CMS_Conversations_v2.txt
+D:\pvbeancounter\trunk\PVService\bin\Debug\EW4009_Conversations.txt
+D:\pvbeancounter\trunk\PVService\bin\Debug\Growatt_Conversations_v1.txt
+D:\pvbeancounter\trunk\PVService\bin\Debug\JFY_Conversations_v1.txt
+D:\pvbeancounter\trunk\PVService\bin\Debug\KLNE_Conversations_v1.txt
+D:\pvbeancounter\trunk\PVService\bin\Debug\SAMIL_Conversations_v1.txt
+D:\pvbeancounter\trunk\PVService\bin\Debug\SMABluetooth_Conversations.txt
+D:\pvbeancounter\trunk\PVService\bin\Debug\PVService.exe.config
+D:\pvbeancounter\trunk\PVService\bin\Debug\PVService.exe
+D:\pvbeancounter\trunk\PVService\bin\Debug\PVService.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\DeviceControl.dll
+D:\pvbeancounter\trunk\PVService\bin\Debug\GenericConnector.dll
+D:\pvbeancounter\trunk\PVService\bin\Debug\PVBCInterfaces.dll
+D:\pvbeancounter\trunk\PVService\bin\Debug\PVSettings.dll
+D:\pvbeancounter\trunk\PVService\bin\Debug\Utilities.dll
+D:\pvbeancounter\trunk\PVService\bin\Debug\GenThreadManager.dll
+D:\pvbeancounter\trunk\PVService\bin\Debug\Device.dll
+D:\pvbeancounter\trunk\PVService\bin\Debug\Conversations.dll
+D:\pvbeancounter\trunk\PVService\bin\Debug\DeviceStream.dll
+D:\pvbeancounter\trunk\PVService\bin\Debug\Algorithms.dll
+D:\pvbeancounter\trunk\PVService\bin\Debug\PVInverterManagement.dll
+D:\pvbeancounter\trunk\PVService\bin\Debug\LsaWrapper.dll
+D:\pvbeancounter\trunk\PVService\bin\Debug\Mischel.Synchronization.dll
+D:\pvbeancounter\trunk\PVService\bin\Debug\DeviceDataRecorders.dll
+D:\pvbeancounter\trunk\PVService\bin\Debug\InTheHand.Net.Personal.dll
+D:\pvbeancounter\trunk\PVService\bin\Debug\DeviceControl.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\GenericConnector.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\PVBCInterfaces.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\PVSettings.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\Utilities.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\GenThreadManager.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\Device.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\Conversations.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\DeviceStream.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\Algorithms.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\PVInverterManagement.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\LsaWrapper.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\Mischel.Synchronization.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\DeviceDataRecorders.pdb
+D:\pvbeancounter\trunk\PVService\bin\Debug\InTheHand.Net.Personal.xml
+D:\pvbeancounter\trunk\PVService\obj\x86\Debug\PVService.csprojResolveAssemblyReference.cache
+D:\pvbeancounter\trunk\PVService\obj\x86\Debug\PVService.ProjectInstaller.resources
+D:\pvbeancounter\trunk\PVService\obj\x86\Debug\PVService.PVService.resources
+D:\pvbeancounter\trunk\PVService\obj\x86\Debug\PVService.csproj.GenerateResource.Cache
+D:\pvbeancounter\trunk\PVService\obj\x86\Debug\PVService.exe
+D:\pvbeancounter\trunk\PVService\obj\x86\Debug\PVService.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\settings_template_SE_SQLite.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\DeviceManagement_v02.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Device_CC128.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Device_CMS.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Device_Fronius.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Device_Growatt.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Device_JFY.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Device_KLNE.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Device_Samil.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Device_SunnyRoo.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Device_Xantrex.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\CMS_Conversations_v2.txt
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\EW4009_Conversations.txt
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Growatt_Conversations_v1.txt
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\JFY_Conversations_v1.txt
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\KLNE_Conversations_v1.txt
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\SAMIL_Conversations_v1.txt
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\SMABluetooth_Conversations.txt
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\PVService.exe.config
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\PVService.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\PVService.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\DeviceControl.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\GenericConnector.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\PVBCInterfaces.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\PVSettings.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\GenThreadManager.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Device.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Conversations.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Algorithms.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\PVInverterManagement.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\LsaWrapper.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\DeviceDataRecorders.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\InTheHand.Net.Personal.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\DeviceControl.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\GenericConnector.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\PVBCInterfaces.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\PVSettings.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\GenThreadManager.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Device.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Conversations.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Algorithms.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\PVInverterManagement.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\LsaWrapper.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\DeviceDataRecorders.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\Debug\Device_SMA_SunnyExplorer.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\settings_template_SE_SQLite.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\DeviceManagement_v02.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Device_CC128.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Device_CMS.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Device_Consolidation.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Device_DeltaSolivia.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Device_Fronius.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Device_Growatt.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Device_JFY.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Device_KLNE.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Device_Samil.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Device_SMA_SunnyExplorer.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Device_SunnyRoo.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Device_Xantrex.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\PVBeanCounter.ico
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\PVService.exe.config
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\PVService.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\PVService.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\DeviceControl.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\GenericConnector.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\GenThreadManager.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\OutputManagers.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\PVBCInterfaces.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\PVSettings.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Algorithms.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Conversations.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\LsaWrapper.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\DeviceControl.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\GenericConnector.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\GenThreadManager.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\OutputManagers.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\PVBCInterfaces.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\PVSettings.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Algorithms.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Conversations.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\LsaWrapper.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\bin\x86\Debug\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\obj\x86\Debug\PVService.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\obj\x86\Debug\PVService.PVService.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\obj\x86\Debug\PVService.csproj.GenerateResource.Cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\obj\x86\Debug\PVService.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVService\obj\x86\Debug\PVService.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\settings_template_SE_SQLite.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\DeviceManagement_v02.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Device_CC128.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Device_CMS.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Device_Consolidation.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Device_DeltaSolivia.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Device_Fronius.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Device_Growatt.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Device_JFY.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Device_KLNE.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Device_Samil.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Device_SMA_SunnyExplorer.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Device_SunnyRoo.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Device_Xantrex.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\CMS_Conversations_v2.txt
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\EW4009_Conversations.txt
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Growatt_Conversations_v1.txt
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\JFY_Conversations_v1.txt
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\KLNE_Conversations_v1.txt
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\SAMIL_Conversations_v1.txt
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\SMABluetooth_Conversations.txt
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\PVBeanCounter.ico
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\PVService.exe.config
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\PVService.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\PVService.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\DeviceControl.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\GenericConnector.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\GenThreadManager.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\OutputManagers.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\PVBCInterfaces.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\PVSettings.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Algorithms.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Conversations.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\LsaWrapper.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\DeviceControl.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\GenericConnector.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\GenThreadManager.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\OutputManagers.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\PVBCInterfaces.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\PVSettings.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Algorithms.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Conversations.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\LsaWrapper.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\bin\x86\Debug\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\obj\x86\Debug\PVService.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\obj\x86\Debug\PVService.PVService.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\obj\x86\Debug\PVService.csproj.GenerateResource.Cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\obj\x86\Debug\PVService.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVService\obj\x86\Debug\PVService.pdb

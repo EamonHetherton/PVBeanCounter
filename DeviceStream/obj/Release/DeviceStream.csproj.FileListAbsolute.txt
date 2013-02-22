@@ -1,0 +1,31 @@
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\bin\Release\DeviceStream.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\bin\Release\DeviceStream.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\bin\Release\InTheHand.Net.Personal.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\bin\Release\InTheHand.Net.Personal.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\obj\Release\ResolveAssemblyReference.cache
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\obj\Release\DeviceStream.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\obj\Release\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\bin\Release\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\bin\Release\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\bin\Release\GenThreadManager.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\bin\Release\InTheHand.Net.Personal.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\bin\Release\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\bin\Release\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\bin\Release\GenThreadManager.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\bin\Release\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\bin\Release\InTheHand.Net.Personal.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\bin\Release\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\obj\Release\ResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\obj\Release\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\obj\Release\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\DeviceStream\bin\Release\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\DeviceStream\bin\Release\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\DeviceStream\bin\Release\GenThreadManager.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\DeviceStream\bin\Release\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\DeviceStream\bin\Release\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\DeviceStream\bin\Release\GenThreadManager.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\DeviceStream\bin\Release\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\DeviceStream\bin\Release\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\DeviceStream\obj\Release\DeviceStream.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\DeviceStream\obj\Release\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\DeviceStream\obj\Release\DeviceStream.pdb

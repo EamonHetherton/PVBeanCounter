@@ -1,0 +1,37 @@
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\obj\Release\ResolveAssemblyReference.cache
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\Conversations.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\Conversations.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\DeviceStream.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\InTheHand.Net.Personal.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\DeviceStream.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\InTheHand.Net.Personal.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\obj\Release\Conversations.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\obj\Release\Conversations.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\Conversations.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\Conversations.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\GenThreadManager.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\InTheHand.Net.Personal.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\GenThreadManager.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\InTheHand.Net.Personal.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\Release\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\obj\Release\ResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\obj\Release\Conversations.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\obj\Release\Conversations.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Conversations\bin\Release\Conversations.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Conversations\bin\Release\Conversations.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Conversations\bin\Release\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Conversations\bin\Release\GenThreadManager.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Conversations\bin\Release\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Conversations\bin\Release\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Conversations\bin\Release\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Conversations\bin\Release\GenThreadManager.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Conversations\bin\Release\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Conversations\bin\Release\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Conversations\obj\Release\Conversations.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Conversations\obj\Release\Conversations.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\Conversations\obj\Release\Conversations.pdb

@@ -1,0 +1,15 @@
+﻿:ReadQuery1 $END;
+R 43 5A $END;
+E $Addr1(BYTE[2]) $Addr2(BYTE[2]) $Control(BYTE[1]) $Function(BYTE[1]) $Size(BYTE[1]) $END;
+:ReadQuery2 $END;
+E $Data(BYTE[1]) $CheckSum16(BYTE[2]) $END;
+:SendSerialNo $END;
+S AA AA FF 00 7F 00 00 80 0A 32 31 30 39 42 4f 31 33 38 33 $CheckSum16(BYTE[2]) $END;
+:AckAddress $END;
+S AA AA FF 01 7F 00 00 81 01 06 $CheckSum16(BYTE[2]) $END;
+:SendDetails $END;
+S AA AA FF 01 01 00 01 83 31 00 00 32 30 30 30 20 20 31 30 30 30 30 20 20 41 31 30 30 20 20 20 20 20 20 20 20 20 20 20 20 4B 4C 4E 45 20 20 20 20 20 20 20 20 20 20 00 00 00 00 $CheckSum16(BYTE[2]) $END;
+:SendFormat $END;
+S AA AA FF 01 01 00 01 80 30 31 30 30 41 41 30 30 52 34 2E 31 35 20 20 4D 6F 64 65 6C 3A 20 35 2E 30 20 4B 57 20 20 20 49 6E 76 65 72 74 65 72 20 35 30 30 30 20 33 35 30 30 $CheckSum16(BYTE[2]) $END;
+:SendData $END;
+S AA AA FF 01 01 00 01 82 26 $Temperature(BYTE[2]) $VoltsPV(BYTE[2]) $CurrentAC(BYTE[2]) $VoltsAC(BYTE[2]) $Frequency(BYTE[2]) $PowerAC(BYTE[2]) $EnergyToday(BYTE[2]) $EnergyTotal(BYTE[4]) $Hours(BYTE[4]) $Mode(BYTE[2]) 00 00 00 00 00 00 00 00 00 00 00 00 00 00 $Checksum(BYTE[2]) $END;

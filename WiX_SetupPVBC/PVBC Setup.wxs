@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+    <Product Id="9799DC8E-506B-429E-83CE-0D0EB3C3961E" Name="PV Bean Counter" Language="1033" Version="2.0.0.3" Manufacturer="Mackay-Fisher" UpgradeCode="94B6A6FB-3567-4617-B52A-DAE65CF113EB">
+        <Package Description="Test file in a Product" Comments="Simple test" InstallerVersion="200" Compressed="yes" />
+        <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
+        <?define SolutionConfig = "Debug" ?>
+        <?define Platform = "x86" ?>
+        <?if $(var.Platform) = "x86" ?>
+        <?if $(var.SolutionConfig) = "Release" ?>
+        <?define SourcePathFragment = "Bin\x86\Release\" ?>
+        <?else ?>
+        <?define SourcePathFragment = "Bin\x86\Debug\" ?>
+        <?endif ?>
+        <?elseif $(var.Platform) = "AnyCPU" ?>
+        <?if $(var.SolutionConfig) = "Release" ?>
+        <?define SourcePathFragment = "Bin\Release\" ?>
+        <?else ?>
+        <?define SourcePathFragment = "Bin\Debug\" ?>
+        <?endif ?>
+        <?endif ?>
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder" Name="ProgramFilesFolder">
+                <Directory Name="Mackay-Fisher" Id="MACKAY_FISHER">
+                    <Directory Name="PV Bean Counter V2" Id="PV_BEAN_COUNTER_V2">
+                        <Component Id="PVBeanCounter" DiskId="1" KeyPath="no" Guid="dfd2ce38-8cc0-4ab7-832f-03b8c51d01d9">
+                            <File Id="ALGORITHMS.DLL" Name="Algorithms.dll" Source="..\PVService\$(var.SourcePathFragment)Algorithms.dll" />
+                            <File Id="CONVERSATIONS.DLL" Name="Conversations.dll" Source="..\PVService\$(var.SourcePathFragment)Conversations.dll" />
+                            <File Id="DEVICE_CC128.XML" Name="Device_CC128.xml" Source="..\PVService\$(var.SourcePathFragment)Device_CC128.xml" />
+                            <File Id="DEVICE_CMS.XML" Name="Device_CMS.xml" Source="..\PVService\$(var.SourcePathFragment)Device_CMS.xml" />
+                            <File Id="DEVICE_FRONIUS.XML" Name="Device_Fronius.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Fronius.xml" />
+                            <File Id="DEVICE_GROWATT.XML" Name="Device_Growatt.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Growatt.xml" />
+                            <File Id="DEVICE_JFY.XML" Name="Device_JFY.xml" Source="..\PVService\$(var.SourcePathFragment)Device_JFY.xml" />
+                            <File Id="DEVICE_KLNE.XML" Name="Device_KLNE.xml" Source="..\PVService\$(var.SourcePathFragment)Device_KLNE.xml" />
+                            <File Id="DEVICE_SAMIL.XML" Name="Device_Samil.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Samil.xml" />
+                            <File Id="DEVICE_SUNNYROO.XML" Name="Device_SunnyRoo.xml" Source="..\PVService\$(var.SourcePathFragment)Device_SunnyRoo.xml" />
+                            <File Id="DEVICE_XANTREX.XML" Name="Device_Xantrex.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Xantrex.xml" />
+                            <File Id="DEVICEMANAGEMENT_V02.XML" Name="DeviceManagement_v02.xml" Source="..\PVService\$(var.SourcePathFragment)DeviceManagement_v02.xml" />
+                            <File Id="DEVICECONTROL.DLL" Name="DeviceControl.dll" Source="..\PVService\$(var.SourcePathFragment)DeviceControl.dll" />
+                            <File Id="DEVICESTREAM.DLL" Name="DeviceStream.dll" Source="..\PVService\$(var.SourcePathFragment)DeviceStream.dll" />
+                            <File Id="GENERICCONNECTOR.DLL" Name="GenericConnector.dll" Source="..\PVService\$(var.SourcePathFragment)GenericConnector.dll" />
+                            <File Id="GENTHREADMANAGER.DLL" Name="GenThreadManager.dll" Source="..\PVService\$(var.SourcePathFragment)GenThreadManager.dll" />
+                            <File Id="LSAWRAPPER.DLL" Name="LsaWrapper.dll" Source="..\PVService\$(var.SourcePathFragment)LsaWrapper.dll" />
+                            <File Id="MISCHEL.SYNCHRONIZATION.DLL" Name="Mischel.Synchronization.dll" Source="..\PVService\$(var.SourcePathFragment)Mischel.Synchronization.dll" />
+                            <File Id="PVBCINTERFACES.DLL" Name="PVBCInterfaces.dll" Source="..\PVService\$(var.SourcePathFragment)PVBCInterfaces.dll" />
+                            <File Id="PVBeanCounterEXE" Name="PVBeanCounter.exe" Source="..\PVBeanCounter\$(var.SourcePathFragment)PVBeanCounter.exe" Vital="yes" KeyPath="yes">
+                                <Shortcut Id="ExeShortcut" Name="PV Bean Counter - Configuration" Directory="ProgramMenuDir" IconIndex="0" Icon="StartMenuIcon.exe" Advertise="yes" />
+                            </File>
+                            <File Id="PVBEANCOUNTER.EXE.CONFIG" Name="PVBeanCounter.exe.config" Source="..\PVBeanCounter\$(var.SourcePathFragment)PVBeanCounter.exe.config" />
+                            <File Id="PVBEANCOUNTER.ICO" Name="PVBeanCounter.ico" Source="..\PVService\$(var.SourcePathFragment)PVBeanCounter.ico" />
+                            <File Id="PVSETTINGS.DLL" Name="PVSettings.dll" Source="..\PVService\$(var.SourcePathFragment)PVSettings.dll" />
+                            <File Id="SETTINGS_TEMPLATE_SE_SQLITE.XML" Name="settings_template_SE_SQLite.xml" Source="..\PVService\$(var.SourcePathFragment)settings_template_SE_SQLite.xml" />
+                            <File Id="TIMECONTROL.DLL" Name="TimeControl.dll" Source="..\PVBeanCounter\$(var.SourcePathFragment)TimeControl.dll" />
+                            <File Id="UTILITIES.DLL" Name="Utilities.dll" Source="..\PVService\$(var.SourcePathFragment)Utilities.dll" />
+                            <File Id="DEVICE_SMA_SUNNYEXPLORER.XML" Name="Device_SMA_SunnyExplorer.xml" Source="..\PVService\$(var.SourcePathFragment)Device_SMA_SunnyExplorer.xml" />
+                            <File Id="PVMONITOR3.ICO" Name="PVMonitor3.ico" Source="..\PVMonitor\$(var.SourcePathFragment)PVMonitor3.ico" />
+                            <?if $(var.SolutionConfig) = "Debug" ?>
+                            <File Id="ALGORITHMS.PDB" Name="Algorithms.pdb" Source="..\PVService\$(var.SourcePathFragment)Algorithms.pdb" />
+                            <File Id="CONVERSATIONS.PDB" Name="Conversations.pdb" Source="..\PVService\$(var.SourcePathFragment)Conversations.pdb" />
+                            <File Id="DEVICECONTROL.PDB" Name="DeviceControl.pdb" Source="..\PVService\$(var.SourcePathFragment)DeviceControl.pdb" />
+                            <File Id="DEVICESTREAM.PDB" Name="DeviceStream.pdb" Source="..\PVService\$(var.SourcePathFragment)DeviceStream.pdb" />
+                            <File Id="GENERICCONNECTOR.PDB" Name="GenericConnector.pdb" Source="..\PVService\$(var.SourcePathFragment)GenericConnector.pdb" />
+                            <File Id="GENTHREADMANAGER.PDB" Name="GenThreadManager.pdb" Source="..\PVService\$(var.SourcePathFragment)GenThreadManager.pdb" />
+                            <File Id="LSAWRAPPER.PDB" Name="LsaWrapper.pdb" Source="..\PVService\$(var.SourcePathFragment)LsaWrapper.pdb" />
+                            <File Id="MISCHEL.SYNCHRONIZATION.PDB" Name="Mischel.Synchronization.pdb" Source="..\PVService\$(var.SourcePathFragment)Mischel.Synchronization.pdb" />
+                            <File Id="PVBCINTERFACES.PDB" Name="PVBCInterfaces.pdb" Source="..\PVService\$(var.SourcePathFragment)PVBCInterfaces.pdb" />
+                            <File Id="PVBeanCounterPDB" Name="PVBeanCounter.pdb" Source="..\PVBeanCounter\$(var.SourcePathFragment)PVBeanCounter.pdb" />
+                            <File Id="PVSETTINGS.PDB" Name="PVSettings.pdb" Source="..\PVService\$(var.SourcePathFragment)PVSettings.pdb" />
+                            <File Id="TIMECONTROL.PDB" Name="TimeControl.pdb" Source="..\PVBeanCounter\$(var.SourcePathFragment)TimeControl.pdb" />
+                            <File Id="UTILITIES.PDB" Name="Utilities.pdb" Source="..\PVService\$(var.SourcePathFragment)Utilities.pdb" />
+                            <File Id="_.NET_PROJECTS.LNK" Name=".Net Projects.lnk" Source="..\..\..\..\..\..\Desktop\.Net Projects.lnk" />
+                            <File Id="SYSTEM.DATA.SQLITE.DLL" Name="System.Data.SQLite.dll" Source="..\..\external dlls\bin\Release\System.Data.SQLite.dll" />
+                            <File Id="DEVICE_CONSOLIDATION.XML" Name="Device_Consolidation.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Consolidation.xml" />
+                            <File Id="OUTPUTMANAGERS.DLL" Name="OutputManagers.dll" Source="..\OutputManagers\$(var.SourcePathFragment)OutputManagers.dll" />
+                            <File Id="OUTPUTMANAGERS.PDB" Name="OutputManagers.pdb" Source="..\OutputManagers\$(var.SourcePathFragment)OutputManagers.pdb" />
+                            <?endif ?>
+                        </Component>
+                        <Component Id="PVMonitor" Guid="DEB1B9A1-F929-4492-97EF-A5B07CA51702">
+                            <File Id="PVMONITOR.EXE" Name="PVMonitor.exe" Source="..\PVMonitor\$(var.SourcePathFragment)PVMonitor.exe" KeyPath="yes" Vital="yes">
+                                <Shortcut Id="MonitorExeShortcut" Name="PV Monitor" Directory="ProgramMenuDir" Advertise="yes" Icon="PVMonitor.ico" IconIndex="0" />
+                            </File>
+                            <File Id="PVMONITOR.EXE.CONFIG" Name="PVMonitor.exe.config" Source="..\PVMonitor\$(var.SourcePathFragment)PVMonitor.exe.config" />
+                            <File Id="ENERGYDISPLAYCONTROLS.DLL" Name="EnergyDisplayControls.dll" Source="..\PVMonitor\$(var.SourcePathFragment)EnergyDisplayControls.dll" />
+                            <?if $(var.SolutionConfig) = "Debug" ?>
+                            <File Id="PVMONITOR.PDB" Name="PVMonitor.pdb" Source="..\PVMonitor\$(var.SourcePathFragment)PVMonitor.pdb" />
+                            <File Id="ENERGYDISPLAYCONTROLS.PDB" Name="EnergyDisplayControls.pdb" Source="..\PVMonitor\$(var.SourcePathFragment)EnergyDisplayControls.pdb" />
+                            <?endif ?>
+                        </Component>
+                        <Component Id="PVService" Guid="095D0C4E-63E2-427A-B40A-589088995569">
+                            <File Id="PVSERVICE.EXE" Name="PVService.exe" Source="..\PVService\$(var.SourcePathFragment)PVService.exe" KeyPath="yes" Vital="yes" />
+                            <File Id="PVSERVICE.EXE.CONFIG" Name="PVService.exe.config" Source="..\PVService\$(var.SourcePathFragment)PVService.exe.config" />
+                            <File Id="IONIC.ZIP.DLL" Name="Ionic.Zip.dll" Source="..\PVService\$(var.SourcePathFragment)Ionic.Zip.dll" />
+                            <?if $(var.SolutionConfig) = "Debug" ?>
+                            <File Id="PVSERVICE.PDB" Name="PVService.pdb" Source="..\PVService\$(var.SourcePathFragment)PVService.pdb" />
+                            <?endif ?>
+                            <ServiceInstall Name="PVService" Type="ownProcess" Start="auto" ErrorControl="normal" Vital="yes" DisplayName="PVService" Description="PVBC Device Monitor Service" Id="PVServiceInstall">
+                                <ServiceConfig DelayedAutoStart="1" OnInstall="yes" />
+                            </ServiceInstall>
+                            <ServiceControl Id="PVServiceControl" Name="PVService" Stop="both" Wait="yes" />
+                        </Component>
+                        <Component Id="PVPublisherService" Guid="21953F1A-378E-4227-BC98-08A3336250D0">
+                            <File Id="PVPUBLISHERSERVICE.EXE" Name="PVPublisherService.exe" Source="..\PVPublisherService\$(var.SourcePathFragment)PVPublisherService.exe" KeyPath="yes" Vital="yes" />
+                            <File Id="PVPUBLISHERSERVICE.EXE.CONFIG" Name="PVPublisherService.exe.config" Source="..\PVPublisherService\$(var.SourcePathFragment)PVPublisherService.exe.config" />
+                            <File Id="SERVICEMODELEX.DLL" Name="ServiceModelEx.dll" Source="..\PVPublisherService\$(var.SourcePathFragment)ServiceModelEx.dll" />
+                            <?if $(var.SolutionConfig) = "Debug" ?>
+                            <File Id="PVPUBLISHERSERVICE.PDB" Name="PVPublisherService.pdb" Source="..\PVPublisherService\$(var.SourcePathFragment)PVPublisherService.pdb" />
+                            <File Id="SERVICEMODELEX.PDB" Name="ServiceModelEx.pdb" Source="..\PVPublisherService\$(var.SourcePathFragment)ServiceModelEx.pdb" />
+                            <?endif ?>
+                            <ServiceInstall Name="PVPublisherService" Type="ownProcess" Start="auto" ErrorControl="normal" Vital="yes" DisplayName="PVPublisherService" Description="PVBC Event Publisher Service" Id="PVPublisherServiceInstall">
+                                <ServiceConfig DelayedAutoStart="1" OnInstall="yes" />
+                            </ServiceInstall>
+                            <ServiceControl Id="PVPublisherServiceControl" Name="PVPublisherService" Stop="both" Wait="yes" />
+                        </Component>
+                        <Directory Id="EMPTY_DATABASES" Name="Empty Databases">
+                            <Component Id="PVHISTORY.S3DB" DiskId="1" Guid="CB2B7504-473C-4E12-ACEE-BD934D68CC62">
+                                <File Id="PVHISTORY.S3DB" Name="pvhistory.s3db" Source="..\Empty Databases\pvhistory.s3db" />
+                            </Component>
+                            <Component Id="PVRECORDS_JET.ACCDB" DiskId="1" Guid="88144A19-6EAB-460D-96E8-7987F4DB1FC8">
+                                <File Id="PVRECORDS_JET.ACCDB" Name="PVRecords_jet.accdb" Source="..\Empty Databases\PVRecords_jet.accdb" />
+                            </Component>
+                            <Component Id="PVRECORDS_JET.MDB" DiskId="1" Guid="4B36FEC4-1DBC-4635-9117-838F02D71430">
+                                <File Id="PVRECORDS_JET.MDB" Name="PVRecords_jet.mdb" Source="..\Empty Databases\PVRecords_jet.mdb" />
+                            </Component>
+                            <Component Id="SUNNYEXPLORERTEST_X64.BAT" DiskId="1" Guid="0D214615-0D25-45E0-895D-89BF394C1D2A">
+                                <File Id="SUNNYEXPLORERTEST_X64.BAT" Name="SunnyExplorerTest_x64.bat" Source="..\Empty Databases\SunnyExplorerTest_x64.bat" />
+                            </Component>
+                            <Component Id="SUNNYEXPLORERTEST_X86.BAT" DiskId="1" Guid="842184C0-89D4-4779-B162-EF0FAA43AAA2">
+                                <File Id="SUNNYEXPLORERTEST_X86.BAT" Name="SunnyExplorerTest_x86.bat" Source="..\Empty Databases\SunnyExplorerTest_x86.bat" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="X86" Name="x86">
+                            <Component Id="SQLITE.INTEROP.DLL.x86" DiskId="1" Guid="9FB515F4-AD4C-4678-AA78-451BC8382962">
+                                <File Id="SQLITE.INTEROP.DLL" Name="SQLite.Interop.dll" Source="..\..\external dlls\bin\Release\x86\SQLite.Interop.dll" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="X64" Name="x64">
+                            <Component Id="SQLITE.INTEROP.DLL.x64" DiskId="1" Guid="B696C4B3-869A-4CF6-9226-792CBD6B0986">
+                                <File Id="SQLITE.INTEROP.DLL_1" Name="SQLite.Interop.dll" Source="..\..\external dlls\bin\Release\x64\SQLite.Interop.dll" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                </Directory>
+            </Directory>
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ProgramMenuDir" Name="PV Bean Counter v2">
+                    <Component Id="StartMenuShortcuts" Guid="6D8CDCF1-C14D-42FE-A7DD-B99B793E249F">
+                        <RemoveFolder Id="ProgramMenuDir" On="uninstall" />
+                        <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="PV Bean Counter" />
+                        <Shortcut Id="UninstallProduct" Name="Uninstall" Description="Uninstalls PV Bean Counter" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" />
+                        <util:InternetShortcut Id="WebsiteShortcut" Name="PV Bean Counter" Target="http://code.google.com/p/pvbeancounter/" Type="url" />
+                    </Component>
+                </Directory>
+            </Directory>
+        </Directory>
+        <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
+            <ComponentRef Id="StartMenuShortcuts" />
+            <ComponentRef Id="PVBeanCounter" />
+            <ComponentRef Id="PVMonitor" />
+            <ComponentRef Id="PVService" />
+            <ComponentRef Id="PVPublisherService" />
+            <ComponentRef Id="PVHISTORY.S3DB" />
+            <ComponentRef Id="PVRECORDS_JET.ACCDB" />
+            <ComponentRef Id="PVRECORDS_JET.MDB" />
+            <ComponentRef Id="SUNNYEXPLORERTEST_X64.BAT" />
+            <ComponentRef Id="SUNNYEXPLORERTEST_X86.BAT" />
+            <ComponentRef Id="SQLITE.INTEROP.DLL.x86" />
+            <ComponentRef Id="SQLITE.INTEROP.DLL.x64" />
+        </Feature>
+        <UI />
+        <UIRef Id="WixUI_Minimal" />
+        <PropertyRef Id="NETFRAMEWORK45" />
+        <Condition Message="This application requires .NET Framework 4.5">Installed OR NETFRAMEWORK45</Condition>
+        <Icon Id="StartMenuIcon.exe" SourceFile="..\PVBeanCounter\$(var.SourcePathFragment)PVBeanCounter.exe" />
+        <Icon Id="PVMonitor.ico" SourceFile="..\PVMonitor\PVMonitor3.ico" />
+        <Property Id="ARPPRODUCTICON" Value="StartMenuIcon.exe" />
+        <Property Id="ALLUSERS" Value="1" />
+        <Upgrade Id="1B95C5A2-BE0C-4F90-9B99-513164300DD9">
+            <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" Minimum="2.0.0" IncludeMinimum="yes" Maximum="3.0.0" IncludeMaximum="no" />
+        </Upgrade>
+        <InstallExecuteSequence>
+            <RemoveExistingProducts After="InstallValidate" />
+        </InstallExecuteSequence>
+    </Product>
+</Wix>

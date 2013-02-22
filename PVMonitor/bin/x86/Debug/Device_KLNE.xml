@@ -1,0 +1,871 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<devices>
+ 
+  <device>
+    
+    <devicetype value="Inverter" />
+    <description value="KLNE Inverters (Modbus - V8.11 V5.00 and V5.01 - Untested)" />
+    <specification value="KLNE" />
+    <version value="00" />
+    <protocol value="KLNEModbus" />
+    <endian16bit value="Big" />
+    <endian32bit value="Big" />
+
+    <features>
+      <feature type="YieldAC" />
+      <feature type="PowerAC" phase="0"/>
+      <feature type="PowerAC" phase="1"/>
+      <feature type="PowerAC" phase="2"/>
+      <feature type="PowerPV" string="0"/>
+      <feature type="PowerPV" string="1"/>
+    </features>
+    
+    <block>
+      <name value="Identity" />
+      <type value="Identity" />
+      <conversation value="Command34" />
+      <commandid value="4" />
+      <base value="39990" />
+      <islastblock value="true" />
+      <register>
+        <content value="Manufacturer" />
+        <type value="string" />
+        <size value="32" />
+        <registervalue value="KLNE" />
+      </register>
+      <register>
+        <content value="Model" />
+        <type value="string" />
+        <size value="32" />
+        <registervalue value="Unknown" />
+      </register>
+      <register>
+        <content value="SerialNo" />
+        <id value="1" />
+        <type value="bcd" />
+        <size value="6" />
+      </register>
+    </block>
+    
+    <block>
+      <name value="Inverter Data" />
+      <type value="Reading" />
+      <conversation value="Command34" />
+      <commandid value="4" />
+      <base value="40000" />
+      <islastblock value="true" />
+      <register>
+        <content value="Status" />
+        <id value="31" />
+        <type value="byte" />
+      </register>
+      <register>
+        <content value="VoltsPV1" />
+        <id value="1" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="CurrentPV1" />
+        <id value="3" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="VoltsPV2" />
+        <id value="2" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="CurrentPV2" />
+        <id value="4" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="PowerAC" />
+        <id value="12" />
+        <type value="uint32" />
+        <scale value="1" />
+      </register>
+      <register>
+        <content value="Frequency" />
+        <id value="11" />
+        <type value="uint16" />
+        <scale value="100" />
+      </register>
+      <register>
+        <content value="VoltsAC1" />
+        <id value="5" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="CurrentAC1" />
+        <id value="8" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="VoltsAC2" />
+        <id value="6" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="CurrentAC2" />
+        <id value="9" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="VoltsAC3" />
+        <id value="7" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="CurrentAC3" />
+        <id value="10" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="EnergyTodayAC" />
+        <id value="14" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>      
+      <register>
+        <content value="EnergyTotalAC" />
+        <id value="15" />
+        <type value="uint32" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="TimeTotal" />
+        <id value="18" />
+        <type value="uint32" />
+        <scale value="1" />
+      </register>
+      <register>
+        <content value="Temperature" />
+        <id value="21" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="ErrorCode" />
+        <iserrorflag value="true" />
+        <id value="31" />
+        <type value="uint16" />
+        <valuelist>
+          <option value="0" tag="OK" />
+          <option value="1" tag="OK" />
+          <option value="4" tag="OK" />
+        </valuelist>
+      </register>
+    </block>
+    
+  </device>
+
+  <device>
+
+    <devicetype value="Inverter" />
+    <description value="KLNE Inverters (Modbus - V8.12  V8.13 V8.14, V5.02 and V5.03)" />
+    <specification value="KLNE" />
+    <version value="01" />
+    <protocol value="Modbus" />
+    <endian16bit value="Big" />
+    <endian32bit value="Big" />
+
+    <features>
+      <feature type="YieldAC" />
+      <feature type="PowerAC" phase="0"/>
+      <feature type="PowerAC" phase="1"/>
+      <feature type="PowerAC" phase="2"/>
+      <feature type="PowerPV" string="0"/>
+      <feature type="PowerPV" string="1"/>
+    </features>
+
+    <block>
+      <name value="Identity" />
+      <type value="Identity" />
+      <conversation value="Command34" />
+      <commandid value="4" />
+      <base value="-1" />
+      <islastblock value="true" />
+      <register>
+        <content value="Manufacturer" />
+        <type value="string" />
+        <size value="32" />
+        <registervalue value="KLNE" />
+      </register>
+      <register>
+        <content value="Model" />
+        <type value="string" />
+        <size value="32" />
+        <registervalue value="Unknown" />
+      </register>
+      <register>
+        <content value="SerialNo" />
+        <id value="1" />
+        <type value="bcd" />
+        <size value="6" />
+      </register>
+    </block>
+
+    <block>
+      <name value="Inverter Data" />
+      <type value="Reading" />
+      <conversation value="Command34" />
+      <commandid value="4" />
+      <base value="9" />
+      <islastblock value="true" />
+      <register>
+        <content value="Status" />
+        <id value="31" />
+        <type value="byte" />
+      </register>
+      <register>
+        <content value="VoltsPV1" />
+        <id value="1" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="CurrentPV1" />
+        <id value="3" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="VoltsPV2" />
+        <id value="2" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="CurrentPV2" />
+        <id value="4" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="PowerAC" />
+        <id value="12" />
+        <type value="uint32" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="Frequency" />
+        <id value="11" />
+        <type value="uint16" />
+        <scale value="100" />
+      </register>
+      <register>
+        <content value="VoltsAC1" />
+        <id value="5" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="CurrentAC1" />
+        <id value="8" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="VoltsAC2" />
+        <id value="6" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="CurrentAC2" />
+        <id value="9" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="VoltsAC3" />
+        <id value="7" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="CurrentAC3" />
+        <id value="10" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="EnergyTodayAC" />
+        <id value="14" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="EnergyTotalAC" />
+        <id value="15" />
+        <type value="uint32" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="TimeTotal" />
+        <id value="18" />
+        <type value="uint32" />
+        <scale value="1" />
+      </register>
+      <register>
+        <content value="Temperature" />
+        <id value="21" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+      <register>
+        <content value="ErrorCode" />
+        <iserrorflag value="true" />
+        <id value="31" />
+        <type value="uint16" />
+        <valuelist>
+          <option value="0" tag="OK" />
+          <option value="1" tag="OK" />
+          <option value="4" tag="OK" />
+        </valuelist>
+      </register>
+    </block>
+
+  </device>
+
+  <device>
+    <devicetype value="Inverter" />
+    <description value="KLNE Inverters (Non-Modbus - Untested)" />
+    <specification value="KLNE Original" />
+    <version value="01" />
+    <protocol value="Phoenixtec" />
+    <endian16bit value="Big" />
+    <endian32bit value="Big" />
+
+    <block>
+      <name value="Initialise" />
+      <type value="Identity" />
+      <conversation value="SendMessage" />
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+          <registervalue value="0x43 5A" />
+          <binding value="SendHeader" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendAppAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendAppAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x7F" />
+          <binding value="SendInvAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendInvAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendControl" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x03" />
+          <binding value="SendFunction" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <registervalue value="" />
+          <binding value="SendTrailer" />
+        </register>
+      </message>
+    </block>
+    
+    <block>
+      <name value="IndentifyInverter" />
+      <type value="Identity" />
+      <conversation value="SendReceive" />
+
+      <message>
+        <name value="Send" />
+
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendAppAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendAppAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x7F" />
+          <binding value="SendInvAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendInvAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendFunction" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveHeader" />
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+          <registervalue value="0xAA AA" />
+          <binding value="ReceiveHeader" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0xFF" />
+          <binding value="ReceiveInvAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="ReceiveInvAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x7F" />
+          <binding value="ReceiveAppAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="ReceiveAppAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="ReceiveControl" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x80" />
+          <binding value="ReceiveFunction" />
+        </register>
+      </message>
+      
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="string" />
+          <content value="SerialNo" />
+          <size value="10" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <registervalue value="" />
+          <binding value="ReceiveTrailer" />
+        </register>
+      </message>
+      
+    </block>
+
+    <block>
+      
+      <name value="RegisterInverter" />
+      <type value="Identity" />
+      <conversation value="SendReceive" />
+
+      <message>
+        <name value="Send" />
+
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendAppAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendAppAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x7F" />
+          <binding value="SendInvAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="SendInvAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendFunction" />
+        </register>
+        <register>
+          <type value="string" />
+          <content value="SerialNo" />
+          <size value="10" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />         
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveHeader" />
+
+        <register>
+          <type value="byte" />
+          <registervalue value="0xFF" />
+          <binding value="ReceiveInvAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="ReceiveInvAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x7F" />
+          <binding value="ReceiveAppAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="ReceiveAppAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x81" />
+          <binding value="ReceiveFunction" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="byte" />
+        </register>
+      </message>
+
+    </block>
+
+    <block>
+
+      <name value="GetInverterDetails" />
+      <type value="Identity" />
+      <conversation value="SendReceive" />
+
+      <message>
+        <name value="Send" />
+
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendAppAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendAppAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendInvAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="SendInvAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendControl" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x03" />
+          <binding value="SendFunction" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveHeader" />
+
+        <register>
+          <type value="byte" />
+          <registervalue value="0xFF" />
+          <binding value="ReceiveInvAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="ReceiveInvAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="ReceiveAppAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="ReceiveAppAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="ReceiveControl" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x83" />
+          <binding value="ReceiveFunction" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+        </register>
+        <register>
+          <type value="string" />
+          <size value="6" />
+          <name value="Capacity" />
+        </register>
+        <register>
+          <type value="string" />
+          <size value="7" />
+          <name value="Firmware" />
+        </register>
+        <register>
+          <type value="string" />
+          <size value="16" />
+          <content value="Model" />
+        </register>
+        <register>
+          <type value="string" />
+          <size value="14" />
+          <content value="Manufacturer" />
+        </register>
+      </message>
+
+    </block>
+
+    <block>
+
+      <name value="GetData" />
+      <type value="Reading" />
+      <conversation value="SendReceive" />
+
+      <message>
+        <name value="Send" />
+
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendAppAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendAppAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendInvAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="SendInvAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x02" />
+          <binding value="SendFunction" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveHeader" />
+
+        <register>
+          <type value="byte" />
+          <registervalue value="0xFF" />
+          <binding value="ReceiveInvAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="ReceiveInvAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="ReceiveAppAddr1" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="ReceiveAppAddr2" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x82" />
+          <binding value="ReceiveFunction" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+
+        <register>
+          <type value="uint16" />
+          <content value="Temperature" />
+          <scale value="10" />
+          <position value="0" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <content value="VoltsPV1" />
+          <scale value="10" />
+          <position value="2" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <content value="CurrentAC1" />
+          <scale value="10" />
+          <position value="4" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <content value="VoltsAC1" />
+          <scale value="10" />
+          <position value="6" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <content value="Frequency" />
+          <scale value="100" />
+          <position value="8" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <content value="PowerAC1" />
+          <position value="10" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <content value="EnergyTodayAC" />
+          <scale value="10" />
+          <position value="12" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <content value="EnergyTotalACHigh" />
+          <scale value="10" />
+          <position value="14" />
+        </register>        
+        <register>
+          <type value="uint16" />
+          <content value="EnergyTotalAC" />
+          <scale value="10" />
+          <position value="16" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <content value="TimeTotalHigh" />
+          <position value="18" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <content value="TimeTotal" />
+          <position value="20" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <content value="Status" />
+          <position value="22" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <name value="ErrorGV" />
+          <iserrordetail value="true" />
+          <position value="24" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <name value="ErrorGF" />
+          <iserrordetail value="true" />
+          <position value="26" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <name value="ErrorGZ" />
+          <iserrordetail value="true" />
+          <position value="28" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <name value="ErrorTemp" />
+          <iserrordetail value="true" />
+          <position value="30" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <name value="ErrorPV1" />
+          <iserrordetail value="true" />
+          <position value="32" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <name value="ErrorGFC1" />
+          <iserrordetail value="true" />
+          <position value="34" />
+        </register>        
+        <register>
+          <type value="uint16" />
+          <content value="ErrorCode" />
+          <position value="36" />
+          <iserrorflag value="true" />
+          <valuelist>
+            <option value="0" tag="OK" />
+          </valuelist>
+        </register>
+      </message>
+
+    </block>
+    
+  </device>
+  
+</devices>
+

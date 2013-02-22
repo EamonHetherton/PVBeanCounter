@@ -1,0 +1,141 @@
+﻿<Window x:Class="PVMonitor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:customControl="clr-namespace:EnergyDisplayControls;assembly=EnergyDisplayControls"
+        xmlns:local="clr-namespace:PVMonitor"
+        Title="Energy Monitor" Closing="Window_Closing" SizeToContent="WidthAndHeight"
+	    Icon="/PVMonitor;component/PVMonitor3.ico" WindowStyle="None" UseLayoutRounding="False" AllowsTransparency="True" Background="Transparent" MouseEnter="Window_MouseEnter" MouseLeave="Window_MouseLeave" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" d:DesignHeight="625" d:DesignWidth="507" Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <Style x:Key="MyHeaderStyle" TargetType="GridViewColumnHeader">
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Setter Property="Height" Value="0" />
+        </Style>
+        <local:NullableValueConverter x:Key="NullableValueConverter" />
+    </Window.Resources>   
+        
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Name="stackPanelGauges" Orientation="Horizontal">
+            <StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <customControl:PowerGauge Name="gaugeYield" DialArc="180" DialWidth="230" DialRadiusY="100"
+                    MouseLeftButtonDown="dial_MouseLeftButtonDown"
+                    Scale1Units="" GaugeDescription="Inverter Yield" 
+                    DialReverse="False" Rotation="0.0" Margin="3,3,1,1" DialStyle="Generation" Scale1Max="6000" 
+                                          VerticalAlignment="Bottom" Scale1Min="0" Scale1MajorMarks="7" UseStandardSize="True">
+                    <customControl:PowerGauge.LayoutTransform>
+                        <TransformGroup>
+                            <RotateTransform Angle="0.0"  />
+                        </TransformGroup>
+                    </customControl:PowerGauge.LayoutTransform>
+                </customControl:PowerGauge>
+                    <StackPanel VerticalAlignment="Bottom">
+                        <Button HorizontalAlignment="Right" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Name="button_Exit" Click="button_Exit_Click" Visibility="Visible" Margin="0,0,10,-10">
+                            <Image Source="/PVMonitor;component/Exit.png" Height="32" Width="33"></Image>
+                        </Button>
+                        <customControl:PowerGauge Name="gaugeCCYield" DialArc="180" DialWidth="180" DialRadiusY="85" 
+                            MouseLeftButtonDown="dial_MouseLeftButtonDown"
+                            Scale1Units="" GaugeDescription="Meter Yield" Scale1Max="6000"
+                            DialReverse="False" Rotation="0.0" Margin="1,-5,3,1" DialStyle="Generation" VerticalAlignment="Bottom" Scale1MajorMarks="7" UseStandardSize="True">
+                            <customControl:PowerGauge.LayoutTransform>
+                                <TransformGroup>
+                                    <RotateTransform Angle="0.0"  />
+                                </TransformGroup>
+                            </customControl:PowerGauge.LayoutTransform>
+                        </customControl:PowerGauge>                        
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
+                    <customControl:PowerGauge Name="gaugeFeedIn" DialArc="180" DialWidth="230" DialRadiusY="100" Margin="3,1,1,3"
+                    MouseLeftButtonDown="dial_MouseLeftButtonDown"
+                    Scale1Units="Watts" GaugeDescription="Feed-In" 
+                    DialReverse="True" Rotation="180.0" Scale1Min="-6000" Scale1Max="6000" Scale1Centre="0" DialStyle="FeedIn" 
+                                          VerticalAlignment="Bottom" Scale1Current="True" Scale1LeftMarks="3" Scale1RightMarks="3" UseStandardSize="True">
+                    <customControl:PowerGauge.LayoutTransform>
+                        <TransformGroup>
+                            <RotateTransform Angle="180.0"  />
+                        </TransformGroup>
+                    </customControl:PowerGauge.LayoutTransform>
+                </customControl:PowerGauge>
+                    <StackPanel >                    
+                        <customControl:PowerGauge Name="gaugeConsume" DialArc="180" DialWidth="180" DialRadiusY="85" 
+                            MouseLeftButtonDown="dial_MouseLeftButtonDown"
+                            Scale1Units="" GaugeDescription="Consumption" Scale1Max="6000"
+                            DialReverse="True" Rotation="180.0" Margin="1,1,3,3" DialStyle="Consumption" VerticalAlignment="Bottom" Scale1MajorMarks="7" UseStandardSize="True">
+                        <customControl:PowerGauge.LayoutTransform>
+                            <TransformGroup>
+                                <RotateTransform Angle="180.0"  />
+                            </TransformGroup>
+                        </customControl:PowerGauge.LayoutTransform>
+                    </customControl:PowerGauge>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+        
+        <StackPanel x:Name="stackDials" Grid.Column="1">          
+            <Canvas MinHeight="37"></Canvas>
+        </StackPanel>
+
+        <Expander Name="expanderSettings" Grid.Row="1" Margin="0,1,0,0" AllowDrop="True" Header="{Binding Path=LastStatusEvent}">
+            <StackPanel Name="stackPanelMain" >
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="Publisher Machine:" Margin="10,8,0,8" Width="120" HorizontalAlignment="Right" TextAlignment="Right" />
+                    <ComboBox Name="comboBoxLocalMachines" Text="{Binding Path=PublisherMachine}" ItemsSource="{Binding LocalMachines}" Margin="8,8,8,8" Width="Auto" IsEditable="True" LostFocus="comboBoxLocalMachines_LostFocus" MinWidth="125" Background="Gold" />
+                    <Button Name="buttonReconnect" MaxHeight="25" Content="Reconnect" Padding="4,1" Click="buttonReconnect_Click" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="Alternate Publisher:" Margin="10,8,0,8" Width="120" HorizontalAlignment="Right" TextAlignment="Right" />
+                    <ComboBox Name="comboBoxLocalMachines2" Text="{Binding Path=AlternatePublisherMachine}" ItemsSource="{Binding LocalMachines}" Margin="8,8,8,8" Width="Auto" IsEditable="True" LostFocus="comboBoxLocalMachines2_LostFocus" MinWidth="125" Foreground="Black" />
+                    <Button Name="buttonAlternateReconnect" MaxHeight="25" Content="Alt Reconnect" Padding="4,1" Click="buttonAlternateReconnect_Click" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="Max Yield:" Margin="10,4,0,4" Width="120" HorizontalAlignment="Right" TextAlignment="Right" />
+                    <TextBox Name="textBox_MaxYield" Text="{Binding Path=MaxYield, Mode=TwoWay}" Margin="8,4,8,4" Width="Auto" MinWidth="125" IsEnabled="True" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="Max Consumption:" Margin="10,4,0,4" Width="120" HorizontalAlignment="Right" TextAlignment="Right" />
+                    <TextBox Name="textBox_MaxConsumption" Text="{Binding Path=MaxConsumption, Mode=TwoWay}" Margin="8,4,8,4" Width="Auto" MinWidth="125" IsEnabled="True" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text=" " Margin="10,8,0,4" Width="120" HorizontalAlignment="Right" TextAlignment="Right" />
+                    <CheckBox Name="checkBox_ManualCredentials" IsChecked="{Binding Path=ManualCredentials}" Content="Manual Credentials" Margin="8,8,8,4" Width="Auto" Checked="checkBox_ManualCredentials_Checked" Unchecked="checkBox_ManualCredentials_Unchecked" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="Domain / Workgroup:" Margin="10,6,0,2" Width="120" HorizontalAlignment="Right" TextAlignment="Right" />
+                    <ComboBox Name="comboBox_Domain" Text="{Binding Path=Domain}" ItemsSource="{Binding}" Margin="8,4,8,2" Width="Auto" IsEditable="True" MinWidth="125" IsEnabled="False">
+                        <ComboBoxItem Content="WORKGROUP" />
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="Username:" Margin="10,4,0,4" Width="120" HorizontalAlignment="Right" TextAlignment="Right" />
+                    <TextBox Name="textBox_Username" Text="{Binding Path=Username}" Margin="8,2,8,2" Width="Auto" MinWidth="125" IsEnabled="False" />   
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="Password:" Margin="10,4,0,8" Width="120" HorizontalAlignment="Right" TextAlignment="Right" />
+                    <PasswordBox Name="passwordBox" Margin="8,2,8,6" Width="Auto" MinWidth="125" IsEnabled="False" PasswordChanged="passwordBox_PasswordChanged" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="Version:" Margin="10,10,0,8" Width="120" HorizontalAlignment="Right" TextAlignment="Right" />
+                    <TextBox Margin="8,6,8,6" Text="{Binding Path=ApplicationVersion,Mode=OneTime}" Width="Auto" MinWidth="70" IsEnabled="False" />
+                </StackPanel>
+            </StackPanel>
+            <Expander.Background>
+                <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                    <GradientStop Color="#FF69D7F8" Offset="0" />
+                    <GradientStop Color="#FF99F8A0" Offset="1" />
+                </LinearGradientBrush>
+            </Expander.Background>
+        </Expander>
+    </Grid>
+    
+</Window>

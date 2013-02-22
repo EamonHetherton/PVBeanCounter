@@ -1,0 +1,41 @@
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\bin\x86\Debug\GenericConnector.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\bin\x86\Debug\GenericConnector.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\obj\x86\Debug\GenericConnector.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\obj\x86\Debug\GenericConnector.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\bin\x86\Debug\GenericConnector.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\bin\x86\Debug\GenericConnector.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\bin\x86\Debug\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\bin\x86\Debug\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\bin\x86\Debug\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\bin\x86\Debug\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\obj\x86\Debug\GenericConnector.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\obj\x86\Debug\GenericConnector.pdb
+D:\pvbeancounter\trunk\GenericConnector\bin\x86\Debug\GenericConnector.dll
+D:\pvbeancounter\trunk\GenericConnector\bin\x86\Debug\GenericConnector.pdb
+D:\pvbeancounter\trunk\GenericConnector\bin\x86\Debug\Utilities.dll
+D:\pvbeancounter\trunk\GenericConnector\bin\x86\Debug\Mischel.Synchronization.dll
+D:\pvbeancounter\trunk\GenericConnector\bin\x86\Debug\Utilities.pdb
+D:\pvbeancounter\trunk\GenericConnector\bin\x86\Debug\Mischel.Synchronization.pdb
+D:\pvbeancounter\trunk\GenericConnector\obj\x86\Debug\GenericConnector.csprojResolveAssemblyReference.cache
+D:\pvbeancounter\trunk\GenericConnector\obj\x86\Debug\GenericConnector.dll
+D:\pvbeancounter\trunk\GenericConnector\obj\x86\Debug\GenericConnector.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\GenericConnector\bin\x86\Debug\GenericConnector.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\GenericConnector\bin\x86\Debug\GenericConnector.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\GenericConnector\bin\x86\Debug\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\GenericConnector\bin\x86\Debug\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\GenericConnector\bin\x86\Debug\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\GenericConnector\bin\x86\Debug\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\GenericConnector\obj\x86\Debug\GenericConnector.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\GenericConnector\obj\x86\Debug\GenericConnector.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\GenericConnector\obj\x86\Debug\GenericConnector.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\GenericConnector\bin\x86\Debug\GenericConnector.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\GenericConnector\bin\x86\Debug\GenericConnector.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\GenericConnector\bin\x86\Debug\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\GenericConnector\bin\x86\Debug\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\GenericConnector\bin\x86\Debug\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\GenericConnector\bin\x86\Debug\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\GenericConnector\obj\x86\Debug\GenericConnector.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\GenericConnector\obj\x86\Debug\GenericConnector.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\GenericConnector\obj\x86\Debug\GenericConnector.pdb

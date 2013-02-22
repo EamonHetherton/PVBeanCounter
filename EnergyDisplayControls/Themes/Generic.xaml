@@ -1,0 +1,215 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:EnergyDisplayControls">
+    <Style TargetType="{x:Type local:PowerGauge}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:PowerGauge}">
+                    <ControlTemplate.Resources>
+                        <Style x:Key="ScaleMarkerLarge" TargetType="Polygon" >
+                            <Setter Property="Points" Value="0,-1.5 0,1.5 8,1.5 8,-1.5" />
+                            <Setter Property="Fill" Value="WhiteSmoke" />
+                            <Setter Property="Effect">                                
+                                <Setter.Value>
+                                    <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="3"  Direction="315"  ShadowDepth="2"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style x:Key="ScaleMarkerSmallRect" TargetType="Polygon" >
+                            <Setter Property="Points" Value="0,-1 0,1 4,1 4,-1" />
+                            <Setter Property="Fill" Value="WhiteSmoke" />
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="3"  Direction="315"  ShadowDepth="2"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style x:Key="ScaleMarkerSmall" TargetType="Ellipse" >
+                            <Setter Property="Width" Value="4"/>
+                            <Setter Property="Height" Value="3"/>
+                            <Setter Property="Fill" Value="WhiteSmoke" />
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="3"  Direction="315"  ShadowDepth="2"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style x:Key="DialText"  TargetType="Label">
+                            <Setter Property="Foreground" Value="#FF524F4F"/>
+                            <Setter Property="Background" Value="{x:Null}"/>
+                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style>
+                        <Style x:Key="DialNumeral" TargetType="Label">
+                            <Setter Property="FontSize" Value="12.5" />
+                            <Setter Property="Foreground" Value="WhiteSmoke"/>
+                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="3"  Direction="315"  ShadowDepth="2"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style x:Key="DialGeneric" TargetType="Path">
+                            <Setter Property="Fill">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="1,.5" StartPoint="0,.5">
+                                        <GradientStop Color="#FF86B6DE" Offset="0" />
+                                        <GradientStop Color="#FF86B6DE" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style x:Key="DialGeneration" TargetType="Path">
+                            <Setter Property="Fill">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="1,.5" StartPoint="0,.5">
+                                        <GradientStop Color="#FF86B6DE" Offset="0" />
+                                        <GradientStop Color="#FF66F849" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style x:Key="DialGenerationReverse" TargetType="Path">
+                            <Setter Property="Fill">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="1,.5" StartPoint="0,.5">
+                                        <GradientStop Color="#FF66F849" Offset="0" />
+                                        <GradientStop Color="#FF86B6DE" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style x:Key="DialConsumption" TargetType="Path">
+                            <Setter Property="Fill">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="1,.5" StartPoint="0,.5">
+                                        <GradientStop Color="#FF86B6DE" Offset="0" />
+                                        <GradientStop Color="#FFFFFF3E" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style x:Key="DialConsumptionReverse" TargetType="Path">
+                            <Setter Property="Fill">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="1,.5" StartPoint="0,.5">
+                                        <GradientStop Color="#FFFFFF3E" Offset="0" />
+                                        <GradientStop Color="#FF86B6DE" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style x:Key="DialFeedIn" TargetType="Path">
+                            <Setter Property="Fill">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="1,.5" StartPoint="0,.5">
+                                        <GradientStop Color="#FFFFFF3E" Offset="0" />
+                                        <GradientStop Color="#FF86B6DE" Offset=".5"/>
+                                        <GradientStop Color="#FF66F849" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style x:Key="DialFeedInReverse" TargetType="Path">
+                            <Setter Property="Fill">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="1,.5" StartPoint="0,.5">
+                                        <GradientStop Color="#FF66F849" Offset="0" />
+                                        <GradientStop Color="#FF86B6DE" Offset=".5"/>
+                                        <GradientStop Color="#FFFFFF3E" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ControlTemplate.Resources>
+                    
+                    <Canvas Name="canvasBase" >
+                        <Canvas.RenderTransform>
+                            <TransformGroup>
+                                <TranslateTransform X="{Binding Path=DialTranslateX, RelativeSource={RelativeSource TemplatedParent}}" 
+                                                    Y="{Binding Path=DialTranslateY, RelativeSource={RelativeSource TemplatedParent}}" />                               
+                            </TransformGroup>
+                        </Canvas.RenderTransform>
+
+                        <Path Name="pathBorder" StrokeThickness="2" >
+                            <Path.Data>
+                                <PathGeometry >
+                                    <PathFigure StartPoint="{Binding Path=DialBorderLowerLeft, RelativeSource={RelativeSource TemplatedParent}}" IsClosed="True">
+                                        <ArcSegment Size="{Binding Path=DialBorderSize, RelativeSource={RelativeSource TemplatedParent}}" 
+                                                RotationAngle="0" IsLargeArc="True" SweepDirection="Clockwise" 
+                                                Point="{Binding Path=DialBorderLowerRight, RelativeSource={RelativeSource TemplatedParent}}" IsSmoothJoin="True" />
+                                        <LineSegment Point="{Binding Path=DialBorderLowerLeft, RelativeSource={RelativeSource TemplatedParent}}" IsSmoothJoin="True" />
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                            <Path.Stroke>
+                                <LinearGradientBrush EndPoint="0,0" StartPoint="1,1">
+                                    <GradientStop Color="Gray" Offset="0" />
+                                    <GradientStop Color="#FFDBDBDB" Offset="1" />
+                                </LinearGradientBrush>
+                            </Path.Stroke>
+                            <Path.Fill>
+                                <LinearGradientBrush EndPoint="0,0" StartPoint="1,1">
+                                    <GradientStop Color="#FFA7A7A7" Offset="0" />
+                                    <GradientStop Color="#FFD4D4D4" Offset="1" />
+                                </LinearGradientBrush>
+                            </Path.Fill>
+                            <Path.Effect>
+                                <DropShadowEffect Color="#FF555555" Opacity="0.65" BlurRadius="4"  Direction="315"  
+                                                  ShadowDepth="{Binding Path=DialBorderShadowDepth, RelativeSource={RelativeSource TemplatedParent}}" />
+                            </Path.Effect>
+                        </Path>
+
+                        <Path Name="pathDial" StrokeThickness="2">
+                            <Path.Data>
+                                <PathGeometry >
+                                    <PathFigure StartPoint="{Binding Path=DialLowerLeft, RelativeSource={RelativeSource TemplatedParent}}" IsClosed="True">
+                                        <ArcSegment Size="{Binding Path=DialSize, RelativeSource={RelativeSource TemplatedParent}}" 
+                                            RotationAngle="0" IsLargeArc="True" SweepDirection="Clockwise" 
+                                            Point="{Binding Path=DialLowerRight, RelativeSource={RelativeSource TemplatedParent}}" IsSmoothJoin="True" />
+                                        <LineSegment Point="{Binding Path=DialLowerLeft, RelativeSource={RelativeSource TemplatedParent}}" IsSmoothJoin="True" />
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                            <Path.Stroke>
+                                <LinearGradientBrush EndPoint="1,1" StartPoint="0,0">
+                                    <GradientStop Color="#FF868686" Offset="0" />
+                                    <GradientStop Color="#FFC4C4C4" Offset="1" />
+                                </LinearGradientBrush>
+                            </Path.Stroke>
+                        </Path>
+
+                        <Canvas Name="canvasScale1Markers">                               
+                        </Canvas>
+                        <Label ContentStringFormat="F0"></Label>
+                            <Label Name="textScale1Value" 
+                                   Content="{Binding Path=Scale1Value, RelativeSource={RelativeSource TemplatedParent}, StringFormat=F0}" 
+                                   HorizontalContentAlignment="Center" />
+
+                        <Label Name="textDescription" 
+                                   Content="{Binding Path=GaugeDescription, RelativeSource={RelativeSource TemplatedParent}}" 
+                                   HorizontalContentAlignment="Center" />
+
+                        <Label Name="textUnits" 
+                                   Content="{Binding Path=Scale1Units, RelativeSource={RelativeSource TemplatedParent}}" 
+                                   HorizontalContentAlignment="Center" />
+
+                        <Polygon Name="polygonPointer1"
+                            Fill="#FFC41A00"
+                            Points="{Binding Path=Pointer1Points, RelativeSource={RelativeSource TemplatedParent}}" >                            
+                            <Polygon.RenderTransform>
+                                <RotateTransform Angle="{Binding Path=Scale1Angle, RelativeSource={RelativeSource TemplatedParent}}" />
+                            </Polygon.RenderTransform>
+                            <Polygon.Effect>
+                                <DropShadowEffect Color="#FF9A9A9A" Opacity="0.6" BlurRadius="2"  Direction="315"  ShadowDepth="2.5"/>
+                            </Polygon.Effect>                              
+                        </Polygon>
+                        
+                    </Canvas>                    
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<devices>
+  <device>
+    <devicetype value="SMA_SunnyExplorer" />
+    <description value="SMA via Sunny Explorer" />
+    <specification value="SMA_SE" />
+    <version value="01" />
+    <status value="Test Only" />
+    <protocol value="SMA_SunnyExplorer" />
+    <devicetype value="Inverter" />
+
+    <features>
+      <feature type="YieldAC" instance="0" description="Inverter Yield AC"/>
+    </features>
+
+  </device>
+
+</devices>
+

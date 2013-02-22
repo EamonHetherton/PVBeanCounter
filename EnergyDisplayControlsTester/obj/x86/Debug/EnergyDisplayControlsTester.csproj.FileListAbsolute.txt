@@ -1,0 +1,59 @@
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControlsTester.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControlsTester.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControls.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControls.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\MainWindow.baml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\MainWindow.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\App.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester_MarkupCompile.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.g.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.Properties.Resources.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\GenerateResource.read.1.tlog
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\GenerateResource.write.1.tlog
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.pdb
+D:\pvbeancounter\trunk\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControlsTester.exe
+D:\pvbeancounter\trunk\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControlsTester.pdb
+D:\pvbeancounter\trunk\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControls.dll
+D:\pvbeancounter\trunk\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControls.pdb
+D:\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.csprojResolveAssemblyReference.cache
+D:\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\MainWindow.baml
+D:\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\MainWindow.g.cs
+D:\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\App.g.cs
+D:\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester_MarkupCompile.cache
+D:\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.g.resources
+D:\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.Properties.Resources.resources
+D:\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.csproj.GenerateResource.Cache
+D:\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.exe
+D:\pvbeancounter\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControlsTester.exe.config
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControlsTester.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControlsTester.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControls.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControls.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControlsTester\obj\x86\Debug\MainWindow.baml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControlsTester\obj\x86\Debug\MainWindow.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControlsTester\obj\x86\Debug\App.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester_MarkupCompile.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.g.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.Properties.Resources.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.csproj.GenerateResource.Cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControlsTester.exe.config
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControlsTester.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControlsTester.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControls.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControlsTester\bin\Debug\EnergyDisplayControls.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControlsTester\obj\x86\Debug\MainWindow.baml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControlsTester\obj\x86\Debug\MainWindow.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControlsTester\obj\x86\Debug\App.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester_MarkupCompile.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.g.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.Properties.Resources.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.csproj.GenerateResource.Cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControlsTester\obj\x86\Debug\EnergyDisplayControlsTester.pdb

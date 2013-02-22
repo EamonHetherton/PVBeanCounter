@@ -1,0 +1,321 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <host value="" />
+  <database value="pvhistory.s3db" />
+  <username value="" />
+  <password value="" />
+  <databasetype value="SQLite" />
+  <providertype value="Proprietary" />
+  <providername value="System.Data.SQLite" />
+  <oledbname value="" />
+  <connectionstring value="" />
+  <defaultdirectory value="C:\PVRecords" />
+  <servicestarttime value="" />
+  <servicestoptime value="" />
+  <servicewakeinterval value="00:23:00" />
+  <servicesuspendinterval value="01:37:00" />
+  <servicesuspendtype value="sleep" />
+  <logtrace value="" />
+  <invertermanagerlist>
+    <invertermanager>
+      <serialport />
+      <instanceno value="1" />
+      <managertype value="Sunny Explorer" />
+      <enabled value="" />
+      <sunnyexplorerpath value="C:\Program Files (x86)\SMA\Sunny Explorer\SunnyExplorer.exe" />
+    </invertermanager>
+    <invertermanager>
+      <serialport />
+      <instanceno value="1" />
+      <managertype value="SMA Bluetooth" />
+      <enabled value="" />
+    </invertermanager>
+    <invertermanager>
+      <serialport />
+      <instanceno value="1" />
+      <managertype value="CMS" />
+      <enabled value="" />
+    </invertermanager>
+    <invertermanager>
+      <serialport />
+      <instanceno value="1" />
+      <managertype value="Meter" />
+      <enabled value="" />
+    </invertermanager>
+    <invertermanager>
+      <serialport />
+      <instanceno value="1" />
+      <managertype value="SMA WebBox" />
+      <enabled value="" />
+    </invertermanager>
+    <invertermanager>
+      <managertype value="KLNE" />
+      <serialport />
+      <instanceno value="1" />
+      <enabled value="" />
+    </invertermanager>
+    <invertermanager>
+      <managertype value="Growatt" />
+      <serialport />
+      <inverterlist />
+      <instanceno value="1" />
+      <enabled value="" />
+    </invertermanager>
+    <invertermanager>
+      <managertype value="SAMIL" />
+      <serialport />
+      <instanceno value="1" />
+      <enabled value="" />
+    </invertermanager>
+    <invertermanager>
+      <managertype value="JFY" />
+      <serialport />
+      <instanceno value="1" />
+      <enabled value="" />
+    </invertermanager>
+    <invertermanager>
+      <managertype value="Devices" />
+      <instanceno value="1" />
+      <enabled value="" />
+    </invertermanager>
+  </invertermanagerlist>
+  <dateformat value="yyyy-MM-dd" />
+  <metermanagerlist>
+    <metermanager>
+      <appliancelist>
+        <appliance>
+          <applianceno value="0" />
+          <storereading value="true" />
+          <isconsumption value="true" />
+          <isinverteryield value="" />
+          <adjusthistory value="true" />
+          <storehistory value="" />
+          <calibrate value="1" />
+        </appliance>
+        <appliance>
+          <applianceno value="1" />
+          <storereading value="true" />
+          <isconsumption value="" />
+          <isinverteryield value="" />
+          <adjusthistory value="true" />
+          <storehistory value="" />
+          <calibrate value="1" />
+        </appliance>
+        <appliance>
+          <applianceno value="2" />
+          <storereading value="" />
+          <isinverteryield value="" />
+          <isconsumption value="" />
+          <adjusthistory value="" />
+          <storehistory value="" />
+          <calibrate value="1" />
+        </appliance>
+        <appliance>
+          <applianceno value="3" />
+          <storereading value="" />
+          <isinverteryield value="" />
+          <isconsumption value="" />
+          <adjusthistory value="" />
+          <storehistory value="" />
+          <calibrate value="1" />
+        </appliance>
+        <appliance>
+          <applianceno value="4" />
+          <storereading value="" />
+          <isinverteryield value="" />
+          <isconsumption value="" />
+          <adjusthistory value="" />
+          <storehistory value="" />
+          <calibrate value="1" />
+        </appliance>
+        <appliance>
+          <applianceno value="5" />
+          <storereading value="" />
+          <isinverteryield value="" />
+          <isconsumption value="" />
+          <adjusthistory value="" />
+          <storehistory value="" />
+          <calibrate value="1" />
+        </appliance>
+        <appliance>
+          <applianceno value="6" />
+          <storereading value="" />
+          <isinverteryield value="" />
+          <isconsumption value="" />
+          <adjusthistory value="" />
+          <storehistory value="" />
+          <calibrate value="1" />
+        </appliance>
+        <appliance>
+          <applianceno value="7" />
+          <storereading value="" />
+          <isinverteryield value="" />
+          <isconsumption value="" />
+          <adjusthistory value="" />
+          <storehistory value="" />
+          <calibrate value="1" />
+        </appliance>
+        <appliance>
+          <applianceno value="8" />
+          <storereading value="" />
+          <isinverteryield value="" />
+          <isconsumption value="" />
+          <adjusthistory value="" />
+          <storehistory value="" />
+          <calibrate value="1" />
+        </appliance>
+        <appliance>
+          <applianceno value="9" />
+          <storereading value="" />
+          <isinverteryield value="" />
+          <isconsumption value="" />
+          <adjusthistory value="" />
+          <storehistory value="" />
+          <calibrate value="1" />
+        </appliance>
+      </appliancelist>
+      <serialport>
+        <portname value="" />
+        <baudrate value="" />
+      </serialport>
+      <instanceno value="1" />
+      <managertype value="CC128" />
+      <enabled value="" />
+    </metermanager>
+    <metermanager>
+      <appliancelist>
+        <appliance>
+          <applianceno value="0" />
+          <storereading value="true" />
+        </appliance>
+      </appliancelist>
+      <instanceno value="1" />
+      <managertype value="Owl" />
+      <enabled value="" />
+      <owldatabase value="C:\ProgramData\2SE\be.db" />
+    </metermanager>
+    <metermanager>
+      <appliancelist>
+        <appliance>
+          <applianceno value="0" />
+          <storereading value="true" />
+        </appliance>
+        <appliance>
+          <applianceno value="1" />
+          <storereading value="" />
+        </appliance>
+        <appliance>
+          <applianceno value="2" />
+          <storereading value="" />
+        </appliance>
+        <appliance>
+          <applianceno value="3" />
+          <storereading value="" />
+        </appliance>
+        <appliance>
+          <applianceno value="4" />
+          <storereading value="" />
+        </appliance>
+        <appliance>
+          <applianceno value="5" />
+          <storereading value="" />
+        </appliance>
+        <appliance>
+          <applianceno value="6" />
+          <storereading value="" />
+        </appliance>
+        <appliance>
+          <applianceno value="7" />
+          <storereading value="" />
+        </appliance>
+        <appliance>
+          <applianceno value="8" />
+          <storereading value="" />
+        </appliance>
+        <appliance>
+          <applianceno value="9" />
+          <storereading value="" />
+        </appliance>
+        <appliance>
+          <applianceno value="10" />
+          <storereading value="" />
+        </appliance>
+        <appliance>
+          <applianceno value="11" />
+          <storereading value="" />
+        </appliance>
+        <appliance>
+          <applianceno value="12" />
+          <storereading value="" />
+        </appliance>
+        <appliance>
+          <applianceno value="13" />
+          <storereading value="" />
+        </appliance>
+        <appliance>
+          <applianceno value="14" />
+          <storereading value="" />
+        </appliance>
+        <appliance>
+          <applianceno value="15" />
+          <storereading value="" />
+        </appliance>
+      </appliancelist>
+      <serialport />
+      <instanceno value="1" />
+      <managertype value="EW4009" />
+      <enabled value="" />
+    </metermanager>
+  </metermanagerlist>
+  <pvoutputsitelist>
+    <site>
+      <pvoutputdaylist>
+        <pvoutputday>
+          <day value="2012-07-26" />
+          <forceload value="" />
+          <forceloadset value="" />
+        </pvoutputday>
+        <pvoutputday>
+          <day value="2012-07-25" />
+          <forceload value="" />
+          <forceloadset value="" />
+        </pvoutputday>
+      </pvoutputdaylist>
+      <apikey value="" />
+      <apiversion value="" />
+      <siteid value="" />
+      <name value="My System" />
+      <livedays value="" />
+      <autobackload value="" />
+      <datainterval value="" />
+      <enable value="" />
+      <usecctemperature value="" />
+    </site>
+  </pvoutputsitelist>
+  <initialsave value="true" />
+  <settingsversion value="1.9.0.7" />
+  <legacydateformat value="d/MM/yyyy" />
+  <datetimeformat value="yyyy'-'MM'-'dd'T'HH':'mm':'ss" />
+  <devicemanagerlist>
+    <devicemanager>
+      <devices>
+        <device>
+          <address value="1" />
+          <name value="Dev Name" />
+          <enabled value="false" />
+          <description value="Inverter: Samil Inverters (Non-Modbus)" />
+          <id value="Inverter: Samil Original - 01" />
+        </device>
+      </devices>
+      <enabled value="false" />
+      <name value="My Device" />
+    </devicemanager>
+  </devicemanagerlist>
+  <autostartpvbcservice value="false" />
+  <enableeveningsuspend value="false" />
+  <monitormeters value="false" />
+  <intervalstarttime value="07:00:00" />
+  <intervalstoptime value="18:00:00" />
+  <meterhistorytimelineadjust value="false" />
+  <monitorinverters value="true" />
+</configuration>

@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<devices>
+  <device>
+    <devicetype value="EnergyMeter" />
+    <description value="Current Cost EnviR" />
+    <specification value="CC128" />
+    <version value="01" />
+    <status value="Test Only" />
+    <protocol value="CC128" />
+    <devicetype value="EnergyMeter" />
+
+    <features>
+      <feature id="0" type="EnergyAC" description="Energy AC" />
+    </features>
+
+    <block>
+      <name value="Message" />
+      <type value="Reading" />
+      <conversation value="ReadMessage" />      
+      <register>
+        <type value="string" />
+        <content value="Message" />
+        <binding value="Message" />
+      </register>
+    </block>
+  </device>
+
+  <device>
+    <devicetype value="EnergyMeter" />
+    <description value="Current Cost EnviR - 3 Phase" />
+    <specification value="CC128_3Phase" />
+    <version value="01" />
+    <status value="Test Only" />
+    <protocol value="CC128" />
+    <devicetype value="EnergyMeter" />
+
+    <features>
+      <feature id="0" type="EnergyAC" description="Energy AC - Phase 0" />
+      <feature id="1" type="EnergyAC" description="Energy AC - Phase 1" />
+      <feature id="2" type="EnergyAC" description="Energy AC - Phase 2" />
+    </features>
+
+    <block>
+      <name value="Message" />
+      <type value="Reading" />
+      <conversation value="ReadMessage" />
+      <register>
+        <type value="string" />
+        <content value="Message" />
+        <binding value="Message" />
+      </register>
+    </block>
+  </device>
+  
+</devices>

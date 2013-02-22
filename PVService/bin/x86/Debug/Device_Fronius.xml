@@ -1,0 +1,455 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<devices>
+  <device>
+    <devicetype value="Inverter" />
+    <description value="Fronius Inverters (Untested)" />
+    <specification value="Fronius Original" />
+    <version value="01" />
+    <protocol value="Fronius" />
+    <endian16bit value="Big" />
+
+    <features>
+      <feature id="0" type="YieldAC" />
+      <feature id="0" type="YieldDC" />
+    </features>
+    
+    <block>
+      <name value="GetVersion" />
+      <type value="Identity" />
+      <conversation value="SendReceive" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendDeviceOption" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x00" />
+          <binding value="SendDeviceNumber" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendCommand" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="byte" />
+          <name value="IFCType" />
+        </register>
+        <register>
+          <type value="byte" />
+          <name value="FirmwareMajor" />
+        </register>
+        <register>
+          <type value="byte" />
+          <name value="FirmwareMinor" />
+        </register>
+        <register>
+          <type value="byte" />
+          <name value="FirmwareRelease" />
+        </register>
+      </message>
+    </block>
+
+    <block>
+      <name value="GetDeviceType" />
+      <type value="Identity" />
+      <conversation value="SendReceive" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendDeviceOption" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="SendDeviceNumber" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x02" />
+          <binding value="SendCommand" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <content value="Model" />
+          <type value="string" />
+          <size value="1" />
+          <extractor value="FroniusModel" />
+        </register>
+        <register>
+          <content value="Manufacturer" />
+          <type value="string" />
+          <registervalue value="Fronius" />
+        </register>
+      </message>
+    </block>
+
+    <block>
+      <name value="GetPower" />
+      <type value="Reading" />
+      <conversation value="SendReceive" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendDeviceOption" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="SendDeviceNumber" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x10" />
+          <binding value="SendCommand" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="uint16_exp" />
+          <content value="PowerAC1" />
+        </register>
+      </message>
+    </block>
+
+    <block>
+      <name value="GetEnergyTotal" />
+      <type value="Reading" />
+      <conversation value="SendReceive" />
+      <ondbwriteonly value="true" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendDeviceOption" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="SendDeviceNumber" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x11" />
+          <binding value="SendCommand" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="uint16_exp" />
+          <content value="EnergyTotalAC" />
+          <scale value="1000" />
+        </register>
+      </message>
+    </block>
+
+    <block>
+      <name value="GetCurrentAC" />
+      <type value="Reading" />
+      <conversation value="SendReceive" />
+      <ondbwriteonly value="true" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendDeviceOption" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="SendDeviceNumber" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x14" />
+          <binding value="SendCommand" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="uint16_exp" />
+          <content value="CurrentAC1" />
+        </register>
+      </message>
+    </block>
+
+    <block>
+      <name value="GetVoltageAC" />
+      <type value="Reading" />
+      <conversation value="SendReceive" />
+      <ondbwriteonly value="true" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendDeviceOption" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="SendDeviceNumber" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x15" />
+          <binding value="SendCommand" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="uint16_exp" />
+          <content value="VoltsAC1" />
+        </register>
+      </message>
+    </block>
+
+    <block>
+      <name value="GetFrequency" />
+      <type value="Reading" />
+      <conversation value="SendReceive" />
+      <ondbwriteonly value="true" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendDeviceOption" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="SendDeviceNumber" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x16" />
+          <binding value="SendCommand" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="uint16_exp" />
+          <content value="Frequency" />
+        </register>
+      </message>
+    </block>
+
+    <block>
+      <name value="GetCurrentPV" />
+      <type value="Reading" />
+      <conversation value="SendReceive" />
+      <ondbwriteonly value="true" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendDeviceOption" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="SendDeviceNumber" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x17" />
+          <binding value="SendCommand" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="uint16_exp" />
+          <content value="CurrentPV1" />
+        </register>
+      </message>
+    </block>
+
+    <block>
+      <name value="GetVoltagePV" />
+      <type value="Reading" />
+      <conversation value="SendReceive" />
+      <ondbwriteonly value="true" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendDeviceOption" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="SendDeviceNumber" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x18" />
+          <binding value="SendCommand" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="uint16_exp" />
+          <content value="VoltsPV1" />
+        </register>
+      </message>
+    </block>
+
+    <block>
+      <name value="GetTimeTotal" />
+      <type value="Reading" />
+      <conversation value="SendReceive" />
+      <ondbwriteonly value="true" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendDeviceOption" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="SendDeviceNumber" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x2A" />
+          <binding value="SendCommand" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="uint16_exp" />
+          <content value="TimeTotal" />
+          <scale value="60" />
+        </register>
+      </message>
+    </block>
+
+    <block>
+      <name value="GetTemperature" />
+      <type value="Reading" />
+      <conversation value="SendReceive" />
+      <ondbwriteonly value="true" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendDeviceOption" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="SendDeviceNumber" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0xE0" />
+          <binding value="SendCommand" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="uint16_exp" />
+          <content value="Temperature" />
+        </register>
+      </message>
+    </block>
+
+    <block>
+      <name value="GetStatus" />
+      <type value="Reading" />
+      <conversation value="SendReceive" />
+      <ondbwriteonly value="true" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <registervalue value="0x01" />
+          <binding value="SendDeviceOption" />
+        </register>
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="SendDeviceNumber" />
+        </register>
+        <register>
+          <type value="byte" />
+          <registervalue value="0x0F" />
+          <binding value="SendCommand" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <content value="ErrorCode" />
+          <iserrorflag value="true" />
+          <type value="uint16" />
+          <valuelist>
+            <option value="0" tag="OK" />
+          </valuelist>
+        </register>
+        <register>
+          <type value="byte" />
+          <name value="ErrorPV1" />
+          <iserrordetail value="true" />
+          <type value="byte" />
+        </register>
+      </message>
+    </block>
+
+  </device>
+
+</devices>
+

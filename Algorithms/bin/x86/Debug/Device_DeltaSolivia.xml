@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<devices>
+  <device>
+    <devicetype value="Inverter" />
+    <description value="Delta Solivia (untested)" />
+    <specification value="DeltaSolivia Original" />
+    <version value="01" />
+    <protocol value="DeltaSolivia" />
+    <endian16bit value="Big" />
+    <endian32bit value="Big" />
+
+    <features>
+      <feature id="0" type="YieldAC"/>
+    </features>
+
+    <block>
+      <name value="GetId" />
+      <type value="Identity" />
+      <conversation value="SendReceive" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="Address" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+          <registervalue value="0x00 00" />
+          <binding value="Request" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <size value="14" />
+        </register>
+      </message>
+    </block>
+
+    <block>
+      <name value="GetSerialNo" />
+      <type value="Identity" />
+      <conversation value="SendReceive" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="Address" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+          <registervalue value="0x00 09" />
+          <binding value="Request" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+        </register>
+        <register>
+          <type value="string" />
+          <size value="18" />
+          <content value="SerialNo" />
+        </register>
+      </message>
+
+    </block>
+
+    <block>
+      <name value="GetEnergyTodayAC" />
+      <type value="Reading" />
+      <conversation value="SendReceive" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="Address" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+          <registervalue value="0x13 05" />
+          <binding value="Request" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <scale value="100" />
+          <content value="EnergyTodayAC" />
+        </register>
+      </message>
+    </block>
+
+    <block>
+      <name value="GetPowerAC" />
+      <type value="Reading" />
+      <conversation value="SendReceive" />
+
+      <message>
+        <name value="Send" />
+
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="Address" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+          <registervalue value="0x12 0A" />
+          <binding value="Request" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <scale value="10" />
+          <content value="PowerAC" />
+        </register>
+      </message>
+    </block>
+  </device>
+
+</devices>
+
+
+

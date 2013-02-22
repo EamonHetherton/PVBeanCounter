@@ -1,0 +1,106 @@
+﻿<Window x:Class="DatabaseUtilities.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Database Manager" Height="358" Width="802">
+    <StackPanel Width="774">
+        <TabControl Height="310" Name="tabControl1" Width="751" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <TabItem Header="Source Database" Name="tabSourceDB" DataContext="{Binding}">
+                <Canvas Height="275" Width="738" DataContext="{Binding}" VerticalAlignment="Top">
+                    <TextBox Height="23" Name="txtHost" Width="174" Text="{Binding Path=Host}" Canvas.Left="117" Canvas.Top="15" ToolTip="Database machine name or IP Address" />
+                    <Label Content="Host" Height="28" IsEnabled="True" Name="label3" HorizontalContentAlignment="Right" Canvas.Left="77" Canvas.Top="13" />
+                    <ComboBox Height="23" Name="cbxDatabaseType" Width="174" Text="{Binding Path=DatabaseType}" IsEditable="True" Canvas.Left="117" Canvas.Top="44" ToolTip="Database Type">
+                        <ComboBoxItem Content="Jet" />
+                        <ComboBoxItem Content="MySql" />
+                        <ComboBoxItem Content="SQLite" />
+                        <ComboBoxItem Content="SQL Server" />
+                    </ComboBox>
+                    <Label Content="Database Type" Height="28" Name="label1" IsEnabled="True" HorizontalContentAlignment="Right" Canvas.Left="28" Canvas.Top="42" />
+                    <ComboBox Height="23" Name="cbxProviderType" Width="174" Text="{Binding Path=ProviderType}" IsEditable="True" Canvas.Left="117" Canvas.Top="74" ToolTip="Proprietary for database specific provider - OleDb for generic database access via OleDb">
+                        <ComboBoxItem Content="OleDb" />
+                        <ComboBoxItem Content="Proprietary" />
+                    </ComboBox>
+                    <Label Content="Provider Type" Height="28" IsEnabled="True" Name="label2"  HorizontalContentAlignment="Right" Canvas.Left="29" Canvas.Top="72" />
+                    <ComboBox Height="23" Name="cbxOleDbProvider" Width="174" Text="{Binding Path=OleDbName}" IsEditable="True" Canvas.Left="117" Canvas.Top="132" ToolTip="Only used when Provider Name is System.Data.OleDb">
+                        <ComboBoxItem Content="Microsoft.ACE.OLEDB.12.0" />
+                        <ComboBoxItem Content="Microsoft.Jet.OLEDB.4.0" />
+                    </ComboBox>
+                    <Label Content="OleDb Name" Height="28" IsEnabled="True" Name="label7" HorizontalContentAlignment="Right" Canvas.Left="37" Canvas.Top="130" />
+                    <ComboBox Height="23" Name="cbxProvider" Width="174" Text="{Binding Path=ProviderName}" IsEditable="True" Canvas.Left="117" Canvas.Top="103" ToolTip="Registered name of the .Net provider">
+                        <ComboBoxItem Content="MySql.Data.MySQLClient" />
+                        <ComboBoxItem Content="System.Data.OleDb" />
+                        <ComboBoxItem Content="System.Data.SQLite" />
+                        <ComboBoxItem Content="System.Data.SqlClient" />
+                    </ComboBox>
+                    <Label Content="Provider Name" Height="28" IsEnabled="True" Name="label8" HorizontalContentAlignment="Right" Canvas.Left="27" Canvas.Top="101" />
+                    <TextBox Height="23" Name="txtUserName" Width="154" Text="{Binding Path=UserName}" Canvas.Left="446" Canvas.Top="15" ToolTip="Used when the database requires a login username" />
+                    <Label Content="User Name" Height="28" IsEnabled="True" Name="label4" HorizontalContentAlignment="Right" Canvas.Left="376" Canvas.Top="11" />
+                    <TextBox Height="23" Name="txtPassword" Width="154" Text="{Binding Path=Password}" Canvas.Left="446" Canvas.Top="44" ToolTip="Used when the database requires a login password" />
+                    <Label Content="Password" Height="28" IsEnabled="True" Name="label5" HorizontalContentAlignment="Right" Canvas.Left="385" Canvas.Top="42" />
+                    <TextBox Height="23" Name="txtDatabase" Text="{Binding Path=Database}" Canvas.Left="446" Canvas.Top="74" Width="200" ToolTip="The database &quot;Schema&quot; name (MySql) or database file name (Jet)" />
+                    <Label Content="Database / Data Source" DataContext="{Binding}" Height="28" IsEnabled="True" Name="label6"  HorizontalContentAlignment="Right" Canvas.Left="310" Canvas.Top="72" />
+                    <TextBox Height="23" Name="txtConnectionString" Text="{Binding Path=ConnectionString}" Width="612" Canvas.Left="117" Canvas.Top="169" ToolTip="Normally blank - if used it overrides connection string generation from the information entered above" />
+                    <Label Content="Connection String" DataContext="{Binding}" Height="28" IsEnabled="True" Name="label10" HorizontalContentAlignment="Right" Canvas.Left="6" Canvas.Top="167" />
+                    <ComboBox Canvas.Left="117" Canvas.Top="206" Height="23" Name="comboBox5" Text="{Binding Path=StandardDBType}" Width="95">
+                        <ComboBoxItem Content="Custom" />
+                        <ComboBoxItem Content="Jet (2003)" />
+                        <ComboBoxItem Content="Jet (2007)" />
+                        <ComboBoxItem Content="MySQL" />
+                        <ComboBoxItem Content="SQLite" />
+                        <ComboBoxItem Content="SQL Server" />
+                    </ComboBox>
+                    <Label Canvas.Left="13" Canvas.Top="201" Content="Database Type" Height="28" HorizontalContentAlignment="Right" Name="label19" Width="106" />
+                </Canvas>
+            </TabItem>
+            <TabItem Header="TargetDatabase" Name="tabTargetDB" DataContext="{Binding}" >
+                <Grid>
+                    <TextBox Height="23" Margin="116,15,451,240" Name="textBox1" Text="{Binding Path=Host}" ToolTip="Database machine name or IP Address" Width="174" />
+                    <Label Content="Host" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Margin="76,13,630,237" Name="label9" />
+                    <ComboBox Height="23" IsEditable="True" Margin="116,44,451,211" Name="comboBox1" Text="{Binding Path=DatabaseType}" ToolTip="Database Type" Width="174">
+                        <ComboBoxItem Content="Jet" />
+                        <ComboBoxItem Content="MySql" />
+                        <ComboBoxItem Content="SQLite" />
+                        <ComboBoxItem Content="SQL Server" />
+                    </ComboBox>
+                    <Label Content="Database Type" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Margin="27,42,626,208" Name="label11" />
+                    <ComboBox Height="23" IsEditable="True" Margin="116,74,451,181" Name="comboBox2" Text="{Binding Path=ProviderType}" ToolTip="Proprietary for database specific provider - OleDb for generic database access via OleDb" Width="174">
+                        <ComboBoxItem Content="OleDb" />
+                        <ComboBoxItem Content="Proprietary" />
+                    </ComboBox>
+                    <Label Content="Provider Type" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Margin="28,72,630,178" Name="label12" />
+                    <ComboBox Height="23" IsEditable="True" Margin="116,132,451,123" Name="comboBox3" Text="{Binding Path=OleDbName}" ToolTip="Only used when Provider Name is System.Data.OleDb" Width="174">
+                        <ComboBoxItem Content="Microsoft.ACE.OLEDB.12.0" />
+                        <ComboBoxItem Content="Microsoft.Jet.OLEDB.4.0" />
+                    </ComboBox>
+                    <Label Content="OleDb Name" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Margin="36,130,626,120" Name="label13" />
+                    <ComboBox Height="23" IsEditable="True" Margin="116,103,451,152" Name="comboBox4" Text="{Binding Path=ProviderName}" ToolTip="Registered name of the .Net provider" Width="174">
+                        <ComboBoxItem Content="MySql.Data.MySQLClient" />
+                        <ComboBoxItem Content="System.Data.OleDb" />
+                        <ComboBoxItem Content="System.Data.SQLite" />
+                        <ComboBoxItem Content="System.Data.SqlClient" />
+                    </ComboBox>
+                    <Label Content="Provider Name" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Margin="26,101,626,149" Name="label14" />
+                    <TextBox Height="23" Margin="445,15,142,240" Name="textBox2" Text="{Binding Path=UserName}" ToolTip="Used when the database requires a login username" Width="154" />
+                    <Label Content="User Name" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Margin="375,11,297,239" Name="label15" />
+                    <TextBox Height="23" Margin="445,44,142,211" Name="textBox3" Text="{Binding Path=Password}" ToolTip="Used when the database requires a login password" Width="154" />
+                    <Label Content="Password" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Margin="384,42,297,208" Name="label16" />
+                    <TextBox Height="23" Margin="445,74,96,181" Name="textBox4" Text="{Binding Path=DatabaseName}" ToolTip="The database &quot;Schema&quot; name (MySql) or database file name (Jet)" Width="200" />
+                    <Label Content="Database / Data Source" DataContext="{Binding}" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Margin="309,72,297,178" Name="label17" />
+                    <TextBox Height="23" Margin="116,169,13,86" Name="textBox5" Text="{Binding Path=ConnectionString}" ToolTip="Normally blank - if used it overrides connection string generation from the information entered above" Width="612" />
+                    <Label Content="Connection String" DataContext="{Binding}" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Margin="5,167,631,83" Name="label18" />
+                    <ComboBox Height="23" Margin="116,207,530,48" Name="comboBoxStandardDB" Text="{Binding Path=StandardDBType}" Width="95">
+                        <ComboBoxItem Content="Custom" />
+                        <ComboBoxItem Content="Jet (2003)" />
+                        <ComboBoxItem Content="Jet (2007)" />
+                        <ComboBoxItem Content="MySQL" />
+                        <ComboBoxItem Content="SQLite" />
+                        <ComboBoxItem Content="SQL Server" />
+                    </ComboBox>
+                    <Label Content="Database Type" Height="28" HorizontalAlignment="Left" HorizontalContentAlignment="Right" Margin="12,202,0,0" Name="label39" VerticalAlignment="Top" Width="106" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Actions" Name="tabActions">
+                <Grid />
+            </TabItem>
+        </TabControl>
+    </StackPanel>
+</Window>

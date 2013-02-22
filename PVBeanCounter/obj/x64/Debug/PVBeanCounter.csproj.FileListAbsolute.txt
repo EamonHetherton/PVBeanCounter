@@ -1,0 +1,66 @@
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\settings_template_SE_SQLite.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\settings_template_SE_Access.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\settings_template_SE_MySql.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\PVBeanCounter.exe
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\PVBeanCounter.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\PVSettings.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\PVSettings.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\ResolveAssemblyReference.cache
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\MainWindow.g.cs
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\App.g.cs
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\GeneratedInternalTypeHelper.g.cs
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\PVBeanCounter_MarkupCompile.cache
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\PVBeanCounter_MarkupCompile.lref
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\MainWindow.baml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\PVBeanCounter.g.resources
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\PVBeanCounter.Properties.Resources.resources
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\GenerateResource.read.1.tlog
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\GenerateResource.write.1.tlog
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\PVBeanCounter.exe
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\PVBeanCounter.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\PVBeanCounter.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\PVBeanCounter.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\settings_template_SE_SQLite.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\PVBeanCounter.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\PVBeanCounter.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\PVSettings.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\PVSettings.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\ResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\MainWindow.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\App.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\GeneratedInternalTypeHelper.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\PVBeanCounter_MarkupCompile.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\PVBeanCounter_MarkupCompile.lref
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\MainWindow.baml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\PVBeanCounter.g.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\PVBeanCounter.Properties.Resources.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\GenerateResource.read.1.tlog
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\obj\x64\Debug\GenerateResource.write.1.tlog
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\PVBeanCounter.exe.config
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\DeviceManagement_v02.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\Device_CMS.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\Device_Growatt.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\Device_KLNE.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\Device_Samil.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\Device_SunnyRoo.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\Device_Xantrex.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\GenericConnector.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\TimeControl.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\Conversations.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\LsaWrapper.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\GenThreadManager.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\InTheHand.Net.Personal.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\GenericConnector.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\TimeControl.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\Conversations.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\LsaWrapper.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\GenThreadManager.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\InTheHand.Net.Personal.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\Device_Fronius.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVBeanCounter\bin\x64\Debug\Device_JFY.xml

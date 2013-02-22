@@ -1,0 +1,5 @@
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\bin\Debug\GenericConnector.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\bin\Debug\GenericConnector.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\obj\Debug\ResolveAssemblyReference.cache
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\obj\Debug\GenericConnector.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\obj\Debug\GenericConnector.pdb

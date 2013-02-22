@@ -1,0 +1,93 @@
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\EnergyDisplayControls.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\EnergyDisplayControls.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\Conversations.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\GenThreadManager.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\InTheHand.Net.Personal.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\Conversations.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\GenThreadManager.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\InTheHand.Net.Personal.xml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls_MarkupCompile.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls_MarkupCompile.lref
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\Themes\Generic.baml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.g.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.Properties.Resources.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\GenerateResource.read.1.tlog
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\GenerateResource.write.1.tlog
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.pdb
+D:\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\EnergyDisplayControls.dll
+D:\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\EnergyDisplayControls.pdb
+D:\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\Conversations.dll
+D:\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\DeviceStream.dll
+D:\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\Utilities.dll
+D:\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\GenThreadManager.dll
+D:\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\InTheHand.Net.Personal.dll
+D:\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\Mischel.Synchronization.dll
+D:\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\Conversations.pdb
+D:\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\DeviceStream.pdb
+D:\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\Utilities.pdb
+D:\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\GenThreadManager.pdb
+D:\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\InTheHand.Net.Personal.xml
+D:\pvbeancounter\trunk\EnergyDisplayControls\bin\x86\Debug\Mischel.Synchronization.pdb
+D:\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.csprojResolveAssemblyReference.cache
+D:\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+D:\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls_MarkupCompile.cache
+D:\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls_MarkupCompile.lref
+D:\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\Themes\Generic.baml
+D:\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.g.resources
+D:\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.Properties.Resources.resources
+D:\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.csproj.GenerateResource.Cache
+D:\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.dll
+D:\pvbeancounter\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\bin\x86\Debug\EnergyDisplayControls.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\bin\x86\Debug\EnergyDisplayControls.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\bin\x86\Debug\Conversations.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\bin\x86\Debug\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\bin\x86\Debug\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\bin\x86\Debug\GenThreadManager.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\bin\x86\Debug\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\bin\x86\Debug\Conversations.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\bin\x86\Debug\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\bin\x86\Debug\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\bin\x86\Debug\GenThreadManager.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\bin\x86\Debug\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls_MarkupCompile.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls_MarkupCompile.lref
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\obj\x86\Debug\Themes\Generic.baml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.g.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.Properties.Resources.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.csproj.GenerateResource.Cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\bin\x86\Debug\EnergyDisplayControls.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\bin\x86\Debug\EnergyDisplayControls.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\bin\x86\Debug\Conversations.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\bin\x86\Debug\DeviceStream.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\bin\x86\Debug\Utilities.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\bin\x86\Debug\GenThreadManager.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\bin\x86\Debug\Mischel.Synchronization.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\bin\x86\Debug\Conversations.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\bin\x86\Debug\DeviceStream.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\bin\x86\Debug\Utilities.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\bin\x86\Debug\GenThreadManager.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\bin\x86\Debug\Mischel.Synchronization.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls_MarkupCompile.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls_MarkupCompile.lref
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\obj\x86\Debug\Themes\Generic.baml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.g.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.Properties.Resources.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.csproj.GenerateResource.Cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\EnergyDisplayControls\obj\x86\Debug\EnergyDisplayControls.pdb

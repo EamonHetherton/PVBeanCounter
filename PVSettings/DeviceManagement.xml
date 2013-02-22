@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<devicemanagement>
+  <protocol>
+    <name value="Modbus" />
+    <type value="Modbus" />
+    <checksum value="ModbusCheckSum16" />
+    <checksumendian16bit value="Little" />
+    <endian16bit value="Big" />
+    <endian32bit value="Big" />
+    <conversation>
+      <name value="Command34" />
+      <message>
+        <type value ="Send" />
+        <element type="BYTE" name="Address" />
+        <element type="BYTE" name="CommandId" />
+        <element type="BYTE[2]" name="FirstAddress" />
+        <element type="BYTE[2]" name="Registers" />
+        <element type="BYTE[2]" name="CheckSum16" />
+      </message>
+      <message>
+        <type value="Read" />
+        <element type="BYTE" name="Address" />
+        <element type="BYTE" name="CommandId" />
+      </message>
+      <message>
+        <type value="Extract" />
+        <element type="BYTE" name="DataSize" />
+      </message>
+      <message>
+        <type value="Extract" />
+        <element type="BYTE[DataSize]" name="Data" />
+        <element type="BYTE[2]" name="CheckSum16" />
+      </message>
+    </conversation>
+  </protocol>
+  <protocol>
+    <name value="CMS_Inverter" />
+    <type value="Phoenixtec" />
+    <endian value="Big" />
+    <addresslow value="1" />
+    <addresshigh value="255" />
+    <conversation>
+      <name value="Initialise" />
+      <message>
+        <type value ="Send" />
+        <element value="0xAA AA 01 00 00 00 00 04 00" />
+        <element type="BYTE[2]" name="CheckSum16" />
+      </message>
+    </conversation>
+    <conversation>
+      <name value="QueryNewDevice" />
+      <message>
+        <type value ="Send" />
+        <element value="0xAA AA 01 00 00 00 00 00 00" />
+        <element type="BYTE[2]" name="CheckSum16" />
+      </message>
+      <message>
+        <type value ="Read" />
+        <element value="0xAA AA 00 00 01 00 00 80 0A" />
+      </message>
+      <message>
+        <optional value="true" />
+        <type value="Extract" />
+        <element type="BYTE[10]" name="SerialNo" />
+        <element type="BYTE[2]" name="CheckSum16" />
+      </message>
+      <message>
+        <type value ="Send" />
+        <element value="0xAA AA 01 00 00 00 00 01 0B" />
+        <element type="BYTE[10]" name="SerialNo" />
+        <element type="BYTE" name="Address" />
+        <element type="BYTE[2]" name="CheckSum16" />
+      </message>
+      <message>
+        <type value ="Read" />
+        <element value="0xAA AA 00 01 01 00 00 81 01" />
+      </message>
+      <message>
+        <type value ="Extract" />
+        <element type="OK" name="Result" />
+        <element type="BYTE[2]" name="CheckSum16" />
+      </message>
+    </conversation>
+    <conversation>
+      <name value="Identity" />
+      <message>
+        <type value ="Send" />
+        <element value="0xAA AA 01 00 00" />
+        <element type="BYTE" name="Address" />
+        <element value="01 03 00" />
+        <element type="BYTE[2]" name="CheckSum16" />
+      </message>
+      <message>
+        <type value ="Read" />
+        <element value="0xAA AA 00" />
+        <element type="BYTE" name="Address" />
+        <element value="01 00 01 83" />
+      </message>
+      <message>
+        <type value="Extract" />
+        <element type="BYTE" name="DataSize" />
+      </message>
+      <message>
+        <type value="Extract" />
+        <element type="BYTE[DataSize]" name="Data" />
+        <element type="BYTE[2]" name="CheckSum16" />
+      </message>
+    </conversation>
+    <conversation>
+      <name value="ReadingFormat" />
+      <message>
+        <type value ="Send" />
+        <element value="0xAA AA 01 00 00" />
+        <element type="BYTE" name="Address" />
+        <element value="01 00 00" />
+        <element type="BYTE[2]" name="CheckSum16" />
+      </message>
+      <message>
+        <type value ="Read" />
+        <element value="0xAA AA 00" />
+        <element type="BYTE" name="Address" />
+        <element value="01 00 01 80" />
+      </message>
+      <message>
+        <type value="Extract" />
+        <element type="BYTE" name="DataSize" />
+      </message>
+      <message>
+        <type value="Extract" />
+        <element type="BYTE[DataSize]" name="Data" />
+        <element type="BYTE[2]" name="CheckSum16" />
+      </message>
+    </conversation>
+    <conversation>
+      <name value="Reading" />
+      <message>
+        <type value ="Send" />
+        <element value="0xAA AA 01 00 00" />
+        <element type="BYTE" name="Address" />
+        <element value="01 02 00" />
+        <element type="BYTE[2]" name="CheckSum16" />
+      </message>
+      <message>
+        <type value ="Read" />
+        <element value="0xAA AA 00" />
+        <element type="BYTE" name="Address" />
+        <element value="01 00 01 82" />
+      </message>
+      <message>
+        <type value="Extract" />
+        <element type="BYTE" name="DataSize" />
+      </message>
+      <message>
+        <type value="Extract" />
+        <element type="BYTE[DataSize]" name="Data" />
+        <element type="BYTE[2]" name="CheckSum16" />
+      </message>
+    </conversation>
+  </protocol>
+</devicemanagement>
+
+

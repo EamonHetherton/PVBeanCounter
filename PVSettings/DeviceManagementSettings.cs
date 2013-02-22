@@ -1,0 +1,207 @@
+﻿/*
+* Copyright (c) 2012 Dennis Mackay-Fisher
+*
+* This file is part of PV Scheduler
+* 
+* PV Scheduler is free software: you can redistribute it and/or 
+* modify it under the terms of the GNU General Public License version 3 or later 
+* as published by the Free Software Foundation.
+* 
+* PV Scheduler is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with PV Scheduler.
+* If not, see <http://www.gnu.org/licenses/>.
+*/
+
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Xml;
+using System.ComponentModel;
+using System.Reflection;
+using System.IO;
+
+namespace PVSettings
+{
+    public class DeviceManagementSettings : SettingsBase, INotifyPropertyChanged
+    {
+        public class DeviceListItem
+        {
+            public String Id { get; set; }
+            public String Description { get; set; }
+            public DeviceSettings DeviceSettings;
+        }
+
+        private String SettingsDirectory;
+        ObservableCollection<DeviceListItem> _DeviceList = null;
+        ObservableCollection<ProtocolSettings> _ProtocolList = null;
+        ObservableCollection<String> _IntervalList = null;
+
+        public DeviceManagementSettings()
+        {
+            SettingsDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            BuildIntervalList();
+            LoadSettings();
+        }
+
+        private void BuildIntervalList()
+        {
+            _IntervalList = new ObservableCollection<String>();
+            _IntervalList.Add("");
+            _IntervalList.Add("6");
+            _IntervalList.Add("10");
+            _IntervalList.Add("12");
+            _IntervalList.Add("15");
+            _IntervalList.Add("20");
+            _IntervalList.Add("30");
+            _IntervalList.Add("60");
+        }
+
+        private void LoadSettings()
+        {
+            _DeviceList = new ObservableCollection<DeviceListItem>();
+            _ProtocolList = new ObservableCollection<ProtocolSettings>();
+            
+            String mainName = Path.Combine(SettingsDirectory, "DeviceManagement_v02.xml");
+
+            foreach (String fileName in System.IO.Directory.EnumerateFiles(SettingsDirectory, "*Device*.xml"))
+            {
+                XmlReader reader;
+
+                // Create the validating reader and specify DTD validation.
+                XmlReaderSettings readerSettings = new XmlReaderSettings();
+                readerSettings.DtdProcessing = DtdProcessing.Parse;
+                readerSettings.ValidationType = ValidationType.None;
+
+                reader = XmlReader.Create(fileName, readerSettings);
+
+                // Pass the validating reader to the XML document.
+                // Validation fails due to an undefined attribute, but the 
+                // data is still loaded into the document.
+
+                XmlDocument newDocument = new XmlDocument();
+                //settings = new XmlDocument();
+                newDocument.Load(reader);
+                reader.Close();
+
+                bool isMainSettings = false;
+                String targetNode;
+                if (fileName == mainName)
+                {
+                    document = newDocument;
+                    isMainSettings = true;
+                    targetNode = "devicemanagement";
+                }
+                else
+                    targetNode = "devices";
+
+                bool found = false;
+
+                PVSettings.SettingsBase fileSettings = null;
+
+                foreach (XmlNode n in newDocument.ChildNodes)
+                    if (n.NodeType == XmlNodeType.Element && n.Name == targetNode)
+                    {
+                        if (isMainSettings)
+                        {
+                            settings = (XmlElement)n;
+                        }
+                        else
+                        {
+                            fileSettings = new PVSettings.SettingsBase();
+                            fileSettings.SetDocument(newDocument);
+                            fileSettings.settings = (XmlElement)n;
+                        }
+                        found = true;
+                        break;
+                    }
+
+                if (found)
+                {
+                    LoadProtocolsAndDevices(isMainSettings ? this : fileSettings);
+                }
+                else
+                    throw new Exception("LoadSettings - Cannot find element '" + targetNode + "'");
+            }
+        }
+
+        public DeviceSettings GetDevice(String id)
+        {
+            foreach (DeviceListItem device in DeviceList)
+            {
+                if (device.Id == id)
+                    return device.DeviceSettings;
+            }
+            return null;
+        }
+
+        public DeviceSettings GetDeviceByDescription(String description)
+        {
+            foreach (DeviceListItem device in DeviceList)
+            {
+                foreach(String name in device.DeviceSettings.Names)
+                    if (name == description)
+                        return device.DeviceSettings;
+            }
+            return GetDevice(description);
+        }
+
+        private void LoadProtocolsAndDevices(PVSettings.SettingsBase fileSettings)
+        {
+            foreach (XmlNode e in fileSettings.settings.ChildNodes)
+            {
+                if (e.NodeType == XmlNodeType.Element && e.Name == "protocol")
+                {
+                    ProtocolSettings protocol = new ProtocolSettings(this, (XmlElement)e);
+                    _ProtocolList.Add(protocol);
+                }
+                else if (e.NodeType == XmlNodeType.Element && e.Name == "device")
+                {
+                    DeviceSettings device = new DeviceSettings(this, (XmlElement)e);
+                    foreach (String name in device.Names)
+                    {
+                        DeviceListItem item = new DeviceListItem();
+                        item.Id = device.Id;
+                        item.Description = name;
+                        item.DeviceSettings = device;
+                        _DeviceList.Add(item);
+                    }
+                }
+            }
+        }
+
+        public ProtocolSettings GetProtocol(String protocolName)
+        {
+            foreach (ProtocolSettings p in _ProtocolList)
+                if (p.Name == protocolName)
+                    return p;
+            return null;
+        }
+
+        public ObservableCollection<DeviceListItem> GetDeviceList(string protocol)
+        {
+            ObservableCollection<DeviceListItem> list = new ObservableCollection<DeviceListItem>();
+
+            foreach (DeviceListItem i in _DeviceList)
+                if (i.DeviceSettings.ProtocolSettings.Name == protocol || protocol == "")
+                    list.Add(i);
+
+            return list;
+        }
+
+        public ObservableCollection<DeviceListItem> DeviceList { get { return _DeviceList; } }
+
+        public ObservableCollection<ProtocolSettings> ProtocolList { get { return _ProtocolList; } }
+
+        public ObservableCollection<String> IntervalList { get { return _IntervalList; } }
+
+    }
+}
+

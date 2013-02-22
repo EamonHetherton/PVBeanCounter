@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="fb73c4ed-6456-4e09-8a41-a68d3958d032" name="Dennis@BLACKSATIN 2011-10-01 09:32:43" runUser="BlackSatin\Dennis" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="Local" id="469dbf55-0fb3-4de3-9455-75d37def6e78">
+    <Description>These are default test settings for a local test run.</Description>
+    <Deployment enabled="false" runDeploymentRoot="Dennis_BLACKSATIN 2011-10-01 09_32_43">
+      <DeploymentItem filename="D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Conversations\bin\x86\Debug\Conversations.dll" />
+      <DeploymentItem filename="D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\GenericConnector\bin\x86\Debug\GenericConnector.dll" />
+      <DeploymentItem filename="D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\bin\x86\Debug\PVInverterManagement.dll" />
+      <DeploymentItem filename="D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Utilities\bin\x86\Debug\Utilities.dll" />
+      <DeploymentItem filename="D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\external dlls\32Feet.Assemblies\XP2\InTheHand.Net.Personal.dll" />
+      <DeploymentItem filename="D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVSettings\bin\x86\Debug\PVSettings.dll" />
+      <DeploymentItem filename="D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\DeviceStream\bin\x86\Debug\DeviceStream.dll" />
+      <DeploymentItem filename="D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVService\bin\Debug\PVService.exe" />
+    </Deployment>
+    <Execution>
+      <TestTypeSpecific />
+      <AgentRule name="Execution Agents">
+      </AgentRule>
+    </Execution>
+  </TestSettings>
+  <Times creation="2011-10-01T09:32:43.2755613+10:00" queuing="2011-10-01T09:32:49.2971719+10:00" start="2011-10-01T09:32:49.6091724+10:00" finish="2011-10-01T09:33:32.9556775+10:00" />
+  <ResultSummary outcome="Error">
+    <Counters total="8" executed="5" passed="4" error="0" failed="0" timeout="0" aborted="1" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="3" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <RunInfos>
+      <RunInfo computerName="BLACKSATIN" outcome="Warning" timestamp="2011-10-01T09:32:47.1755682+10:00">
+        <Text>Deployment is currently disabled. The deployment item 'PVService.exe' on test 'PVRecords_Test.PVServiceTest.OnStartTest' was not deployed.</Text>
+      </RunInfo>
+      <RunInfo computerName="BLACKSATIN" outcome="Error" timestamp="2011-10-01T09:33:32.9536774+10:00">
+        <Text>Test host process exited unexpectedly.</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="OnStartTest" storage="d:\users\dennis\my documents\visual studio 2010\projects\pvbeancounter\trunk\pvrecords_test\bin\x86\debug\pvrecords_test.dll" id="fa07783a-7b64-985d-9203-06f03d4218a3">
+      <DeploymentItems>
+        <DeploymentItem filename="PVService.exe" />
+      </DeploymentItems>
+      <Execution id="4276fcc3-0a08-4006-aac5-ce623480e2a0" />
+      <TestMethod codeBase="D:/Users/Dennis/My Documents/Visual Studio 2010/Projects/pvbeancounter/trunk/PVRecords_Test/bin/x86/Debug/PVRecords_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="PVRecords_Test.PVServiceTest, PVRecords_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="OnStartTest" />
+    </UnitTest>
+    <UnitTest name="extractRecordsTest" storage="d:\users\dennis\my documents\visual studio 2010\projects\pvbeancounter\trunk\pvrecords_test\bin\x86\debug\pvrecords_test.dll" id="cce70440-9a15-4a61-aca5-3e666f618c81">
+      <Execution id="2ac393fa-eaa1-4ebd-8aa3-ee16258ca6b3" />
+      <TestMethod codeBase="D:/Users/Dennis/My Documents/Visual Studio 2010/Projects/pvbeancounter/trunk/PVRecords_Test/bin/x86/Debug/PVRecords_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="PVRecords_Test.SunnyExplorerCSVParserTest, PVRecords_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="extractRecordsTest" />
+    </UnitTest>
+    <UnitTest name="ManageExecutionStateTest" storage="d:\users\dennis\my documents\visual studio 2010\projects\pvbeancounter\trunk\pvrecords_test\bin\x86\debug\pvrecords_test.dll" id="8c93a772-f3de-a26f-66b1-0254c5ba6318">
+      <DeploymentItems>
+        <DeploymentItem filename="PVInverterManagement.dll" />
+      </DeploymentItems>
+      <Execution id="7c75115d-382c-4d4f-8652-980af228ed64" />
+      <TestMethod codeBase="D:/Users/Dennis/My Documents/Visual Studio 2010/Projects/pvbeancounter/trunk/PVRecords_Test/bin/x86/Debug/PVRecords_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="PVRecords_Test.ExecutionStateManagerTest, PVRecords_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ManageExecutionStateTest" />
+    </UnitTest>
+    <UnitTest name="GetMessageTest" storage="d:\users\dennis\my documents\visual studio 2010\projects\pvbeancounter\trunk\pvrecords_test\bin\x86\debug\pvrecords_test.dll" id="77728677-88b6-005e-f385-94652e2eda07">
+      <Execution id="4c048991-bf03-4d28-ba31-5e15f0cbe029" />
+      <TestMethod codeBase="D:/Users/Dennis/My Documents/Visual Studio 2010/Projects/pvbeancounter/trunk/PVRecords_Test/bin/x86/Debug/PVRecords_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="PVRecords_Test.CCManagerTest, PVRecords_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="GetMessageTest" />
+    </UnitTest>
+    <UnitTest name="ApplicationSettingsConstructorTest" storage="d:\users\dennis\my documents\visual studio 2010\projects\pvbeancounter\trunk\pvrecords_test\bin\x86\debug\pvrecords_test.dll" id="b07455e8-d6f7-db20-cdce-595623ba955a">
+      <Execution id="e38b810e-cf5d-463f-9af5-ffa679b1aeca" />
+      <TestMethod codeBase="D:/Users/Dennis/My Documents/Visual Studio 2010/Projects/pvbeancounter/trunk/PVRecords_Test/bin/x86/Debug/PVRecords_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="PVRecords_Test.ApplicationSettingsTest, PVRecords_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ApplicationSettingsConstructorTest" />
+    </UnitTest>
+    <UnitTest name="SuspendForDurationTest" storage="d:\users\dennis\my documents\visual studio 2010\projects\pvbeancounter\trunk\pvrecords_test\bin\x86\debug\pvrecords_test.dll" id="3bdfeb6a-1940-3387-cd87-eb3de9d258af">
+      <Execution id="5703e99d-e007-40c4-87aa-7b9ff650cbfa" />
+      <TestMethod codeBase="D:/Users/Dennis/My Documents/Visual Studio 2010/Projects/pvbeancounter/trunk/PVRecords_Test/bin/x86/Debug/PVRecords_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="PVRecords_Test.SystemServicesTest, PVRecords_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="SuspendForDurationTest" />
+    </UnitTest>
+    <UnitTest name="RunExtractTest" storage="d:\users\dennis\my documents\visual studio 2010\projects\pvbeancounter\trunk\pvrecords_test\bin\x86\debug\pvrecords_test.dll" id="3c9984cf-43c8-041a-86d6-73e5c5077978">
+      <Execution id="8771da81-e2da-469b-b85d-4751b2377ce1" />
+      <TestMethod codeBase="D:/Users/Dennis/My Documents/Visual Studio 2010/Projects/pvbeancounter/trunk/PVRecords_Test/bin/x86/Debug/PVRecords_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="PVRecords_Test.InverterManagerTest, PVRecords_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="RunExtractTest" />
+    </UnitTest>
+    <UnitTest name="MonitorCCEnviRTest" storage="d:\users\dennis\my documents\visual studio 2010\projects\pvbeancounter\trunk\pvrecords_test\bin\x86\debug\pvrecords_test.dll" id="304bec18-6cbf-4ddf-d11a-6159bd7832ea">
+      <Execution id="7c1c036e-8d3b-48fa-8126-ae9e2debcc79" />
+      <TestMethod codeBase="D:/Users/Dennis/My Documents/Visual Studio 2010/Projects/pvbeancounter/trunk/PVRecords_Test/bin/x86/Debug/PVRecords_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="PVRecords_Test.CCManagerTest, PVRecords_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="MonitorCCEnviRTest" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="304bec18-6cbf-4ddf-d11a-6159bd7832ea" executionId="7c1c036e-8d3b-48fa-8126-ae9e2debcc79" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3bdfeb6a-1940-3387-cd87-eb3de9d258af" executionId="5703e99d-e007-40c4-87aa-7b9ff650cbfa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3c9984cf-43c8-041a-86d6-73e5c5077978" executionId="8771da81-e2da-469b-b85d-4751b2377ce1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="77728677-88b6-005e-f385-94652e2eda07" executionId="4c048991-bf03-4d28-ba31-5e15f0cbe029" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8c93a772-f3de-a26f-66b1-0254c5ba6318" executionId="7c75115d-382c-4d4f-8652-980af228ed64" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b07455e8-d6f7-db20-cdce-595623ba955a" executionId="e38b810e-cf5d-463f-9af5-ffa679b1aeca" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="cce70440-9a15-4a61-aca5-3e666f618c81" executionId="2ac393fa-eaa1-4ebd-8aa3-ee16258ca6b3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fa07783a-7b64-985d-9203-06f03d4218a3" executionId="4276fcc3-0a08-4006-aac5-ce623480e2a0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="7c1c036e-8d3b-48fa-8126-ae9e2debcc79" testId="304bec18-6cbf-4ddf-d11a-6159bd7832ea" testName="MonitorCCEnviRTest" computerName="BLACKSATIN" duration="00:00:00.0109126" startTime="2011-10-01T09:32:49.7963728+10:00" endTime="2011-10-01T09:32:51.6683761+10:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7c1c036e-8d3b-48fa-8126-ae9e2debcc79">
+    </UnitTestResult>
+    <UnitTestResult executionId="5703e99d-e007-40c4-87aa-7b9ff650cbfa" testId="3bdfeb6a-1940-3387-cd87-eb3de9d258af" testName="SuspendForDurationTest" computerName="BLACKSATIN" duration="00:00:00.0003358" startTime="2011-10-01T09:32:51.6839761+10:00" endTime="2011-10-01T09:32:51.6995761+10:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5703e99d-e007-40c4-87aa-7b9ff650cbfa">
+    </UnitTestResult>
+    <UnitTestResult executionId="8771da81-e2da-469b-b85d-4751b2377ce1" testId="3c9984cf-43c8-041a-86d6-73e5c5077978" testName="RunExtractTest" computerName="BLACKSATIN" duration="00:00:00.0003275" startTime="2011-10-01T09:32:51.6995761+10:00" endTime="2011-10-01T09:32:51.7151761+10:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8771da81-e2da-469b-b85d-4751b2377ce1">
+    </UnitTestResult>
+    <UnitTestResult executionId="4c048991-bf03-4d28-ba31-5e15f0cbe029" testId="77728677-88b6-005e-f385-94652e2eda07" testName="GetMessageTest" computerName="BLACKSATIN" duration="00:00:00.0001474" startTime="2011-10-01T09:32:51.7151761+10:00" endTime="2011-10-01T09:32:51.7307762+10:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4c048991-bf03-4d28-ba31-5e15f0cbe029">
+    </UnitTestResult>
+    <UnitTestResult executionId="7c75115d-382c-4d4f-8652-980af228ed64" testId="8c93a772-f3de-a26f-66b1-0254c5ba6318" testName="ManageExecutionStateTest" computerName="BLACKSATIN" duration="00:00:41.2249013" startTime="2011-10-01T09:32:51.7307762+10:00" endTime="2011-10-01T09:33:32.9556775+10:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Aborted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7c75115d-382c-4d4f-8652-980af228ed64">
+    </UnitTestResult>
+    <UnitTestResult executionId="e38b810e-cf5d-463f-9af5-ffa679b1aeca" testId="b07455e8-d6f7-db20-cdce-595623ba955a" testName="ApplicationSettingsConstructorTest" computerName="BLACKSATIN" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e38b810e-cf5d-463f-9af5-ffa679b1aeca">
+    </UnitTestResult>
+    <UnitTestResult executionId="2ac393fa-eaa1-4ebd-8aa3-ee16258ca6b3" testId="cce70440-9a15-4a61-aca5-3e666f618c81" testName="extractRecordsTest" computerName="BLACKSATIN" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2ac393fa-eaa1-4ebd-8aa3-ee16258ca6b3">
+    </UnitTestResult>
+    <UnitTestResult executionId="4276fcc3-0a08-4006-aac5-ce623480e2a0" testId="fa07783a-7b64-985d-9203-06f03d4218a3" testName="OnStartTest" computerName="BLACKSATIN" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4276fcc3-0a08-4006-aac5-ce623480e2a0">
+    </UnitTestResult>
+  </Results>
+</TestRun>

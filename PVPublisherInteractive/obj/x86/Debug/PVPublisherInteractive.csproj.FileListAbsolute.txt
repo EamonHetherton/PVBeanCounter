@@ -1,0 +1,61 @@
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\bin\Debug\PVPublisherInteractive.exe.config
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\bin\Debug\PVPublisherInteractive.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\bin\Debug\PVPublisherInteractive.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\bin\Debug\ServiceModelEx.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\bin\Debug\ServiceModelEx.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\MainWindow.baml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\MainWindow.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\App.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive_MarkupCompile.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.g.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.Properties.Resources.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\GenerateResource.read.1.tlog
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\GenerateResource.write.1.tlog
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.pdb
+D:\pvbeancounter\trunk\PVPublisherInteractive\bin\Debug\PVPublisherInteractive.exe.config
+D:\pvbeancounter\trunk\PVPublisherInteractive\bin\Debug\PVPublisherInteractive.exe
+D:\pvbeancounter\trunk\PVPublisherInteractive\bin\Debug\PVPublisherInteractive.pdb
+D:\pvbeancounter\trunk\PVPublisherInteractive\bin\Debug\ServiceModelEx.dll
+D:\pvbeancounter\trunk\PVPublisherInteractive\bin\Debug\ServiceModelEx.pdb
+D:\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.csprojResolveAssemblyReference.cache
+D:\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\MainWindow.baml
+D:\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\MainWindow.g.cs
+D:\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\App.g.cs
+D:\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive_MarkupCompile.cache
+D:\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.g.resources
+D:\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.Properties.Resources.resources
+D:\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.csproj.GenerateResource.Cache
+D:\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.exe
+D:\pvbeancounter\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVPublisherInteractive\bin\Debug\PVPublisherInteractive.exe.config
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVPublisherInteractive\bin\Debug\PVPublisherInteractive.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVPublisherInteractive\bin\Debug\PVPublisherInteractive.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVPublisherInteractive\bin\Debug\ServiceModelEx.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVPublisherInteractive\bin\Debug\ServiceModelEx.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVPublisherInteractive\obj\x86\Debug\MainWindow.baml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVPublisherInteractive\obj\x86\Debug\MainWindow.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVPublisherInteractive\obj\x86\Debug\App.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive_MarkupCompile.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.g.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.Properties.Resources.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.csproj.GenerateResource.Cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVPublisherInteractive\bin\Debug\PVPublisherInteractive.exe.config
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVPublisherInteractive\bin\Debug\PVPublisherInteractive.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVPublisherInteractive\bin\Debug\PVPublisherInteractive.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVPublisherInteractive\bin\Debug\ServiceModelEx.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVPublisherInteractive\bin\Debug\ServiceModelEx.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVPublisherInteractive\obj\x86\Debug\MainWindow.baml
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVPublisherInteractive\obj\x86\Debug\MainWindow.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVPublisherInteractive\obj\x86\Debug\App.g.cs
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive_MarkupCompile.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.g.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.Properties.Resources.resources
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.csproj.GenerateResource.Cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.exe
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\PVPublisherInteractive\obj\x86\Debug\PVPublisherInteractive.pdb

@@ -1,0 +1,684 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<devices>
+  
+  <device>
+    
+    <devicetype value="Inverter" />
+    <description value="Xantrex Inverters (Modbus - Untested)" />
+    <specification value="Xantrex" />
+    <version value="01" />
+    <status value="Test Only" />
+    <protocol value="Modbus" />
+    <endian16bit value="Big" />
+    <endian32bit value="Big" />
+
+    <features>
+      <feature type="YieldAC" />
+      <feature type="PowerAC"/>
+      <feature type="PowerPV" string="0"/>
+    </features>
+
+    <typeoptions>
+      <type value="uint16" />
+        <valuelist>
+          <option value="65535" tag="NotAvailable" />
+          <option value="65534" tag="Invalid" />
+        </valuelist>
+    </typeoptions>
+
+    <typeoptions>
+      <type value="sint16" />
+      <valuelist>
+        <option value="32767" tag="NotAvailable" />
+        <option value="32766" tag="Invalid" />
+      </valuelist>
+    </typeoptions>
+    
+    <block>
+      <name value="Identity" />
+      <type value="Identity" />
+      <conversation value="Command34" />
+      <commandid value="3" />
+      <base value="0" />
+      <register>
+        <content value="Manufacturer" />
+        <type value="string" />
+        <registervalue value="Xantrex" />
+      </register>
+      <register>
+        <content value="Model" />
+        <id value="0x0000" />
+        <type value="cstring" />
+        <size value="20" />
+      </register>
+      <register>
+        <content value="SerialNo" />
+        <id value="0x0014" />
+        <type value="cstring" />
+        <size value="20" />
+      </register>
+    </block>
+    
+    <block>
+      <name value="Inverter Status" />
+      <type value="Reading" />
+      <ondbwriteonly value="true" />
+      <conversation value="Command34" />
+      <commandid value="3" />
+      <base value="0" />
+      <register>
+        <content value="Status" />
+        <id value="0x00CF" />
+        <type value="uint16" />
+      </register>
+    </block>
+    
+    <block>
+      <name value="Inverter DC" />
+      <type value="Reading" />
+      <ondbwriteonly value="true" />
+      <conversation value="Command34" />
+      <commandid value="3" />
+      <base value="0" />
+      <register>
+        <content value="VoltsPV1" />
+        <id value="0x0201" />
+        <type value="uint32" />
+        <scale value="100" />
+      </register>
+      <register>
+        <content value="CurrentPV1" />
+        <id value="0x0203" />
+        <type value="uint32" />
+        <scale value="100" />
+      </register>
+    </block>
+    
+    <block>
+      <name value="Inverter AC" />
+      <type value="Reading" />
+      <conversation value="Command34" />
+      <commandid value="3" />
+      <base value="0" />
+      <register>
+        <content value="VoltsAC1" />
+        <id value="0x0701" />
+        <type value="uint32" />
+        <scale value="100" />
+      </register>
+      <register>
+        <content value="CurrentAC1" />
+        <id value="0x0703" />
+        <type value="uint32" />
+        <scale value="100" />
+      </register>
+      <register>
+        <content value="PowerAC1" />
+        <id value="0x0706" />
+        <type value="uint32" />
+        <scale value="1" />
+      </register>
+      <register>
+        <content value="Frequency" />
+        <id value="0x0705" />
+        <type value="uint16" />
+        <scale value="10" />
+      </register>
+    </block>
+    
+    <block>
+      <name value="Temperature" />
+      <type value="Reading" />
+      <ondbwriteonly value="true" />
+      <conversation value="Command34" />
+      <commandid value="3" />
+      <base value="0" />      
+      <register>
+        <content value="Temperature" />
+        <id value="0x0900" />
+        <type value="sint16" />
+        <scale value="10" />
+      </register>
+    </block>
+    
+    <block>
+      <name value="Error Count" />
+      <type value="Reading" />
+      <ondbwriteonly value="true" />
+      <conversation value="Command34" />
+      <commandid value="3" />
+      <base value="0" />
+      <register>
+        <content value="ErrorCode" />
+        <iserrorflag value="true" />
+        <erroraction>
+          <type value="CallAlgorithm" />
+          <algorithm value="Log Errors" />
+        </erroraction>
+        <id value="0x0080" />
+        <type value="uint16" />
+        <valuelist>
+          <option value="0" tag="OK" />
+        </valuelist>
+      </register>
+    </block>
+    
+    <block>
+      <name value="Initialise Error Retrieval" />
+      <conversation value="SetRegisters" />
+      <base value="0" />
+      <register>
+        <name value="ErrorId" />
+        <id value="0x0081" />
+        <type value="uint16" />
+        <registervalue value="0" />
+      </register>
+    </block>
+    
+    <block>
+      <name value="Retrieve Error" />
+      <conversation value="Command34" />
+      <commandid value="3" />
+      <base value="0" />
+      <register>
+        <name value="ErrorValue" />
+        <id value="0x0082" />
+        <type value="bytes" />
+        <size value="8" />
+        <iserrordetail value="true" />
+      </register>
+      <register>
+        <name value="ErrorDesc" />
+        <id value="0x0086" />
+        <type value="cstring" />
+        <size value="40" />
+        <iserrordetail value="true" />
+      </register>
+    </block>
+    
+    <block>
+      <name value="Initialise History Retrieval" />
+      <conversation value="SetRegisters" />
+      <base value="0" />
+      <register>
+        <name value="HistoryType" />
+        <id value="0x0800" />
+        <type value="uint16" />
+      </register>
+      <register>
+        <name value="Options" />
+        <id value="0x0801" />
+        <type value="bytes" />
+        <size value="4" />
+        <registervalue value="0x00 00 00 00" />
+      </register>
+      <register>
+        <name value="HistoryId" />
+        <id value="0x0803" />
+        <type value="uint16" />
+      </register>
+    </block>
+    
+    <block>
+      <name value="Retrieve History" />
+      <conversation value="Command34" />
+      <commandid value="3" />
+      <base value="0" />
+      <register>
+        <name value="HistoryId" />
+        <id value="0x0803" />
+        <type value="uint16" />
+      </register>
+      <register>
+        <name value="Energy" />
+        <id value="0x0804" />
+        <type value="sint32" />
+        <scale value="10" />
+      </register>
+      <register>
+        <name value="PeakPower" />
+        <id value="0x0806" />
+        <type value="sint32" />
+        <scale value="1" />
+      </register>
+      <register>
+        <name value="HarvestTime" />
+        <id value="0x0808" />
+        <type value="uint32" />
+        <scale value="1" />
+      </register>
+    </block>
+    
+    <algorithm>
+      <type value="Reading" />
+      <ondbwriteonly value="true" />
+      <name value="Retrieve EnergyTodayAC" />
+      <action>
+        <type value="SendBlock" />
+        <blockname value="Initialise History Retrieval" />
+        <parameter>
+          <name value="HistoryType" />
+          <parametervalue value="4" />
+        </parameter>
+        <parameter>
+          <name value="HistoryId" />
+          <parametervalue value="0" />
+        </parameter>
+      </action>
+      <action>
+        <type value="GetBlock" />
+        <blockname value="Retrieve History" />
+        <parameter>
+          <name value="Energy" />
+          <content value="EnergyTodayAC" />
+        </parameter>
+      </action>
+    </algorithm>
+    
+    <algorithm>
+      <type value="Reading" />
+      <ondbwriteonly value="true" />
+      <name value="Retrieve EnergyTotalAC" />
+      <action>
+        <type value="SendBlock" />
+        <blockname value="Initialise History Retrieval" />
+        <parameter>
+          <name value="HistoryType" />
+          <parametervalue value="5" />
+        </parameter>
+        <parameter>
+          <name value="HistoryId" />
+          <parametervalue value="0" />
+        </parameter>
+      </action>
+      <action>
+        <type value="GetBlock" />
+        <blockname value="Retrieve History" />
+        <parameter>
+          <name value="Energy" />
+          <content value="EnergyTotalAC" />
+        </parameter>
+        <parameter>
+          <name value="HarvestTime" />
+          <content value="TimeTotal" />
+        </parameter>
+      </action>
+    </algorithm>
+    
+    <algorithm>
+      <type value="ErrorLog" />
+      <name value="Log Errors" />
+      <ondbwriteonly value="true" />
+      <action>
+        <type value="SendBlock" />
+        <blockname value="Initialise Error Retrieval" />
+      </action>
+      <action>
+        <type value="RepeatCountTimes" />
+        <blockname value="Retrieve Error" />
+        <count value="ErrorCode" />
+        <action>
+          <type value="GetBlock" />          
+        </action>
+        <action>
+          <type value="LogError" />
+        </action>
+      </action>
+    </algorithm>   
+  </device>
+
+  <device>
+    <devicetype value="Inverter" />
+    <description value="Xantrex Inverters (ASCII - Untested)" />
+    <specification value="Xantrex ASCII" />
+    <version value="01" />
+    <status value="Test Only" />
+    <protocol value="QueryResponse_Generic" />
+
+    <features>
+      <feature type="YieldAC" />
+      <feature type="PowerAC"/>
+      <feature type="PowerPV" string="0"/>
+    </features>
+
+    <block>
+      <name value="Identity" />
+      <type value="Identity" />
+      <conversation value="QueryResponseX3" />
+      <register>
+        <type value="byte" />
+        <registervalue value="0x0D" />
+        <binding value="EndOfMessage" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value="IDN?" />
+        <binding value="QueryString" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value="M:" />
+        <binding value="Marker1" />
+      </register>
+      <register>
+        <type value="string" />
+        <content value="Model" />
+        <binding value="Response1" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value=" X:" />
+        <binding value="Marker2" />
+      </register>
+      <register>
+        <type value="string" />
+        <content value="XanbusID" />
+        <binding value="Response2" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value=" S:" />
+        <binding value="Marker3" />
+      </register>
+      <register>
+        <type value="string" />
+        <content value="SerialNo" />
+        <binding value="Response3" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value="" />
+        <binding value="Marker4" />
+      </register>
+    </block>
+
+    <block>
+      <name value="Power" />
+      <type value="ReadingX" />
+      <conversation value="QueryResponse" />
+      <register>
+        <type value="string" />
+        <registervalue value="POUT?" />
+        <binding value="QueryString" />
+      </register>
+      <register>
+        <type value="string" />
+        <content value="PowerAC1" />
+        <binding value="Response" />
+      </register>
+    </block>
+
+    <block>
+      <name value="Temperature" />
+      <type value="Reading" />
+      <conversation value="QueryResponseX2" />
+      <ondbwriteonly value ="true" />
+      <register>
+        <type value="string" />
+        <registervalue value="MEASTEMP?" />
+        <binding value="QueryString" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value="C:" />
+        <binding value="Marker1" />
+      </register>
+      <register>
+        <type value="string" />
+        <content value="Temperature" />
+        <binding value="Response1" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value=" F:" />
+        <binding value="Marker2" />
+      </register>
+      <register>
+        <type value="string" />
+        <content value="TemperatureF" />
+        <binding value="Response2" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value="" />
+        <binding value="Marker3" />
+      </register>
+    </block>
+
+    <block>
+      <name value="Inverter Inputs" />
+      <type value="Reading" />
+      <conversation value="QueryResponseX3" />
+      <ondbwriteonly value ="true" />
+      <register>
+        <type value="string" />
+        <registervalue value="MEASIN?" />
+        <binding value="QueryString" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value="V:" />
+        <binding value="Marker1" />
+      </register>
+      <register>
+        <type value="string" />
+        <content value="VoltsPV1" />
+        <binding value="Response1" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value=" I:" />
+        <binding value="Marker2" />
+      </register>
+      <register>
+        <type value="string" />
+        <content value="CurrentPV1" />
+        <binding value="Response2" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value=" P:" />
+        <binding value="Marker3" />
+      </register>
+      <register>
+        <type value="string" />
+        <content value="PowerPV1" />
+        <binding value="Response3" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value="" />
+        <binding value="Marker4" />
+      </register>
+    </block>
+
+    <block>
+      <name value="Inverter Outputs" />
+      <type value="Reading" />
+      <conversation value="QueryResponseX4" />
+      <register>
+        <type value="string" />
+        <registervalue value="MEASOUT?" />
+        <binding value="QueryString" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value="V:" />
+        <binding value="Marker1" />
+      </register>
+      <register>
+        <type value="string" />
+        <content value="VoltsAC1" />
+        <binding value="Response1" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value=" I:" />
+        <binding value="Marker2" />
+      </register>
+      <register>
+        <type value="string" />
+        <content value="CurrentAC1" />
+        <binding value="Response2" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value=" P:" />
+        <binding value="Marker3" />
+      </register>
+      <register>
+        <type value="string" />
+        <content value="PowerAC1" />
+        <binding value="Response3" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value=" F:" />
+        <binding value="Marker4" />
+      </register>
+      <register>
+        <type value="string" />
+        <content value="Frequency" />
+        <binding value="Response4" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value="" />
+        <binding value="Marker5" />
+      </register>
+    </block>
+
+    <block>
+      <name value="EnergyToday" />
+      <type value="Reading" />
+      <ondbwriteonly value="true" />
+      <conversation value="QueryResponse" />
+      <register>
+        <type value="string" />
+        <registervalue value="KWHTODAY?" />
+        <binding value="QueryString" />
+      </register>
+      <register>
+        <type value="string" />
+        <content value="EnergyTodayAC" />
+        <binding value="Response" />
+      </register>
+    </block>
+
+    <block>
+      <name value="EnergyTotal" />
+      <type value="Reading" />
+      <ondbwriteonly value="true" />
+      <conversation value="QueryResponse" />
+      <register>
+        <type value="string" />
+        <registervalue value="KWHLIFE?" />
+        <binding value="QueryString" />
+      </register>
+      <register>
+        <type value="string" />
+        <content value="EnergyTotalAC" />
+        <binding value="Response" />
+      </register>
+    </block>
+
+    <block>
+      <name value="RequestErrorList" />
+      <conversation value="Query" />
+      <register>
+        <type value="string" />
+        <registervalue value="FAULTACTIVE?" />
+        <binding value="QueryString" />
+      </register>
+    </block>
+
+    <block>
+      <name value="ReadErrorListIndicator" />
+      <conversation value="ReadIndicator" />
+      <register>
+        <type value="string" />
+        <registervalue value="" />
+        <binding value="Marker1" />
+      </register>
+      <register>
+        <type value="byte" />
+        <registervalue value="0x22" />
+        <binding value="Indicator" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value="" />
+        <binding value="Marker2" />
+      </register>
+    </block>
+
+    <block>
+      <name value="ReadErrorListEntry" />
+      <conversation value="MultiLineResponseX2" />
+      <register>
+        <type value="string" />
+        <registervalue value="" />
+        <binding value="Marker1" />
+      </register>
+      <register>
+        <name value="ErrorCode" />
+        <type value="string" />
+        <binding value="Response1" />
+        <iserrordetail value="true" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value=", " />
+        <binding value="Marker2" />
+      </register>
+      <register>
+        <name value="ErrorMessage" />
+        <type value="string" />
+        <binding value="Response2" />
+        <iserrordetail value="true" />
+      </register>
+      <register>
+        <type value="string" />
+        <registervalue value="" />
+        <binding value="Marker3" />
+      </register>
+    </block>
+
+    <algorithm>
+      <type value="Reading" />
+      <name value="Log Errors" />
+      <ondbwriteonly value ="true" />
+      <action>
+        <type value="SendBlock" />
+        <blockname value="RequestErrorList" />
+      </action>
+      <action>
+        <type value="GetBlock" />
+        <blockname value="ReadErrorListIndicator" />
+      </action>
+      <action>
+        <type value="Repeat" />
+        <blockname value="ReadErrorListEntry" />
+        <parameter>
+          <name value="!RepeatCount" />
+          <content value="ErrorCode" />
+        </parameter>
+        <action>
+          <type value="GetBlock" />
+          <blockname value="ReadErrorListIndicator" />
+          <exitonsuccess value="true" />
+        </action>
+        <action>
+          <type value="GetBlock" />         
+        </action>
+        <action>
+          <type value="LogError" />
+        </action>
+      </action>
+    </algorithm>
+
+  </device>
+  
+</devices>
+
+

@@ -1,0 +1,93 @@
+13/01/2013 10:40:14 AM :T09 :SaveSettings: Fail Environment Check: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to dennis on: C:\PVRecords 
+Assigned full control to dennis on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\PVRecords_pattern\Empty Databases'
+13/01/2013 10:40:15 AM :T09 :SaveSettings: Save Location: C:\PVRecords
+14/01/2013 5:16:30 PM :T09 :CheckEnvironment: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to Network Service on: C:\PVRecords 
+Assigned full control to Network Service on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\Empty Databases'
+14/01/2013 5:21:56 PM :T09 :CheckEnvironment: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to Network Service on: C:\PVRecords 
+Assigned full control to Network Service on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\Empty Databases'
+15/01/2013 10:48:28 AM :T09 :CheckEnvironment: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to Local Service on: C:\PVRecords 
+Assigned full control to Local Service on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\Empty Databases'
+23/01/2013 8:10:48 AM :T09 :SaveSettings: Fail Environment Check: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to Local System on: C:\PVRecords 
+Assigned full control to Local System on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\Empty Databases'
+23/01/2013 8:10:53 AM :T09 :SaveSettings: Save Location: C:\PVRecords
+23/01/2013 5:30:06 PM :T10 :SaveSettings: Fail Environment Check: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to Local System on: C:\PVRecords 
+Assigned full control to Local System on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\Empty Databases'
+23/01/2013 5:30:09 PM :T10 :SaveSettings: Save Location: C:\PVRecords
+24/01/2013 5:31:47 PM :T09 :SaveSettings: Fail Environment Check: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to Local System on: C:\PVRecords 
+Assigned full control to Local System on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\Empty Databases'
+24/01/2013 5:31:50 PM :T09 :SaveSettings: Save Location: C:\PVRecords
+24/01/2013 6:02:56 PM :T09 :SaveSettings: Fail Environment Check: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to Local System on: C:\PVRecords 
+Assigned full control to Local System on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\Empty Databases'
+24/01/2013 6:02:59 PM :T09 :SaveSettings: Save Location: C:\PVRecords
+25/01/2013 8:05:43 AM :T09 :SaveSettings: Fail Environment Check: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to Local System on: C:\PVRecords 
+Assigned full control to Local System on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\Empty Databases'
+25/01/2013 8:05:46 AM :T09 :SaveSettings: Save Location: C:\PVRecords
+25/01/2013 8:06:33 AM :T10 :SaveSettings: Fail Environment Check: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to Local System on: C:\PVRecords 
+Assigned full control to Local System on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\Empty Databases'
+25/01/2013 8:06:36 AM :T10 :SaveSettings: Save Location: C:\PVRecords
+26/01/2013 10:10:17 AM :T10 :SaveSettings: Fail Environment Check: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to Local System on: C:\PVRecords 
+Assigned full control to Local System on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\Empty Databases'
+26/01/2013 10:10:20 AM :T10 :SaveSettings: Save Location: C:\PVRecords
+2/02/2013 8:26:01 AM :T10 :SaveSettings: Fail Environment Check: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to Local System on: C:\PVRecords 
+Assigned full control to Local System on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\Empty Databases'
+2/02/2013 8:26:03 AM :T10 :SaveSettings: Save Location: C:\PVRecords
+2/02/2013 10:12:58 AM :T09 :SaveSettings: Fail Environment Check: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to Local System on: C:\PVRecords 
+Assigned full control to Local System on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\Empty Databases'
+2/02/2013 10:13:00 AM :T09 :SaveSettings: Save Location: C:\PVRecords
+2/02/2013 10:13:25 AM :T09 :SaveSettings: Fail Environment Check: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to Local System on: C:\PVRecords 
+Assigned full control to Local System on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\Empty Databases'
+2/02/2013 10:13:27 AM :T09 :SaveSettings: Save Location: C:\PVRecords
+2/02/2013 10:18:50 AM :T08 :SaveSettings: Fail Environment Check: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to Local System on: C:\PVRecords 
+Assigned full control to Local System on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\Empty Databases'
+2/02/2013 10:18:52 AM :T08 :SaveSettings: Save Location: C:\PVRecords
+10/02/2013 8:00:29 AM :T09 :SaveSettings: Fail Environment Check: Directory Located: C:\PVRecords 
+Directory Located: C:\PVRecords\Archive 
+Assigned full control to Local Service on: C:\PVRecords 
+Assigned full control to Local Service on: C:\PVRecords\Archive 
+Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\x86\Debug\Empty Databases'
+10/02/2013 8:00:30 AM :T09 :SaveSettings: Save Location: C:\PVRecords

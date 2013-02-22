@@ -1,0 +1,174 @@
+    <Window.Resources>
+        <Style x:Key="MyHeaderStyle" TargetType="GridViewColumnHeader">
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Setter Property="Height" Value="0" />
+        </Style>
+        <ControlTemplate x:Key="templateSpeedometer" TargetType="ProgressBar">
+            <ControlTemplate.Resources>
+                <Style TargetType="Polygon">
+                    <Setter Property="Points" Value="-70,-1.5 -70,1.5 -61,1.5 -61,-1.5" />
+                    <Setter Property="Fill" Value="White" />
+                </Style>                
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="11.5" />
+                    <Setter Property="Foreground" Value="#FF524F4F"/>
+                    <Setter Property="FontWeight" Value="Bold" />
+                </Style>
+            </ControlTemplate.Resources>
+
+            <Border Width="200" Height="115"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Background="{TemplateBinding Background}">
+
+                <Canvas Width="0" Height="0" RenderTransform="1 0 0 1 0 45" >
+
+                    <Rectangle Name="PART_Track" Width="180" />
+                    <Rectangle Name="PART_Indicator" />
+
+                    <Polygon Points="-75,-2 -75,2 -61,2 -61,-2">
+                        <Polygon.RenderTransform>
+                            <RotateTransform Angle="0" />
+                        </Polygon.RenderTransform>
+                        <Polygon.Effect>
+                            <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="4"  Direction="315"  ShadowDepth="3"/>
+                        </Polygon.Effect>
+                    </Polygon>
+
+                    <Polygon >
+                        <Polygon.RenderTransform>
+                            <RotateTransform Angle="15" />
+                        </Polygon.RenderTransform>
+                        <Polygon.Effect>
+                            <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="4"  Direction="315"  ShadowDepth="3"/>
+                        </Polygon.Effect>
+                    </Polygon>
+
+                    <Polygon Points="-75,-2 -75,2 -61,2 -61,-2">
+                        <Polygon.RenderTransform>
+                            <RotateTransform Angle="30" />
+                        </Polygon.RenderTransform>
+                        <Polygon.Effect>
+                            <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="4"  Direction="330"  ShadowDepth="3"/>
+                        </Polygon.Effect>
+                    </Polygon>
+
+                    <Polygon>
+                        <Polygon.RenderTransform>
+                            <RotateTransform Angle="45" />
+                        </Polygon.RenderTransform>
+                        <Polygon.Effect>
+                            <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="4"  Direction="345"  ShadowDepth="3"/>
+                        </Polygon.Effect>
+                    </Polygon>
+
+                    <Polygon Points="-75,-2 -75,2 -61,2 -61,-2">
+                        <Polygon.RenderTransform>
+                            <RotateTransform Angle="60" />
+                        </Polygon.RenderTransform>
+                        <Polygon.Effect>
+                            <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="4"  Direction="360"  ShadowDepth="3"/>
+                        </Polygon.Effect>
+                    </Polygon>
+
+                    <Polygon>
+                        <Polygon.RenderTransform>
+                            <RotateTransform Angle="75" />
+                        </Polygon.RenderTransform>
+                        <Polygon.Effect>
+                            <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="4"  Direction="15"  ShadowDepth="3"/>
+                        </Polygon.Effect>
+                    </Polygon>
+
+                    <Polygon Points="-75,-2 -75,2 -61,2 -61,-2">
+                        <Polygon.RenderTransform>
+                            <RotateTransform Angle="90" />
+                        </Polygon.RenderTransform>
+                        <Polygon.Effect>
+                            <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="4"  Direction="30"  ShadowDepth="3"/>
+                        </Polygon.Effect>
+                    </Polygon>
+                  
+                    <Polygon>
+                        <Polygon.RenderTransform>
+                            <RotateTransform Angle="105" />
+                        </Polygon.RenderTransform>
+                        <Polygon.Effect>
+                            <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="4"  Direction="45"  ShadowDepth="3"/>
+                        </Polygon.Effect>
+                    </Polygon>
+
+                    <Polygon Points="-75,-2 -75,2 -61,2 -61,-2">
+                        <Polygon.RenderTransform>
+                            <RotateTransform Angle="120" />
+                        </Polygon.RenderTransform>
+                        <Polygon.Effect>
+                            <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="4"  Direction="60"  ShadowDepth="3"/>
+                        </Polygon.Effect>
+                    </Polygon>
+
+                    <Polygon>
+                        <Polygon.RenderTransform>
+                            <RotateTransform Angle="135" />
+                        </Polygon.RenderTransform>
+                        <Polygon.Effect>
+                            <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="4"  Direction="75"  ShadowDepth="3"/>
+                        </Polygon.Effect>
+                    </Polygon>
+
+                    <Polygon Points="-75,-2 -75,2 -61,2 -61,-2">
+                        <Polygon.RenderTransform>
+                            <RotateTransform Angle="150" />
+                        </Polygon.RenderTransform>
+                        <Polygon.Effect>
+                            <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="4"  Direction="90"  ShadowDepth="3"/>
+                        </Polygon.Effect>
+                    </Polygon>
+                    
+                    <Polygon>
+                        <Polygon.RenderTransform>
+                            <RotateTransform Angle="165" />
+                        </Polygon.RenderTransform>
+                        <Polygon.Effect>
+                            <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="4"  Direction="105"  ShadowDepth="3"/>
+                        </Polygon.Effect>
+                    </Polygon>
+
+                    <Polygon Points="-75,-2 -75,2 -61,2 -61,-2">
+                        <Polygon.RenderTransform>
+                            <RotateTransform Angle="180" />
+                        </Polygon.RenderTransform>
+                        <Polygon.Effect>
+                            <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="4"  Direction="120"  ShadowDepth="3"/>
+                        </Polygon.Effect>
+                    </Polygon>
+
+                    <TextBlock Text="0" Canvas.Left="-88" Canvas.Top="-9" />
+                    <TextBlock Text="1" Canvas.Left="-78" Canvas.Top="-50" />
+                    <TextBlock Text="2" Canvas.Left="-47" Canvas.Top="-82" />
+                    <TextBlock Text="3" Canvas.Left="-4" Canvas.Top="-95" />
+                    <TextBlock Text="4" Canvas.Left="39" Canvas.Top="-82" />
+                    <TextBlock Text="5" Canvas.Left="71" Canvas.Top="-50" />
+                    <TextBlock Text="6" Canvas.Left="82" Canvas.Top="-9" />
+
+                    <TextBlock Canvas.Top="-95" Canvas.Left="-90" FontSize="11" Text="Watts" />
+                    <TextBox Canvas.Top="-42" Canvas.Left="-29" DataContext="{TemplateBinding Value}" Text="{Binding Mode=OneWay}" BorderThickness="0" HorizontalContentAlignment="Center" Width="60" HorizontalAlignment="Center" IsReadOnly="True" IsHitTestVisible="False" TextAlignment="Center" FontFamily="Lucida Console" FontSize="20" FontWeight="Bold" Foreground="#FF524F4F">
+                        <TextBox.Background>
+                            <SolidColorBrush />
+                        </TextBox.Background>
+                    </TextBox>
+                    <TextBlock Canvas.Top="-22" Canvas.Left="-50" FontSize="11" Text="{Binding Description}" HorizontalAlignment="Center" TextAlignment="Center" Width="100"/>
+                    <Polygon Points="4,3 4.5,2.5 5,1.5 5.5,0 5,-1.5 4.5,-2.5 4,-3 -52,0"
+                                 Stroke="Red" Fill="Red">
+                        <Polygon.RenderTransform>
+                            <RotateTransform Angle="{Binding ElementName=PART_Indicator, Path=ActualWidth}" />
+                        </Polygon.RenderTransform>
+                        <Polygon.Effect>
+                            <DropShadowEffect Color="Gray" Opacity="0.7" BlurRadius="4"  Direction="315"  ShadowDepth="3"/>
+                        </Polygon.Effect>
+                    </Polygon>
+                    
+                </Canvas>
+            </Border>
+        </ControlTemplate>
+    </Window.Resources>

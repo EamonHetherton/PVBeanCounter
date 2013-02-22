@@ -1,0 +1,44 @@
+Jim Mischel
+
+WaitableTimer
+
+http://www.mischel.com/pubs/waitabletimer.zip
+
+------------------------------------------------------------------------------
+32Feet.Net 
+
+Bluetooth Library
+
+
+InTheHand.Net.Personal
+
+------------------------------------------------------------------------------
+DotNetZip
+
+Zip file manipulation library
+
+http://dotnetzip.codeplex.com/
+
+------------------------------------------------------------------------------
+LsaWrapper.cs
+
+// Uncredited code obtained from 
+
+http://www.roelvanlisdonk.nl/?p=1151
+
+------------------------------------------------------------------------------
+Publish / Subscribe event distributon service based on published sample code 
+from IDesign Inc
+
+Source files contain the original IDesign attribution
+Sample code is explained in "Programming WCF Services" by Juval Lowy
+
+//http://www.idesign.net
+
+------------------------------------------------------------------------------
+TimeControl
+
+From Code Green Software (Mel Green)
+http://mel-green.com/2010/03/wpf-time-control-12-hour-format/
+
+------------------------------------------------------------------------------

@@ -1,0 +1,20 @@
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\ServiceModelEx\bin\x86\Debug\ServiceModelEx.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\ServiceModelEx\bin\x86\Debug\ServiceModelEx.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\ServiceModelEx\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\ServiceModelEx\obj\x86\Debug\ServiceModelEx.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\ServiceModelEx\obj\x86\Debug\ServiceModelEx.pdb
+D:\pvbeancounter\trunk\ServiceModelEx\bin\x86\Debug\ServiceModelEx.dll
+D:\pvbeancounter\trunk\ServiceModelEx\bin\x86\Debug\ServiceModelEx.pdb
+D:\pvbeancounter\trunk\ServiceModelEx\obj\x86\Debug\ServiceModelEx.dll
+D:\pvbeancounter\trunk\ServiceModelEx\obj\x86\Debug\ServiceModelEx.pdb
+D:\pvbeancounter\trunk\ServiceModelEx\obj\x86\Debug\ServiceModelEx.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\ServiceModelEx\bin\x86\Debug\ServiceModelEx.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\ServiceModelEx\bin\x86\Debug\ServiceModelEx.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\ServiceModelEx\obj\x86\Debug\ServiceModelEx.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\ServiceModelEx\obj\x86\Debug\ServiceModelEx.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\ServiceModelEx\obj\x86\Debug\ServiceModelEx.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\ServiceModelEx\bin\x86\Debug\ServiceModelEx.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\ServiceModelEx\bin\x86\Debug\ServiceModelEx.pdb
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\ServiceModelEx\obj\x86\Debug\ServiceModelEx.csprojResolveAssemblyReference.cache
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\ServiceModelEx\obj\x86\Debug\ServiceModelEx.dll
+D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk_v2\ServiceModelEx\obj\x86\Debug\ServiceModelEx.pdb

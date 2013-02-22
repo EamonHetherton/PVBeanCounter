@@ -1,0 +1,26 @@
+:initialise $END;   //initialise connection
+S AA AA 01 00 00 00 00 04 00 01 59 $END;
+:serial $END;
+S AA AA 01 00 00 00 00 00 00 01 55 $END;
+F AA AA 00 00 01 00 00 80 0A $END;
+E $SerialNo(BYTE[10]) $CheckSum16(BYTE[2]) $END;
+:conf_serial $END;
+S AA AA 01 00 00 00 00 01 0B $SerialNo 01 $CheckSum16 $END;
+R AA AA 00 01 01 00 00 81 $END;
+E $Size(BYTE[1]) $OK(BYTE[1]) $CheckSum16 $END;
+:req_version $END;
+S AA AA 01 00 00 01 01 03 00 01 5A $END;
+R AA AA 00 01 01 00 01 83 $END;
+E $IGNORE01(BYTE[2]) $Capacity(BYTE[6]) $Firmware(BYTE[9]) $Model(BYTE[12]) $Manufacturer(BYTE[16]) $SerialNo2(BYTE[10]) $IGNORE02(BYTE[6]) $IGNORE03(BYTE[4]) $CheckSum16 $END;
+:req_data_format_p1 $END;
+S AA AA 01 00 00 01 01 00 00 01 57 $END;
+R AA AA 00 01 01 00 01 80 $END;
+E $FormatSize(BYTE[1]) $END;
+:req_data_format_p2 $END;
+E $FormatArray(BYTE[21]) $CheckSum16 $END;
+:req_data_p1 $END;
+S AA AA 01 00 00 01 01 02 00 01 59 $END;
+R AA AA 00 01 01 00 01 82 $END;
+E $DataSize(BYTE[1]) $END;
+:req_data_p2 $END;
+E $DataArray(BYTE[42]) $CheckSum16 $END;

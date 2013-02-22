@@ -1,0 +1,17 @@
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\bin\Debug\settings_template_SE_SQLite.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\bin\Debug\settings_template_SE_Access.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\bin\Debug\settings_template_SE_MySql.xml
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\bin\Debug\PVInverterManagement.dll.config
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\bin\Debug\PVInverterManagement.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\bin\Debug\PVInverterManagement.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\bin\Debug\GenericConnector.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\bin\Debug\PVSettings.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\bin\Debug\Utilities.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\bin\Debug\GenericConnector.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\bin\Debug\PVSettings.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\bin\Debug\Utilities.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\obj\Debug\ResolveAssemblyReference.cache
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\obj\Debug\PVInverterManagement.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\obj\Debug\PVInverterManagement.pdb
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\bin\Debug\Mischel.Synchronization.dll
+D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\PVInverterManagement\bin\Debug\Mischel.Synchronization.pdb
