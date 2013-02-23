@@ -1,6 +1,0 @@
-10/01/2013 12:22:35 PM :T09 :SaveSettings: Fail Environment Check: Directory Located: C:\PVRecords 
-Directory Located: C:\PVRecords\Archive 
-Assigned full control to Local Service on: C:\PVRecords 
-Assigned full control to Local Service on: C:\PVRecords\Archive 
-Cannot locate directory 'D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounterv2\trunk\PVBeanCounter\bin\Release\PVRecords_pattern\Empty Databases'
-10/01/2013 12:22:39 PM :T09 :SaveSettings: Save Location: C:\PVRecords

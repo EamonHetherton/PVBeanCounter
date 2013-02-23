@@ -1,7 +1,0 @@
-D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Utilities\bin\Debug\Utilities.dll
-D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Utilities\bin\Debug\Utilities.pdb
-D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Utilities\obj\Debug\ResolveAssemblyReference.cache
-D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Utilities\obj\Debug\Utilities.dll
-D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Utilities\obj\Debug\Utilities.pdb
-D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Utilities\bin\Debug\Mischel.Synchronization.dll
-D:\Users\Dennis\Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\Utilities\bin\Debug\Mischel.Synchronization.pdb

@@ -1,9 +1,0 @@
-﻿:ReadQuery $END;
-R 01 $END;
-E $Command(BYTE[1]) $StartRegister(BYTE[2]) $Registers(BYTE[2]) $CheckSum16(BYTE[2]) $END;
-:Identity $END;
-S 01 04 06 01 02 03 04 05 06 $CheckSum16(BYTE[2]) $END; 
-:Reading $END;
-S 01 04 3E $VoltsPV1(BYTE[2]) $VoltsPV2(BYTE[2]) $CurrentPV1(BYTE[2]) $CurrentPV2(BYTE[2]) $VoltsAC1(BYTE[2]) $VoltsAC2(BYTE[2]) $VoltsAC3(BYTE[2]) 
-$CurrentAC1(BYTE[2]) $CurrentAC2(BYTE[2]) $CurrentAC3(BYTE[2]) $Frequency(BYTE[2]) $PowerAC(BYTE[4]) $EnergyToday(BYTE[2]) $EnergyTotal(BYTE[4]) 
-00 00 $TimeTotal(BYTE[4]) 00 00 $Temperature(BYTE[2]) 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 $ErrorCode(BYTE[2]) $CheckSum16(BYTE[2]) $END; 

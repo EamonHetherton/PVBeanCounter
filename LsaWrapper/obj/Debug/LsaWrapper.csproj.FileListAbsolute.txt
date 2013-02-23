@@ -1,5 +1,0 @@
-D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\LsaWrapper\bin\Debug\LsaWrapper.dll
-D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\LsaWrapper\bin\Debug\LsaWrapper.pdb
-D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\LsaWrapper\obj\Debug\ResolveAssemblyReference.cache
-D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\LsaWrapper\obj\Debug\LsaWrapper.dll
-D:\Users\Dennis\My Documents\Visual Studio 2010\Projects\pvbeancounter\trunk\LsaWrapper\obj\Debug\LsaWrapper.pdb

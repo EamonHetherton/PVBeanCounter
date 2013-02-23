@@ -1,3 +1,0 @@
-﻿:Read $END;
-E $Value(BYTE[8]) $END;
-

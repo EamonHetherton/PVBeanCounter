@@ -1,4 +1,0 @@
-:command_3_4_registers $END;      
-S $Address(BYTE[1]) $CommandId(BYTE[1]) $FirstAddress(BYTE[2]) $Registers(BYTE[2]) $CheckSum16(BYTE[2]) $END;
-R $Address(BYTE[1]) $CommandId(BYTE[1]) $DataSize(BYTE[1]) $END; 
-E $Data(BYTE[2]) $CheckSum16(BYTE[2]) $END;
