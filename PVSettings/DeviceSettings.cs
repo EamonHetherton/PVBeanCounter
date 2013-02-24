@@ -201,10 +201,10 @@ namespace PVSettings
             return Id;
         }
 
-        public FeatureSettings GetFeatureSettings(FeatureType featureType)
-        {
+        public FeatureSettings GetFeatureSettings(FeatureType featureType, uint featureId)
+        { 
             foreach (FeatureSettings fs in _FeatureList)
-                if (fs.Type == featureType)
+                if (fs.Type == featureType && fs.Id == featureId)
                     return fs;
             return null;
         }

@@ -255,7 +255,7 @@ namespace Device
                 FeaturePeriods fdNew;
                 fdNew.Type = featureType;
                 fdNew.Id = featureId;
-                FeatureSettings fs = DeviceSettings.GetFeatureSettings(featureType);
+                FeatureSettings fs = DeviceSettings.GetFeatureSettings(featureType, featureId);
                 fdNew.Periods = CreateNewPeriods(fs);
                 FeaturePeriodsList.Add(fdNew);
                 return fdNew.Periods;

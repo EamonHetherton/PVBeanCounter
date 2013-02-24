@@ -9,7 +9,7 @@
 
     <features>
       <feature type="YieldAC" id="0" description="Inverter Yield AC" />
-      <feature type="ConsumptionAC" id="1" description="Consumption AC" />      
+      <feature type="ConsumptionAC" id="0" description="Consumption AC" />      
     </features>
 
   </device>

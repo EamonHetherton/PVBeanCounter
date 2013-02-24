@@ -554,7 +554,7 @@ namespace Algorithms
 
             if (!result)
             {
-                LogMessage("DoQueryResponse - Error in '" + Conversation + "' conversation", LogEntryType.ErrorMessage);
+                LogMessage("DoQueryResponse - Failure in '" + Conversation + "' conversation", LogEntryType.Information);
                 RegisterData = new byte[2];
                 return false;
             }

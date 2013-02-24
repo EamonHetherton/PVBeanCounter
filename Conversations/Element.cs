@@ -458,6 +458,8 @@ namespace Conversations
 
         public override String ToString()
         {
+            if (Bytes == null)
+                return "";
             String val = "";
             try
             {

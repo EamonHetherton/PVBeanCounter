@@ -289,7 +289,8 @@ namespace Algorithms
                     else if (var.GetType() == typeof(VariableEntry_Bytes))
                         return new RegisterBytes(block, settings, ((VariableEntry_Bytes)var).SetValueDelegate, ((VariableEntry_Bytes)var).GetValueDelegate);
                 }
-                LogMessage("Device.GetRegister - Cannot find 'Content': " + itemName, LogEntryType.ErrorMessage);
+                // some devices do not need external exposure of the Register entries - eg CC128
+                LogMessage("Device.GetRegister - Cannot find 'Content': " + itemName, LogEntryType.Trace);
             }
 
             RegisterSettings.RegisterValueType type = settings.Type;

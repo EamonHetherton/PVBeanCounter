@@ -319,6 +319,12 @@ namespace DeviceDataRecorders
 
         protected abstract void Normalise(GenConnection con, int activeInterval);
 
+        public virtual void UpdateReadings()
+        {
+            // normal devices (not consolidations) are always up to date
+            // consolidations override this to ensure current day readings are up to date
+        }
+
         public void UpdateDatabase(GenConnection con, DateTime? activeReadingTime)
         {
             int activeInterval = -1;
@@ -985,18 +991,22 @@ namespace DeviceDataRecorders
                 // for each device feature that consolidates to this device (owner of this period)
                 foreach (Device.DeviceLink devLink in ((Device.ConsolidationDevice)DeviceDetailPeriods.Device).SourceDevices)
                 {
-                    DeviceDetailPeriodsBase periods = devLink.FromDevice.FindOrCreateFeaturePeriods(devLink.FromFeatureType, devLink.FromFeatureId);
-                    // step through all periods in the period container
-                    PeriodEnumerator pEnum = periods.GetPeriodEnumerator(Start, End);
-                    foreach (PeriodBase p in pEnum)
+                    // to link must match this consolidation - consolidate the matching from link
+                    if (Feature.Type == devLink.ToFeatureType && Feature.Id == devLink.ToFeatureId)
                     {
-                        // locate a period with a specific start date
-                        // Note - if it does not exist and empty one will be created
-                        DeviceDetailPeriod<TDeviceReading, TDeviceHistory> period = (DeviceDetailPeriod<TDeviceReading, TDeviceHistory>)periods.FindOrCreate(p.Start);
-                        // step through the readings in one period and consolidate into this period
-                        List<TDeviceReading> readings = period.GetReadings();
-                        foreach (TDeviceReading r in readings)                           
-                            ConsolidateReading(r, devLink.Operation);
+                        DeviceDetailPeriodsBase periods = devLink.FromDevice.FindOrCreateFeaturePeriods(devLink.FromFeatureType, devLink.FromFeatureId);
+                        // step through all periods in the period container
+                        PeriodEnumerator pEnum = periods.GetPeriodEnumerator(Start, End);
+                        foreach (PeriodBase p in pEnum)
+                        {
+                            // locate a period with a specific start date
+                            // Note - if it does not exist and empty one will be created
+                            DeviceDetailPeriod<TDeviceReading, TDeviceHistory> period = (DeviceDetailPeriod<TDeviceReading, TDeviceHistory>)periods.FindOrCreate(p.Start);
+                            // step through the readings in one period and consolidate into this period
+                            List<TDeviceReading> readings = period.GetReadings();
+                            foreach (TDeviceReading r in readings)
+                                ConsolidateReading(r, devLink.Operation);
+                        }
                     }
                 }
             }
@@ -1057,6 +1067,19 @@ namespace DeviceDataRecorders
                 toReading = (TDeviceReading)ReadingsGeneric.Values[index];
 
             toReading.AccumulateReading(reading, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);                
+        }
+
+        private DateTime PreviousToday = DateTime.MinValue;
+
+        public override void UpdateReadings()
+        {
+            // consolidations override this to ensure current day readings are up to date
+            // Always reevaluate yesterday on first run after switch to new day
+            if (End > PreviousToday)
+            {
+                LoadPeriodFromConsolidations();
+                PreviousToday = DateTime.Today;
+            }
         }
 
     }

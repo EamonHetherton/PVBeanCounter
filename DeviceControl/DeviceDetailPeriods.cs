@@ -71,6 +71,8 @@ namespace DeviceDataRecorders
                 periodReadings = NewPeriodReadingsGeneric(periodStart, Device.DeviceParams);
                 Add(periodReadings);
             }
+            else
+                periodReadings.UpdateReadings();
 
             return periodReadings;
         }

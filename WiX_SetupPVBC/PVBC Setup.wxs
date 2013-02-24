@@ -67,7 +67,6 @@
                             <File Id="PVSETTINGS.PDB" Name="PVSettings.pdb" Source="..\PVService\$(var.SourcePathFragment)PVSettings.pdb" />
                             <File Id="TIMECONTROL.PDB" Name="TimeControl.pdb" Source="..\PVBeanCounter\$(var.SourcePathFragment)TimeControl.pdb" />
                             <File Id="UTILITIES.PDB" Name="Utilities.pdb" Source="..\PVService\$(var.SourcePathFragment)Utilities.pdb" />
-                            <File Id="_.NET_PROJECTS.LNK" Name=".Net Projects.lnk" Source="..\..\..\..\..\..\Desktop\.Net Projects.lnk" />
                             <File Id="SYSTEM.DATA.SQLITE.DLL" Name="System.Data.SQLite.dll" Source="..\..\external dlls\bin\Release\System.Data.SQLite.dll" />
                             <File Id="DEVICE_CONSOLIDATION.XML" Name="Device_Consolidation.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Consolidation.xml" />
                             <File Id="OUTPUTMANAGERS.DLL" Name="OutputManagers.dll" Source="..\OutputManagers\$(var.SourcePathFragment)OutputManagers.dll" />

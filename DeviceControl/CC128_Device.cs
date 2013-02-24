@@ -72,7 +72,7 @@ namespace Device
             DeviceParams.RecordingInterval = deviceSettings.DBIntervalInt;
 
             DeviceParams.CalibrationFactor = deviceSettings.CalibrationFactor;
-            Feature_EnergyAC = deviceSettings.DeviceSettings.GetFeatureSettings(FeatureType.EnergyAC);
+            Feature_EnergyAC = deviceSettings.DeviceSettings.GetFeatureSettings(FeatureType.EnergyAC, deviceSettings.Feature);
         }
 
         protected override DeviceDetailPeriodsBase CreateNewPeriods(FeatureSettings featureSettings)

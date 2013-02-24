@@ -57,7 +57,7 @@ namespace Device
             DeviceParams.RecordingInterval = deviceSettings.DBIntervalInt;
 
             DeviceParams.CalibrationFactor = deviceSettings.CalibrationFactor;
-            Feature_YieldAC = DeviceSettings.GetFeatureSettings(FeatureType.YieldAC);
+            Feature_YieldAC = DeviceSettings.GetFeatureSettings(FeatureType.YieldAC, deviceSettings.Feature);
         }
 
         protected override DeviceDetailPeriodsBase CreateNewPeriods(FeatureSettings featureSettings)
