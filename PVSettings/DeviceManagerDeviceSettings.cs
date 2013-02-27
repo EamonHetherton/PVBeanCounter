@@ -33,6 +33,147 @@ namespace PVSettings
         EnumCount
     }
 
+    public enum EventType
+    {
+        Yield,
+        Consumption,
+        FeedInYield,
+        FeedInConsumption,
+        _TypeCount    // This marker must be last
+    }
+
+    public class DeviceEventSettings : PVSettings.SettingsBase
+    {        
+        private ApplicationSettings ApplicationSettings;
+        private DeviceManagerDeviceSettings Device;
+
+        private static List<EventType> _EventTypeList = null;
+
+        public DeviceEventSettings(ApplicationSettings root, XmlElement element, DeviceManagerDeviceSettings device)
+            : base(root, element)
+        {
+            ApplicationSettings = root;
+            Device = device;
+            if (_EventTypeList == null)
+            {
+                LoadEventTypeList();
+                DoPropertyChanged("EventTypeList");
+            }
+        }
+
+        public static void LoadEventTypeList()
+        {
+            _EventTypeList = new List<EventType>();
+
+            for(PVSettings.EventType i = 0; i < PVSettings.EventType._TypeCount; i++ )
+                _EventTypeList.Add(i);
+            
+        }
+
+        public List<EventType> EventTypeList { get { return _EventTypeList; } }
+
+        public ObservableCollection<FeatureSettings> EventFeatures
+        {
+            get
+            {
+                return Device.DeviceSettings.FeatureList;
+            }
+        }
+
+        public FeatureSettings EventFeature
+        {
+            get
+            {
+                FeatureType? fromType = EventFeatureType;
+                uint? fromId = EventFeatureId;
+                if (fromType == null || fromId == null)
+                    return null;
+                return Device.DeviceSettings.FindFeature(fromType.Value, fromId.Value);
+            }
+            set
+            {
+                if (value == null)
+                {
+                    EventFeatureType = null;
+                    EventFeatureId = null;
+                }
+                else
+                {
+                    EventFeatureType = value.Type;
+                    EventFeatureId = value.Id;
+                }
+            }
+        }
+
+        public FeatureType? EventFeatureType
+        {
+            get
+            {
+                String val = GetValue("eventfeaturetype");
+                if (val == "")
+                    return null;
+                return FeatureSettings.FeatureTypeFromString(val);
+            }
+            set
+            {
+                FeatureType? old = EventFeatureType;
+                if (value.HasValue)
+                    SetValue("eventfeaturetype", value.ToString(), "EventFeatureType");
+                else
+                    SetValue("eventfeaturetype", "", "EventFeatureType");
+                if (old != value)
+                {
+                    EventFeatureId = null;
+                    DoPropertyChanged("EventFeatureId");
+                }
+            }
+        }
+
+        public uint? EventFeatureId
+        {
+            get
+            {
+                String val = GetValue("eventfeatureid");
+                if (val == "")
+                    return null;
+                return uint.Parse(val);
+            }
+            set
+            {
+                if (value.HasValue)
+                    SetValue("eventfeatureid", value.ToString(), "EventFeatureId");
+                else
+                    SetValue("eventfeatureid", "", "EventFeatureId");
+            }
+        }
+
+        public static EventType? EventTypeFromString(String eventType)
+        {
+            for (EventType et = (EventType)0; et < PVSettings.EventType._TypeCount; et++)
+                if (et.ToString() == eventType)
+                    return et;
+            return null;
+        }
+
+        public EventType? EventType
+        {
+            get
+            {
+                String val = GetValue("eventtype");
+                if (val == "")
+                    return null;
+                return EventTypeFromString(val);
+            }
+            set
+            {
+                if (value.HasValue)
+                    SetValue("eventtype", value.ToString(), "EventType");
+                else
+                    SetValue("eventtype", "", "EventType");
+            }
+        }
+    }
+
     public class ConsolidateDeviceSettings : PVSettings.SettingsBase
     {
         public enum OperationType
@@ -325,6 +466,8 @@ namespace PVSettings
         public ObservableCollection<ConsolidateDeviceSettings> consolidateToDevices = null;
         public ObservableCollection<ConsolidateDeviceSettings> consolidateFromDevices = null;
 
+        public ObservableCollection<DeviceEventSettings> deviceEvents = null;
+
         public DeviceManagerDeviceSettings(ApplicationSettings root, XmlElement element, DeviceManagerSettings deviceManagerSettings)
             : base(root, element)
         {
@@ -342,6 +485,26 @@ namespace PVSettings
 
             consolidateToDevices = new ObservableCollection<ConsolidateDeviceSettings>();
             consolidateFromDevices = new ObservableCollection<ConsolidateDeviceSettings>();
+
+            RegisterEvents();
+        }
+
+        public void RegisterEvents()
+        {
+            XmlElement events = GetElement("deviceevents");
+            if (events == null)
+                events = AddElement(settings, "deviceevents");
+
+            deviceEvents = new ObservableCollection<DeviceEventSettings>();
+            
+            foreach (XmlElement e in events.ChildNodes)
+            {
+                if (e.Name == "event")
+                {
+                    DeviceEventSettings eventSettings = new DeviceEventSettings(ApplicationSettings, e, this);
+                    deviceEvents.Add(eventSettings);
+                }
+            }
         }
 
         public void RegisterConsolidations()
@@ -378,6 +541,8 @@ namespace PVSettings
 
         public ObservableCollection<ConsolidateDeviceSettings> ConsolidateFromDevices { get { return consolidateFromDevices; } }
 
+        public ObservableCollection<DeviceEventSettings> DeviceEvents { get { return deviceEvents; } }
+
         internal bool CheckDeviceRecursion(DeviceManagerDeviceSettings device)
         {
             if (device == null)
@@ -395,24 +560,59 @@ namespace PVSettings
             return false;
         }
 
-        public void AddDevice(DeviceManagerDeviceSettings device, ConsolidateDeviceSettings.OperationType operation)
+        public void AddEvent()
         {
-            if (device != null && CheckDeviceRecursion(device))
-                return;
+            XmlElement events = GetElement("deviceevents");
+            XmlElement e = AddElement(events, "event");
 
+            DeviceEventSettings newEvent = new DeviceEventSettings(ApplicationSettings, e, this);
+            deviceEvents.Add(newEvent);
+
+            DoPropertyChanged("DeviceEvents");
+        }
+
+        public void DeleteEvent(DeviceEventSettings e)
+        {
+            DeviceEventSettings forDeletion = null;
+
+            foreach (DeviceEventSettings settings in deviceEvents)
+            {
+                if (settings == e)
+                {
+                    forDeletion = settings;
+                    break;
+                }
+            }
+
+            if (forDeletion != null)
+                deviceEvents.Remove(forDeletion);
+
+
+            XmlElement devices = GetElement("deviceevents");
+            if (devices == null || e == null)
+                return;
+            
+            devices.RemoveChild(e.settings);
+            SettingChangedEventHandler("");
+                    
+            DoPropertyChanged("DeviceEvents");
+        }
+
+        public void AddDevice(ConsolidateDeviceSettings.OperationType operation)
+        {
+            
             XmlElement devices = GetElement("consolidatetodevices");
             XmlElement e = AddElement(devices, "device");
 
             ConsolidateDeviceSettings newConsol = new ConsolidateDeviceSettings(ApplicationSettings, e, this);
-            newConsol.ConsolidateToDevice = device;
+            newConsol.ConsolidateToDevice = null;
             newConsol.Operation = operation;
             consolidateToDevices.Add(newConsol);
-            if (device != null)
-                device.ConsolidateFromDevices.Add(newConsol);
             
             DoPropertyChanged("ConsolidateDevices");
             DoPropertyChanged("ConsolidateFromDevices");
         }
+      
 
         public void DeleteDevice(ConsolidateDeviceSettings consol)
         {
@@ -437,18 +637,10 @@ namespace PVSettings
             XmlElement devices = GetElement("consolidatetodevices");
             if (devices == null || consol == null)
                 return;
-
-            foreach (XmlNode child in devices.ChildNodes)
-            {
-                if (child.Name == "device" 
-                    && ElementHasChild(child, "devicename", consol.DeviceName)
-                    && ElementHasChild(child, "operation", consol.Operation.ToString()) )
-                {                    
-                    devices.RemoveChild(child);
-                    SettingChangedEventHandler("");
-                    return;
-                }
-            }
+                       
+            devices.RemoveChild(consol.settings);
+            SettingChangedEventHandler("");
+                   
             DoPropertyChanged("ConsolidateDevices");
             DoPropertyChanged("ConsolidateFromDevices");
         }
@@ -750,6 +942,22 @@ namespace PVSettings
 
                 SetValue("enabled", value ? "true" : "false", "Enabled");
                 DeleteElement("enable");
+            }
+        }
+
+        public bool AutoEvents
+        {
+            get
+            {
+                string val = GetValue("autoevents");
+                if (val == "")
+                    return false;
+                return val == "true";
+            }
+
+            set
+            {
+                SetValue("autoevents", value ? "true" : "false", "AutoEvents");
             }
         }
 

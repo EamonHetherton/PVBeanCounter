@@ -73,7 +73,7 @@ namespace DeviceControl
                     EnergyEvents.NewEnergyReading(SystemServices, EnergyEventType.TotalYield, "Sunny Explorer/1", "Inverters", "2001380621", "", DateTime.Now, testPower, null, 3600);
                     EnergyEvents.PVEventReadyEvent.Reset(); // ensure it waits below
                 }
-                 * */
+                */
 
                 if (LastEventTypeList <= DateTime.Now.AddMinutes(-2.0))
                 {

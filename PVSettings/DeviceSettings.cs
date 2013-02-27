@@ -52,8 +52,9 @@ namespace PVSettings
         EnergyDC,        
         YieldAC,        
         YieldDC,        
-        ConsumptionAC,        
-        FeatureTypeCount    // This marker must be last
+        ConsumptionAC,
+        GridFeedIn,
+        _TypeCount    // This marker must be last
     }
 
     public class FeatureSettings
@@ -87,7 +88,7 @@ namespace PVSettings
 
         public static FeatureType FeatureTypeFromString(String featureType)
         {
-            for (FeatureType ft = (FeatureType)0; ft < FeatureType.FeatureTypeCount; ft++)
+            for (FeatureType ft = (FeatureType)0; ft < FeatureType._TypeCount; ft++)
                 if (ft.ToString() == featureType)
                     return ft;
             return FeatureType.Unknown;
@@ -95,7 +96,7 @@ namespace PVSettings
 
         public static MeasureType MeasureTypeFromFeatureType(FeatureType featureType)
         {
-            if (featureType >= FeatureType.EnergyAC && featureType <= FeatureType.ConsumptionAC)
+            if (featureType >= FeatureType.EnergyAC && featureType <= FeatureType.GridFeedIn)
                 return MeasureType.Energy;
             return MeasureType.Unknown;
         }

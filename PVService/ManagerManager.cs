@@ -41,9 +41,7 @@ namespace PVService
         public bool RunMonitors { get; private set; }
         public IEvents EnergyEvents { get; private set; }
 
-        private DateTime LastYieldReady;
-        private DateTime LastConsumeReady;
-
+        public EventManager EventManager { get; private set; }
         public List<DeviceControl.DeviceManagerBase> RunningDeviceManagers { get; private set; }
         public List<DeviceControl.DeviceManagerBase> ConsolidationDeviceManagers { get; private set; }
         public List<OutputManagers.PVOutputManager> RunningOutputManagers { get; private set; }
@@ -80,12 +78,11 @@ namespace PVService
             // MySQL and SQL Server isolate concurrent queries from intra-command db changes (such as delete from table where...)
             GlobalSettings.SystemServices.UseDatabaseMutex = (GlobalSettings.ApplicationSettings.DatabaseType != "MySql" && GlobalSettings.ApplicationSettings.DatabaseType != "SQL Server");
             LiveLoadForced = false;
-            LastYieldReady = DateTime.Today;
-            LastConsumeReady = DateTime.Today;
 
             RunningOutputManagers = new List<OutputManagers.PVOutputManager>();
             RunningDeviceManagers = new List<DeviceControl.DeviceManagerBase>();
             ConsolidationDeviceManagers = new List<DeviceControl.DeviceManagerBase>();
+            EventManager = null;
             OutputReadyLock = new Object();
         }
 
@@ -288,6 +285,7 @@ namespace PVService
                 RunningOutputManagers.Clear();
                 RunningDeviceManagers.Clear();
                 ConsolidationDeviceManagers.Clear();
+                EventManager = null;
             }
             catch (Exception e)
             {
@@ -300,9 +298,9 @@ namespace PVService
             try
             {
                 LogMessage("Loading Event Manager", LogEntryType.Information);
-                EventManager eventManager = new EventManager(ExecutionManager.GenThreadManager, EnergyEvents);
+                EventManager = new EventManager(ExecutionManager.GenThreadManager, EnergyEvents);
 
-                int emId = ExecutionManager.GenThreadManager.AddThread(eventManager);
+                int emId = ExecutionManager.GenThreadManager.AddThread(EventManager);
                 ExecutionManager.GenThreadManager.StartThread(emId);
 
                 LogMessage("Event Manager Loaded", LogEntryType.StatusChange);

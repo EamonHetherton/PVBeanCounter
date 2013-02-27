@@ -785,7 +785,7 @@ namespace PVBeanCounter
             DeviceManagerDeviceSettings device = ((DeviceManagerDeviceSettings)gridDevice.DataContext);
             if (device == null)
                 return;
-            device.AddDevice(null, ConsolidateDeviceSettings.OperationType.Add);
+            device.AddDevice(ConsolidateDeviceSettings.OperationType.Add);
             //buttonDeleteConsolidateTo.IsEnabled = device.ConsolidateToDevices.Count > 0;
         }
 
@@ -796,6 +796,24 @@ namespace PVBeanCounter
                 return;
             device.DeleteDevice((ConsolidateDeviceSettings)datGridConsolidateToDevices.SelectedItem);
             buttonDeleteConsolidateTo.IsEnabled &= device.ConsolidateToDevices.Count > 0;
+        }
+
+        private void buttonAddDeviceEvent_Click(object sender, RoutedEventArgs e)
+        {
+            DeviceManagerDeviceSettings device = ((DeviceManagerDeviceSettings)gridDevice.DataContext);
+            if (device == null)
+                return;
+            device.AddEvent();
+            buttonDeleteDeviceEvent.IsEnabled = device.DeviceEvents.Count > 0;
+        }
+
+        private void buttonDeleteDeviceEvent_Click(object sender, RoutedEventArgs e)
+        {
+            DeviceManagerDeviceSettings device = ((DeviceManagerDeviceSettings)gridDevice.DataContext);
+            if (device == null)
+                return;
+            device.DeleteEvent((DeviceEventSettings)dataGridDeviceEvents.SelectedItem);
+            buttonDeleteDeviceEvent.IsEnabled = device.DeviceEvents.Count > 0;
         }
 
         private void datGridConsolidateToDevices_SelectionChanged(object sender, SelectionChangedEventArgs e)
