@@ -771,6 +771,7 @@ namespace PVBeanCounter
             expanderDeviceMgrAdvanced.IsExpanded = false;
             expanderConsolidatedFrom.IsExpanded = false;
             expanderConsolidatesTo.IsExpanded = false;
+            expanderDeviceEvents.IsExpanded = false;
         }
 
         private void expanderDeviceMgrAdvanced_Expanded(object sender, RoutedEventArgs e)
@@ -778,6 +779,7 @@ namespace PVBeanCounter
             expanderDeviceAdvanced.IsExpanded = false;
             expanderConsolidatedFrom.IsExpanded = false;
             expanderConsolidatesTo.IsExpanded = false;
+            expanderDeviceEvents.IsExpanded = false;
         }
 
         private void buttonAddConsolidateTo_Click(object sender, RoutedEventArgs e)
@@ -837,18 +839,33 @@ namespace PVBeanCounter
         private void expanderConsolidatedFrom_Expanded(object sender, RoutedEventArgs e)
         {
             expanderDeviceMgrAdvanced.IsExpanded = false;
-            expanderConsolidatesTo.IsExpanded = false;
             expanderDeviceAdvanced.IsExpanded = false;
             expanderConsolidatesTo.IsExpanded = false;
+            expanderDeviceEvents.IsExpanded = false;
         }
 
         private void expanderConsolidatesTo_Expanded(object sender, RoutedEventArgs e)
         {
             expanderDeviceMgrAdvanced.IsExpanded = false;
-            expanderConsolidatedFrom.IsExpanded = false;
             expanderDeviceAdvanced.IsExpanded = false;
             expanderConsolidatedFrom.IsExpanded = false;
+            expanderDeviceEvents.IsExpanded = false;
         }
+
+        private void expanderDeviceEvents_Expanded(object sender, RoutedEventArgs e)
+        {
+            expanderDeviceMgrAdvanced.IsExpanded = false;
+            expanderDeviceAdvanced.IsExpanded = false;
+            expanderConsolidatedFrom.IsExpanded = false;
+            expanderConsolidatesTo.IsExpanded = false;
+            checkBoxAutoEvents_Auto.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
+        private void expanderDeviceEvents_Collapsed(object sender, RoutedEventArgs e)
+        {
+            checkBoxAutoEvents_Auto.Visibility = System.Windows.Visibility.Visible;
+        }
+
     }
 
     public class NullableValueConverter : IValueConverter
