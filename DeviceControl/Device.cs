@@ -128,7 +128,7 @@ namespace Device
             EventStatusList = new List<EnergyEventStatus>();
             foreach (FeatureSettings fs in DeviceSettings.FeatureList)
             {
-                EnergyEventStatus status = new EnergyEventStatus(this, fs.Type, fs.Id, DeviceManagerDeviceSettings.QueryIntervalInt, false);
+                EnergyEventStatus status = new EnergyEventStatus(this, fs.Type, fs.Id, DeviceManagerDeviceSettings.QueryIntervalInt, DeviceManagerDeviceSettings.DeviceEvents);
                 EventStatusList.Add(status);
             }
         }

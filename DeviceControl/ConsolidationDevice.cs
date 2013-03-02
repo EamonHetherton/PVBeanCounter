@@ -57,7 +57,7 @@ namespace Device
             ToFeatureId = toFeatureId;
             Operation = operation;
             FromEventStatus = fromEventStatus;
-            FromEventStatus.ToDeviceLink = this;
+            FromEventStatus.ToDeviceLinks.Add(this);
         }
     }
 
@@ -93,6 +93,7 @@ namespace Device
                 return;
             }
             deviceLink.ToEventStatus = FindFeatureStatus(deviceLink.ToFeatureType, deviceLink.ToFeatureId);
+            deviceLink.ToEventStatus.ToDeviceLinks.Add(deviceLink);
             SourceDevices.Add(deviceLink);
             deviceLink.FromDevice.AddTargetDevice(deviceLink);
         }

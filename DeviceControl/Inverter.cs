@@ -149,6 +149,8 @@ namespace Device
                     return false;
                 }
 
+                int curPower = InverterAlgorithm.PowerAC1.HasValue ? (int)InverterAlgorithm.PowerAC1.Value : 0;
+
                 if (dbWrite)
                 {
                     DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_YieldAC.Type, Feature_YieldAC.Id);
@@ -213,9 +215,8 @@ namespace Device
                 if (EmitEvents)
                 {
                     stage = "energy";
-                    DeviceManager.ManagerManager.EnergyEvents.NewEnergyReading(
-                        DeviceManager.ThreadName, DeviceIdentifier, "", curTime,
-                        null, (int)InverterAlgorithm.PowerAC1.Value, (int)duration.TotalSeconds);
+                    EnergyEventStatus status = FindFeatureStatus(FeatureType.YieldAC, 0);
+                    status.SetEventReading(curTime, 0.0, curPower, (int)duration.TotalSeconds, true);
                 }
 
                 stage = "errors";

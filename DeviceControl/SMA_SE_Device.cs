@@ -160,9 +160,8 @@ namespace Device
                 if (EmitEvents)
                 {
                     stage = "energy";
-                    DeviceManager.ManagerManager.EnergyEvents.NewEnergyReading(
-                        DeviceManager.ThreadName, DeviceIdentifier, "", liveReading.TimeStampe,
-                        null, liveReading.Watts, (int)duration.TotalSeconds);
+                    EnergyEventStatus status = FindFeatureStatus(FeatureType.YieldAC, 0);
+                    status.SetEventReading(DateTime.Now, 0.0, liveReading.Watts, (int)duration.TotalSeconds, true);
                 }
 
                 stage = "errors";

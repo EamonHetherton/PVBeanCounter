@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,42 +28,82 @@ using PVSettings;
 
 namespace Device
 {
-    public class EventStatus
+    public struct DeviceEventConfig
+    {
+        public String EventName;
+        public EventType EventType;
+        public bool UseForFeedIn;
+
+        public DeviceEventConfig(DeviceEventSettings settings)
+        {
+            EventName = settings.EventName;
+            EventType = settings.EventType.Value;
+            UseForFeedIn = settings.UseForFeedIn;
+        }
+    }
+
+    public abstract class EventStatus
     {
         protected DeviceBase Device;
         public FeatureType FeatureType;
         public uint FeatureId;
 
-        public int? Frequency;
-        public bool EmitEvent;
+        public int Frequency;
+        public List<DeviceEventConfig> EmitEvents;
         public int EventCount = 0;
         protected float Interval = 0.0F;
         protected DateTime? IntervalEnd = null;
 
-        public DeviceLink ToDeviceLink = null;
+        public List<DeviceLink> ToDeviceLinks;
+        public List<DeviceLink> FromDeviceLinks;
 
-        public EventStatus(DeviceBase device, FeatureType featureType, uint featureId, int? frequency, bool emitEvent)
+        public EventStatus(DeviceBase device, FeatureType featureType, uint featureId, int frequency, ObservableCollection<DeviceEventSettings> emitEvents)
         {
             Device = device;
             FeatureType = featureType;
             FeatureId = featureId;
             Frequency = frequency;
-            EmitEvent = emitEvent;
+            ToDeviceLinks = new List<DeviceLink>();
+            FromDeviceLinks = new List<DeviceLink>();
+
+            EmitEvents = new List<DeviceEventConfig>();
+            foreach(DeviceEventSettings es in device.DeviceManagerDeviceSettings.DeviceEvents)
+                if (es.EventFeatureType == FeatureType && es.EventFeatureId == FeatureId)
+                    EmitEvents.Add(new DeviceEventConfig(es));
+        }
+
+        protected void IncrementEventCount(int depth)
+        {
+            if (depth > 10)
+            {
+                GlobalSettings.LogMessage("IncrementEventCount", "Recursion too deep: " + depth + " - increment aborted", LogEntryType.ErrorMessage);
+                return;
+            }
+
+            if (GlobalSettings.SystemServices.LogEvent)
+                GlobalSettings.LogMessage("IncrementEventCount",
+                    "Increment - Type: " + FeatureType +
+                    " - Id: " + FeatureId +
+                    " - Device: " + Device.DeviceManagerDeviceSettings.Name, LogEntryType.Event);
+            EventCount++;
+            depth++;
+            foreach (DeviceLink link in FromDeviceLinks)                
+                    link.ToEventStatus.IncrementEventCount(depth);
         }
     }
 
     public class EnergyEventStatus : EventStatus
     {
         private Double EnergyTotal;
-        private int NodePower;
+        private int EventPower;
         public int LastPowerEmitted;
         public Double LastEnergyEmitted;
 
-        public EnergyEventStatus(DeviceBase device, FeatureType featureType, uint featureId, int? frequency, bool emitEvent)
-            : base(device, featureType, featureId, frequency, emitEvent)
+        public EnergyEventStatus(DeviceBase device, FeatureType featureType, uint featureId, int frequency, ObservableCollection<DeviceEventSettings> emitEvents)
+            : base(device, featureType, featureId, frequency, emitEvents)
         {
             EnergyTotal = 0.0;            
-            NodePower = 0;
+            EventPower = 0;
             LastPowerEmitted = 0;
             LastEnergyEmitted = 0.0;        
         }
@@ -73,7 +114,7 @@ namespace Device
             {
                 if (IntervalEnd.HasValue)
                 {
-                    int limit = Frequency.Value * 4 + 10;
+                    int limit = Frequency * 4 + 10;
                     return IntervalEnd.Value.AddSeconds(limit);
                 }
                 else
@@ -100,28 +141,51 @@ namespace Device
             }
             IntervalEnd = eventTime;
             Interval = interval;
-            NodePower = power;
+            EventPower = power;
             IncrementEventCount( 0);
         }
 
-        public void IncrementEventCount( int depth)
+        public void GetCurrentReading(DateTime asAt, out Double energyToday, out int currentPower)
         {
-            if (depth > 10)
-            {
-                GlobalSettings.LogMessage("IncrementEventCount", "Recursion too deep: " + depth + " - increment aborted", LogEntryType.ErrorMessage);
-                return;
-            }
+            Double energy = 0.0;
+            if (IntervalEnd.HasValue)
+                energy = ((asAt.Date == IntervalEnd.Value.Date) ? EnergyTotal : 0.0);
 
-            if (GlobalSettings.SystemServices.LogEvent)
-                GlobalSettings.LogMessage("IncrementEventCount",
-                    "Increment - Type: " + FeatureType +
-                    " - Id: " + FeatureId +
-                    " - Device: " + Device.DeviceManagerDeviceSettings.Name, LogEntryType.Event);
-            EventCount++;
-            depth++;
-            foreach (EnergyNode node in AddsTo)
-                node.IncrementEventCount( depth);
+            int power = GetNodePower(asAt);
+
+            foreach (DeviceLink link in FromDeviceLinks)
+            {
+                Double subEnergy;
+                int subPower;
+
+                link.FromEventStatus.GetCurrentReading(asAt, out subEnergy, out subPower);
+                energy += subEnergy;
+                power += subPower;
+            }
+            energyToday = energy;
+            currentPower = power;
+            LastPowerEmitted = power;
+            LastEnergyEmitted = energy;
         }
+
+        private int GetNodePower(DateTime asAt)
+        {
+            DateTime? expires = PowerExpires;
+            if (expires.HasValue)
+                if (expires.Value >= asAt)
+                    return EventPower;
+                else
+                {
+                    if (GlobalSettings.ApplicationSettings.LogMeterTrace)
+                        GlobalSettings.LogMessage("EnergyNode.GetNodePower", "Power has expired - Name: " + Device.DeviceManagerDeviceSettings.Name +
+                            " - Feature Type: " + FeatureType + " - Id: " + FeatureId +
+                            " - Expired: " + expires.Value, LogEntryType.MeterTrace);
+                    return 0;
+                }
+            else
+                return 0;
+        }
+
 
         /*
         public void InitialiseEnergyNode( int? frequency, bool emitEvent)
@@ -293,51 +357,6 @@ namespace Device
                 LinkMeterNodes(HierarchyType.Consumption, allNodes);
             }
         }
-
-        private int GetNodePower(DateTime asAt)
-        {
-            DateTime? expires = PowerExpires;
-            if (expires.HasValue)
-                if (expires.Value >= asAt)
-                    return NodePower;
-                else
-                {
-                    if (Logger.LogMeterTrace)
-                        Logger.LogMessage("EnergyNode.GetNodePower", "Power has expired - Hierarchy: " + Hierarchy +
-                            " - Manager: " + ManagerName + " - Component: " + Component + " - Device: " + DeviceName +
-                            " - Expired: " + expires.Value, LogEntryType.MeterTrace);
-                    return 0;
-                }
-            else
-                return 0;
-        }
-
-        public void GetCurrentReading(DateTime asAt, out Double energyToday, out int currentPower)
-        {
-            Double energy = 0.0;
-            if (IntervalEnd.HasValue)
-                energy = ((asAt.Date == IntervalEnd.Value.Date) ? EnergyTotal : 0.0);
-
-            int power = GetNodePower(asAt);
-
-            foreach (EnergyNode node in ComposedOf)
-                if (node.Frequency.HasValue)
-                {
-                    Double subEnergy;
-                    int subPower;
-
-                    node.GetCurrentReading(asAt, out subEnergy, out subPower);
-                    energy += subEnergy;
-                    power += subPower;
-                }
-            energyToday = energy;
-            currentPower = power;
-            LastPowerEmitted = power;
-            LastEnergyEmitted = energy;
-        }
-
-
-
 
     */
     }
