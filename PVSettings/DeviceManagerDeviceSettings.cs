@@ -37,15 +37,14 @@ namespace PVSettings
     {
         Yield,
         Consumption,
-        FeedInYield,
-        FeedInConsumption,
+        Energy,
         _TypeCount    // This marker must be last
     }
 
     public class DeviceEventSettings : PVSettings.SettingsBase
     {        
         private ApplicationSettings ApplicationSettings;
-        private DeviceManagerDeviceSettings Device;
+        public DeviceManagerDeviceSettings Device { get; private set; }
 
         private static List<EventType> _EventTypeList = null;
 
@@ -159,6 +158,38 @@ namespace PVSettings
             }
         }
 
+        public bool UseForFeedIn
+        {
+            get
+            {
+                return GetValue("useforfeedin") == "true";
+            }
+
+            set
+            {
+                if (EventType > PVSettings.EventType.Consumption)
+                    SetValue("useforfeedin", "false", "UseForFeedIn");
+                else
+                {
+                    SetValue("useforfeedin", value ? "true" : "false", "UseForFeedIn");
+                    if (value)
+                        ClearOtherMatchingEvents(true);
+                }
+            }
+        }
+
+        public String EventName
+        {
+            get
+            {
+                return GetValue("eventname").Trim();
+            }
+            set
+            {
+                SetValue("eventname", value.Trim(), "EventName");
+            }
+        }
+
         public static EventType? EventTypeFromString(String eventType)
         {
             for (EventType et = (EventType)0; et < PVSettings.EventType._TypeCount; et++)
@@ -167,27 +198,29 @@ namespace PVSettings
             return null;
         }
 
-        private void ClearOtherMatchingEvents(EventType eventType)
-        {            
+        private void ClearOtherMatchingEvents(bool clearOtherFeedIn)
+        {
+            PVSettings.EventType? eventType = EventType;
+            String customEvent = EventName;
+            if (eventType > PVSettings.EventType.Consumption || !eventType.HasValue)
+                return;
+
             foreach (DeviceManagerDeviceSettings d in ApplicationSettings.AllDevicesList)
             {
                 bool cleared = false;
                 for (int i = 0; i < d.DeviceEvents.Count; )
                 {
                     DeviceEventSettings e = d.deviceEvents[i];
-                    if (    e != this 
-                            && 
-                            (   e.EventType == eventType 
-                                ||  d.AutoEvents 
-                                    && 
-                                    (   eventType == PVSettings.EventType.Yield && e.EventType == PVSettings.EventType.FeedInYield
-                                        || eventType == PVSettings.EventType.Consumption && e.EventType == PVSettings.EventType.FeedInConsumption
-                                    )
-                            )
-                        )
+                    if (e != this && e.EventType == eventType && e.EventName == customEvent)
                     {
                         d.DeleteEvent(e);
                         cleared = true;
+                    }
+                    if (e != this && e.EventType == eventType && e.EventName != customEvent && clearOtherFeedIn && e.UseForFeedIn)
+                    {
+                        e.UseForFeedIn = false;
+                        cleared = true;
+                        i++;
                     }
                     else
                         i++;
@@ -203,9 +236,9 @@ namespace PVSettings
                 return true;
             if (!EventType.HasValue)
                 return true;
-            if (EventFeatureType == FeatureType.YieldAC && (EventType == PVSettings.EventType.Yield || EventType == PVSettings.EventType.FeedInYield))
+            if (EventFeatureType == FeatureType.YieldAC && EventType == PVSettings.EventType.Yield )
                 return true;
-            if (EventFeatureType == FeatureType.ConsumptionAC && (EventType == PVSettings.EventType.Consumption || EventType == PVSettings.EventType.FeedInConsumption))
+            if (EventFeatureType == FeatureType.ConsumptionAC && EventType == PVSettings.EventType.Consumption)
                 return true;
             if (EventFeatureType == FeatureType.EnergyAC)
                 return true;
@@ -234,13 +267,19 @@ namespace PVSettings
                 if (ValidateEvent())
                 {
                     if (value.HasValue)
-                        ClearOtherMatchingEvents(value.Value);
+                    {
+                        if (EventName == "")
+                            EventName = value.Value.ToString();
+                        if (value > PVSettings.EventType.Consumption)                        
+                            UseForFeedIn = false;
+                        else
+                            ClearOtherMatchingEvents(UseForFeedIn);
+                    }
                 }
                 else if (old.HasValue)
                     SetValue("eventtype", old.ToString(), "EventType");
                 else
                     SetValue("eventtype", "", "EventType");
-
             }
         }
     }
@@ -1017,23 +1056,6 @@ namespace PVSettings
             }
         }
 
-        private void RemoveDuplicateEvents(EventType eventType, bool autoDeleteFeedin = false)
-        {
-            for (int i = 0; i < deviceEvents.Count; )
-            {
-                // remove both target event type and associated feedin event type
-                if (deviceEvents[i].EventType == eventType 
-                    || autoDeleteFeedin && (eventType == EventType.Yield && deviceEvents[i].EventType == EventType.FeedInYield
-                    || eventType == EventType.Consumption && deviceEvents[i].EventType == EventType.FeedInConsumption))
-                {
-                    DeleteEvent(deviceEvents[i]);
-                    AutoEvents = false;
-                }
-                else
-                    i++;
-            }
-        }
-
         public bool CheckAdjustAutoEvents()
         {
             int hasYield = 0;
@@ -1063,30 +1085,16 @@ namespace PVSettings
                         DeviceEventSettings e = AddEvent();
                         e.EventFeature = f;
                         e.EventType = EventType.Yield;
-                        e = AddEvent();
-                        e.EventFeature = f;
-                        e.EventType = EventType.FeedInYield;
+                        e.UseForFeedIn = true;
                     }
                     else if (f.Type == FeatureType.ConsumptionAC)
                     {
                         DeviceEventSettings e = AddEvent();
                         e.EventFeature = f;
                         e.EventType = EventType.Consumption;
-                        e = AddEvent();
-                        e.EventFeature = f;
-                        e.EventType = EventType.FeedInConsumption;
+                        e.UseForFeedIn = true;
                     }
                 }
-
-                // scan the other devices and remove any conflicting events
-                foreach (DeviceManagerDeviceSettings d in ApplicationSettings.AllDevicesList)
-                    if (d != this)
-                    {
-                        if (hasYield == 1)
-                            d.RemoveDuplicateEvents(EventType.Yield, true);  // check for and remove any yield events
-                        if (hasConsume == 1)
-                            d.RemoveDuplicateEvents(EventType.Consumption, true); // check for and remove any consumption events
-                    }
 
                 return true; // confirm that auto events for this device are configured
             }

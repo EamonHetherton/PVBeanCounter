@@ -49,89 +49,6 @@ namespace Device
         }
     }
 
-    public class DeviceInfo
-    {
-        public DeviceIdentity Identity;
-        public UInt64 Address;
-        public String Firmware = "";
-        public String SiteId = null;
-        public bool Found = false;
-        public int Phases = -1;
-        public Double? VARating = null;
-        public Double EstEnergy = 0.0;        // Current interval energy estimate based upon spot power readings - reset when cmsdata record is written
-        public DateTime? LastEstTime = null;
-        public DateTime? LastRecordTime = null;
-        public Double EstMargin = 0.01;
-        public bool UseEnergyTotal = true;
-        public bool HasPhoenixtecStartOfDayEnergyDefect;
-        public Double CrazyDayStartMinutes = 90.0;
-        public bool StartEnergyResolved = false;    // Used with HasPhoenixtecStartOfDayEnergyDefect
-        public bool EnergyDropFound = false;    // Used with HasPhoenixtecStartOfDayEnergyDefect
-
-        public DateTime? FirstFullDay = null;
-        public bool ResetFirstFullDay = false;
-
-        public DateTime? NextFileDate = null;
-        //public DeviceAlgorithm Device = null;
-
-        public DeviceInfo(UInt64 address, bool startOfDayEnergyDefect = false, DateTime? firstFullDay = null)
-        {
-            Address = address;
-            HasPhoenixtecStartOfDayEnergyDefect = startOfDayEnergyDefect;
-            ResetFirstFullDay = firstFullDay.HasValue;
-            FirstFullDay = firstFullDay;
-        }
-
-        public TimeSpan EstimateEnergy(Double powerWatts, DateTime curTime)
-        {
-            TimeSpan duration;
-            if (LastEstTime.HasValue)
-                duration = (curTime - LastEstTime.Value);
-            else
-                duration = TimeSpan.FromSeconds(0.0);
-            //Double prevEstimate = EstEnergy;
-            //Double increment = (powerWatts * duration.TotalHours) / 1000.0;
-            //Double newEstimate = prevEstimate + increment;
-            Double newEnergy = (powerWatts * duration.TotalHours) / 1000.0; // watts to KWH
-            EstEnergy += newEnergy;
-            /*
-            if (GlobalSettings.SystemServices.LogTrace)
-                GlobalSettings.SystemServices.LogMessage("EstimateEnergy", 
-                    "Previous: " + prevEstimate + 
-                    " - Increment: " + increment + 
-                    " - Calculated: " + newEstimate + 
-                    " - Recorded: " + EstEnergy, LogEntryType.Trace);
-            */
-            LastEstTime = curTime;
-
-            if (GlobalSettings.SystemServices.LogTrace)
-                GlobalSettings.SystemServices.LogMessage("DataRecorder", "EstimateEnergy - Power: " + powerWatts +
-                    " - Duration: " + duration.TotalSeconds + " - Energy: " + newEnergy + " - TotalEnergy: " + EstEnergy, LogEntryType.Trace);
-
-            return duration;
-        }
-
-        public static int IntervalCompare(int intervalSeconds, DateTime time1, DateTime time2)
-        {
-            if (time1.Date < time2.Date)
-                return -1;
-
-            if (time1.Date > time2.Date)
-                return 1;
-
-            TimeSpan diff = time1 - time2;
-            int interval1 = (int)(time1.TimeOfDay.TotalSeconds / intervalSeconds);
-            int interval2 = (int)(time2.TimeOfDay.TotalSeconds / intervalSeconds);
-
-            if (interval1 < interval2)
-                return -1;
-            if (interval1 > interval2)
-                return 1;
-
-            return 0;
-        }
-    }
-
     public struct OutputReadyNotification
     {
         public FeatureType FeatureType;
@@ -175,6 +92,8 @@ namespace Device
 
         private List<FeaturePeriods> FeaturePeriodsList;
 
+        private List<EnergyEventStatus> EventStatusList;
+
         public bool Enabled { get; private set; }
 
         public DeviceBase(DeviceControl.DeviceManagerBase deviceManager, DeviceManagerDeviceSettings deviceSettings)
@@ -200,6 +119,46 @@ namespace Device
             DeviceSettings = deviceSettings.DeviceSettings;
             DeviceIdentifier = deviceSettings.SerialNo;
             Enabled = deviceSettings.Enabled;
+
+            BuildFeatureEvents();
+        }
+
+        private void BuildFeatureEvents()
+        {
+            EventStatusList = new List<EnergyEventStatus>();
+            foreach (FeatureSettings fs in DeviceSettings.FeatureList)
+            {
+                EnergyEventStatus status = new EnergyEventStatus(this, fs.Type, fs.Id, DeviceManagerDeviceSettings.QueryIntervalInt, false);
+                EventStatusList.Add(status);
+            }
+        }
+
+        public EnergyEventStatus FindFeatureStatus(FeatureType featureType, uint featureId)
+        {
+            foreach (EnergyEventStatus status in EventStatusList)
+                if (featureType == status.FeatureType && featureId == status.FeatureId)
+                    return status;
+            return null;
+        }
+
+        public static int IntervalCompare(int intervalSeconds, DateTime time1, DateTime time2)
+        {
+            if (time1.Date < time2.Date)
+                return -1;
+
+            if (time1.Date > time2.Date)
+                return 1;
+
+            TimeSpan diff = time1 - time2;
+            int interval1 = (int)(time1.TimeOfDay.TotalSeconds / intervalSeconds);
+            int interval2 = (int)(time2.TimeOfDay.TotalSeconds / intervalSeconds);
+
+            if (interval1 < interval2)
+                return -1;
+            if (interval1 > interval2)
+                return 1;
+
+            return 0;
         }
 
         public void BindConsolidations(DeviceControl.IDeviceManagerManager mm)
@@ -210,21 +169,13 @@ namespace Device
                     ConsolidationDevice d = (ConsolidationDevice) mm.FindDeviceFromSettings(cds.ConsolidateToDevice);
                     if (d == null)
                         LogMessage("BindConsolidations - Cannot find device: " + cds.ConsolidateToDevice.Name, LogEntryType.ErrorMessage);
+                    else if (!cds.ConsolidateFromFeatureType.HasValue || !cds.ConsolidateFromFeatureId.HasValue)
+                        LogMessage("BindConsolidations - Missing Feature info: " + cds.ConsolidateFromDevice.Name, LogEntryType.ErrorMessage);
                     else
                         d.AddSourceDevice
-                            (new DeviceLink 
-                                {   FromDevice = this, 
-                                    FromFeatureType = cds.ConsolidateFromFeatureType.Value,
-                                    FromFeatureId = cds.ConsolidateFromFeatureId.Value, 
-                                    ToDevice = d, 
-                                    ToFeatureType = cds.ConsolidateToFeatureType,
-                                    ToFeatureId = cds.ConsolidateToFeatureId, 
-                                    Operation = cds.Operation ,
-
-                                    LastReadyTime = DateTime.MinValue,
-                                    ReadyTimeUpdated = false
-                                }
-                            );
+                            (new DeviceLink( this, cds.ConsolidateFromFeatureType.Value, cds.ConsolidateFromFeatureId.Value, 
+                                d, cds.ConsolidateToFeatureType, cds.ConsolidateToFeatureId, 
+                                cds.Operation, FindFeatureStatus(cds.ConsolidateFromFeatureType.Value, cds.ConsolidateFromFeatureId.Value)));
                 }
         }
 

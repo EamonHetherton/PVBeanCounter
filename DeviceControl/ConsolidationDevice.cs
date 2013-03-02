@@ -40,8 +40,25 @@ namespace Device
         public uint ToFeatureId;
         public ConsolidateDeviceSettings.OperationType Operation;
 
-        public DateTime LastReadyTime;
-        public bool ReadyTimeUpdated;
+        public DateTime LastReadyTime = DateTime.MinValue;
+        public bool ReadyTimeUpdated = false;
+        public EnergyEventStatus FromEventStatus;
+        public EnergyEventStatus ToEventStatus = null;
+
+        public DeviceLink(DeviceBase fromDevice, FeatureType fromFeatureType, uint fromFeatureId, 
+            ConsolidationDevice toDevice, FeatureType toFeatureType, uint toFeatureId,
+            ConsolidateDeviceSettings.OperationType operation, EnergyEventStatus fromEventStatus)
+        {
+            FromDevice = fromDevice;
+            FromFeatureType = fromFeatureType;
+            FromFeatureId = fromFeatureId;
+            ToDevice = toDevice;
+            ToFeatureType = toFeatureType;
+            ToFeatureId = toFeatureId;
+            Operation = operation;
+            FromEventStatus = fromEventStatus;
+            FromEventStatus.ToDeviceLink = this;
+        }
     }
 
     public abstract class ConsolidationDevice : DeviceBase
@@ -75,6 +92,7 @@ namespace Device
                     this.DeviceIdentifier + " - ignored", LogEntryType.ErrorMessage);
                 return;
             }
+            deviceLink.ToEventStatus = FindFeatureStatus(deviceLink.ToFeatureType, deviceLink.ToFeatureId);
             SourceDevices.Add(deviceLink);
             deviceLink.FromDevice.AddTargetDevice(deviceLink);
         }

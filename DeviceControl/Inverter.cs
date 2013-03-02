@@ -133,7 +133,7 @@ namespace Device
 
                 DateTime curTime = DateTime.Now;
                 bool dbWrite = (LastRecordTime == null
-                    || DeviceInfo.IntervalCompare(DatabaseInterval, LastRecordTime.Value, curTime) != 0);
+                    || DeviceBase.IntervalCompare(DatabaseInterval, LastRecordTime.Value, curTime) != 0);
                 res = InverterAlgorithm.ExtractReading(dbWrite, ref alarmFound, ref errorFound);
                 if (!res)
                     return false;
@@ -213,7 +213,7 @@ namespace Device
                 if (EmitEvents)
                 {
                     stage = "energy";
-                    DeviceManager.ManagerManager.EnergyEvents.NewEnergyReading(PVSettings.HierarchyType.Yield,
+                    DeviceManager.ManagerManager.EnergyEvents.NewEnergyReading(
                         DeviceManager.ThreadName, DeviceIdentifier, "", curTime,
                         null, (int)InverterAlgorithm.PowerAC1.Value, (int)duration.TotalSeconds);
                 }

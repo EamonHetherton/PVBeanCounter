@@ -56,7 +56,6 @@ namespace PVSettings
         private ObservableCollection<DeviceManagerSettings> _DeviceManagerList;
         //private ObservableCollection<MeterManagerSettings> _MeterManagerList;
         private ObservableCollection<PvOutputSiteSettings> _PvOutputSystemList;
-        private ObservableCollection<EnergyEventSettings> _EnergyEventList;
         private ObservableCollection<DeviceManagerDeviceSettings> _AllDevicesList;
         private ObservableCollection<DeviceManagerDeviceSettings> _AllConsolidationDevicesList;
         
@@ -71,7 +70,6 @@ namespace PVSettings
         public ApplicationSettings(String SettingsFileName)
             : base(SettingsFileName, "configuration", @"\settings_template_SE_SQLite.xml")
         {
-            _EnergyEventList = new ObservableCollection<EnergyEventSettings>();
             DeviceManagementSettings = new DeviceManagementSettings();
             
             SystemServices = null;
@@ -96,12 +94,10 @@ namespace PVSettings
             return null;
         }
 
-        public void SetSystemServices(SystemServices systemServices, bool loadEnergyEvents = true)
+        public void SetSystemServices(SystemServices systemServices)
         {
             bool oldChangedState = ServiceDetailsChanged;
             SystemServices = systemServices;
-            if (loadEnergyEvents)
-                LoadEnergyEvents(true);
             ServiceDetailsChanged = oldChangedState;
         }
 
@@ -133,6 +129,7 @@ namespace PVSettings
             DeleteElement("monitorinverters");
             DeleteElement("monitormeters");
             DeleteElement("metermanagerlist");
+            DeleteElement("usedefaultevents");
         }
 
         internal String GetApplianceListXml()
@@ -143,98 +140,6 @@ namespace PVSettings
 
             return elem.InnerXml;
         }
-
-        /*
-        private void LoadMeterManagers()
-        {
-            _MeterManagerList = new ObservableCollection<MeterManagerSettings>();
-            CCMeterManagerSettings ccMeterManagerSettings = null;
-            OwlMeterManagerSettings owlMeterManagerSettings = null;
-            EW4009MeterManagerSettings ew4009MeterManagerSettings = null;
-            int count = 0;
-
-            XmlElement managers = GetElement("metermanagerlist");
-            if (managers == null)
-                managers = AddElement(settings, "metermanagerlist");
-
-            foreach (XmlNode e in managers.ChildNodes)
-            {
-                if (e.NodeType == XmlNodeType.Element && e.Name == "metermanager")
-                {
-                    foreach (XmlElement e2 in e.ChildNodes)
-                    {
-                        if (e2.Name == "managertype")
-                        {
-                            if (e2.Attributes["value"].Value == MeterManagerSettings.MeterManagerTypes[(int)MeterManagerSettings.MeterManagerType.CurrentCost].Name)
-                            {
-                                ccMeterManagerSettings = new CCMeterManagerSettings(this, (XmlElement)e);
-                                _MeterManagerList.Add(ccMeterManagerSettings);
-                                count++;
-                            }
-                            else if (e2.Attributes["value"].Value == MeterManagerSettings.MeterManagerTypes[(int)MeterManagerSettings.MeterManagerType.Owl].Name)
-                            {
-                                owlMeterManagerSettings = new OwlMeterManagerSettings(this, (XmlElement)e);
-                                _MeterManagerList.Add(owlMeterManagerSettings);
-                                count++;
-                            }
-                            else if (e2.Attributes["value"].Value == MeterManagerSettings.MeterManagerTypes[(int)MeterManagerSettings.MeterManagerType.EW4009].Name)
-                            {
-                                ew4009MeterManagerSettings = new EW4009MeterManagerSettings(this, (XmlElement)e);
-                                _MeterManagerList.Add(ew4009MeterManagerSettings);
-                                count++;
-                            }
-
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (ccMeterManagerSettings == null)
-            {
-                XmlElement e = AddElement(managers, "metermanager");
-                CCMeterManagerSettings manager = new CCMeterManagerSettings(this, e);
-                manager.InstanceNo = 1;
-
-                manager.ManagerType = MeterManagerSettings.MeterManagerTypes[(int)manager.ManagerTypeInternal].Name;
-                manager.Enabled = (count == 0);
-                manager.PortName = GetValue("meterportname");
-                manager.BaudRate = GetValue("meterbaudrate");
-                String histHours = GetValue("consumptionmeterhisthours").Trim();
-                if (histHours != "")
-                    manager.ConsumptionMeterHistHours = Convert.ToInt32(histHours);
-
-                _MeterManagerList.Add(manager);
-                count++;
-            }
-
-            if (owlMeterManagerSettings == null)
-            {
-                XmlElement e = AddElement(managers, "metermanager");
-                OwlMeterManagerSettings manager = new OwlMeterManagerSettings(this, e);
-                manager.InstanceNo = 1;
-
-                manager.ManagerType = MeterManagerSettings.MeterManagerTypes[(int)manager.ManagerTypeInternal].Name;
-                manager.Enabled = false;
-
-                _MeterManagerList.Add(manager);
-                count++;
-            }
-
-            if (ew4009MeterManagerSettings == null)
-            {
-                XmlElement e = AddElement(managers, "metermanager");
-                EW4009MeterManagerSettings manager = new EW4009MeterManagerSettings(this, e);
-                manager.InstanceNo = 1;
-
-                manager.ManagerType = MeterManagerSettings.MeterManagerTypes[(int)manager.ManagerTypeInternal].Name;
-                manager.Enabled = false;
-
-                _MeterManagerList.Add(manager);
-                count++;
-            }       
-        }
-        */
 
         public static void  RemoveExtraElements(XmlElement element, string name, int limit)
         {
@@ -334,87 +239,6 @@ namespace PVSettings
             }
         }
 
-        /*
-        private void LoadInverterManagers()
-        {
-            ObservableCollection<InverterManagerSettings> inverterManagerList = new ObservableCollection<InverterManagerSettings>();
-            
-            XmlElement managers = GetElement("invertermanagerlist");
-            if (managers == null)
-                managers = AddElement(settings, "invertermanagerlist");
-
-            foreach (XmlNode e in managers.ChildNodes)
-            {
-                if (e.NodeType == XmlNodeType.Element && e.Name == "invertermanager")
-                {
-                    InverterManagerSettings manager = new InverterManagerSettings(this, (XmlElement)e);
-
-                    if (manager.ManagerType == InverterManagerSettings.InverterManagerType.SMABluetooth)
-                        continue;
-                    if (manager.ManagerType == InverterManagerSettings.InverterManagerType.Devices)
-                        DeviceInverterManagerSettings = manager;
-
-                    inverterManagerList.Add(manager);
-                }
-            }
-
-            foreach (InverterManagerSettings.InverterManagerInfo info in InverterManagerSettings.InverterManagerTypes)
-            {
-                if (!info.IsLoaded && info.Type != InverterManagerSettings.InverterManagerType.SMABluetooth)
-                {
-                    XmlElement e = AddElement(managers, "invertermanager");
-                    InverterManagerSettings manager = new InverterManagerSettings(this, e, info.Name);
-                    manager.InstanceNo = 1;
-                    manager.Enabled = false;
-                    inverterManagerList.Add(manager);
-                    if (manager.ManagerType == InverterManagerSettings.InverterManagerType.Devices)
-                        DeviceInverterManagerSettings = manager;
-                }
-            }
-
-            IEnumerable<InverterManagerSettings> sorted = inverterManagerList.OrderBy(ims => ((ims.Enabled ? "0" : "1") + ims.Description));
-
-            _InverterManagerList = new ObservableCollection<InverterManagerSettings>();
-            foreach (InverterManagerSettings im in sorted)
-                _InverterManagerList.Add(im);
-        }
-        */
-
-        /*
-        private int GetNextInverterManagerInstanceNo(String managerType)
-        {
-            int maxId = 1;
-            foreach (InverterManagerSettings manager in InverterManagerList)
-            {
-                if (manager.ManagerTypeName == managerType && manager.InstanceNo > maxId)
-                    maxId = manager.InstanceNo;
-            }
-
-            return maxId + 1;
-        }
-        */
-
-        /*
-        public InverterManagerSettings AddInverterManager(String managerType)
-        {
-            XmlElement managers = GetElement("invertermanagerlist");
-            if (managers == null)
-                managers = AddElement(settings, "invertermanagerlist");
-
-            XmlElement e = AddElement(managers, "invertermanager");
-            InverterManagerSettings manager = new InverterManagerSettings(this, e, managerType);
-            XmlElement e2 = AddElement(e, "serialport");
-            manager.SerialPort = new SerialPortSettings(this, e2);
-
-            manager.Enabled = false;
-            manager.InstanceNo = GetNextInverterManagerInstanceNo(managerType);
-
-            InverterManagerList.Add(manager);
-
-            return manager;
-        }
-        */
-
         public DeviceManagerSettings AddDeviceManager()
         {
             XmlElement managers = GetElement("devicemanagerlist");
@@ -480,252 +304,6 @@ namespace PVSettings
                     }          
                 }
             }
-        }
-
-        public EnergyEventSettings FindEnergyEventSettings(HierarchyType hierarchy, 
-            String managerName, String componentId, String deviceName, bool autoCreate = false)
-        {
-            foreach (EnergyEventSettings evnt in _EnergyEventList)
-            {
-                if (evnt.Hierarchy == hierarchy
-                && evnt.ManagerName == managerName
-                && evnt.Component == componentId
-                && evnt.DeviceName == deviceName)
-                {
-                    evnt.IsCurrentEvent = true;
-                    return evnt;
-                }
-            }
-
-            if (!autoCreate)
-                return null;
-
-            XmlElement events = GetElement("energyevents");
-            XmlElement e = AddElement(events, "event");
-            EnergyEventSettings newEvnt = new EnergyEventSettings(this, e);
-           
-            newEvnt.Hierarchy = hierarchy;
-            newEvnt.ManagerName = managerName;
-            newEvnt.Component = componentId;
-            newEvnt.DeviceName = deviceName;
-            newEvnt.Interval = null;
-            newEvnt.IsCurrentEvent = true;
-
-            _EnergyEventList.Add(newEvnt);
-
-            return newEvnt;
-        }
-
-        private void RollUpInterval(HierarchyType type, EnergyEventSettings evnt, int interval)
-        {
-            if (interval <= 0)
-                return;
-
-            if (evnt.Interval == null || evnt.Interval > interval)
-            {
-                evnt.Interval = interval;
-                EnergyEventSettings parentEvnt = null;
-                if (evnt.DeviceName != "")
-                    parentEvnt = FindEnergyEventSettings(type, evnt.ManagerName, evnt.Component, "");
-                else if (evnt.Component != "")
-                    parentEvnt = FindEnergyEventSettings(type, evnt.ManagerName, "", "");
-                else if (evnt.ManagerName != "")
-                    parentEvnt = FindEnergyEventSettings(type, "", "", "");
-                else
-                {
-                    // is a root node
-                    if (UseDefaultEvents && (type == HierarchyType.Yield || type == HierarchyType.Consumption))
-                        evnt.EmitEvent = true;
-                }
-                    
-                if (parentEvnt != null)
-                    RollUpInterval(type, parentEvnt, interval);
-            }
-        }
-
-        private void BuildStandardEvents()
-        {
-            bool useDefaultEvents = UseDefaultEvents;
-
-            EnergyEventSettings rootYield;
-            rootYield = FindEnergyEventSettings(HierarchyType.Yield, "", "", "", true); // System wide total yield event
-            if (useDefaultEvents)
-                rootYield.FeedInYield = true;
-            /*
-            foreach(InverterManagerSettings imSettings in InverterManagerList)
-                if (imSettings.Enabled || !useDefaultEvents)
-                {
-                    EnergyEventSettings evnt;
-                    evnt = FindEnergyEventSettings(HierarchyType.Yield, imSettings.Description, "", "", true); // Inverter Manager specific yield events
-                    if (imSettings.ManagerTypeName == "Meter")
-                    {
-                        foreach (MeterManagerSettings mmSettings in MeterManagerList)
-                        {
-                            foreach (MeterApplianceSettings appl in mmSettings.ApplianceList)
-                            {
-                                if (appl.IsInverterYield)
-                                {
-                                    evnt = FindEnergyEventSettings(HierarchyType.Yield,
-                                        imSettings.Description, appl.Inverter, "", true); // inverter summary node
-                                    evnt = FindEnergyEventSettings(HierarchyType.Yield,
-                                        imSettings.Description, appl.Inverter, appl.ApplianceNo.ToString(), true); // Meter appliance specific yield events
-                                    RollUpInterval(HierarchyType.Yield, evnt, imSettings.SampleFrequency);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        TestDatabase Database = new TestDatabase(this, SystemServices);
-                        List<InverterInfo> inverterList = Database.GetInverterList(imSettings.ManagerTypeName, imSettings.InstanceNo);
-                        foreach (InverterInfo info in inverterList)
-                        {
-                            evnt = FindEnergyEventSettings(HierarchyType.Yield, imSettings.Description, info.SerialNumber, "", true); // Inverter yield events
-                            RollUpInterval(HierarchyType.Yield, evnt, imSettings.SampleFrequency);
-                        }
-                    }
-                }
-            */
-            EnergyEventSettings rootConsumption;
-            rootConsumption = FindEnergyEventSettings(HierarchyType.Consumption, "", "", "", true); // System wide total consumption event
-            if (useDefaultEvents)
-                rootConsumption.FeedInConsumption = true;
-            /*
-            foreach (MeterManagerSettings mmSettings in MeterManagerList)
-                if (mmSettings.Enabled || !useDefaultEvents)
-                {
-                    EnergyEventSettings evnt;
-                    evnt = FindEnergyEventSettings(HierarchyType.Consumption, "Meter", "", "", true); // Meter Manager specific consumption events
-                    evnt = FindEnergyEventSettings(HierarchyType.Consumption, "Meter", 
-                        mmSettings.StandardName, "", true); // Meter Manager specific consumption events
-                    foreach (MeterApplianceSettings appl in mmSettings.ApplianceList)
-                    {
-                        if (appl.IsConsumption)
-                        {
-                            evnt = FindEnergyEventSettings(HierarchyType.Consumption, "Meter", 
-                                mmSettings.StandardName, appl.ApplianceNo.ToString(), true); // Meter appliance specific consumption events
-                            RollUpInterval(HierarchyType.Consumption, evnt, mmSettings.SampleFrequency);
-                        }
-                    }
-                }
-            */
-            EnergyEventSettings rootUntyped;
-            rootUntyped = FindEnergyEventSettings(HierarchyType.Meter, "", "", "", true); // System wide total untyped meter event
-
-            EnergyEventSettings mEvent = FindEnergyEventSettings(HierarchyType.Meter, "Meter", "", "", true); // System wide total untyped meter event
-            /*
-            foreach (MeterManagerSettings mmSettings in MeterManagerList)
-                if (mmSettings.Enabled || !useDefaultEvents)
-                {
-                    mEvent = FindEnergyEventSettings(HierarchyType.Meter, "Meter", 
-                        mmSettings.StandardName, "", true); // Meter Manager specific untyped events
-                    foreach (MeterApplianceSettings appl in mmSettings.ApplianceList)
-                    {
-                        if (appl.StoreReading)
-                        {
-                            mEvent = FindEnergyEventSettings(HierarchyType.Meter, "Meter", mmSettings.StandardName, 
-                                appl.ApplianceNo.ToString(), true); // Meter appliance specific untyped events
-                            mEvent.Inverter = appl.Inverter;
-                            mEvent.ConsumeSystem = appl.ConsumptionSiteId;
-                            RollUpInterval(HierarchyType.Meter, mEvent, mmSettings.SampleFrequency);
-                            // emit standard event if meter is not Yield and not Consumption
-                            if (useDefaultEvents)
-                            {
-                                mEvent.EmitEvent = (!appl.IsInverterYield && !appl.IsConsumption);
-                                if (mEvent.EmitEvent)
-                                    mEvent.EventType = "Generic";
-                            }
-                        }
-                    }
-                }
-             * */
-        }
-
-        private struct EnergyEventUserInfo
-        {
-            public EnergyEventKey Key;
-            public bool EmitEvent;
-            public String Description;
-            public bool FeedInYield;
-            public bool FeedInConsumption;
-            public String Type;
-        }
-
-        public void ClearYieldFeedin()
-        {
-            foreach (EnergyEventSettings evnt in _EnergyEventList)
-            {
-                evnt.FeedInYield = false;
-            }
-        }
-
-        public void ClearConsumptionFeedin()
-        {
-            foreach (EnergyEventSettings evnt in _EnergyEventList)
-            {
-                evnt.FeedInConsumption = false;
-            }
-        }
-
-        public void LoadEnergyEvents(bool initialLoad = false)
-        {
-            LoadingEnergyEvents = initialLoad;
-            XmlElement events = GetElement("energyevents");
-            if (events == null)
-                events = AddElement(settings, "energyevents");
-
-            foreach (XmlNode e in events.ChildNodes)
-            {
-                if (e.NodeType == XmlNodeType.Element && e.Name == "event")
-                {
-                    EnergyEventSettings eventx = new EnergyEventSettings(this, (XmlElement)e);
-                    _EnergyEventList.Add(eventx);
-                    eventx.RemoveOldNodes();
-                }
-            }
-
-            // Store user supplied event details
-            List<EnergyEventUserInfo> userInfoList = new List<EnergyEventUserInfo>();
-            foreach (EnergyEventSettings evnt in _EnergyEventList)
-            {
-                EnergyEventUserInfo info;
-                
-                info.Key.Hierarchy = evnt.Hierarchy;
-                info.Key.ManagerName = evnt.ManagerName;
-                info.Key.Component = evnt.Component;
-                info.Key.DeviceName = evnt.DeviceName;
-                info.Description = evnt.Description;
-                info.EmitEvent = evnt.EmitEvent;
-                info.FeedInConsumption = evnt.FeedInConsumption;
-                info.FeedInYield = evnt.FeedInYield;
-                info.Type = evnt.EventType;
-                userInfoList.Add(info);
-            }
-
-            DeleteElement("energyevents");
-            _EnergyEventList.Clear();
-
-            events = AddElement(settings, "energyevents");
-
-            BuildStandardEvents();
-
-            if (!UseDefaultEvents)
-            {
-                // restore user supplied info
-                foreach (EnergyEventUserInfo info in userInfoList)
-                {
-                    EnergyEventSettings evnt = FindEnergyEventSettings(info.Key.Hierarchy, info.Key.ManagerName, info.Key.Component, info.Key.DeviceName);
-                    if (evnt != null)
-                    {
-                        evnt.Description = info.Description;
-                        evnt.EventType = info.Type;                       
-                        evnt.EmitEvent = info.EmitEvent;
-                        evnt.FeedInYield = info.FeedInYield;
-                        evnt.FeedInConsumption = info.FeedInConsumption;            
-                    }
-                }
-            }
-            LoadingEnergyEvents = false;
         }
 
         private void LoadPVOutputSites()
@@ -806,10 +384,7 @@ namespace PVSettings
             SettingsDirectory = DefaultDirectory;
 
             LoadDeviceManagers();
-            //LoadMeterManagers();
-            //LoadInverterManagers();
             LoadPVOutputSites();
-            //LoadEnergyEvents(); // requires DB access only works after services set
 
             RemoveOldElements();
         }
@@ -1636,26 +1211,6 @@ namespace PVSettings
             }
         }
 
-        public bool UseDefaultEvents
-        {
-            get
-            {
-                String rffd = GetValue("usedefaultevents");
-                if (rffd == "false")
-                    return false;
-                else
-                    return true;
-            }
-
-            set
-            {
-                if (value)
-                    SetValue("usedefaultevents", "true", " UseDefaultEvents");
-                else
-                    SetValue("usedefaultevents", "false", " UseDefaultEvents");
-            }
-        }
-
         public bool LogTrace
         {
             get
@@ -1844,11 +1399,6 @@ namespace PVSettings
         public List<String> SerialPortsList
         {
             get { return SerialPortSettings.SerialPortsList; }
-        }
-
-        public ObservableCollection<EnergyEventSettings> EnergyEventList
-        {
-            get { return _EnergyEventList; }
         }
 
         public ObservableCollection<DeviceManagerSettings> DeviceManagerList

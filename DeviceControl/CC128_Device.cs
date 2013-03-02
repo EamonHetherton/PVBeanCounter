@@ -29,6 +29,8 @@ using MackayFisher.Utilities;
 
 namespace Device
 {
+
+
     public struct CC128_LiveRecord
     {
         public DateTime MeterTime;
@@ -62,6 +64,7 @@ namespace Device
     public class CC128_Device : MeterDevice<CC128_LiveRecord, CC128_HistoryRecord, CC128EnergyParams>
     {
         public FeatureSettings Feature_EnergyAC { get; protected set; }
+        public EnergyEventStatus EnergyNode;
 
         public CC128_Device(DeviceControl.DeviceManager_CC128 deviceManager, DeviceManagerDeviceSettings deviceSettings)
             : base(deviceManager, deviceSettings, "CurrentCost", "CC128", "")
@@ -73,6 +76,8 @@ namespace Device
 
             DeviceParams.CalibrationFactor = deviceSettings.CalibrationFactor;
             Feature_EnergyAC = deviceSettings.DeviceSettings.GetFeatureSettings(FeatureType.EnergyAC, deviceSettings.Feature);
+
+            EnergyNode = new EnergyEventStatus(6, true);
         }
 
         protected override DeviceDetailPeriodsBase CreateNewPeriods(FeatureSettings featureSettings)
@@ -188,7 +193,7 @@ namespace Device
                 if (EmitEvents)
                 {
                     stage = "energy";
-                    DeviceManager.ManagerManager.EnergyEvents.NewEnergyReading(PVSettings.HierarchyType.Yield,
+                    DeviceManager.ManagerManager.EnergyEvents.NewEnergyReading(
                         DeviceManager.ThreadName, DeviceIdentifier, "", curTime,
                         null, liveReading.Watts, (int)duration.TotalSeconds);
                 }

@@ -28,271 +28,6 @@ using PVBCInterfaces;
 
 namespace DeviceControl
 {
-    public class EnergyNode
-    {
-        public HierarchyType Hierarchy { get; private set; }
-        public String ManagerName { get; private set; }
-        public String Component { get; private set; }
-        public String DeviceName { get; private set; }
-        public String Inverter { get; private set; }
-        public int? Frequency { get; private set; }
-        public bool EmitEvent { get; private set; }
-        public String EmitEventType { get; private set; }
-
-        public int EventCount;
-
-        private Double EnergyTotal;
-        private int NodePower;
-        public int LastPowerEmitted { get; private set; }
-        public Double LastEnergyEmitted { get; private set; }
-
-        private float Interval;
-        
-        private DateTime? IntervalEnd;
-        IUtilityLog Logger;
-
-        private DateTime? PowerExpires
-        {
-            get
-            {
-                if (IntervalEnd.HasValue)
-                {
-                    int limit = Frequency.Value * 4 + 10;
-                    return IntervalEnd.Value.AddSeconds(limit);
-                }
-                else
-                    return null;
-            }
-        }
-
-        private List<EnergyNode> AddsTo;
-        private List<EnergyNode> ComposedOf;
-
-        public void InitialiseEnergyNode(HierarchyType hierarchy, String managerName,
-            String component, String deviceName, String emitEventType, String inverter, int? frequency, bool emitEvent, List<EnergyNode> allNodes, IUtilityLog logger)
-        {
-            Hierarchy = hierarchy;
-            ManagerName = managerName;            
-            Component = component;
-            DeviceName = deviceName;
-            EmitEventType = emitEventType;
-            Inverter = inverter;
-            Frequency = frequency;
-            EmitEvent = emitEvent;
-            AddsTo = new List<EnergyNode>();
-            ComposedOf = new List<EnergyNode>();
-
-            EnergyTotal = 0.0;
-            IntervalEnd = null;
-            NodePower = 0;
-
-            LastPowerEmitted = 0;
-            LastEnergyEmitted = 0.0;
-            
-            Interval = 0.0F;
-            EventCount = 0;
-            Logger = logger;
-            ConnectToNodes(allNodes);
-            allNodes.Add(this);       
-        }
-
-        public EnergyNode(HierarchyType hierarchy, String managerName,
-            String component, String deviceName, String emitEventType, String inverter, int? frequency,bool emitEvent, List<EnergyNode> allNodes, IUtilityLog logger)
-        {
-            InitialiseEnergyNode(hierarchy, managerName, component, deviceName, emitEventType, inverter, frequency, emitEvent, allNodes, logger);
-        }
-
-        public EnergyNode(EnergyEventSettings settings, List<EnergyNode> allNodes, IUtilityLog logger)
-        {
-            InitialiseEnergyNode(settings.Hierarchy, settings.ManagerName, settings.Component, settings.DeviceName, settings.EventType,
-                settings.Inverter, settings.Interval, settings.EmitEvent, allNodes, logger);
-        }
-
-        private void LinkNodes(HierarchyType hierarchy, List<EnergyNode> allNodes)
-        {
-            Logger.LogMessage("LinkNodes", "Linking New Node - Hierarchy: " + Hierarchy + " - Manager: " + ManagerName +
-                    " - Component: " + Component + " - Device: " + DeviceName, LogEntryType.Event);
-
-            foreach (EnergyNode node in allNodes)
-            {
-                if (hierarchy != node.Hierarchy)
-                    continue;
-
-                Logger.LogMessage("LinkNodes", "Comparing to node - Hierarchy: " + node.Hierarchy + " - Manager: " + node.ManagerName +
-                    " - Component: " + node.Component + " - Device: " + node.DeviceName, LogEntryType.Event);
-                
-                // node is a root node
-                if (node.ManagerName == "" && node.Component == "") 
-                {
-                    Logger.LogMessage("LinkNodes", "Node is root: " + node.Hierarchy, LogEntryType.Event);
-                    // this is a manager summary
-                    if (ManagerName != "" && DeviceName == "" && Component == "")
-                    {
-                        AddsTo.Add(node);
-                        node.ComposedOf.Add(this);
-                        Logger.LogMessage("LinkNodes", "Nodes Linked", LogEntryType.Event);
-                    }
-                    continue;
-                }
-
-                // node is a manager node
-                if (node.ManagerName != "" && node.Component == "")
-                {
-                    Logger.LogMessage("LinkNodes", "Node is Manager: " + node.ManagerName, LogEntryType.Event);
-                    if (ManagerName != node.ManagerName)
-                        continue;
-                    // this is a component summary
-                    if (Component != "" && DeviceName == "")
-                    {
-                        AddsTo.Add(node);
-                        node.ComposedOf.Add(this);
-                        Logger.LogMessage("LinkNodes", "Nodes Linked", LogEntryType.Event);
-                    }
-                    continue;
-                }
-
-                // node is an component summary
-                if (node.Component != "" && node.DeviceName == "")
-                {
-                    Logger.LogMessage("LinkNodes", "Node is Component: " + node.Component, LogEntryType.Event);
-                    if (ManagerName != node.ManagerName || Component != node.Component)
-                        continue;
-                    // this is a device detail
-                    if (DeviceName != "")
-                    {
-                        AddsTo.Add(node);
-                        node.ComposedOf.Add(this);
-                        Logger.LogMessage("LinkNodes", "Nodes Linked", LogEntryType.Event);
-                    }
-                }
-            }
-        }
-
-        private void LinkMeterNodes(HierarchyType hierarchy, List<EnergyNode> allNodes)
-        {
-            Logger.LogMessage("LinkMeterNodes", "Linking New Node - from Hierarchy: " + Hierarchy + " - to Hierarchy: " + hierarchy + " - Manager: " + ManagerName +
-                    " - Component: " + Component + " - Device: " + DeviceName, LogEntryType.Event);
-            foreach (EnergyNode node in allNodes)
-            {
-                if (hierarchy != node.Hierarchy)
-                    continue;
-
-                Logger.LogMessage("LinkMeterNodes", "Comparing to Node - Hierarchy: " + node.Hierarchy + " - Manager: " + node.ManagerName +
-                    " - Component: " + node.Component + " - Device: " + node.DeviceName, LogEntryType.Event);
-  
-                // node is non-meter detail - inverter or non-inverter
-                if (node.DeviceName != "")
-                {
-                    Logger.LogMessage("LinkMeterNodes", "Node is Device: " + node.DeviceName, LogEntryType.Event);
-                    // this is a meter with matching inverter / device details
-                    if ((hierarchy == HierarchyType.Consumption && ManagerName == node.ManagerName && Component == node.Component && DeviceName == node.DeviceName)
-                    || (hierarchy == HierarchyType.Yield && Inverter == node.Component && DeviceName == node.DeviceName))
-                    {
-                        AddsTo.Add(node);
-                        node.ComposedOf.Add(this);
-                        Logger.LogMessage("LinkMeterNodes", "Nodes Linked", LogEntryType.Event);
-                    }
-                }
-            }
-        }
-
-        private void ConnectToNodes(List<EnergyNode> allNodes)
-        {
-            LinkNodes(Hierarchy, allNodes);
-            if (Hierarchy == HierarchyType.Meter && ManagerName != "" && Component != "" && DeviceName != "")
-            {
-                // Meter leaf nodes can add to TotalYield and TotalConsumption as well as the Meter root nodes
-                LinkMeterNodes(HierarchyType.Yield, allNodes);
-                LinkMeterNodes(HierarchyType.Consumption, allNodes);
-            }
-        }
-
-        private int GetNodePower(DateTime asAt)
-        {
-            DateTime? expires = PowerExpires;
-            if (expires.HasValue)
-                if (expires.Value >= asAt)
-                    return NodePower;
-                else
-                {
-                    if (Logger.LogMeterTrace)
-                        Logger.LogMessage("EnergyNode.GetNodePower", "Power has expired - Hierarchy: " + Hierarchy +
-                            " - Manager: " + ManagerName + " - Component: " + Component + " - Device: " + DeviceName +
-                            " - Expired: " + expires.Value, LogEntryType.MeterTrace);
-                    return 0;
-                }
-            else
-                return 0;
-        }
-
-        public void GetCurrentReading(DateTime asAt, out Double energyToday, out int currentPower)
-        {
-            Double energy = 0.0;
-            if (IntervalEnd.HasValue)
-                energy = ((asAt.Date == IntervalEnd.Value.Date) ? EnergyTotal : 0.0);
-
-            int power = GetNodePower(asAt);
-
-            foreach (EnergyNode node in ComposedOf)
-                if (node.Frequency.HasValue)
-                {
-                    Double subEnergy;
-                    int subPower;
-
-                    node.GetCurrentReading(asAt, out subEnergy, out subPower);
-                    energy += subEnergy;
-                    power += subPower;
-                }
-            energyToday = energy;
-            currentPower = power;
-            LastPowerEmitted = power;
-            LastEnergyEmitted = energy;
-        }
-
-        public void IncrementEventCount(IUtilityLog logger, int depth)
-        {
-            if (depth > 10)
-            {
-                logger.LogMessage("IncrementEventCount", "Recursion too deep: " + depth + " - increment aborted", LogEntryType.ErrorMessage);
-                return;
-            }
-
-            if (logger.LogEvent)
-                logger.LogMessage("IncrementEventCount", 
-                    "Increment - Type: " + Hierarchy + 
-                    " - Manager: " + ManagerName + 
-                    " - Component: " + Component + 
-                    " - Device: " + DeviceName, LogEntryType.Event);
-            EventCount++;
-            depth++;
-            foreach (EnergyNode node in AddsTo)
-                node.IncrementEventCount(logger, depth);
-        }
-
-        public void SetNodeReading(IUtilityLog logger, DateTime time, Double energy, int power, float interval, bool energyIsDayTotal)
-        {
-            DateTime eventTime = DateTime.Now;
-            if (energyIsDayTotal)
-                EnergyTotal = energy;
-            else
-            {
-                // Don't use the time reported on the event as this can be from a device with bad time sync (eg CC Meter)
-                // if (IntervalEnd.Date != time.Date)
-                if (!IntervalEnd.HasValue || IntervalEnd.Value.Date != eventTime.Date)
-                    EnergyTotal = 0.0;
-                double sinceDayStart = (eventTime - eventTime.Date).TotalSeconds;
-                if (interval > sinceDayStart && interval > 0)
-                    EnergyTotal += energy * sinceDayStart / interval;
-                else
-                    EnergyTotal += energy;
-            }            
-            IntervalEnd = eventTime;
-            Interval = interval;
-            NodePower = power;
-            IncrementEventCount(logger, 0);
-        }
-    }
-
     public class EnergyEvents : IEvents
     {
         public enum PendingType
@@ -322,7 +57,6 @@ namespace DeviceControl
 
         public ManualResetEvent PVEventReadyEvent { get; private set; }
         
-        private List<EnergyNode> EnergyNodes;
         private List<EventPending> PendingEvents;
 
         private ReaderWriterLock NodeReaderWriterLock;
@@ -339,33 +73,9 @@ namespace DeviceControl
             NodeReaderWriterLock = new ReaderWriterLock();
             NodeUpdateMutex = new Mutex();
             PendingListMutex = new Mutex();
-            BuildEventNetwork();
+            
             PendingEvents = new List<EventPending>();
             LastEmitErrorReported = DateTime.MinValue;
-        }
-
-        public void BuildEventNetwork()
-        {
-            try
-            {
-                NodeReaderWriterLock.AcquireWriterLock(3000);
-                EnergyNodes = new List<EnergyNode>();
-                foreach (EnergyEventSettings evnt in ApplicationSettings.EnergyEventList)
-                {
-                    // note this auto adds itself to EnergyNodes
-                    // it also scans EnergyNodes to build rollup links
-                    new EnergyNode(evnt, EnergyNodes, SystemServices);
-                }
-            }
-            catch (Exception e)
-            {
-                SystemServices.LogMessage("EnergyEvents", "BuildEventNetwork - Exception: " + e.Message, LogEntryType.ErrorMessage);
-            }
-            finally
-            {
-                if (NodeReaderWriterLock.IsWriterLockHeld)
-                    NodeReaderWriterLock.ReleaseWriterLock();
-            }
         }
 
         private EnergyNode FindNode(HierarchyType type, String managerName, String component, String deviceName)
@@ -649,8 +359,8 @@ namespace DeviceControl
                 proxy = new EnergyEventsProxy();
                 int count = 0;
 
-                foreach (EnergyEventSettings eEvent in ApplicationSettings.EnergyEventList)
-                    if (eEvent.EmitEvent) count++;
+                //foreach (EnergyEventSettings eEvent in ApplicationSettings.EnergyEventList)
+                //    if (eEvent.EmitEvent) count++;
                 eventTypes = new EnergyEventsEventInfo[count];
                 if (count > 0)
                 {

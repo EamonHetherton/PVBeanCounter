@@ -98,7 +98,6 @@
     <Compile Include="DeviceManagerSettings.cs" />
     <Compile Include="DeviceSettings.cs" />
     <Compile Include="DynamicDataMap.cs" />
-    <Compile Include="EnergyEventSettings.cs" />
     <Compile Include="EW4009MeterManagerSettings.cs" />
     <Compile Include="InverterSettings.cs" />
     <Compile Include="MessageSettings.cs" />

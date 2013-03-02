@@ -5,7 +5,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:cgs="clr-namespace:CGS;assembly=TimeControl"
         xmlns:local="clr-namespace:PVBeanCounter"  
-        Title="PV Bean Counter - Configuration" Height="643" Width="966" IsManipulationEnabled="True" ResizeMode="CanResize" UseLayoutRounding="True" WindowStyle="ThreeDBorderWindow" Loaded="Window_Loaded" Background="#FFDEFEFF">
+        Title="PV Bean Counter - Configuration" Height="643" Width="991" IsManipulationEnabled="True" ResizeMode="CanResize" UseLayoutRounding="True" WindowStyle="ThreeDBorderWindow" Loaded="Window_Loaded" Background="#FFDEFEFF">
     <Window.Resources>
         
         <Style TargetType="ToolTip">
@@ -129,7 +129,7 @@
   
     </Window.Resources>
   
-    <Grid Name="gridPVSettings" DataContext="{Binding}" Margin="2,2,2,30" Background="#00000000">
+    <Grid Name="gridPVSettings" DataContext="{Binding}" Margin="2,2,2,2" Background="#00000000">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition MaxHeight="40" />
@@ -219,7 +219,7 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <Label Content="Configured Device Managers" Margin="10,0,0,0" FontWeight="Bold" FontSize="13"/>
+                            <Label Content="Device Managers" Margin="10,0,0,0" FontWeight="Bold" FontSize="13"/>
                             <DataGrid Grid.Row="1" AutoGenerateColumns="False" MinWidth="210"  DataContext="{Binding}" HorizontalAlignment="Stretch" ItemsSource="{Binding DeviceManagerList}" Name="dataGridDeviceManagers" VerticalAlignment="Stretch" GridLinesVisibility="Horizontal" SelectedIndex="0" ToolTip="Select a Device Manager for detail display. Enable and disable individual Modbus Managers." SelectionChanged="dataGridDeviceManagers_SelectionChanged" Margin="10,0,10,0" Background="#FFFAFFCA">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Description" MinWidth="140" IsReadOnly="True" Binding="{Binding Description}"/>
@@ -263,7 +263,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <Label Content="DeviceManager Configuration" FontWeight="Bold" FontSize="13" />
+                            <Label Content="Device Manager Configuration" FontWeight="Bold" FontSize="13" />
                             <Grid Margin="0,0,10,5" Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -629,8 +629,12 @@
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    <CheckBox Name="checkBoxAutoEvents_Manual" Content="Auto Events" IsChecked="{Binding Path=AutoEvents}" Margin="25,20,10,5" FontSize="10.5" />
-                                    <DataGrid Name="dataGridDeviceEvents" Grid.Column="1" Grid.Row="0" ItemsSource="{Binding Path=DeviceEvents}" Margin="0,-20" AutoGenerateColumns="false" MinHeight="72" ColumnHeaderHeight="20" SelectionMode="Single" Width="240" HorizontalAlignment="Left" FontSize="10" IsReadOnly="{Binding Path=AutoEvents}" >
+                                    <CheckBox Name="checkBoxAutoEvents_Manual" Content="Auto Events" IsChecked="{Binding Path=AutoEvents}" Margin="25,10,10,5" FontSize="10.5"
+                                              ToolTip="Check to configure all suitable features as triggers for device events"/>
+                                    <DataGrid Name="dataGridDeviceEvents" Grid.Column="1" Grid.Row="0" ItemsSource="{Binding Path=DeviceEvents}" Margin="0,-20,0,32" AutoGenerateColumns="false" MinHeight="72" 
+                                              ColumnHeaderHeight="20" SelectionMode="Single" Width="350" HorizontalAlignment="Left" FontSize="10" IsReadOnly="{Binding Path=AutoEvents}" 
+                                              Grid.RowSpan="2" SelectionChanged="dataGridDeviceEvents_SelectionChanged" 
+                                              ToolTip="Details of all device features configured to emit a device event" >
                                         <DataGrid.Columns>
                                             <DataGridComboBoxColumn x:Name="eventFeatureDeviceColumn" Header="Feature" DisplayMemberPath="Name"  Width="Auto" MinWidth="100" 
                                                                     SelectedItemBinding="{Binding EventFeature, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource NullableValueConverter}}"
@@ -646,6 +650,7 @@
                                                     </Style>
                                                 </DataGridComboBoxColumn.ElementStyle>
                                             </DataGridComboBoxColumn>
+                                            <DataGridTextColumn Header="Event Name" Binding="{Binding EventName, UpdateSourceTrigger=LostFocus}" MinWidth="85" />
                                             <DataGridComboBoxColumn x:Name="eventTypeDeviceColumn" Header="Event Type" Width="Auto" MinWidth="100" 
                                                                     SelectedItemBinding="{Binding EventType, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource NullableValueConverter}}"
                                                                     CanUserResize="False" >
@@ -660,6 +665,8 @@
                                                     </Style>
                                                 </DataGridComboBoxColumn.ElementStyle>
                                             </DataGridComboBoxColumn>
+                                            <DataGridCheckBoxColumn Header="Feed-In" Binding="{Binding UseForFeedIn, UpdateSourceTrigger=LostFocus}"  />
+                                            
                                         </DataGrid.Columns>
                                     </DataGrid>
                                     <Grid Margin="0,7,0,0" Grid.Row="1" Grid.Column="1">
@@ -668,11 +675,12 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <Button Content="Add" Height="23" HorizontalAlignment="Left" Name="buttonAddDeviceEvent"  VerticalAlignment="Top" ToolTip="Add a new Device Event to the selected device." Margin="0,0,2,0" Padding="5,0" Click="buttonAddDeviceEvent_Click" FontSize="10" IsEnabled="{Binding Path=ManualEvents}" />
-                                        <Button Content="Delete" Height="23" HorizontalAlignment="Right" Name="buttonDeleteDeviceEvent" VerticalAlignment="Top" Grid.Column="1" ToolTip="Delete the selected DeviceEvent." Margin="4,0,5,4" Padding="5,0" FontSize="10" Click="buttonDeleteDeviceEvent_Click" IsEnabled="{Binding Path=ManualEvents}" />
+                                        <Button Content="Delete" Height="23" HorizontalAlignment="Right" Name="buttonDeleteDeviceEvent" VerticalAlignment="Top" Grid.Column="1" ToolTip="Delete the selected Device Event." Margin="4,0,5,4" Padding="5,0" FontSize="10" Click="buttonDeleteDeviceEvent_Click" IsEnabled="False" />
                                     </Grid>
                                 </Grid>
                             </Expander>
-                            <CheckBox Name="checkBoxAutoEvents_Auto" Content="Auto Events" Grid.Row="7" Grid.Column="1" IsChecked="{Binding Path=AutoEvents}" Margin="0,6,0,0" FontSize="10.5" />
+                            <CheckBox Name="checkBoxAutoEvents_Auto" Content="Auto Events" Grid.Row="7" Grid.Column="1" IsChecked="{Binding Path=AutoEvents}" Margin="0,6,0,0" FontSize="10.5" 
+                                      ToolTip="Check to configure all suitable features as triggers for device events" />
                         </Grid>
                     </Grid>
 
@@ -682,7 +690,7 @@
                             <RowDefinition Height="26*" />
                             <RowDefinition Height="43" />
                         </Grid.RowDefinitions>
-                        <Label Content="All Configured Devices" Margin="10,0,0,0" FontWeight="Bold" FontSize="13"/>
+                        <Label Content="All Devices" Margin="10,0,0,0" FontWeight="Bold" FontSize="13"/>
                         <DataGrid Grid.Row="1" AutoGenerateColumns="False" MinWidth="210" HorizontalAlignment="Stretch" ItemsSource="{Binding AllDevicesList}" x:Name="dataGridDeviceList" VerticalAlignment="Stretch" GridLinesVisibility="Horizontal" ToolTip="Select a Device for detail display. Enable and disable individual Devices." Margin="10,0,10,0" Background="#FFDAFFBB" SelectionChanged="dataGridDeviceList_SelectionChanged" IsSynchronizedWithCurrentItem="True" GotFocus="dataGridDeviceList_GotFocus">
 
                             <DataGrid.Columns>
@@ -889,23 +897,6 @@
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Inverters" Name="tabItem8" ToolTip="Lists all detected Inverters" Padding="6,3" >
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="36*" />
-                        <RowDefinition Height="46" />
-                    </Grid.RowDefinitions>
-                    <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" DataContext="{Binding}" HorizontalAlignment="Stretch" Margin="10,10,10,0" Name="dataGridInverterList" SelectionMode="Single" VerticalAlignment="Stretch" >
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Path=SerialNumber}" Header="Serial No" IsReadOnly="True" MinWidth="120" />
-                            <DataGridTextColumn Binding="{Binding Path=Manufacturer}" Header="Manufacturer" IsReadOnly="True" MinWidth="150" />
-                            <DataGridTextColumn Binding="{Binding Path=Model}" Header="Model" IsReadOnly="True" MinWidth="150" />                            
-                            <DataGridComboBoxColumn DisplayMemberPath="Description" x:Name="inverterSiteIdColumn" Header="Selected pvoutput.org System" SelectedValueBinding="{Binding Path=SiteId, Mode=TwoWay}" SelectedValuePath="SiteId" MinWidth="170"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                    <Button Content="Retrieve / Refresh" Height="23" HorizontalAlignment="Left" Margin="10,10,0,0" Name="buttonInverterRefresh" VerticalAlignment="Top" Width="119" Click="buttonInverterRefresh_Click" ToolTip="Retrieve or Refresh the Inverter List" Grid.Row="1" />
-                </Grid>
-            </TabItem>
             <TabItem Header="Suspend Control" Name="tabItem2" IsEnabled="True" Padding="6,3" ToolTip="Control automatic suspend / resume and inverter access time interval" >
                 <Canvas Height="328" VerticalAlignment="Top">
                     <Border BorderBrush="Silver" BorderThickness="1" Canvas.Left="10" Canvas.Top="12" Height="153" Name="border2" Opacity="0.5" Width="371">
@@ -1007,67 +998,6 @@
                     <Label Content="Connection String" DataContext="{Binding}" Height="28" IsEnabled="True" Name="label10" HorizontalContentAlignment="Right" Canvas.Left="60" Canvas.Top="238" />
                 </Canvas>
             </TabItem>
-            <TabItem Header="Events" Name="tabItem9" Padding="6,3">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="695*" />
-                        <ColumnDefinition MinWidth="130" Width="130" MaxWidth="130" />
-                    </Grid.ColumnDefinitions>
-                    <DataGrid AutoGenerateColumns="False" DataContext="{Binding}" HorizontalAlignment="Stretch" ItemsSource="{Binding EnergyEventList}" Width="Auto" Name="dataGridEnergyEvents" VerticalAlignment="Stretch" GridLinesVisibility="Horizontal" SelectedIndex="0">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Hierarchy" MinWidth="80" IsReadOnly="True" Binding="{Binding Hierarchy}" />
-                            <DataGridTextColumn Header="Manager" MinWidth="80" IsReadOnly="True" Binding="{Binding ManagerName}" />
-                            <DataGridTextColumn Header="Component" MinWidth="80" IsReadOnly="True" Binding="{Binding Component}" />
-                            <DataGridTextColumn Header="Appl" MinWidth="50" IsReadOnly="True" Binding="{Binding DeviceName}" />
-                            <DataGridTemplateColumn Header="Description" >                               
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=Description, Mode=TwoWay}"  >
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                                <DataGridTemplateColumn.CellEditingTemplate>
-                                    <DataTemplate>
-                                        <ComboBox Text="{Binding Path=Description, Mode=TwoWay}" IsEditable="True" >
-                                            <ComboBoxItem Content="Inverter Yield" />
-                                            <ComboBoxItem Content="Consumption" />
-                                            <ComboBoxItem Content="Meter Yield" />
-                                        </ComboBox>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellEditingTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Event Type" >                               
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=EventType, Mode=TwoWay}" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                                <DataGridTemplateColumn.CellEditingTemplate>
-                                    <DataTemplate>
-                                        <ComboBox Text="{Binding Path=EventType, Mode=TwoWay}" IsEditable="True" >
-                                            <ComboBoxItem Content="Yield" />
-                                            <ComboBoxItem Content="Consumption" />
-                                            <ComboBoxItem Content="Generic" />
-                                            <ComboBoxItem Content="" />
-                                        </ComboBox>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellEditingTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridCheckBoxColumn Header="Emit" Binding="{Binding EmitEvent}" />
-                            <DataGridTextColumn Header="Sec" MinWidth="20" IsReadOnly="True" Binding="{Binding Interval}" />
-                            <DataGridTextColumn Header="Inverter" MinWidth="60" IsReadOnly="True" Binding="{Binding Inverter}" />
-                            <DataGridTextColumn Header="Consume" MinWidth="60" IsReadOnly="True" Binding="{Binding ConsumeSystem}" />
-                            <DataGridCheckBoxColumn Header="FI-Y" Binding="{Binding FeedInYield}" />
-                            <DataGridCheckBoxColumn Header="FI-C" Binding="{Binding FeedInConsumption}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                    <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Margin="10,0,0,0">
-                        <CheckBox Content="Use Default Events" IsChecked="{Binding Path=UseDefaultEvents, Converter={StaticResource NullableValueConverter}}" HorizontalAlignment="Left" x:Name="checkBoxUseDefaultEvents" Padding="4,0,0,10" />
-                        <CheckBox Content="Emit Events" IsChecked="{Binding Path=EmitEvents, Converter={StaticResource NullableValueConverter}}" HorizontalAlignment="Left" Name="checkBoxEmitEvents" ToolTip="This activates and deactivates the emission of events from PVBC" />
-                        <Button Content="Refresh" HorizontalAlignment="Left" Name="buttonRefreshEvents" VerticalAlignment="Top" Width="75" Click="buttonRefreshEvents_Click" Margin="0,10,0,0" />
-                    </StackPanel>
-                </Grid>
-            </TabItem>
             <TabItem Header="Log Files" Name="tabItem5" ToolTip="Log file content control" Padding="6,3">
                 <Grid Margin="20,20,0,0">
                     <Grid.RowDefinitions>
@@ -1134,6 +1064,25 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
+            <TabItem Header="Device List" Name="tabItem8" ToolTip="Lists all detected Devices" Padding="6,3" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="36*" />
+                        <RowDefinition Height="46" />
+                    </Grid.RowDefinitions>
+                    <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" DataContext="{Binding}" HorizontalAlignment="Stretch" Margin="10,10,10,0" Name="dataGridInverterList" SelectionMode="Single" VerticalAlignment="Stretch" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Path=Id}" Header="Id" IsReadOnly="True" MinWidth="20" />
+                            <DataGridTextColumn Binding="{Binding Path=DeviceType}" Header="Device Type" IsReadOnly="True" MinWidth="180" />
+                            <DataGridTextColumn Binding="{Binding Path=SerialNumber}" Header="Serial No" IsReadOnly="True" MinWidth="120" />
+                            <DataGridTextColumn Binding="{Binding Path=Manufacturer}" Header="Manufacturer" IsReadOnly="True" MinWidth="150" />
+                            <DataGridTextColumn Binding="{Binding Path=Model}" Header="Model" IsReadOnly="True" MinWidth="150" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button Content="Retrieve / Refresh" Height="23" HorizontalAlignment="Left" Margin="10,10,0,0" Name="buttonInverterRefresh" VerticalAlignment="Top" Width="119" Click="buttonInverterRefresh_Click" ToolTip="Retrieve or Refresh the Inverter List" Grid.Row="1" />
+                </Grid>
+            </TabItem>
+
         </TabControl>
         
         <StackPanel HorizontalAlignment="Left" Margin="70,4,10,4" Name="stackPanel1" VerticalAlignment="Top" Canvas.Top="35" Orientation="Horizontal" Grid.Row="1">

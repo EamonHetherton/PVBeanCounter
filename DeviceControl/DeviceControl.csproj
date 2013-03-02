@@ -106,6 +106,7 @@
     <Compile Include="EnergyEventsProxy.cs" />
     <Compile Include="EnergyReading.cs" />
     <Compile Include="EventManager.cs" />
+    <Compile Include="EventStatus.cs" />
     <Compile Include="IEnergyEvents_Contract.cs" />
     <Compile Include="Inverter.cs" />
     <Compile Include="InverterAlgorithm.cs" />

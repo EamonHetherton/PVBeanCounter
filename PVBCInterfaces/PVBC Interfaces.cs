@@ -29,19 +29,12 @@ using PVSettings;
 
 namespace PVBCInterfaces
 {
-    /*
-    public interface IOutputManager : GenThreadManagement.IGenThread
-    {
-        ManualResetEvent OutputReadyEvent { get; }
-        String OutputSiteId { get; }
-    }
-    */
 
     public interface IEvents
     {
         void BuildEventNetwork();
         void EmitEventTypes(bool updatedEvents);
-        bool NewEnergyReading(PVSettings.HierarchyType type, string managerName, string component, string deviceName, DateTime time, double? energy, int? powerWatts, float interval, bool energyIsDayTotal = false, bool isRetry = false);
+        bool NewEnergyReading(/*PVSettings.HierarchyType type,*/ string managerName, string component, string deviceName, DateTime time, double? energy, int? powerWatts, float interval, bool energyIsDayTotal = false, bool isRetry = false);
         void NewStatusEvent(string statusType, string statusText);
         void ScanForEvents();
         ManualResetEvent PVEventReadyEvent { get; }

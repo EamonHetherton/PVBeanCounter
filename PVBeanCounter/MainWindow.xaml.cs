@@ -33,10 +33,9 @@ namespace PVBeanCounter
         ApplicationSettings ApplicationSettings;
         SystemServices SystemServices;
         CheckEnvironment CheckEnvironment;
-        InverterUpdate InverterUpdate;
+        DeviceUpdate DeviceUpdate;
         OwlDatabaseInfo OwlDatabaseInfo;
 
-        bool uiLoaded = false;
         bool saveRequired = false;
         bool checkRequired = false;
 
@@ -93,7 +92,7 @@ namespace PVBeanCounter
             
                 CheckEnvironment = new CheckEnvironment(ApplicationSettings, SystemServices);
 
-                ApplicationSettings.SetSystemServices(SystemServices, false);
+                ApplicationSettings.SetSystemServices(SystemServices);
 
                 OwlDatabaseInfo = null;
 
@@ -106,10 +105,9 @@ namespace PVBeanCounter
                 comboBoxMMStopBits.ItemsSource = SerialPortSettings.StopBitsList;
                 comboBoxMMHandshake.ItemsSource = SerialPortSettings.HandshakeList;
 
-                InverterUpdate = new InverterUpdate(ApplicationSettings, SystemServices);
+                DeviceUpdate = new DeviceUpdate(ApplicationSettings, SystemServices);
 
-                dataGridInverterList.ItemsSource = InverterUpdate.InverterList;
-                inverterSiteIdColumn.ItemsSource = ApplicationSettings.PvOutputSystemList;
+                dataGridInverterList.ItemsSource = DeviceUpdate.DeviceList;
                 //applianceConsumeSiteIdColumn.ItemsSource = ApplicationSettings.PvOutputSiteList;
                 //comboBoxMAConsumeSystem.ItemsSource = ApplicationSettings.PvOutputSiteList;
 
@@ -121,9 +119,6 @@ namespace PVBeanCounter
                 buttonDeleteSite.IsEnabled = ApplicationSettings.PvOutputSystemList.Count > 1;
 
                 SyncServiceStartup();
-
-                checkBoxUseDefaultEvents.Checked += new System.Windows.RoutedEventHandler(this.checkBoxUseDefaultEvents_Checked);
-                checkBoxUseDefaultEvents.Unchecked += new System.Windows.RoutedEventHandler(this.checkBoxUseDefaultEvents_Unchecked);
 
                 LoadModbusSettings();
                 saveRequired = ApplicationSettings.InitialSave;
@@ -171,7 +166,7 @@ namespace PVBeanCounter
 
             try
             {
-                InverterUpdate.UpdateInverters();
+                DeviceUpdate.UpdateDevices();
                 ApplicationSettings.InitialSave = false;
                 ApplicationSettings.SaveSettings();
                 SystemServices.LogMessage("SaveSettings", "Save Location: " + ApplicationSettings.DefaultDirectory, LogEntryType.ErrorMessage);
@@ -337,17 +332,6 @@ namespace PVBeanCounter
             }
         }
 
-        /*
-        private void comboBox2_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-        private void checkBox16_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-        */
         private void dataGridPvOutputSiteList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PvOutputSiteSettings pvSettings = (PvOutputSiteSettings) dataGridPvOutputSiteIds.SelectedItem;
@@ -406,8 +390,8 @@ namespace PVBeanCounter
 
         private void buttonInverterRefresh_Click(object sender, RoutedEventArgs e)
         {
-            InverterUpdate iu = new InverterUpdate(ApplicationSettings, SystemServices);
-            InverterUpdate.LoadInverterList();
+            DeviceUpdate iu = new DeviceUpdate(ApplicationSettings, SystemServices);
+            DeviceUpdate.LoadDeviceList();
         }
 
         private void butBrowseOwlDb_Click(object sender, RoutedEventArgs e)
@@ -513,43 +497,6 @@ namespace PVBeanCounter
 
         }
 
-        private void buttonRefreshEvents_Click(object sender, RoutedEventArgs e)
-        {
-            ApplicationSettings.LoadEnergyEvents();
-        }
-
-        private void checkBoxUseDefaultEvents_Checked(object sender, RoutedEventArgs e)
-        {
-            dataGridEnergyEvents.Columns[4].IsReadOnly = true;
-            dataGridEnergyEvents.Columns[5].IsReadOnly = true;
-            dataGridEnergyEvents.Columns[6].IsReadOnly = true;
-            dataGridEnergyEvents.Columns[10].IsReadOnly = true;
-            dataGridEnergyEvents.Columns[11].IsReadOnly = true;
-            if (uiLoaded)
-                ApplicationSettings.LoadEnergyEvents();
-            else
-            {
-                SettingsSaved();
-                uiLoaded = true;
-            }
-        }
-
-        private void checkBoxUseDefaultEvents_Unchecked(object sender, RoutedEventArgs e)
-        {
-            dataGridEnergyEvents.Columns[4].IsReadOnly = false;
-            dataGridEnergyEvents.Columns[5].IsReadOnly = false;
-            dataGridEnergyEvents.Columns[6].IsReadOnly = false;
-            dataGridEnergyEvents.Columns[10].IsReadOnly = false;
-            dataGridEnergyEvents.Columns[11].IsReadOnly = false;
-            if (uiLoaded)
-                ApplicationSettings.LoadEnergyEvents();
-            else
-            {
-                SettingsSaved();
-                uiLoaded = true;
-            }
-        }
-
         private void butInverterLogs_Click(object sender, RoutedEventArgs e)
         {
             FolderBrowserDialog myDialog = new FolderBrowserDialog();
@@ -572,31 +519,6 @@ namespace PVBeanCounter
 
         }
 
-        /*
-        private void SetWebBoxAppearance()
-        {
-            bool usePush = (checkBoxUseFtpPush.IsChecked == true) ? true : false;
-            textBoxWebBoxFtpLimit.IsEnabled = !usePush;
-            textBoxWebBoxFtpUrl.IsEnabled = !usePush;
-            textBoxWebBoxUserName.IsEnabled = !usePush;
-            textBoxWebBoxPassword.IsEnabled = !usePush;
-
-            textBoxPushDirectory.IsEnabled = usePush;
-            butPushDirectory.IsEnabled = usePush;
-        }
-        */
-
-        /*
-        private void checkBoxUseFtpPush_Unchecked(object sender, RoutedEventArgs e)
-        {
-            SetWebBoxAppearance();
-        }
-
-        private void checkBoxUseFtpPush_Checked(object sender, RoutedEventArgs e)
-        {
-            SetWebBoxAppearance();
-        }
-        */
         private void buttonAddModbusMgr_Click(object sender, RoutedEventArgs e)
         {
             dataGridDeviceManagers.SelectedItem = ApplicationSettings.AddDeviceManager();
@@ -637,7 +559,6 @@ namespace PVBeanCounter
             gridConsolidations.DataContext = device;
             comboBoxDeviceType.ItemsSource = device == null ? null : device.DeviceManagerSettings.DeviceListItems;
             comboBoxListenerDevice.ItemsSource = device == null ? null : device.DeviceManagerSettings.DeviceListItems;
-            //buttonDeleteConsolidateTo.IsEnabled = device == null ? false : device.ConsolidateToDevices.Count > 0;
         }
 
         private void SelectDevice()
@@ -788,7 +709,6 @@ namespace PVBeanCounter
             if (device == null)
                 return;
             device.AddDevice(ConsolidateDeviceSettings.OperationType.Add);
-            //buttonDeleteConsolidateTo.IsEnabled = device.ConsolidateToDevices.Count > 0;
         }
 
         private void buttonDeleteConsolidateTo_Click(object sender, RoutedEventArgs e)
@@ -864,6 +784,12 @@ namespace PVBeanCounter
         private void expanderDeviceEvents_Collapsed(object sender, RoutedEventArgs e)
         {
             checkBoxAutoEvents_Auto.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void dataGridDeviceEvents_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DeviceEventSettings de = (DeviceEventSettings)dataGridDeviceEvents.SelectedItem;
+            buttonDeleteDeviceEvent.IsEnabled = de != null && de.Device.ManualEvents;
         }
 
     }

@@ -157,7 +157,13 @@ namespace Device
                 BuildOutputReadyFeatureList(notificationList, FeatureType.YieldAC, 0, reading.ReadingEnd);
                 UpdateConsolidations(notificationList);
 
-
+                if (EmitEvents)
+                {
+                    stage = "energy";
+                    DeviceManager.ManagerManager.EnergyEvents.NewEnergyReading(
+                        DeviceManager.ThreadName, DeviceIdentifier, "", liveReading.TimeStampe,
+                        null, liveReading.Watts, (int)duration.TotalSeconds);
+                }
 
                 stage = "errors";
             }

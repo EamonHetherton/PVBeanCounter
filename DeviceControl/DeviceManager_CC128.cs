@@ -136,7 +136,7 @@ namespace DeviceControl
 
             DateTime curTime = DateTime.Now;
             bool dbWrite = (LastRecordTime == null
-                || DeviceInfo.IntervalCompare(ManagerParams.RecordingInterval, LastRecordTime.Value, curTime) != 0);
+                || DeviceBase.IntervalCompare(ManagerParams.RecordingInterval, LastRecordTime.Value, curTime) != 0);
 
             device.ProcessOneLiveReading(liveRecord);
 

@@ -9,59 +9,40 @@ using PVSettings;
 
 namespace PVBeanCounter
 {
-    public class InverterInfo
+    public class DeviceInfo
     {
-        private String siteId;
         private ApplicationSettings ApplicationSettings;
 
         public long Id { get; set; }
         public String SerialNumber { get; set; }
-        public String SiteId
-        {
-            get
-            {
-                return siteId;
-            }
-
-            set
-            {
-                if (value == "" || value == null)
-                    siteId = "none";
-                else
-                    siteId = value;
-                Updated = true;
-                if (InitialLoad)
-                    InitialLoad = false;
-                else
-                    ApplicationSettings.SettingChangedEventHandler("");
-            }
-        }
+        public String DeviceType { get; set; }
+        
         public String Manufacturer { get; set; }
         public String Model { get; set; }
         
         public bool Updated { get; set; }
         public bool InitialLoad { get; private set; }
 
-        public InverterInfo(ApplicationSettings settings)
+        public DeviceInfo(ApplicationSettings settings)
         {
             ApplicationSettings = settings;
             InitialLoad = true;
         }
     }
 
-    public class InverterUpdate
+    public class DeviceUpdate
     {
         ApplicationSettings Settings;
         SystemServices SystemServices;
 
-        public ObservableCollection<InverterInfo> InverterList;
+        public ObservableCollection<DeviceInfo> DeviceList;
 
-        public InverterUpdate(ApplicationSettings settings, SystemServices services)
+        public DeviceUpdate(ApplicationSettings settings, SystemServices services)
         {
             Settings = settings;
             //SystemServices = new SystemServices(settings.BuildFileName("PVBC.log"));
             SystemServices = services;
-            InverterList = new ObservableCollection<InverterInfo>();
+            DeviceList = new ObservableCollection<DeviceInfo>();
         }
 
         private GenDatabase GetDatabase()
@@ -75,9 +56,9 @@ namespace PVBeanCounter
             return db;
         }
 
-        public void LoadInverterList()
+        public void LoadDeviceList()
         {
-            InverterList.Clear();
+            DeviceList.Clear();
 
             GenDatabase db = null;
             GenConnection con = null;
@@ -88,28 +69,28 @@ namespace PVBeanCounter
             {
                 db = GetDatabase();
                 con = db.NewConnection();
-                String getInverters =
-                    "select i.Id, i.SerialNumber, i.SiteId, it.Manufacturer, it.Model " +
-                    "from inverter i, invertertype it " +
-                    "where i.InverterType_Id = it.Id " +
-                    "order by SerialNumber ";
+                String getDevices =
+                    "select i.Id, i.SerialNumber, it.DeviceType, it.Manufacturer, it.Model " +
+                    "from device i, devicetype it " +
+                    "where i.DeviceType_Id = it.Id " +
+                    "order by it.DeviceType, i.SerialNumber ";
 
-                cmd = new GenCommand(getInverters, con);
+                cmd = new GenCommand(getDevices, con);
 
                 dataReader = (GenDataReader)cmd.ExecuteReader();
 
                 while (dataReader.Read())
                 {
-                    InverterInfo info = new InverterInfo(Settings);
+                    DeviceInfo info = new DeviceInfo(Settings);
                     info.Id = dataReader.GetInt32(0);
                     info.SerialNumber = dataReader.GetString(1);
-                    info.SiteId = dataReader.GetString(2);
+                    info.DeviceType = dataReader.GetString(2);
                     info.Manufacturer = dataReader.GetString(3);
                     info.Model = dataReader.GetString(4);
                     
                     info.Updated = false;
 
-                    InverterList.Add(info);
+                    DeviceList.Add(info);
                 }
             }
             catch (Exception)
@@ -132,8 +113,9 @@ namespace PVBeanCounter
             }
         }
 
-        public void UpdateInverters()
+        public void UpdateDevices()
         {
+            /*
             GenDatabase db = GetDatabase();
 
             GenConnection con = db.NewConnection();
@@ -142,7 +124,7 @@ namespace PVBeanCounter
                 "update inverter set SiteId = @SiteId " +
                 "where Id = @Id " ;
 
-            foreach(InverterInfo info in InverterList)
+            foreach(DeviceInfo info in DeviceList)
             {
                 if (info.Updated)
                 {
@@ -154,6 +136,7 @@ namespace PVBeanCounter
 
                 info.Updated = false;
             }
+            */
         }
     }    
 }
