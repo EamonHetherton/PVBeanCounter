@@ -70,7 +70,7 @@ namespace PVService
 
         public ManagerManager(ExecutionManager executionStateManager)
         {
-            EnergyEvents = new DeviceControl.EnergyEvents(GlobalSettings.ApplicationSettings);
+            EnergyEvents = new DeviceControl.EnergyEvents(GlobalSettings.ApplicationSettings, this);
             ExecutionManager = executionStateManager;
             RunMonitors = false;
 

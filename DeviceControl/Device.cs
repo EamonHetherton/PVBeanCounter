@@ -92,7 +92,7 @@ namespace Device
 
         private List<FeaturePeriods> FeaturePeriodsList;
 
-        private List<EnergyEventStatus> EventStatusList;
+        public List<EnergyEventStatus> EventStatusList;
 
         public bool Enabled { get; private set; }
 

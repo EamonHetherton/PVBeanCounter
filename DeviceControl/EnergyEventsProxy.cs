@@ -64,9 +64,9 @@ partial class EnergyEventsProxy : ClientBase<IEnergyEvents>, IEnergyEvents
         Channel.OnConsumptionEvent(id, time, energyDayTotalKWattHrs, powerWatts);
     }
 
-    public void OnMeterEvent(EnergyEventsEventId id, DateTime time, Double energyDayTotalKWattHrs, int powerWatts)
+    public void OnEnergyEvent(EnergyEventsEventId id, DateTime time, Double energyDayTotalKWattHrs, int powerWatts)
     {
-        Channel.OnMeterEvent(id, time, energyDayTotalKWattHrs, powerWatts);
+        Channel.OnEnergyEvent(id, time, energyDayTotalKWattHrs, powerWatts);
     }
 
     public void OnYieldEvent60second(EnergyEventsEventId id, DateTime time, Double energyDayTotalKWattHrs, int powerWatts)

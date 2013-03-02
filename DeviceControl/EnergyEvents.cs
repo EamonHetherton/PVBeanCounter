@@ -40,11 +40,8 @@ namespace DeviceControl
         public struct EventPending
         {
             public PendingType PendingType;
-            public String Hierarchy;
             public String EmitEventType;
-            public String ManagerName;
-            public String Component;
-            public String DeviceName;
+            public String Name;
             public DateTime EventTime;
             public Double EnergyToday;
             public int CurrentPower;
@@ -65,9 +62,12 @@ namespace DeviceControl
 
         DateTime LastEmitErrorReported;
 
-        public EnergyEvents(ApplicationSettings settings)
+        IDeviceManagerManager ManagerManager;
+
+        public EnergyEvents(ApplicationSettings settings, IDeviceManagerManager managerManager)
         {
             ApplicationSettings = settings;
+            ManagerManager = managerManager;
             SystemServices = GlobalSettings.SystemServices;
             PVEventReadyEvent = new ManualResetEvent(false);
             NodeReaderWriterLock = new ReaderWriterLock();
@@ -88,50 +88,55 @@ namespace DeviceControl
             {
                 NodeReaderWriterLock.AcquireReaderLock(3000);
                 haveMutex = NodeUpdateMutex.WaitOne();
-                foreach (EnergyNode node in EnergyNodes)
+                foreach (DeviceManagerBase mgr in ManagerManager.RunningDeviceManagers)
                 {
-                    if (SystemServices.LogEvent)
-                        SystemServices.LogMessage("ScanForEvents", "Hierarchy: " + node.Hierarchy + " - Manager: " + node.ManagerName +
-                            " - Component: " + node.Component + " - Device: " + node.DeviceName +
-                            " - Frequency: " + node.Frequency + " - Count: " + node.EventCount + " - Emit: " + node.EmitEvent.ToString() , LogEntryType.Event);
-                    if (node.Frequency.HasValue && node.EmitEvent)
+                    foreach (Device.DeviceBase dev in mgr.GenericDeviceList)
                     {
-                        int lastPower = node.LastPowerEmitted;
-                        Double lastEnergy = node.LastEnergyEmitted;
-
-                        Double energyToday;
-                        int currentPower;
-                        
-                        node.GetCurrentReading(eventTime, out energyToday, out currentPower);
-
-                        if (lastPower != currentPower || lastEnergy != energyToday)
+                        foreach(Device.EnergyEventStatus status in dev.EventStatusList)
                         {
-                            EventPending pend;
-                            pend.PendingType = PendingType.Energy;
-                            pend.Hierarchy = node.Hierarchy.ToString();
-                            pend.EmitEventType = node.EmitEventType;
-                            pend.ManagerName = node.ManagerName;
-                            pend.Component = node.Component;
-                            pend.DeviceName = node.DeviceName;
-                            pend.EventTime = eventTime;
-                            pend.EnergyToday = energyToday;
-                            pend.CurrentPower = currentPower;
-                            pend.StatusText = "";
-                            pend.StatusType = "";
-                            // Queue pending events so that they are sent outside the Mutex lock
-                            // allow more events to be recorded without extended thread block
-                            havePendingMutex = PendingListMutex.WaitOne();
-                            PendingEvents.Add(pend);
-                            if (havePendingMutex)
-                            {
-                                PendingListMutex.ReleaseMutex();
-                                havePendingMutex = false;
+                            if (status.EmitEvents.Count > 0)
+                            {                                
+                                int lastPower = status.LastPowerEmitted;
+                                Double lastEnergy = status.LastEnergyEmitted;
+
+                                Double energyToday;
+                                int currentPower;
+
+                                status.GetCurrentReading(eventTime, out energyToday, out currentPower);
+                                
+                                if (lastPower != currentPower || lastEnergy != energyToday)
+                                    foreach(Device.DeviceEventConfig e in status.EmitEvents)
+                                    {
+                                        if (SystemServices.LogEvent)
+                                            SystemServices.LogMessage("ScanForEvents", " - Name: " + e.EventName +
+                                                " - Type: " + e.EventType, LogEntryType.Event);
+
+                                        EventPending pend;
+                                        pend.PendingType = PendingType.Energy;
+                                        pend.Name = e.EventName;
+                                        pend.EmitEventType = e.EventType.ToString();
+                                        pend.EventTime = eventTime;
+                                        pend.EnergyToday = energyToday;
+                                        pend.CurrentPower = currentPower;
+                                        pend.StatusText = "";
+                                        pend.StatusType = "";
+                                        // Queue pending events so that they are sent outside the Mutex lock
+                                        // allow more events to be recorded without extended thread block
+                                        havePendingMutex = PendingListMutex.WaitOne();
+                                        PendingEvents.Add(pend);
+                                        if (havePendingMutex)
+                                        {
+                                            PendingListMutex.ReleaseMutex();
+                                            havePendingMutex = false;
+                                        }
+                                        SystemServices.LogMessage("ScanForEvents", "Event queued", LogEntryType.Event);
+                                                                        
+                                    }
                             }
-                            SystemServices.LogMessage("ScanForEvents", "Event queued", LogEntryType.Event);
+                        
                         }
                     }
-                    node.EventCount = 0;
-                }                
+                }
             }
             catch (Exception e)
             {
@@ -160,14 +165,11 @@ namespace DeviceControl
 
                 EventPending pend;
                 pend.PendingType = PendingType.Status;
-                pend.Hierarchy = "";
+                pend.Name = "";
                 pend.EmitEventType = "";
                 pend.EventTime = DateTime.Now;
                 pend.CurrentPower = 0;
                 pend.EnergyToday = 0.0;
-                pend.DeviceName = "";
-                pend.Component = "";
-                pend.ManagerName = "";
                 pend.StatusType = statusType;
                 pend.StatusText = statusText;
                 PendingEvents.Add(pend);
@@ -210,22 +212,20 @@ namespace DeviceControl
                     }
 
                     EnergyEventsEventId id;
-                    id.ManagerName = node.ManagerName;
-                    id.Component = node.Component;
-                    id.Device = node.DeviceName;
+                    id.Name = node.Name;
+                    
 
                     if (node.PendingType == PendingType.Energy)
                     {
-                        if (node.Hierarchy == "Yield")
+                        if (node.EmitEventType == "Yield")
                             proxy.OnYieldEvent(id, node.EventTime, node.EnergyToday, node.CurrentPower);
-                        else if (node.Hierarchy == "Consumption")
+                        else if (node.EmitEventType == "Consumption")
                             proxy.OnConsumptionEvent(id, node.EventTime, node.EnergyToday, node.CurrentPower);
                         else
-                            proxy.OnMeterEvent(id, node.EventTime, node.EnergyToday, node.CurrentPower);
+                            proxy.OnEnergyEvent(id, node.EventTime, node.EnergyToday, node.CurrentPower);
 
                         if (SystemServices.LogEvent)
-                            SystemServices.LogMessage("EmitPendingEvents", "Hierarchy: " + node.Hierarchy + " - Manager: " + node.ManagerName +
-                                " - Component: " + node.Component + " - Device: " + node.DeviceName + " - Type: " + node.EmitEventType + " - Time: " + node.EventTime +
+                            SystemServices.LogMessage("EmitPendingEvents", "Type: " + node.EmitEventType + " - Name: " + node.Name + " - Time: " + node.EventTime +
                                 " - Power: " + node.CurrentPower + " - Energy: " + node.EnergyToday, LogEntryType.Event);
                     }
                     else if (node.PendingType == PendingType.Status)
@@ -277,6 +277,16 @@ namespace DeviceControl
                 NodeReaderWriterLock.AcquireReaderLock(3000);
                 proxy = new EnergyEventsProxy();
                 int count = 0;
+                foreach (DeviceManagerBase mgr in ManagerManager.RunningDeviceManagers)                
+                    foreach (Device.DeviceBase dev in mgr.GenericDeviceList)                    
+                        foreach (Device.EnergyEventStatus status in dev.EventStatusList)                        
+                            count += status.EmitEvents.Count;
+                            
+                        
+                    
+                
+
+                   
 
                 //foreach (EnergyEventSettings eEvent in ApplicationSettings.EnergyEventList)
                 //    if (eEvent.EmitEvent) count++;
@@ -284,19 +294,19 @@ namespace DeviceControl
                 if (count > 0)
                 {
                     count = 0;
-                    foreach (EnergyEventSettings eEvent in ApplicationSettings.EnergyEventList)
-                        if (eEvent.EmitEvent)
-                        {
-                            eventTypes[count].Hierarchy = eEvent.Hierarchy.ToString();
-                            eventTypes[count].Type = eEvent.EventType;
-                            eventTypes[count].Id.ManagerName = eEvent.ManagerName;
-                            eventTypes[count].Id.Component = eEvent.Component;
-                            eventTypes[count].Id.Device = eEvent.DeviceName;
-                            eventTypes[count].Description = eEvent.Description;
-                            eventTypes[count].FeedInYield = eEvent.FeedInYield;
-                            eventTypes[count].FeedInConsumption = eEvent.FeedInConsumption;
-                            count++;
-                        }
+                    foreach (DeviceManagerBase mgr in ManagerManager.RunningDeviceManagers)                
+                        foreach (Device.DeviceBase dev in mgr.GenericDeviceList)                    
+                            foreach(Device.EnergyEventStatus status in dev.EventStatusList)                        
+                                foreach(Device.DeviceEventConfig eEvent in status.EmitEvents)
+                                {
+                                    eventTypes[count].Id.Name = eEvent.EventName;
+                                    eventTypes[count].Type = eEvent.EventType.ToString();                                    
+                                    eventTypes[count].Description = "";
+                                    eventTypes[count].FeedInYield = eEvent.EventType == EventType.Yield && eEvent.UseForFeedIn;
+                                    eventTypes[count].FeedInConsumption = eEvent.EventType == EventType.Consumption && eEvent.UseForFeedIn;
+                                    count++;
+                                }
+
                     proxy.AvailableEventList(updatedEvents, eventTypes);
                 }
             }

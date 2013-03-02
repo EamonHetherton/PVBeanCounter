@@ -61,7 +61,7 @@ namespace Subscriber
 
     public class ActiveEvent : INotifyPropertyChanged
     {
-        public String Hierarchy { get; private set; }
+        public String Name { get; private set; }
         public EnergyEventsEventId Id { get; private set; }
 
         public String Type { get; private set; }
@@ -69,20 +69,26 @@ namespace Subscriber
         public bool IsCurrent { get; set; }
         private IUpdateDials UpdateDials;
 
-        public bool FeedInYield { get; set; }
-        public bool FeedInConsumption { get; set; }
+        public bool FeedInYield { get; private set; }
+        public bool FeedInConsumption { get; private set; }
 
         public ActiveEvent(EnergyEventsEventInfo info, IUpdateDials updateDials)
         {
-            Hierarchy = info.Hierarchy;
+            Name = info.Id.Name;
             Id = info.Id;
 
             Type = info.Type;
             
             UpdateDials = updateDials;
-            String name = info.Type + "_" + info.Id.ManagerName + "_" + info.Id.Component + "_" + info.Id.Device;
-            name = name.Replace('/', '_');
-            ReadingDescription = info.Description;
+
+            if (info.Description != "")
+                ReadingDescription = info.Description;
+            else
+                ReadingDescription = info.Id.Name;
+
+            FeedInYield = info.FeedInYield;
+            FeedInConsumption = info.FeedInConsumption;
+
             updateDials.UpdateDial(this);
             CurrentPower = 0;           
 
@@ -168,12 +174,9 @@ namespace Subscriber
         private void CreateDefaultEvents()
         {
             EnergyEventsEventInfo info;
-            info.Hierarchy = "Custom";
-            info.Type = "FeedIn";
+            info.Type = "Feed-In";
             info.Description = "Feed-In";
-            info.Id.ManagerName = "";
-            info.Id.Component = "";
-            info.Id.Device = "";
+            info.Id.Name = "";
             info.FeedInYield = false;
             info.FeedInConsumption = false;
             FeedInEvent = GetActiveEvent(info, true);
@@ -228,7 +231,7 @@ namespace Subscriber
         {
             foreach (ActiveEvent evnt in _ActiveEvents)
             {
-                if (evnt.Hierarchy == info.Hierarchy && evnt.Id == info.Id)
+                if (evnt.Id == info.Id)
                     return evnt;
             }
 
@@ -270,25 +273,9 @@ namespace Subscriber
 
             for (int i = 0; i < eventTypes.GetLength(0); i++)
             {
-                // Remediate for use with old Publisher
-                if (eventTypes[i].Hierarchy == null || eventTypes[i].Hierarchy == "")
-                {
-                    if (eventTypes[i].Type == null || eventTypes[i].Type == "" || eventTypes[i].Type == "Meter")
-                    {
-                        if (eventTypes[i].Id.ManagerName != "")
-                        {
-                            eventTypes[i].Hierarchy = "Meter";
-                            eventTypes[i].Type = "Yield";
-                        }
-                    }
-                    else
-                        eventTypes[i].Hierarchy = eventTypes[i].Type;
-                }
                 // locate or create an ActiveEvent for each available event
                 ActiveEvent evnt = GetActiveEvent(eventTypes[i], true);
-                evnt.ReadingDescription = eventTypes[i].Description;
-                evnt.FeedInConsumption = eventTypes[i].FeedInConsumption;
-                evnt.FeedInYield = eventTypes[i].FeedInYield;
+                
                 // Mark event as current
                 evnt.IsCurrent = true;
             }
@@ -306,7 +293,6 @@ namespace Subscriber
             LastEventTime = DateTime.Now;
 
             EnergyEventsEventInfo info;
-            info.Hierarchy = "Yield";
             info.Type = "Yield";
             info.Id = id;
             info.Description = "Yield Found";
@@ -333,7 +319,6 @@ namespace Subscriber
             LastEventTime = DateTime.Now;
 
             EnergyEventsEventInfo info;
-            info.Hierarchy = "Consumption";
             info.Type = "Consumption";
             info.Id = id;
             info.Description = "Consumption Found";
@@ -354,15 +339,14 @@ namespace Subscriber
             }
         }
 
-        public void OnMeterEvent(EnergyEventsEventId id, DateTime time, Double energyDayTotalKWattHrs, int powerWatts)
+        public void OnEnergyEvent(EnergyEventsEventId id, DateTime time, Double energyDayTotalKWattHrs, int powerWatts)
         {
             LastEventTime = DateTime.Now;
 
             EnergyEventsEventInfo info;
-            info.Hierarchy = "Meter";
-            info.Type = "Yield";
+            info.Type = "Energy";
             info.Id = id;
-            info.Description = "Meter Found";
+            info.Description = "Energy Found";
             info.FeedInConsumption = false;
             info.FeedInYield = false;
 
@@ -611,9 +595,10 @@ namespace Subscriber
         {
             MySubscriptionServiceProxy proxy;
             if (useAlternate)
-                proxy = new MySubscriptionServiceProxy(Context, "PVMonitorSubscribe_TCP", "net.tcp://" + AlternatePublisherMachine + ":8012/MySubscriptionManager");
+                proxy = new MySubscriptionServiceProxy(Context, "PVMonitorSubscribe_TCP", "net.tcp://" + AlternatePublisherMachine + ":8013/MySubscriptionManager");
             else
-                proxy = new MySubscriptionServiceProxy(Context, "PVMonitorSubscribe_TCP", "net.tcp://" + PublisherMachine + ":8012/MySubscriptionManager");
+                proxy = new MySubscriptionServiceProxy(Context, "PVMonitorSubscribe_TCP", "net.tcp://" + PublisherMachine + ":8013/MySubscriptionManager");
+
             if (ManualCredentials)
             {
                 proxy.ClientCredentials.Windows.ClientCredential.Domain = Domain;

@@ -23,7 +23,6 @@ using System.ServiceModel.Channels;
 
 public struct EnergyEventsEventInfo
 {
-    public String Hierarchy;
     public String Type;
     public EnergyEventsEventId Id;
     public String Description;
@@ -33,9 +32,7 @@ public struct EnergyEventsEventInfo
 
 public struct EnergyEventsEventId
 {
-    public String ManagerName;
-    public String Component;
-    public String Device;
+    public String Name;
 
     public override bool Equals(Object obj)
     {
@@ -44,16 +41,12 @@ public struct EnergyEventsEventId
 
     public override int GetHashCode()
     {
-        return (ManagerName.GetHashCode() ^ Component.GetHashCode()) ^ Device.GetHashCode();
+        return Name.GetHashCode();
     }
 
     public static bool operator ==(EnergyEventsEventId x, EnergyEventsEventId y)
     {
-        if (x.ManagerName != y.ManagerName)
-            return false;
-        if (x.Component != y.Component)
-            return false;
-        return (x.Device == y.Device);
+        return (x.Name == y.Name);
     }
 
     public static bool operator !=(EnergyEventsEventId x, EnergyEventsEventId y)
@@ -78,7 +71,7 @@ public interface IEnergyEvents
     void OnConsumptionEvent(EnergyEventsEventId id, DateTime time, Double energyDayTotalKWattHrs, int powerWatts);
 
     [OperationContract(IsOneWay = true)]
-    void OnMeterEvent(EnergyEventsEventId id, DateTime time, Double energyDayTotalKWattHrs, int powerWatts);
+    void OnEnergyEvent(EnergyEventsEventId id, DateTime time, Double energyDayTotalKWattHrs, int powerWatts);
 
     [OperationContract(IsOneWay = true)]
     void OnYieldEvent60second(EnergyEventsEventId id, DateTime time, Double energyDayTotalKWattHrs, int powerWatts);

@@ -46,6 +46,9 @@ namespace DeviceControl
         void StopService();
         IEvents EnergyEvents { get; }
         Device.DeviceBase FindDeviceFromSettings(DeviceManagerDeviceSettings deviceSettings);
+
+        List<DeviceControl.DeviceManagerBase> RunningDeviceManagers { get; }
+        List<DeviceControl.DeviceManagerBase> ConsolidationDeviceManagers { get; }
     }
 
     public abstract class DeviceManagerBase : GenThread, IDeviceManager
