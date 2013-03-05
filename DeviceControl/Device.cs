@@ -361,20 +361,41 @@ namespace Device
             return null;
         }
 
-        private int GetDeviceId(GenConnection con)
+        public int GetDeviceId(GenConnection con)
         {
+            bool localCon = false;
             try
-            {                 
+            {
+                if (DeviceId.HasValue)
+                    return DeviceId.Value;
+
+                if (con == null)
+                {                    
+                    con = GlobalSettings.TheDB.NewConnection();
+                    localCon = true;
+                    GlobalSettings.SystemServices.GetDatabaseMutex();
+                }
+
                 int? id = ReadDeviceId(con);
                 if (!id.HasValue)
                     id = InsertDeviceId(con);
 
+                DeviceId = id;
                 return id.Value;
             }
             catch (Exception e)
             {
                 GlobalSettings.SystemServices.LogMessage("GetDeviceId", "Exception: " + e.Message, LogEntryType.ErrorMessage);
                 throw e;
+            }
+            finally
+            {
+                if (localCon && con != null)
+                {
+                    GlobalSettings.SystemServices.ReleaseDatabaseMutex();
+                    con.Close();
+                    con.Dispose();                    
+                }
             }
         }
 
@@ -393,7 +414,7 @@ namespace Device
             cmd.AddParameterWithValue("@PVOutputSystemId", pvOutputSystemId);
         }
 
-        protected void SetDeviceIdentity(FeatureSettings feature, MeasureType measureType, 
+        protected void SetDeviceFeature(FeatureSettings feature, MeasureType measureType, 
             String pvOutputSystemId = null, bool? isConsumption = null, bool? isAC = null, bool? isThreePhase = null, 
             int? stringNumber = null, int? phaseNumber = null)
         {
@@ -430,7 +451,8 @@ namespace Device
             {
                 con = GlobalSettings.TheDB.NewConnection();
 
-                DeviceId = GetDeviceId(con);
+                if (!DeviceId.HasValue)
+                    GetDeviceId(con);
 
                 GenCommand cmd = new GenCommand(sqlRead, con);
 
@@ -618,7 +640,7 @@ namespace Device
 
         // curTime is supplied if duration is to be calculated on the fly (live readings)
         // curTime is null if duration is from a history record - standardDuration contains the correct duration
-        public TimeSpan EstimateEnergy(Double powerWatts, DateTime? curTime, float standardDuration)
+        protected TimeSpan EstimateEnergy(Double powerWatts, DateTime? curTime, float standardDuration)
         {
             TimeSpan duration;
             if (curTime.HasValue)
@@ -636,8 +658,8 @@ namespace Device
             EstEnergy += newEnergy;
             
             if (GlobalSettings.SystemServices.LogTrace)
-                GlobalSettings.SystemServices.LogMessage("Device", "EstimateEnergy - Power: " + powerWatts +
-                    " - Duration: " + duration.TotalSeconds + " - Energy: " + newEnergy + " - TotalEnergy: " + EstEnergy, LogEntryType.Trace);
+                GlobalSettings.SystemServices.LogMessage("Device", "EstimateEnergy - Time: " + curTime + " - Power: " + powerWatts +
+                    " - Duration: " + duration.TotalSeconds + " - Energy: " + newEnergy, LogEntryType.Trace);
 
             return duration;
         }

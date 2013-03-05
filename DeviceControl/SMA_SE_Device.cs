@@ -73,7 +73,7 @@ namespace Device
             }
         }
 
-        public override bool ProcessOneLiveReading(SMA_SE_Record liveReading)
+        private bool ProcessOneReading(SMA_SE_Record liveReading, bool isLive)
         {
             if (FaultDetected)
                 return false;
@@ -116,7 +116,7 @@ namespace Device
                     minPower = liveReading.Watts;
 
                 if (!DeviceId.HasValue)
-                    SetDeviceIdentity(Feature_YieldAC, PVSettings.MeasureType.Energy, null, true, true, false);
+                    SetDeviceFeature(Feature_YieldAC, PVSettings.MeasureType.Energy, null, true, true, false);
                
                 DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_YieldAC.Type, Feature_YieldAC.Id);
                     
@@ -144,7 +144,7 @@ namespace Device
                 maxPower = null;
 
                 if (GlobalSettings.SystemServices.LogTrace)
-                    LogMessage("ProcessOneLiveReading - Reading"
+                    LogMessage("ProcessOneLiveReading - Reading - Time: " + liveReading.TimeStampe
                         + " - EnergyDelta: " + reading.EnergyDelta
                         + " - Power: " + reading.Power
                         , LogEntryType.Trace);
@@ -157,7 +157,7 @@ namespace Device
                 BuildOutputReadyFeatureList(notificationList, FeatureType.YieldAC, 0, reading.ReadingEnd);
                 UpdateConsolidations(notificationList);
 
-                if (EmitEvents)
+                if (isLive && EmitEvents)
                 {
                     stage = "energy";
                     EnergyEventStatus status = FindFeatureStatus(FeatureType.YieldAC, 0);
@@ -175,9 +175,16 @@ namespace Device
             return res;
         }
 
+        public override bool ProcessOneLiveReading(SMA_SE_Record liveReading)
+        {
+            // used for the latest reading
+            return ProcessOneReading(liveReading, true);
+        }
+
         public override bool ProcessOneHistoryReading(SMA_SE_Record histReading)
         {
-            throw new NotImplementedException("ProcessOneHistoryReading not used for SMA SunnyExplorer devices");
+            // used for readings older than the latest
+            return ProcessOneReading(histReading, false);
         }
     }
 }

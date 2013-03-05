@@ -131,7 +131,7 @@ namespace Device
                     minPower = liveReading.Watts;
 
                 if (!DeviceId.HasValue)
-                    SetDeviceIdentity(Feature_EnergyAC, PVSettings.MeasureType.Energy, null, true, true, false);
+                    SetDeviceFeature(Feature_EnergyAC, PVSettings.MeasureType.Energy, null, true, true, false);
 
                 //if (dbWrite)
                 {
@@ -223,7 +223,7 @@ namespace Device
             }
             catch (Exception e)
             {
-                LogMessage("ProcessOneReading - Stage: " + stage + " - Exception: " + e.Message, LogEntryType.ErrorMessage);
+                LogMessage("ProcessOneHistoryReading - Stage: " + stage + " - Exception: " + e.Message, LogEntryType.ErrorMessage);
                 return false;
             }            
         }

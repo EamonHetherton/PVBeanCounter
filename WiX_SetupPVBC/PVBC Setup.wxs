@@ -91,10 +91,10 @@
                             <?if $(var.SolutionConfig) = "Debug" ?>
                             <File Id="PVSERVICE.PDB" Name="PVService.pdb" Source="..\PVService\$(var.SourcePathFragment)PVService.pdb" />
                             <?endif ?>
-                            <ServiceInstall Name="PVService" Type="ownProcess" Start="auto" ErrorControl="normal" Vital="yes" DisplayName="PVService" Description="PVBC Device Monitor Service" Id="PVServiceInstall">
+                            <ServiceInstall Name="PVService" Type="ownProcess" Start="auto" ErrorControl="normal" Vital="yes" DisplayName="PVService" Description="PVBC Device Monitor Service" Id="PVServiceInstall" Account="NT Authority\Local Service">
                                 <ServiceConfig DelayedAutoStart="1" OnInstall="yes" />
                             </ServiceInstall>
-                            <ServiceControl Id="PVServiceControl" Name="PVService" Stop="both" Wait="yes" />
+                            <ServiceControl Id="PVServiceControl" Name="PVService" Remove="uninstall" Stop="both" Wait="yes" />
                         </Component>
                         <Component Id="PVPublisherService" Guid="21953F1A-378E-4227-BC98-08A3336250D0">
                             <File Id="PVPUBLISHERSERVICE.EXE" Name="PVPublisherService.exe" Source="..\PVPublisherService\$(var.SourcePathFragment)PVPublisherService.exe" KeyPath="yes" Vital="yes" />
@@ -104,10 +104,10 @@
                             <File Id="PVPUBLISHERSERVICE.PDB" Name="PVPublisherService.pdb" Source="..\PVPublisherService\$(var.SourcePathFragment)PVPublisherService.pdb" />
                             <File Id="SERVICEMODELEX.PDB" Name="ServiceModelEx.pdb" Source="..\PVPublisherService\$(var.SourcePathFragment)ServiceModelEx.pdb" />
                             <?endif ?>
-                            <ServiceInstall Name="PVPublisherService" Type="ownProcess" Start="auto" ErrorControl="normal" Vital="yes" DisplayName="PVPublisherService" Description="PVBC Event Publisher Service" Id="PVPublisherServiceInstall">
+                            <ServiceInstall Name="PVPublisherService" Type="ownProcess" Start="auto" ErrorControl="normal" Vital="yes" DisplayName="PVPublisherService" Description="PVBC Event Publisher Service" Id="PVPublisherServiceInstall" Account="NT Authority\Local Service">
                                 <ServiceConfig DelayedAutoStart="1" OnInstall="yes" />
                             </ServiceInstall>
-                            <ServiceControl Id="PVPublisherServiceControl" Name="PVPublisherService" Stop="both" Wait="yes" />
+                            <ServiceControl Id="PVPublisherServiceControl" Name="PVPublisherService" Remove="uninstall" Stop="both" Wait="yes" />
                         </Component>
                         <Directory Id="EMPTY_DATABASES" Name="Empty Databases">
                             <Component Id="PVHISTORY.S3DB" DiskId="1" Guid="CB2B7504-473C-4E12-ACEE-BD934D68CC62">

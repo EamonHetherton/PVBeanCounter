@@ -119,7 +119,7 @@ namespace Device
                         return false;
                     }
 
-                    SetDeviceIdentity(Feature_YieldAC, PVSettings.MeasureType.Energy, null, false, true, false);
+                    SetDeviceFeature(Feature_YieldAC, PVSettings.MeasureType.Energy, null, false, true, false);
 
                     if (GlobalSettings.SystemServices.LogTrace)
                         LogMessage("DoExtractReadings - Identity - Manufacturer: " + Manufacturer

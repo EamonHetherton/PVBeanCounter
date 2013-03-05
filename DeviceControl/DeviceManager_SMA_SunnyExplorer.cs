@@ -110,13 +110,14 @@ namespace DeviceControl
                 state = "before UpdateFromDirectory";
                 res = UpdateFromDirectory(OutputDirectory, FileNamePattern, GlobalSettings.ApplicationSettings.BuildFileName(ArchiveDirectory));
 
+                state = "before FindNewStartDate";
                 DateTime? newNextFileDate = FindNewStartDate();
                 if ((NextFileDate != newNextFileDate) && (newNextFileDate != null))                
                     NextFileDate = newNextFileDate;
             }
             catch (Exception e)
             {
-                GlobalSettings.LogMessage("ExtractYield", "Status: " + state + " - exception: " + e.Message, LogEntryType.ErrorMessage);
+                GlobalSettings.LogMessage("DoWork", "Status: " + state + " - exception: " + e.Message, LogEntryType.ErrorMessage);
             }
             
             return res > 0;
@@ -728,7 +729,14 @@ namespace DeviceControl
             {
                 bool updated = false;
 
-                updated = UpdateHistory(fileInfo.FullName);
+                try
+                {
+                    updated = UpdateHistory(fileInfo.FullName);
+                }
+                catch (Exception e)
+                {
+                    LogMessage("UpdateFromDirectory - Exception: " + e.Message, LogEntryType.ErrorMessage);
+                }
 
                 if (updated)
                 {
@@ -799,10 +807,18 @@ namespace DeviceControl
                 for (int i = 0; i < ReadingInfo.LiveRecords.Length; i++ )
                     if (ReadingInfo.Enabled[i])
                     {
+                        
                         CheckReadingSet(ReadingInfo.LiveRecords[i]);
                         SMA_SE_Device device = FindDevice(ReadingInfo.Models[i], ReadingInfo.SerialNumbers[i]);
-                        foreach (SMA_SE_Record reading in ReadingInfo.LiveRecords[i])                    
-                            device.ProcessOneLiveReading(reading);
+                        int end = ReadingInfo.LiveRecords[i].Count - 1;
+                        for (int j = 0; j <= end; j++ )
+                        {
+                            SMA_SE_Record reading = ReadingInfo.LiveRecords[i][j];
+                            if (j == end && reading.TimeStampe.Date >= DateTime.Now.AddMinutes(-15))
+                                device.ProcessOneLiveReading(reading); // handle latest differently - can emit an event
+                            else
+                                device.ProcessOneHistoryReading(reading);
+                        }
                         device.Days.UpdateDatabase();                
                     }
                 return true;

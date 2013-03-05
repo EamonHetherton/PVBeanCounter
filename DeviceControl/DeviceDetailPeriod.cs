@@ -354,7 +354,7 @@ namespace DeviceDataRecorders
             if (reading.ReadingStart >= End)
                 return;
 
-            if (ReadingsGeneric.ContainsKey(reading.ReadingEnd))
+            if (ReadingsGeneric.ContainsKey(reading.ReadingEnd) && addReadingType != AddReadingType.History)
                 throw new Exception("AddReading - Duplicate reading found - ReadingEnd: " + reading.ReadingEnd);
 
             if (reading.Duration.Ticks == 0 )
@@ -426,8 +426,10 @@ namespace DeviceDataRecorders
                 || reading.ReadingStart.Date == DateTime.Today && ReadingsGeneric.Values[ReadingsGeneric.Count - 1].ReadingEnd == reading.ReadingEnd)
                     try
                     {
+                        ReadingBase old = ReadingsGeneric.Values[ReadingsGeneric.IndexOfKey(reading.ReadingEnd)];
                         ReadingsGeneric.Remove(reading.ReadingEnd);
                         ReadingsGeneric.Add(reading.ReadingEnd, reading);
+                        reading.InDatabase = old.InDatabase;
                     }
                     catch (Exception e)
                     {
@@ -994,6 +996,8 @@ namespace DeviceDataRecorders
                     // to link must match this consolidation - consolidate the matching from link
                     if (Feature.Type == devLink.ToFeatureType && Feature.Id == devLink.ToFeatureId)
                     {
+                        if (!devLink.FromDevice.DeviceId.HasValue)
+                            devLink.FromDevice.GetDeviceId(null);
                         DeviceDetailPeriodsBase periods = devLink.FromDevice.FindOrCreateFeaturePeriods(devLink.FromFeatureType, devLink.FromFeatureId);
                         // step through all periods in the period container
                         PeriodEnumerator pEnum = periods.GetPeriodEnumerator(Start, End);

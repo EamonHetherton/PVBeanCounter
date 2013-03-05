@@ -193,7 +193,7 @@
                         <CheckBox Content="Password Required" Grid.Column="2" IsChecked="{Binding Path=ServiceAccountRequiresPassword, Converter={StaticResource NullableValueConverter}}" HorizontalAlignment="Left" Margin="126,11,0,0" Name="checkBoxServiceRequiresPassword" VerticalAlignment="Top" Click="checkBoxServiceRequiresPassword_Click" ToolTip="Check if you need to change tha password associated with the Service Account." />
                     </Grid>
 
-                    <CheckBox Content="AutoStart PVBC Service" Height="16" HorizontalAlignment="Left" IsChecked="{Binding Path=AutoStartPVBCService, TargetNullValue=true}" Name="checkBoxAutoStartService" ToolTip="Check to enable automatic startup of PVBC service (Check for normal operation)" VerticalAlignment="Center" Grid.Column="1" Grid.Row="7" VerticalContentAlignment="Center" />
+                    <CheckBox Content="AutoStart PVBC Service" Height="16" HorizontalAlignment="Left" IsChecked="{Binding Path=AutoStartPVBCService}" Name="checkBoxAutoStartService" ToolTip="Check to enable automatic startup of PVBC service (Check for normal operation)" VerticalAlignment="Center" Grid.Column="1" Grid.Row="7" VerticalContentAlignment="Center" />
 
                     <Button Content="Setup / Check Environment" Height="23" HorizontalAlignment="Left" Name="butCheckEnv" Click="butCheckEnv_Click" VerticalAlignment="Center" ToolTip="Click to perform initial environment setup or to check environment settings" Grid.Row="8" Padding="4,0,3,4" Margin="0,0,0,0" Grid.Column="1" />
                     <Label Content="Service Account" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Name="label34" VerticalAlignment="Center" VerticalContentAlignment="Center" Grid.Row="6" />
