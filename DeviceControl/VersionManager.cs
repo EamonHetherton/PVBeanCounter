@@ -130,17 +130,15 @@ namespace DeviceControl
 
         public abstract string Alter_interter_19011 { get; }
 
-        public virtual string Table_devicetype_2000 { get { return ""; } }
+        public abstract string Table_devicetype_2000 { get { return ""; } }
 
-        public virtual string Table_device_2000 { get { return ""; } }
+        public abstract string Table_devicefeature_2000 { get { return ""; } }
 
-        public virtual string Table_devicereading_ac_2000 { get { return ""; } }
+        public abstract string Table_device_2000 { get { return ""; } }
 
-        public virtual string Table_devicereading_dc_2000 { get { return ""; } }
+        public abstract string Table_devicereading_energy_2000 { get { return ""; } }
 
-        public virtual string Table_devicesummary_2000 { get { return ""; } }
 
-        public virtual string Table_devicesummarydetail_ac_2000 { get { return ""; } }
     }
 
     internal class MySql_DDL : DDL
@@ -684,33 +682,35 @@ namespace DeviceControl
             }
         }
 
-        public override string Table_devicereading_ac_2000
+        public override string Table_devicereading_energy_2000
         {
             get
             {
                 return
-                    "CREATE TABLE `devicereading_ac` " +
+                    "CREATE TABLE `devicereading_energy` " +
                     "( " +
-                        "`OutputTime` DATETIME NOT NULL, " +
+                        "`ReadingEnd` DATETIME NOT NULL, " +
                         "`Device_Id` MEDIUMINT NOT NULL, " +
-                        "`Phase` TINYINT NOT NULL, " +
-                        "`Seconds` MEDIUMINT NULL, " +
+                        "`FeatureType` SMALLINT NOT NULL, " +
+                        "`FeatureId` TINYINT NOT NULL, " +
+                        "`ReadingStart` DATETIME NULL, " +
                         "`EnergyTotal` DOUBLE NULL, " +
                         "`EnergyToday` DOUBLE NULL, " +
                         "`EnergyDelta` FLOAT NULL, " +
-                        "`EnergyCalculated` FLOAT NULL, " +
+                        "`CalcEnergyDelta` FLOAT NULL, " +
+                        "`HistEnergyDelta` FLOAT NULL, " +
                         "`Mode` MEDIUMINT NULL, " +
                         "`ErrorCode` MEDIUMINT NULL, " +
-                        "`PowerAC` MEDIUMINT NULL, " +
-                        "`VoltsAC` FLOAT NULL, " +
-                        "`CurrentAC` FLOAT NULL, " +
-                        "`MinPowerAC` MEDIUMINT NULL, " +
-                        "`MaxPowerAC` MEDIUMINT NULL, " +
+                        "`Power` MEDIUMINT NULL, " +
+                        "`Volts` FLOAT NULL, " +
+                        "`Amps` FLOAT NULL, " +
                         "`Frequency` FLOAT NULL, " +
                         "`Temperature` FLOAT NULL, " +
-                        "PRIMARY KEY (`OutputTime`, `Device_Id`, `Phase` ) , " +
-                        "CONSTRAINT `uk_devicereading_ac` UNIQUE (`Device_Id`, `OutputTime`, `Phase`) , " +
-                        "CONSTRAINT `fk_devicereadingac_device` FOREIGN KEY (`Device_Id`) REFERENCES `device` (`Id`) " +
+                        "`MinPowerAC` MEDIUMINT NULL, " +
+                        "`MaxPowerAC` MEDIUMINT NULL, " +                        
+                        "PRIMARY KEY (`ReadingEnd`, `Device_Id`, `FeatureType`, `FeatureId` ) , " +
+                        "CONSTRAINT `uk_devicereading_energy` UNIQUE (`Device_Id`, `ReadingEnd`, `FeatureType`, `FeatureId`) , " +
+                        "CONSTRAINT `fk_devicereadingenergy_device` FOREIGN KEY (`Device_Id`) REFERENCES `device` (`Id`) " +
                     ") ENGINE=InnoDB DEFAULT CHARSET=latin1 ";
             }
         }

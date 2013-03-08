@@ -39,16 +39,38 @@ namespace DeviceDataRecorders
             set { InDatabaseInternal = value; }
         }
 
+        private bool IsConsolidationReadingInternal = false;
+
+        public bool IsConsolidationReading
+        {
+            get
+            {
+                return IsConsolidationReadingInternal;
+            }
+            set
+            {
+                IsConsolidationReadingInternal = value;
+                if (value)  // consolidation readings are not stored in the database
+                    UpdatePendingInternal = false;
+            }
+        }
+
         private bool UpdatePendingInternal = false;
+
         public bool UpdatePending   // true when database writes are outstanding
         {
             get { return UpdatePendingInternal; }
             protected set
             {
-                UpdatePendingInternal = value;
-                if (value)
-                    foreach (DeviceDetailPeriodBase period in RegisteredPeriods)
-                        period.PeriodIsDirty();
+                if (IsConsolidationReading)  // consolidation readings are not stored in the database
+                    UpdatePendingInternal = false;
+                else
+                {
+                    UpdatePendingInternal = value;
+                    if (value)
+                        foreach (DeviceDetailPeriodBase period in RegisteredPeriods)
+                            period.PeriodIsDirty();
+                }
             }
         }
         public bool AttributeRestoreMode { get; protected set; }    // true when loading values from persistent store
@@ -187,6 +209,7 @@ namespace DeviceDataRecorders
 
         public abstract void CalcFromPreviousGeneric(ReadingBase prevReading);
         public abstract bool IsSameReadingGeneric(ReadingBase other);
+        public abstract bool IsSameReadingValuesGeneric(ReadingBase other);
         public abstract ReadingBase CloneGeneric(DateTime outputTime, TimeSpan duration);
     }
 
@@ -206,6 +229,11 @@ namespace DeviceDataRecorders
             return IsSameReading((TDeviceReading)other);
         }
         protected abstract bool IsSameReading(TDeviceReading other);
+        public override bool IsSameReadingValuesGeneric(ReadingBase other)
+        {
+            return IsSameReadingValues((TDeviceReading)other);
+        }
+        protected abstract bool IsSameReadingValues(TDeviceReading other);
         public override void CalcFromPreviousGeneric(ReadingBase prevReading)
         {
             CalcFromPrevious((TDeviceReading)prevReading);

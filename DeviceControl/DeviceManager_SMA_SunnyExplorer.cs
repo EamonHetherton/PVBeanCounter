@@ -814,7 +814,13 @@ namespace DeviceControl
                         for (int j = 0; j <= end; j++ )
                         {
                             SMA_SE_Record reading = ReadingInfo.LiveRecords[i][j];
-                            if (j == end && reading.TimeStampe.Date >= DateTime.Now.AddMinutes(-15))
+                            bool isLive;
+#if (DEBUG)
+                            isLive = j == end;
+#else
+                            isLive = j == end && reading.TimeStampe.Date >= DateTime.Now.AddMinutes(-15);    
+#endif
+                            if (isLive)
                                 device.ProcessOneLiveReading(reading); // handle latest differently - can emit an event
                             else
                                 device.ProcessOneHistoryReading(reading);

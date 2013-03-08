@@ -130,6 +130,8 @@ namespace PVSettings
             DeleteElement("monitormeters");
             DeleteElement("metermanagerlist");
             DeleteElement("usedefaultevents");
+            DeleteElement("invertermanagerlist");
+            DeleteElement("energyevents");
         }
 
         internal String GetApplianceListXml()

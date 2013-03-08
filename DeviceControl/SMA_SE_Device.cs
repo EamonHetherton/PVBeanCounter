@@ -144,9 +144,9 @@ namespace Device
                 maxPower = null;
 
                 if (GlobalSettings.SystemServices.LogTrace)
-                    LogMessage("ProcessOneLiveReading - Reading - Time: " + liveReading.TimeStampe
+                    LogMessage("ProcessOneReading - Reading - Time: " + liveReading.TimeStampe
                         + " - EnergyDelta: " + reading.EnergyDelta
-                        + " - Power: " + reading.Power
+                        + " - Power: " + reading.Power + " - " + (isLive ? "Live" : "History")
                         , LogEntryType.Trace);
 
                 stage = "record";
@@ -155,7 +155,8 @@ namespace Device
                 
                 List<OutputReadyNotification> notificationList = new List<OutputReadyNotification>();
                 BuildOutputReadyFeatureList(notificationList, FeatureType.YieldAC, 0, reading.ReadingEnd);
-                UpdateConsolidations(notificationList);
+                if (isLive)
+                    UpdateConsolidations(notificationList);
 
                 if (isLive && EmitEvents)
                 {

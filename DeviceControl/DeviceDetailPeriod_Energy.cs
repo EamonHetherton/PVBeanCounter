@@ -86,18 +86,18 @@ namespace DeviceDataRecorders
                     EnergyReading newRec = new EnergyReading();
                     newRec.Initialise(DeviceDetailPeriods, endTime, startTime, true, (EnergyParams)DeviceParams);
 
-                    newRec.EnergyTotal = dr.GetNullableDouble(2);
-                    newRec.EnergyToday = dr.GetNullableDouble(3);
-                    newRec.EnergyDelta = dr.GetDouble(4);
-                    newRec.CalibrationDelta = dr.GetNullableDouble(5);
-                    newRec.HistEnergyDelta = dr.GetNullableDouble(6);
+                    newRec.EnergyTotal = dr.GetNullableDouble(2, EnergyReading.EnergyPrecision);
+                    newRec.EnergyToday = dr.GetNullableDouble(3, EnergyReading.EnergyPrecision);
+                    newRec.EnergyDelta = dr.GetDouble(4, EnergyReading.EnergyPrecision);
+                    newRec.CalibrationDelta = dr.GetNullableDouble(5, EnergyReading.EnergyPrecision);
+                    newRec.HistEnergyDelta = dr.GetNullableDouble(6, EnergyReading.EnergyPrecision);
                     newRec.Mode = dr.GetNullableInt32(7);
                     newRec.ErrorCode = dr.GetNullableInt64(8);
                     newRec.Power = dr.GetNullableInt32(9);
-                    newRec.Volts = dr.GetNullableFloat(10);
-                    newRec.Amps = dr.GetNullableFloat(11);
-                    newRec.Frequency = dr.GetNullableFloat(12);
-                    newRec.Temperature = dr.GetNullableFloat(13);
+                    newRec.Volts = dr.GetNullableFloat(10, EnergyReading.EnergyPrecision);
+                    newRec.Amps = dr.GetNullableFloat(11, EnergyReading.EnergyPrecision);
+                    newRec.Frequency = dr.GetNullableFloat(12, EnergyReading.EnergyPrecision);
+                    newRec.Temperature = dr.GetNullableFloat(13, EnergyReading.EnergyPrecision);
                     newRec.MinPower = dr.GetNullableInt32(14);
                     newRec.MaxPower = dr.GetNullableInt32(15);
 
@@ -175,10 +175,14 @@ namespace DeviceDataRecorders
             EnergyReading newEnergyReading;
 
             if (pattern == null)
-                newEnergyReading = new EnergyReading(DeviceDetailPeriods, outputTime, duration, (EnergyParams)DeviceParams);
+            {
+                newEnergyReading = new EnergyReading(DeviceDetailPeriods, outputTime, duration,  (EnergyParams)DeviceParams);
+                newEnergyReading.IsConsolidationReading = true;
+            }
             else
             {
                 newEnergyReading = pattern.Clone(outputTime, duration);
+                newEnergyReading.IsConsolidationReading = true;
                 newEnergyReading.ResetEnergyDelta();
                 newEnergyReading.HistEnergyDelta = null;
             }
@@ -195,7 +199,9 @@ namespace DeviceDataRecorders
             base.SplitReadingGeneric((ReadingBase)oldReading, splitTime, out newReading1a, out newReading2a);
 
             newReading1 = (EnergyReading)newReading1a;
+            newReading1.IsConsolidationReading = true;
             newReading2 = (EnergyReading)newReading2a;
+            newReading2.IsConsolidationReading = true;
             if (newReading1.EnergyToday.HasValue)
                 newReading1.EnergyToday -= newReading2.EnergyDelta;
             if (newReading1.EnergyTotal.HasValue)

@@ -104,7 +104,7 @@
                             <File Id="PVPUBLISHERSERVICE.PDB" Name="PVPublisherService.pdb" Source="..\PVPublisherService\$(var.SourcePathFragment)PVPublisherService.pdb" />
                             <File Id="SERVICEMODELEX.PDB" Name="ServiceModelEx.pdb" Source="..\PVPublisherService\$(var.SourcePathFragment)ServiceModelEx.pdb" />
                             <?endif ?>
-                            <ServiceInstall Name="PVPublisherService" Type="ownProcess" Start="auto" ErrorControl="normal" Vital="yes" DisplayName="PVPublisherService" Description="PVBC Event Publisher Service" Id="PVPublisherServiceInstall" Account="NT Authority\Local Service">
+                            <ServiceInstall Name="PVPublisherService" Type="ownProcess" Start="auto" ErrorControl="normal" Vital="yes" DisplayName="PVPublisherService" Description="PVBC Event Publisher Service" Id="PVPublisherServiceInstall" Account="NT Authority\SYSTEM">
                                 <ServiceConfig DelayedAutoStart="1" OnInstall="yes" />
                             </ServiceInstall>
                             <ServiceControl Id="PVPublisherServiceControl" Name="PVPublisherService" Remove="uninstall" Stop="both" Wait="yes" />

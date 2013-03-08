@@ -548,7 +548,7 @@ namespace Device
                     if (notify.FeatureType == link.FromFeatureType && notify.FeatureId == link.FromFeatureId && link.LastReadyTime < notify.ReadingEnd)
                     {
                         link.LastReadyTime = notify.ReadingEnd;
-                        link.ReadyTimeUpdated = true;
+                        link.SourceUpdated = true;
                         TargetDevices[i] = link;
                     }
                 }

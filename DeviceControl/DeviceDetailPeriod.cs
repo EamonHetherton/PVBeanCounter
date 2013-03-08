@@ -249,7 +249,9 @@ namespace DeviceDataRecorders
     public abstract class DeviceDetailPeriodBase : PeriodBase
     {
         public DeviceDetailPeriodsBase DeviceDetailPeriods { get; private set; }
-        public FeatureSettings Feature { get; private set; }
+
+        public FeatureType FeatureType { get; private set; }
+        public uint FeatureId { get; private set; }
 
         public int DeviceIntervalSeconds { get; private set; }  // DeviceIntervalSeconds is the expected raw reading interval. It may vary due to device behaviour
 
@@ -270,7 +272,8 @@ namespace DeviceDataRecorders
             DeviceDetailPeriods = deviceDetailPeriods;
             DeviceId = DeviceDetailPeriods.Device.DeviceId;
             DeviceParams = deviceParams;
-            Feature = feature;
+            FeatureType = feature.Type;
+            FeatureId = feature.Id;
             DeviceIntervalSeconds = DeviceParams.QueryInterval;
             UpdatePending = false;
             LastFindTime = DateTime.Now;
@@ -427,9 +430,12 @@ namespace DeviceDataRecorders
                     try
                     {
                         ReadingBase old = ReadingsGeneric.Values[ReadingsGeneric.IndexOfKey(reading.ReadingEnd)];
-                        ReadingsGeneric.Remove(reading.ReadingEnd);
-                        ReadingsGeneric.Add(reading.ReadingEnd, reading);
-                        reading.InDatabase = old.InDatabase;
+                        if (!reading.IsSameReadingValuesGeneric(old))
+                        {
+                            ReadingsGeneric.Remove(reading.ReadingEnd);
+                            ReadingsGeneric.Add(reading.ReadingEnd, reading);
+                            reading.InDatabase = old.InDatabase;
+                        }
                     }
                     catch (Exception e)
                     {
@@ -512,9 +518,13 @@ namespace DeviceDataRecorders
                 return -1;
             if (other.Start > Start)
                 return 1;
-            if (other.Feature.Type < Feature.Type)
+            if (other.FeatureType < FeatureType)
                 return -1;
-            if (other.Feature.Type > Feature.Type)
+            if (other.FeatureType > FeatureType)
+                return 1;
+            if (other.FeatureId < FeatureId)
+                return -1;
+            if (other.FeatureId > FeatureId)
                 return 1;
             return 0;
         }
@@ -953,8 +963,8 @@ namespace DeviceDataRecorders
         protected void BindSelectIdentity(GenCommand cmd)
         {
             cmd.AddParameterWithValue("@Device_Id", DeviceId.Value);
-            cmd.AddParameterWithValue("@FeatureType", (int)Feature.Type);
-            cmd.AddParameterWithValue("@FeatureId", (int)Feature.Id);
+            cmd.AddParameterWithValue("@FeatureType", (int)FeatureType);
+            cmd.AddParameterWithValue("@FeatureId", (int)FeatureId);
             cmd.AddParameterWithValue("@PeriodStart", Start - PeriodOverlapLimit);
             cmd.AddParameterWithValue("@NextPeriodStart", Start.AddDays(1.0) + PeriodOverlapLimit);
         }
@@ -994,7 +1004,7 @@ namespace DeviceDataRecorders
                 foreach (Device.DeviceLink devLink in ((Device.ConsolidationDevice)DeviceDetailPeriods.Device).SourceDevices)
                 {
                     // to link must match this consolidation - consolidate the matching from link
-                    if (Feature.Type == devLink.ToFeatureType && Feature.Id == devLink.ToFeatureId)
+                    if (FeatureType == devLink.ToFeatureType && FeatureId == devLink.ToFeatureId)
                     {
                         if (!devLink.FromDevice.DeviceId.HasValue)
                             devLink.FromDevice.GetDeviceId(null);
@@ -1011,6 +1021,7 @@ namespace DeviceDataRecorders
                             foreach (TDeviceReading r in readings)
                                 ConsolidateReading(r, devLink.Operation);
                         }
+                        devLink.SourceUpdated = false;
                     }
                 }
             }
@@ -1073,19 +1084,26 @@ namespace DeviceDataRecorders
             toReading.AccumulateReading(reading, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);                
         }
 
-        private DateTime PreviousToday = DateTime.MinValue;
+        public bool SourceUpdated
+        {
+            get
+            {
+                foreach (Device.DeviceLink l in ((Device.ConsolidationDevice)DeviceDetailPeriods.Device).SourceDevices)
+                {
+                    if (l.SourceUpdated && l.ToFeatureType == FeatureType && l.ToFeatureId == FeatureId)  
+                        return true;
+                }
+                return false;
+            }
+        }
 
         public override void UpdateReadings()
         {
             // consolidations override this to ensure current day readings are up to date
             // Always reevaluate yesterday on first run after switch to new day
-            if (End > PreviousToday)
-            {
+            if (SourceUpdated)
                 LoadPeriodFromConsolidations();
-                PreviousToday = DateTime.Today;
-            }
         }
-
     }
 
 }

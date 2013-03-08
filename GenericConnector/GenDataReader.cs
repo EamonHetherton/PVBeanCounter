@@ -139,23 +139,28 @@ namespace GenericConnector
         public override double GetDouble(int ordinal)
         {
             Type t = DbDataReader.GetFieldType(ordinal);
-                
+
             if (t == typeof(Single))
                 return (Double)DbDataReader.GetFloat(ordinal);
             else
                 return DbDataReader.GetDouble(ordinal);
         }
 
-        public double? GetNullableDouble(int ordinal)
+        public double GetDouble(int ordinal, int precision)
+        {
+            return Math.Round(GetDouble(ordinal), precision);
+        }
+
+        public double? GetNullableDouble(int ordinal, int precision)
         {
             if (DbDataReader.IsDBNull(ordinal))
                 return null;
-            return GetDouble(ordinal);
+            return Math.Round(GetDouble(ordinal), precision);
         }
 
-        public Double GetDouble(String name)
+        public double GetDouble(String name, int precision)
         {
-            return GetDouble(DbDataReader.GetOrdinal(name));
+            return Math.Round(GetDouble(DbDataReader.GetOrdinal(name)), precision);
         }
 
 
@@ -174,11 +179,16 @@ namespace GenericConnector
             return DbDataReader.GetFloat(ordinal);
         }
 
-        public float? GetNullableFloat(int ordinal)
+        public float GetFloat(int ordinal, int precision)
+        {
+            return (float)Math.Round(DbDataReader.GetFloat(ordinal), precision);
+        }
+
+        public float? GetNullableFloat(int ordinal, int precision)
         {
             if (DbDataReader.IsDBNull(ordinal))
                 return null;
-            return GetFloat(ordinal);
+            return GetFloat(ordinal, precision);
         }
 
         public override Guid GetGuid(int ordinal)

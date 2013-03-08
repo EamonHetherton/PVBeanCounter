@@ -61,7 +61,7 @@ namespace DeviceDataRecorders
 
     public class EnergyReading : ReadingBaseTyped<EnergyReading, EnergyReading>, IComparable<EnergyReading>
     {
-        public const int EnergyPrecision = 5;
+        public static int EnergyPrecision = 5;
 
         public EnergyReading(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, TimeSpan duration, EnergyParams deviceParams)
             : base()
@@ -155,6 +155,25 @@ namespace DeviceDataRecorders
         protected override bool IsSameReading(EnergyReading other)
         {
             return (this == other);
+        }
+
+        protected override bool IsSameReadingValues(EnergyReading other)
+        {
+            if (ReadingEndInternal != other.ReadingEndInternal
+             || DurationInternal != other.DurationInternal
+             || FeatureType != other.FeatureType
+             || FeatureId != other.FeatureId)
+                return false;
+
+            if (VoltsInternal != other.VoltsInternal
+                || AmpsInternal != other.AmpsInternal
+                || FrequencyInternal != other.FrequencyInternal
+                || PowerInternal != other.PowerInternal
+                || EnergyDeltaInternal != other.EnergyDeltaInternal
+                || CalibrationDeltaInternal != other.CalibrationDeltaInternal)
+                return false;
+
+            return true;
         }
 
         public Double TotalReadingDelta 
@@ -277,8 +296,8 @@ namespace DeviceDataRecorders
             }
             set
             {
-                EnergyDeltaInternal = value;               
-                AveragePower = (int)(value * 1000.0 / DurationInternal.TotalHours);
+                EnergyDeltaInternal = Math.Round(value, EnergyPrecision);               
+                AveragePower = (int)(EnergyDeltaInternal * 1000.0 / DurationInternal.TotalHours);
                 
                 if (!AttributeRestoreMode)
                 {
@@ -320,8 +339,8 @@ namespace DeviceDataRecorders
 
                 if (change)
                 {
-                    CalibrationDeltaInternal = value;
-                    UpdatePending = true;
+                    CalibrationDeltaInternal = (value.HasValue ? (Double?)Math.Round(value.Value, EnergyPrecision) : null);
+                    if (!AttributeRestoreMode) UpdatePending = true;
                 }
             }
         }
@@ -352,7 +371,7 @@ namespace DeviceDataRecorders
             }
             set
             {
-                HistEnergyDeltaInternal = value;
+                HistEnergyDeltaInternal = (value.HasValue ? (Double?)Math.Round(value.Value, EnergyPrecision) : null);
                 if (!AttributeRestoreMode)
                 {
                     if (UseInternalCalibration)
@@ -371,7 +390,7 @@ namespace DeviceDataRecorders
             }
             set
             {
-                EnergyTotalInternal = value;
+                EnergyTotalInternal = (value.HasValue ? (Double?)Math.Round(value.Value, EnergyPrecision) : null);
                 if (!AttributeRestoreMode) UpdatePending = true;
             }
         }
@@ -385,7 +404,7 @@ namespace DeviceDataRecorders
             }
             set
             {
-                EnergyTodayInternal = value;
+                EnergyTodayInternal = (value.HasValue ? (Double?)Math.Round(value.Value, EnergyPrecision) : null);
                 if (!AttributeRestoreMode) UpdatePending = true;
             }
         }
@@ -458,7 +477,7 @@ namespace DeviceDataRecorders
 
             set
             {
-                TemperatureInternal = value;
+                TemperatureInternal = (value.HasValue ? (Double?)Math.Round(value.Value, EnergyPrecision) : null);
                 if (!AttributeRestoreMode) UpdatePending = true;
             }
         }
@@ -832,7 +851,8 @@ namespace DeviceDataRecorders
                 cmd.ExecuteNonQuery();
 
                 if (GlobalSettings.SystemServices.LogTrace)
-                    GlobalSettings.LogMessage("EnergyReading.PersistReadingSub - ", (useInsert ? "Insert" : "Update") + " - EnergyTotal: " + EnergyTotal +
+                    GlobalSettings.LogMessage("EnergyReading.PersistReadingSub", "ReadingEnd: " + ReadingEndInternal + " - " + 
+                        (useInsert ? "Insert" : "Update") + " - EnergyTotal: " + EnergyTotal +
                         " - EnergyToday: " + EnergyToday +
                         " - Power: " + Power +
                         " - Calc Adjust: " + CalibrationDelta +

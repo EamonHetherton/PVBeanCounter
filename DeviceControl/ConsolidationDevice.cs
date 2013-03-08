@@ -41,9 +41,10 @@ namespace Device
         public ConsolidateDeviceSettings.OperationType Operation;
 
         public DateTime LastReadyTime = DateTime.MinValue;
-        public bool ReadyTimeUpdated = false;
         public EnergyEventStatus FromEventStatus;
         public EnergyEventStatus ToEventStatus = null;
+
+        public bool SourceUpdated = true;
 
         public DeviceLink(DeviceBase fromDevice, FeatureType fromFeatureType, uint fromFeatureId, 
             ConsolidationDevice toDevice, FeatureType toFeatureType, uint toFeatureId,
@@ -74,6 +75,19 @@ namespace Device
             DeviceIdentifier = settings.SerialNo;
             SourceDevices = new List<DeviceLink>();
             PeriodType = periodType;
+        }
+
+        public bool SourceUpdated
+        {
+            get
+            {
+                foreach (DeviceLink l in SourceDevices)
+                {
+                    if (l.SourceUpdated)
+                        return true;
+                }
+                return false;
+            }
         }
 
         public override DateTime NextRunTime

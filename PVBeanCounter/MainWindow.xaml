@@ -176,6 +176,10 @@
                     </Grid>
                     <Label Content="First Full Day" DataContext="{Binding}" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Name="label15" HorizontalAlignment="Right" Grid.Row="2" VerticalContentAlignment="Center" VerticalAlignment="Center" />
                     <DatePicker Name="datePicker1" SelectedDate="{Binding Path=FirstFullDay, Converter={StaticResource NullableValueConverter}}" ToolTip="Normally set to the day after installation. This prevents constant attempts to retrieve the the incomplete data set from the activation day. Default value for all Inverter Managers." Width="125" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" HorizontalContentAlignment="Stretch"  />
+                    
+                    <CheckBox Content="Emit Events (use with PVMonitor)" Height="16" HorizontalAlignment="Left" IsChecked="{Binding Path=EmitEvents}" 
+                              ToolTip="Check to emit events for use with PVMonitor" VerticalAlignment="Center" 
+                              Grid.Column="1" Grid.Row="3" VerticalContentAlignment="Center" />
 
                     <Grid Grid.Column="1" Grid.Row="6">
                         <Grid.ColumnDefinitions>
