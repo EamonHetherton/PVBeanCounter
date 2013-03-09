@@ -119,7 +119,7 @@ namespace Device
                         return false;
                     }
 
-                    SetDeviceFeature(Feature_YieldAC, PVSettings.MeasureType.Energy, null, false, true, false);
+                    SetDeviceFeature(Feature_YieldAC, PVSettings.MeasureType.Energy, false, true, null);
 
                     if (GlobalSettings.SystemServices.LogTrace)
                         LogMessage("DoExtractReadings - Identity - Manufacturer: " + Manufacturer
@@ -153,7 +153,7 @@ namespace Device
 
                 if (dbWrite)
                 {
-                    DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_YieldAC.Type, Feature_YieldAC.Id);
+                    DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_YieldAC.FeatureType, Feature_YieldAC.FeatureId);
                     EnergyReading reading = new EnergyReading();
                     
                     reading.Initialise(days, curTime, 

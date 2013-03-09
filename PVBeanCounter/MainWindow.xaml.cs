@@ -166,7 +166,6 @@ namespace PVBeanCounter
 
             try
             {
-                DeviceUpdate.UpdateDevices();
                 ApplicationSettings.InitialSave = false;
                 ApplicationSettings.SaveSettings();
                 SystemServices.LogMessage("SaveSettings", "Save Location: " + ApplicationSettings.DefaultDirectory, LogEntryType.ErrorMessage);

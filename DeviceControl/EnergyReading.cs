@@ -706,13 +706,13 @@ namespace DeviceDataRecorders
 
         private static String InsertDeviceReading_AC =
             "INSERT INTO devicereading_energy " +
-                "( ReadingEnd, Device_Id, FeatureType, FeatureId, ReadingStart, EnergyTotal, EnergyToday, EnergyDelta, " +
+                "( ReadingEnd, DeviceFeature_Id, ReadingStart, EnergyTotal, EnergyToday, EnergyDelta, " +
                 "CalcEnergyDelta, HistEnergyDelta, Mode, ErrorCode, Power, Volts, " +
                 "Amps, Frequency, Temperature, " +
                 "MinPower," +
                 "MaxPower) " +
             "VALUES " +
-                "(@ReadingEnd, @Device_Id, @FeatureType, @FeatureId, @ReadingStart, @EnergyTotal, @EnergyToday, @EnergyDelta, " +
+                "(@ReadingEnd, @DeviceFeature_Id, @ReadingStart, @EnergyTotal, @EnergyToday, @EnergyDelta, " +
                 "@CalcEnergyDelta, @HistEnergyDelta, @Mode, @ErrorCode, @Power, @Volts, " +
                 "@Amps, @Frequency, @Temperature, " +
                 "@MinPower, " +
@@ -737,26 +737,20 @@ namespace DeviceDataRecorders
                 "MaxPower = @MaxPower " +
             "WHERE " +
                 "ReadingEnd = @ReadingEnd " +
-                "AND Device_Id = @Device_Id " +
-                 "AND FeatureType = @FeatureType " +
-                "AND FeatureId = @FeatureId ";
+                "AND DeviceFeature_Id = @DeviceFeature_Id ";
 
         private static String DeleteDeviceReading_AC =
             "DELETE from devicereading_energy " +
              "WHERE " +
                 "ReadingEnd = @ReadingEnd " +
-                "AND Device_Id = @Device_Id " +
-                "AND FeatureType = @FeatureType " +
-                "AND FeatureId = @FeatureId ";
+                "AND DeviceFeature_Id = @DeviceFeature_Id ";
 
-        private void SetParametersId(GenCommand cmd, int deviceId)
+        private void SetParametersId(GenCommand cmd, int deviceFeature_Id)
         {
             string stage = "Id";
             try
             {
-                cmd.AddParameterWithValue("@Device_Id", deviceId);
-                cmd.AddParameterWithValue("@FeatureType", (int)FeatureType);
-                cmd.AddParameterWithValue("@FeatureId", (int)FeatureId);
+                cmd.AddParameterWithValue("@DeviceFeature_Id", deviceFeature_Id);
                 cmd.AddParameterWithValue("@ReadingEnd", ReadingEndInternal);
             }
             catch (Exception e)
@@ -770,7 +764,7 @@ namespace DeviceDataRecorders
             string stage = "Device_Id";
             try
             {
-                SetParametersId(cmd, deviceId);
+                SetParametersId(cmd, DeviceDetailPeriods.FeatureSettings.Id);
                 stage = "ReadingStart";
                 cmd.AddParameterWithValue("@ReadingStart", ReadingStartInternal);
                 stage = "EnergyTotal";
@@ -902,7 +896,7 @@ namespace DeviceDataRecorders
 
                 GenCommand cmd = new GenCommand(DeleteDeviceReading_AC, con);
 
-                SetParametersId(cmd, deviceId);
+                SetParametersId(cmd, DeviceDetailPeriods.FeatureSettings.Id);
 
                 stage = "Execute";
                 cmd.ExecuteNonQuery();

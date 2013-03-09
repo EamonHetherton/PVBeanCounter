@@ -63,27 +63,29 @@ namespace PVSettings
         {
             String val = element.GetAttribute("type");
             if (val == "")
-                Type = FeatureType.Unknown;
+                FeatureType = FeatureType.Unknown;
             else
-                Type = FeatureTypeFromString(val);
+                FeatureType = FeatureTypeFromString(val);
             
-            _Id = 0;
+            _FeatureId = 0;
             val = element.GetAttribute("id");
             if (val != "")
             {
-                uint.TryParse(val, out _Id);
+                uint.TryParse(val, out _FeatureId);
             }
             val = element.GetAttribute("description");
             if (val == "")
-                Name = Type.ToString() + "_" + _Id.ToString();
+                Name = FeatureType.ToString() + "_" + _FeatureId.ToString();
             else
                 Name = val.Trim();
 
         }
 
-        private uint _Id;
-        public uint Id { get { return _Id; } private set { _Id = value; } }
-        public FeatureType Type { get; private set; }
+        public int Id = -1;
+
+        private uint _FeatureId;
+        public uint FeatureId { get { return _FeatureId; } private set { _FeatureId = value; } }
+        public FeatureType FeatureType { get; private set; }
         public String Name { get; private set; }
 
         public static FeatureType FeatureTypeFromString(String featureType)
@@ -123,7 +125,7 @@ namespace PVSettings
         public FeatureSettings FindFeature(FeatureType featureType, uint featureId)
         {
             foreach (FeatureSettings fs in FeatureList)
-                if (fs.Type == featureType && fs.Id == featureId)
+                if (fs.FeatureType == featureType && fs.FeatureId == featureId)
                     return fs;
             return null;
         }
@@ -205,7 +207,7 @@ namespace PVSettings
         public FeatureSettings GetFeatureSettings(FeatureType featureType, uint featureId)
         { 
             foreach (FeatureSettings fs in _FeatureList)
-                if (fs.Type == featureType && fs.Id == featureId)
+                if (fs.FeatureType == featureType && fs.FeatureId == featureId)
                     return fs;
             return null;
         }

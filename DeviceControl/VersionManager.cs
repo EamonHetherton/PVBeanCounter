@@ -128,16 +128,13 @@ namespace DeviceControl
 
         public abstract string Create_inverter_index_1902 { get; }
 
-        public abstract string Alter_interter_19011 { get; }
+        public abstract string Table_devicetype_2000 { get; }
 
-        public abstract string Table_devicetype_2000 { get { return ""; } }
+        public abstract string Table_devicefeature_2000 { get; }
 
-        public abstract string Table_devicefeature_2000 { get { return ""; } }
+        public abstract string Table_device_2000 { get; }
 
-        public abstract string Table_device_2000 { get { return ""; } }
-
-        public abstract string Table_devicereading_energy_2000 { get { return ""; } }
-
+        public abstract string Table_devicereading_energy_2000 { get; }
 
     }
 
@@ -635,16 +632,6 @@ namespace DeviceControl
             }
         }
 
-        public override string Alter_interter_19011 
-        {
-            get
-            {
-                return
-                    "alter table `inverter` " +
-                    "add `NextFileDate` DATETIME NULL ";               
-            }
-        }
-
         public override string Table_devicetype_2000
         {
             get
@@ -656,7 +643,7 @@ namespace DeviceControl
                         "`Manufacturer` VARCHAR(60) NOT NULL, " +
                         "`Model` VARCHAR(50) NOT NULL, " +
                         "`MaxPower` MEDIUMINT NULL, " +
-                        "`DeviceType` VARCHAR(15) NOT NULL, " +
+                        "`DeviceType` VARCHAR(20) NOT NULL, " +
                         "PRIMARY KEY (`Id` ), " +
                         "CONSTRAINT `uk1_devicetype` UNIQUE (`Manufacturer` ASC, `Model` ASC), " +
                         "CONSTRAINT `uk2_devicetype` UNIQUE (`DeviceType` ASC) " +
@@ -674,10 +661,33 @@ namespace DeviceControl
                         "`Id` MEDIUMINT UNSIGNED NOT NULL AUTOINCREMENT, " +
                         "`SerialNumber` VARCHAR(45) NOT NULL, " +
                         "`DeviceType_Id` MEDIUMINT NOT NULL, " +
-                        "`Site_Id` VARCHAR(10) NULL, " +
                         "PRIMARY KEY (`Id` ), " +
                         "CONSTRAINT `uk1_devicetype` UNIQUE (`SerialNumber` ASC, `DeviceType_Id` ASC), " +
                         "CONSTRAINT `fk_device_devicetype` FOREIGN KEY (`DeviceType_Id`) REFERENCES `devicetype` (`Id`) " +
+                    ") ENGINE=InnoDB DEFAULT CHARSET=latin1 ";
+            }
+        }
+
+        public override string Table_devicefeature_2000
+        {
+            get
+            {
+                return
+                    "CREATE TABLE `devicefeature` " +
+                    "( " +
+                        "`Id` MEDIUMINT UNSIGNED NOT NULL AUTOINCREMENT, " +
+                        "`Device_Id` MEDIUMINT UNSIGNED NOT NULL, " +
+                        "`FeatureType` SMALLINT NOT NULL, " +
+                        "`FeatureId` TINYINT NOT NULL, " +
+                        "`MeasureType` VARCHAR(20) NOT NULL, " +
+                        "`IsConsumption` CHAR(1) NULL, " +
+                        "`IsAC` CHAR(1) NULL, " +
+                        "`IsThreePhase` CHAR(1) NULL, " +
+                        "`StringNumber` MEDIUMINT NULL, " +
+                        "`PhaseNumber` MEDIUMINT NULL, " +
+                        "PRIMARY KEY ( `Id` ), " +
+                        "CONSTRAINT `uk1_devicefeature` UNIQUE (`Device_Id` ASC, `FeatureType` ASC, `FeatureId` ASC), " +
+                        "CONSTRAINT `fk_devicefeature_device` FOREIGN KEY (`Device_Id`) REFERENCES `device` (`Id`) " +
                     ") ENGINE=InnoDB DEFAULT CHARSET=latin1 ";
             }
         }
@@ -690,9 +700,7 @@ namespace DeviceControl
                     "CREATE TABLE `devicereading_energy` " +
                     "( " +
                         "`ReadingEnd` DATETIME NOT NULL, " +
-                        "`Device_Id` MEDIUMINT NOT NULL, " +
-                        "`FeatureType` SMALLINT NOT NULL, " +
-                        "`FeatureId` TINYINT NOT NULL, " +
+                        "`DeviceFeature_Id` MEDIUMINT NOT NULL, " +
                         "`ReadingStart` DATETIME NULL, " +
                         "`EnergyTotal` DOUBLE NULL, " +
                         "`EnergyToday` DOUBLE NULL, " +
@@ -708,13 +716,12 @@ namespace DeviceControl
                         "`Temperature` FLOAT NULL, " +
                         "`MinPowerAC` MEDIUMINT NULL, " +
                         "`MaxPowerAC` MEDIUMINT NULL, " +                        
-                        "PRIMARY KEY (`ReadingEnd`, `Device_Id`, `FeatureType`, `FeatureId` ) , " +
-                        "CONSTRAINT `uk_devicereading_energy` UNIQUE (`Device_Id`, `ReadingEnd`, `FeatureType`, `FeatureId`) , " +
-                        "CONSTRAINT `fk_devicereadingenergy_device` FOREIGN KEY (`Device_Id`) REFERENCES `device` (`Id`) " +
+                        "PRIMARY KEY (`ReadingEnd`, `DeviceFeature_Id` ) , " +
+                        "CONSTRAINT `uk_devicereading_energy` UNIQUE (`DeviceFeature_Id`, `ReadingEnd`) , " +
+                        "CONSTRAINT `fk_devicereadingenergy_devicefeature` FOREIGN KEY (DeviceFeature_Id) REFERENCES `devicefeature` (Id) " +
                     ") ENGINE=InnoDB DEFAULT CHARSET=latin1 ";
             }
         }
-
     }
 
     internal class SQLite_DDL : DDL
@@ -1263,16 +1270,6 @@ namespace DeviceControl
             }
         }
 
-        public override string Alter_interter_19011
-        {
-            get
-            {
-                return
-                    "alter table `inverter` " +
-                    "add `NextFileDate` date NULL ";
-            }
-        }
-
         public override string Table_devicetype_2000
         {
             get
@@ -1301,40 +1298,62 @@ namespace DeviceControl
                         "Id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "SerialNumber TEXT NOT NULL, " +
                         "DeviceType_Id INTEGER NOT NULL, " +
-                        "Site_Id TEXT NULL, " +
                         "FOREIGN KEY (DeviceType_Id) REFERENCES devicetype (Id), " +
                         "CONSTRAINT uk_device UNIQUE (SerialNumber, DeviceTypeId)  " +
                     ") ";
             }
         }
 
-        public override string Table_devicereading_ac_2000
+        public override string Table_devicefeature_2000
         {
             get
             {
                 return
-                    "CREATE TABLE devicereading_ac " +
+                    "CREATE TABLE devicefeature " +
                     "( " +
-                        "OutputTime DATETIME NOT NULL, " +
-                        "Device_Id INTEGER NOT NULL, " +
-                        "Phase INTEGER NOT NULL, " +
-                        "Seconds INTEGER NULL, " +
+                        "`Id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "`Device_Id` INTEGER NOT NULL, " +
+                        "`FeatureType` INTEGER NOT NULL, " +
+                        "`FeatureId` INTEGER NOT NULL, " +
+                        "`MeasureType` TEXT NOT NULL, " +
+                        "`IsConsumption` TEXT NULL, " +
+                        "`IsAC` TEXT NULL, " +
+                        "`IsThreePhase` TEXT NULL, " +
+                        "`StringNumber` INTEGER NULL, " +
+                        "`PhaseNumber` INTEGER NULL, " +
+                        "CONSTRAINT uk_devicefeature UNIQUE (Device_Id, FeatureType, FeatureId)  " +
+                        "CONSTRAINT `fk_devicefeature_device` FOREIGN KEY (`Device_Id`) REFERENCES `device` (`Id`) " +
+                    ") ";
+            }
+        }
+
+        public override string Table_devicereading_energy_2000
+        {
+            get
+            {
+                return
+                    "CREATE TABLE devicereading_energy " +
+                    "( " +
+                        "ReadingEnd DATETIME NOT NULL, " +
+                        "DeviceFeature_Id INTEGER NOT NULL, " +
+                        "ReadingStart DATETIME NOT NULL, " +
                         "EnergyTotal REAL NULL, " +
                         "EnergyToday REAL NULL, " +
                         "EnergyDelta REAL NULL, " +
-                        "EnergyCalculated REAL NULL, " +
+                        "CalcEnergyDelta REAL NULL, " +
+                        "HistEnergyDelta REAL NULL, " +
                         "Mode INTEGER NULL, " +
                         "ErrorCode INTEGER NULL, " +
-                        "PowerAC INTEGER NULL, " +
-                        "VoltsAC REAL NULL, " +
-                        "CurrentAC REAL NULL, " +
-                        "MinPowerAC INTEGER NULL, " +
-                        "MaxPowerAC INTEGER NULL, " +
+                        "Power INTEGER NULL, " +
+                        "Volts REAL NULL, " +
+                        "Amps REAL NULL, " +
                         "Frequency REAL NULL, " +
                         "Temperature REAL NULL, " +
-                        "CONSTRAINT PK_devicereading_ac_1 PRIMARY KEY (OutputTime, Device_Id, Phase ), " +
-                        "CONSTRAINT uk_devicereading_ac UNIQUE (Device_Id, OutputTime, Phase),  " +
-                        "FOREIGN KEY (Device_Id) REFERENCES device (Id) " +
+                        "MinPower INTEGER NULL, " +
+                        "MaxPower INTEGER NULL, " +                       
+                        "CONSTRAINT PK_devicereading_ac_1 PRIMARY KEY (ReadingEnd, DeviceFeature_Id ), " +
+                        "CONSTRAINT uk_devicereading_ac UNIQUE (DeviceFeature_Id, ReadingEnd),  " +
+                        "FOREIGN KEY (DeviceFeature_Id) REFERENCES devicefeature (Id) " +
                     ") ";
             }
         }
@@ -1939,16 +1958,6 @@ namespace DeviceControl
             }
         }
 
-        public override string Alter_interter_19011
-        {
-            get
-            {
-                return
-                    "alter table inverter " +
-                    "add NextFileDate DATETIME NULL ";
-            }
-        }
-
         public override string Table_devicetype_2000
         {
             get
@@ -1960,7 +1969,7 @@ namespace DeviceControl
                         "Manufacturer varchar(60) NOT NULL, " +
                         "Model varchar(50) NOT NULL, " +
                         "MaxPower INTEGER NULL, " +
-                        "DeviceType varchar(15) NOT NULL, " +
+                        "DeviceType varchar(20) NOT NULL, " +
                         "CONSTRAINT PK_DeviceType PRIMARY KEY (Id), " +
                         "CONSTRAINT DeviceType_UK1 UNIQUE (Manufacturer, Model), " +
                         "CONSTRAINT DeviceType_UK2 UNIQUE (DeviceType) " +
@@ -1978,7 +1987,6 @@ namespace DeviceControl
                         "Id AUTOINCREMENT, " +
                         "SerialNumber varchar(45) NOT NULL, " +
                         "DeviceType_Id INTEGER NOT NULL, " +
-                        "Site_Id varchar(10) NULL, " +
                         "CONSTRAINT PK_device PRIMARY KEY " +
                         "( " +
                             "Id " +
@@ -1989,33 +1997,60 @@ namespace DeviceControl
             }
         }
 
-        public override string Table_devicereading_ac_2000
+        public override string Table_devicefeature_2000
         {
             get
             {
                 return
-                    "CREATE TABLE devicereading_ac " +
+                    "CREATE TABLE `devicefeature` " +
                     "( " +
-                        "OutputTime DATETIME NOT NULL, " +
+                        "Id AUTOINCREMENT, " +
                         "Device_Id INTEGER NOT NULL, " +
-                        "Phase INTEGER NOT NULL, " +
-                        "Seconds INTEGER NULL, " +
+                        "FeatureType INTEGER NOT NULL, " +
+                        "FeatureId INTEGER NOT NULL, " +
+                        "MeasureType VARCHAR(20) NOT NULL, " +
+                        "IsConsumption CHAR(1) NULL, " +
+                        "IsAC CHAR(1) NULL, " +
+                        "IsThreePhase CHAR(1) NULL, " +
+                        "StringNumber INTEGER NULL, " +
+                        "PhaseNumber INTEGER NULL, " +
+                        "CONSTRAINT PK_device PRIMARY KEY " +
+                        "( " +
+                            "Id " +
+                        "), " +
+                        "CONSTRAINT uk_devicefeature UNIQUE (Device_Id, FeatureType, FeatureId)  " +
+                        "CONSTRAINT fk_devicefeature_device FOREIGN KEY (Device_Id) REFERENCES device (Id), " +
+                    ") ";
+            }
+        }
+
+        public override string Table_devicereading_energy_2000
+        {
+            get
+            {
+                return
+                    "CREATE TABLE devicereading_energy " +
+                    "( " +
+                        "ReadingEnd DATETIME NOT NULL, " +
+                        "DeviceFeature_Id INTEGER NOT NULL, " +
+                        "ReadingStart DATETIME NOT NULL, " +
                         "EnergyTotal DOUBLE NULL, " +
                         "EnergyToday DOUBLE NULL, " +
                         "EnergyDelta FLOAT NULL, " +
-                        "EnergyCalculated FLOAT NULL, " +
+                        "CalcEnergyDelta FLOAT NULL, " +
+                        "HistEnergyDelta FLOAT NULL, " +
                         "Mode INTEGER NULL, " +
                         "ErrorCode INTEGER NULL, " +
-                        "PowerAC INTEGER NULL, " +
-                        "VoltsAC FLOAT NULL, " +
-                        "CurrentAC FLOAT NULL, " +
-                        "MinPowerAC INTEGER NULL, " +
-                        "MaxPowerAC INTEGER NULL, " +
+                        "Power INTEGER NULL, " +
+                        "Volts FLOAT NULL, " +
+                        "Amps FLOAT NULL, " +
                         "Frequency FLOAT NULL, " +
                         "Temperature FLOAT NULL, " +
-                        "CONSTRAINT PK_devicereading_ac_1 PRIMARY KEY (OutputTime, Device_Id, Phase ), " +
-                        "CONSTRAINT uk_devicereading_ac UNIQUE (Device_Id, OutputTime, Phase), " +
-                        "CONSTRAINT fk_devicereadingac_device FOREIGN KEY (Device_Id) REFERENCES device (Id) " +
+                        "MinPower INTEGER NULL, " +
+                        "MaxPower INTEGER NULL, " +                        
+                        "CONSTRAINT PK_devicereading_energy_1 PRIMARY KEY (ReadingEnd, DeviceFeature_Id ), " +
+                        "CONSTRAINT uk_devicereading_energy UNIQUE (DeviceFeature_Id, ReadingEnd), " +
+                        "CONSTRAINT fk_devicereadingenergy_devicefeature FOREIGN KEY (DeviceFeature_Id) REFERENCES devicefeature (Id) " +
                     ") ";
             }
         }
@@ -2349,16 +2384,6 @@ namespace DeviceControl
             }
         }
 
-        public override string Alter_interter_19011
-        {
-            get
-            {
-                return
-                    "alter table inverter " +
-                    "add NextFileDate [datetime] NULL ";
-            }
-        }
-
         public override string Table_devicetype_2000
         {
             get
@@ -2370,7 +2395,7 @@ namespace DeviceControl
                         "Manufacturer [varchar](60) NOT NULL, " +
                         "Model [varchar](50) NOT NULL, " +
                         "MaxPower [int] NULL, " +
-                        "DeviceType [varchar](15) NOT NULL, " +
+                        "DeviceType [varchar](20) NOT NULL, " +
                         "CONSTRAINT PK_DeviceType PRIMARY KEY CLUSTERED ([Id] ASC ) " +
                         "WITH " +
                         "( " +
@@ -2403,7 +2428,6 @@ namespace DeviceControl
 	                    "Id [int] IDENTITY(1,1) NOT NULL, " +
 	                    "SerialNumber [varchar](45) NOT NULL, " +
 	                    "DeviceType_Id [int] NOT NULL, " +
-	                    "Site_Id [varchar](10) NULL, " +
                         "CONSTRAINT PK_device PRIMARY KEY CLUSTERED " +
                         "( " +
 	                        "Id ASC " +
@@ -2424,47 +2448,78 @@ namespace DeviceControl
             }
         }
 
-        public override string Table_devicereading_ac_2000
+        public override string Table_devicefeature_2000
         {
             get
             {
                 return
-                    "CREATE TABLE devicereading_ac " +
+                    "CREATE TABLE devicefeature " +
                     "( " +
-                        "OutputTime DATETIME NOT NULL, " +
-                        "Device_Id INT NOT NULL, " +
-                        "Phase TINYINT NOT NULL, " +
-                        "Seconds INT NULL, " +
-                        "EnergyTotal FLOAT NULL, " +
-                        "EnergyToday FLOAT NULL, " +
-                        "EnergyDelta REAL NULL, " +
-                        "EnergyCalculated REAL NULL, " +
-                        "Mode INT NULL, " +
-                        "ErrorCode INT NULL, " +
-                        "PowerAC INT NULL, " +
-                        "VoltsAC REAL NULL, " +
-                        "CurrentAC REAL NULL, " +
-                        "MinPowerAC INT NULL, " +
-                        "MaxPowerAC INT NULL, " +
-                        "Frequency REAL NULL, " +
-                        "Temperature REAL NULL, " +
-                        "CONSTRAINT [PK_devicereading_ac_1] PRIMARY KEY CLUSTERED (OutputTime, Device_Id, Phase ) " +
+                        "Id [int] IDENTITY(1,1) NOT NULL, " +
+                        "Device_Id [int] NOT NULL, " +
+                        "FeatureType [smallint] NOT NULL, " +
+                        "FeatureId [tinyint] NOT NULL, " +
+                        "MeasureType [varchar](20) NOT NULL, " +
+                        "IsConsumption [char](1) NULL, " +
+                        "IsAC [char](1) NULL, " +
+                        "IsThreePhase [char](1) NULL, " +
+                        "StringNumber [int] NULL, " +
+                        "PhaseNumber [int] NULL, " +
+                        "CONSTRAINT PK_device PRIMARY KEY CLUSTERED " +
+                        "( " +
+                            "Id ASC " +
+                        ") " +
                         "WITH " +
                         "( " +
                             "PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, " +
                             "ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON " +
                         "), " +
-                        "CONSTRAINT uk_devicereading_ac UNIQUE (Device_Id, OutputTime, Phase)  " +
-                        "WITH " +
-                        "( " +
-                            "PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, " +
-                            "ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON " +
-                        "), " +
-                        "CONSTRAINT fk_devicereadingac_device FOREIGN KEY (Device_Id) REFERENCES device (Id) " +
+                        "CONSTRAINT uk_devicefeature UNIQUE (Device_Id, FeatureType, FeatureId)  " +
+                        "CONSTRAINT FK_devicefeature_device FOREIGN KEY(Device_Id) REFERENCES device (Id) " +
                     ") ";
             }
         }
 
+        public override string Table_devicereading_energy_2000
+        {
+            get
+            {
+                return
+                    "CREATE TABLE devicereading_energy " +
+                    "( " +
+                        "ReadingEnd DATETIME NOT NULL, " +
+                        "DeviceFeature_Id INT NOT NULL, " +
+                        "ReadingStart DATETIME NOT NULL, " +
+                        "EnergyTotal FLOAT NULL, " +
+                        "EnergyToday FLOAT NULL, " +
+                        "EnergyDelta REAL NULL, " +
+                        "CalcEnergyDelta REAL NULL, " +
+                        "HistEnergyDelta REAL NULL, " +
+                        "Mode INT NULL, " +
+                        "ErrorCode INT NULL, " +
+                        "Power INT NULL, " +
+                        "Volts REAL NULL, " +
+                        "Amps REAL NULL, " +
+                        "Frequency REAL NULL, " +
+                        "Temperature REAL NULL, " +
+                        "MinPower INT NULL, " +
+                        "MaxPower INT NULL, " +                        
+                        "CONSTRAINT [PK_devicereading_energy_1] PRIMARY KEY CLUSTERED (ReadingEnd, DeviceFeature_Id ) " +
+                        "WITH " +
+                        "( " +
+                            "PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, " +
+                            "ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON " +
+                        "), " +
+                        "CONSTRAINT uk_devicereading_energy UNIQUE (DeviceFeature_Id, FeatureType)  " +
+                        "WITH " +
+                        "( " +
+                            "PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, " +
+                            "ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON " +
+                        "), " +
+                        "CONSTRAINT fk_devicereading_energy_devicefeature FOREIGN KEY (DeviceFeature_Id) REFERENCES devicefeature (Id) " +
+                    ") ";
+            }
+        }
     }
 
     public class VersionManager
@@ -2759,24 +2814,6 @@ namespace DeviceControl
             catch (Exception e)
             {
                 GlobalSettings.LogMessage("VersionManager", "Update_pvoutput_v_1836: exception creating views: " + e.Message, LogEntryType.ErrorMessage);
-            }
-
-            return false;
-        }
-
-        private bool Update_inverter_v_19011(DDL ddl, GenConnection con)
-        {
-            try
-            {
-                GenCommand cmd = new GenCommand(
-                    "update inverter as i " +
-                    "set NextFileDate = (select max(NextFileDate) from invertermanager im where i.InverterManager_Id = im.Id ) ", con);
-                int res = cmd.ExecuteNonQuery();
-                return true;
-            }
-            catch (Exception e)
-            {
-                GlobalSettings.LogMessage("VersionManager", "Update_inverter_v_19011: exception updating inverter: " + e.Message, LogEntryType.ErrorMessage);
             }
 
             return false;
@@ -3596,7 +3633,7 @@ namespace DeviceControl
 
             if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
             {
-                res = CompareVersion(major, minor, release, patch, "1", "9", "0", "11");
+                res = CompareVersion(major, minor, release, patch, "2", "0", "0", "0");
                 if (res >= 0)
                     return false;
             }
@@ -3615,13 +3652,12 @@ namespace DeviceControl
             else
                 throw new PVException(PVExceptionType.UnexpectedError, "Unexpected database type: " + databaseType);
 
-            GlobalSettings.LogMessage("UpdateTo_1_9_1_0", "Updating database structure to suit version 1.9.0.11", LogEntryType.Information);
+            GlobalSettings.LogMessage("UpdateTo_2_0_0_0", "Updating database structure to suit version 2.0.0.0", LogEntryType.Information);
 
-            success = AlterRelation(DDL.Alter_interter_19011, con);
-            success &= Update_inverter_v_19011(DDL, con);
-            success &= CreateRelation(DDL.Table_devicetype_2000, con);
+            success = CreateRelation(DDL.Table_devicetype_2000, con);
             success &= CreateRelation(DDL.Table_device_2000, con);
-            success &= CreateRelation(DDL.Table_devicereading_ac_2000, con);
+            success &= CreateRelation(DDL.Table_devicefeature_2000, con);
+            success &= CreateRelation(DDL.Table_devicereading_energy_2000, con);
 
             if (success)
                 UpdateVersion("2", "0", "0", "0", con);

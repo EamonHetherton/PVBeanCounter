@@ -50,8 +50,8 @@ namespace DeviceDataRecorders
             PeriodType = periodType;
             PeriodStartOffset = periodStartOffset;
             FeatureSettings = featureSettings;
-            FeatureType = FeatureSettings.Type;
-            FeatureId = FeatureSettings.Id;
+            FeatureType = FeatureSettings.FeatureType;
+            FeatureId = FeatureSettings.FeatureId;
 
             Periods = new List<DeviceDetailPeriodBase>();
         }

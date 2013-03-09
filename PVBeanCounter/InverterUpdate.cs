@@ -112,31 +112,5 @@ namespace PVBeanCounter
                 }
             }
         }
-
-        public void UpdateDevices()
-        {
-            /*
-            GenDatabase db = GetDatabase();
-
-            GenConnection con = db.NewConnection();
-
-            String updInverters =
-                "update inverter set SiteId = @SiteId " +
-                "where Id = @Id " ;
-
-            foreach(DeviceInfo info in DeviceList)
-            {
-                if (info.Updated)
-                {
-                    GenCommand cmd = new GenCommand(updInverters, con);
-                    cmd.AddParameterWithValue( "@SiteId", info.SiteId);
-                    cmd.AddParameterWithValue("@Id", info.Id);
-                    cmd.ExecuteNonQuery();
-                }
-
-                info.Updated = false;
-            }
-            */
-        }
     }    
 }

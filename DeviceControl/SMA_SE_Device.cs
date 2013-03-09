@@ -69,7 +69,7 @@ namespace Device
         {
             get
             {
-                return (DeviceDataRecorders.DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_YieldAC.Type, Feature_YieldAC.Id);
+                return (DeviceDataRecorders.DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_YieldAC.FeatureType, Feature_YieldAC.FeatureId);
             }
         }
 
@@ -116,9 +116,9 @@ namespace Device
                     minPower = liveReading.Watts;
 
                 if (!DeviceId.HasValue)
-                    SetDeviceFeature(Feature_YieldAC, PVSettings.MeasureType.Energy, null, true, true, false);
+                    SetDeviceFeature(Feature_YieldAC, PVSettings.MeasureType.Energy, false, true);
                
-                DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_YieldAC.Type, Feature_YieldAC.Id);
+                DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_YieldAC.FeatureType, Feature_YieldAC.FeatureId);
                     
                 EnergyReading reading = new EnergyReading();
 

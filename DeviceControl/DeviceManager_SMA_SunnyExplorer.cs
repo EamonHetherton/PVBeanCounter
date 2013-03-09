@@ -203,9 +203,7 @@ namespace DeviceControl
         protected override void LoadParams()
         {
             ManagerParams = new SMA_SE_ManagerParams();
-            ManagerParams.DeviceType = PVSettings.DeviceType.EnergyMeter;
             ManagerParams.RecordingInterval = DeviceManagerSettings.DBIntervalInt;
-            ManagerParams.QueryInterval = DeviceManagerSettings.MessageIntervalInt;
         }
 
         private bool ExtractCSV(String configFile, String password, String exportDirectory, DateTime fromDate, DateTime toDate)

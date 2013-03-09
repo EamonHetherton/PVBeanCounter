@@ -98,8 +98,8 @@ namespace PVSettings
                 }
                 else
                 {
-                    EventFeatureType = value.Type;
-                    EventFeatureId = value.Id;
+                    EventFeatureType = value.FeatureType;
+                    EventFeatureId = value.FeatureId;
                 }
             }
         }
@@ -312,15 +312,15 @@ namespace PVSettings
                 {
                     if (ConsolidateFromFeatures.Count == 1)
                     {
-                        ConsolidateFromFeatureType = ConsolidateFromFeatures[0].Type;
-                        ConsolidateFromFeatureId = ConsolidateFromFeatures[0].Id;
+                        ConsolidateFromFeatureType = ConsolidateFromFeatures[0].FeatureType;
+                        ConsolidateFromFeatureId = ConsolidateFromFeatures[0].FeatureId;
                     }
                     else
                     {
                         ConsolidateFromFeatureType = FeatureType.Unknown;
                         ConsolidateFromFeatureId = null;
                         foreach (FeatureSettings fs in ConsolidateFromFeatures)
-                            if (fs.Type == ConsolidateToFeatureType)
+                            if (fs.FeatureType == ConsolidateToFeatureType)
                             {
                                 ConsolidateFromFeatureType = ConsolidateToFeatureType;
                                 break;
@@ -371,8 +371,8 @@ namespace PVSettings
                 }
                 else
                 {
-                    ConsolidateFromFeatureType = value.Type;
-                    ConsolidateFromFeatureId = value.Id;
+                    ConsolidateFromFeatureType = value.FeatureType;
+                    ConsolidateFromFeatureId = value.FeatureId;
                 }
             }
         }
@@ -447,15 +447,15 @@ namespace PVSettings
 
                 if (ConsolidateToFeatures.Count == 1)
                 {
-                    ConsolidateToFeatureType = ConsolidateToFeatures[0].Type;
-                    ConsolidateToFeatureId = ConsolidateToFeatures[0].Id;
+                    ConsolidateToFeatureType = ConsolidateToFeatures[0].FeatureType;
+                    ConsolidateToFeatureId = ConsolidateToFeatures[0].FeatureId;
                 }
                 else
                 {
                     ConsolidateToFeatureType = FeatureType.Unknown;
                     ConsolidateToFeatureId = 0;
                     foreach (FeatureSettings fs in ConsolidateToFeatures)
-                        if (fs.Type == ConsolidateFromFeatureType)
+                        if (fs.FeatureType == ConsolidateFromFeatureType)
                         {
                             ConsolidateToFeatureType = ConsolidateFromFeatureType.Value;
                             break;
@@ -488,8 +488,8 @@ namespace PVSettings
                 }
                 else
                 {
-                    ConsolidateToFeatureType = value.Type;
-                    ConsolidateToFeatureId = value.Id;
+                    ConsolidateToFeatureType = value.FeatureType;
+                    ConsolidateToFeatureId = value.FeatureId;
                 }
             }
         }
@@ -1064,9 +1064,9 @@ namespace PVSettings
             // detect candidate features on this device
             foreach (FeatureSettings f in DeviceSettings.FeatureList)
             {
-                if (f.Type == FeatureType.YieldAC) 
+                if (f.FeatureType == FeatureType.YieldAC) 
                     hasYield++;
-                else if (f.Type == FeatureType.ConsumptionAC) 
+                else if (f.FeatureType == FeatureType.ConsumptionAC) 
                     hasConsume++;
             }
 
@@ -1080,14 +1080,14 @@ namespace PVSettings
                 // create events for the appropriate features
                 foreach (FeatureSettings f in DeviceSettings.FeatureList)
                 {
-                    if (f.Type == FeatureType.YieldAC)
+                    if (f.FeatureType == FeatureType.YieldAC)
                     {
                         DeviceEventSettings e = AddEvent();
                         e.EventFeature = f;
                         e.EventType = EventType.Yield;
                         e.UseForFeedIn = true;
                     }
-                    else if (f.Type == FeatureType.ConsumptionAC)
+                    else if (f.FeatureType == FeatureType.ConsumptionAC)
                     {
                         DeviceEventSettings e = AddEvent();
                         e.EventFeature = f;

@@ -57,7 +57,8 @@ namespace Device
     {        
         public CC128EnergyParams()
             : base()
-        {            
+        {
+            DeviceType = PVSettings.DeviceType.EnergyMeter;    
         }
     }
 
@@ -68,8 +69,7 @@ namespace Device
         public CC128_Device(DeviceControl.DeviceManager_CC128 deviceManager, DeviceManagerDeviceSettings deviceSettings)
             : base(deviceManager, deviceSettings, "CurrentCost", "CC128", "")
         {
-            DeviceParams = new CC128EnergyParams();
-            DeviceParams.DeviceType = PVSettings.DeviceType.EnergyMeter;            
+            DeviceParams = new CC128EnergyParams();                    
             DeviceParams.QueryInterval = deviceSettings.QueryIntervalInt;
             DeviceParams.RecordingInterval = deviceSettings.DBIntervalInt;
 
@@ -131,11 +131,11 @@ namespace Device
                     minPower = liveReading.Watts;
 
                 if (!DeviceId.HasValue)
-                    SetDeviceFeature(Feature_EnergyAC, PVSettings.MeasureType.Energy, null, true, true, false);
+                    SetDeviceFeature(Feature_EnergyAC, PVSettings.MeasureType.Energy, null, true, false);
 
                 //if (dbWrite)
                 {
-                    days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_EnergyAC.Type, Feature_EnergyAC.Id);
+                    days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_EnergyAC.FeatureType, Feature_EnergyAC.FeatureId);
                     
                     EnergyReading reading = new EnergyReading();
                     
@@ -210,7 +210,7 @@ namespace Device
             String stage = "Initial";
             try
             {
-                DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_EnergyAC.Type, Feature_EnergyAC.Id);
+                DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_EnergyAC.FeatureType, Feature_EnergyAC.FeatureId);
                 DeviceDetailPeriod_EnergyMeter day = days.FindOrCreate(histReading.Time.Date);
 
                 EnergyReading hist = new EnergyReading(days, histReading.Time, TimeSpan.FromSeconds(7200.0), (EnergyParams)DeviceParams);

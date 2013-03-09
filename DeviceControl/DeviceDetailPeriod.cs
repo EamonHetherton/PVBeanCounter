@@ -272,8 +272,8 @@ namespace DeviceDataRecorders
             DeviceDetailPeriods = deviceDetailPeriods;
             DeviceId = DeviceDetailPeriods.Device.DeviceId;
             DeviceParams = deviceParams;
-            FeatureType = feature.Type;
-            FeatureId = feature.Id;
+            FeatureType = feature.FeatureType;
+            FeatureId = feature.FeatureId;
             DeviceIntervalSeconds = DeviceParams.QueryInterval;
             UpdatePending = false;
             LastFindTime = DateTime.Now;
@@ -962,9 +962,7 @@ namespace DeviceDataRecorders
 
         protected void BindSelectIdentity(GenCommand cmd)
         {
-            cmd.AddParameterWithValue("@Device_Id", DeviceId.Value);
-            cmd.AddParameterWithValue("@FeatureType", (int)FeatureType);
-            cmd.AddParameterWithValue("@FeatureId", (int)FeatureId);
+            cmd.AddParameterWithValue("@DeviceFeature_Id", DeviceDetailPeriods.FeatureSettings.Id);
             cmd.AddParameterWithValue("@PeriodStart", Start - PeriodOverlapLimit);
             cmd.AddParameterWithValue("@NextPeriodStart", Start.AddDays(1.0) + PeriodOverlapLimit);
         }

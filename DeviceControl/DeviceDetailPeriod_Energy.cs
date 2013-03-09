@@ -49,9 +49,7 @@ namespace DeviceDataRecorders
             "WHERE " +
                 "ReadingEnd > @PeriodStart " +
                 "AND ReadingEnd <= @NextPeriodStart " +
-                "AND Device_Id = @Device_Id " +
-                "AND FeatureType = @FeatureType " +
-                "AND FeatureId = @FeatureId ";
+                "AND DeviceFeature_Id = @DeviceFeature_Id ";
 
         public override void LoadPeriodFromDatabase(GenConnection existingCon = null)
         {
