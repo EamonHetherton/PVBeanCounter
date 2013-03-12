@@ -136,6 +136,8 @@ namespace DeviceControl
 
         public abstract string Table_devicereading_energy_2000 { get; }
 
+        public abstract String View_devicedayoutput_v_2000 { get; }
+
     }
 
     internal class MySql_DDL : DDL
@@ -722,6 +724,19 @@ namespace DeviceControl
                     ") ENGINE=InnoDB DEFAULT CHARSET=latin1 ";
             }
         }
+
+        public override String View_devicedayoutput_v_2000
+        {
+            get
+            {
+                return
+                    "CREATE VIEW devicedayoutput_v " +
+                    "AS SELECT f.Device_Id, DATE(r.ReadingEnd) OutputDay, SUM(r.EnergyDelta) OutputKwh " +
+                    "from devicereading_energy r, devicefeature f " +
+                    "where r.DeviceFeature_Id = f.Id " +
+                    "group by f.Device_Id, DATE(r.ReadingEnd) ";
+            }
+        }
     }
 
     internal class SQLite_DDL : DDL
@@ -1299,7 +1314,7 @@ namespace DeviceControl
                         "SerialNumber TEXT NOT NULL, " +
                         "DeviceType_Id INTEGER NOT NULL, " +
                         "FOREIGN KEY (DeviceType_Id) REFERENCES devicetype (Id), " +
-                        "CONSTRAINT uk_device UNIQUE (SerialNumber, DeviceTypeId)  " +
+                        "CONSTRAINT uk_device UNIQUE (SerialNumber, DeviceType_Id)  " +
                     ") ";
             }
         }
@@ -1355,6 +1370,19 @@ namespace DeviceControl
                         "CONSTRAINT uk_devicereading_ac UNIQUE (DeviceFeature_Id, ReadingEnd),  " +
                         "FOREIGN KEY (DeviceFeature_Id) REFERENCES devicefeature (Id) " +
                     ") ";
+            }
+        }
+
+        public override String View_devicedayoutput_v_2000
+        {
+            get
+            {
+                return
+                    "CREATE VIEW devicedayoutput_v " +
+                    "AS SELECT f.Device_Id, Date(r.ReadingEnd) OutputDay, SUM(r.EnergyDelta) OutputKwh " +
+                    "from devicereading_energy r, devicefeature f " +
+                    "where r.DeviceFeature_Id = f.Id " +
+                    "group by f.Device_Id, Date(r.ReadingEnd) ";
             }
         }
     }
@@ -1992,7 +2020,7 @@ namespace DeviceControl
                             "Id " +
                         "), " +
                         "CONSTRAINT fk_device_devicetype FOREIGN KEY (DeviceType_Id) REFERENCES devicetype (Id), " +
-                        "CONSTRAINT uk_device UNIQUE (SerialNumber, DeviceTypeId)  " +
+                        "CONSTRAINT uk_device UNIQUE (SerialNumber, DeviceType_Id)  " +
                     ") ";
             }
         }
@@ -2052,6 +2080,19 @@ namespace DeviceControl
                         "CONSTRAINT uk_devicereading_energy UNIQUE (DeviceFeature_Id, ReadingEnd), " +
                         "CONSTRAINT fk_devicereadingenergy_devicefeature FOREIGN KEY (DeviceFeature_Id) REFERENCES devicefeature (Id) " +
                     ") ";
+            }
+        }
+
+        public override String View_devicedayoutput_v_2000
+        {
+            get
+            {
+                return
+                    "CREATE VIEW devicedayoutput_v " +
+                    "AS SELECT f.Device_Id, DateValue(r.ReadingEnd) OutputDay, SUM(r.EnergyDelta) OutputKwh " +
+                    "from devicereading_energy r, devicefeature f " +
+                    "where r.DeviceFeature_Id = f.Id " +
+                    "group by f.Device_Id, DateValue(r.ReadingEnd) ";
             }
         }
     }
@@ -2438,7 +2479,7 @@ namespace DeviceControl
                             "ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON " +
                         "), " +
                         "CONSTRAINT fk_device_devicetype FOREIGN KEY (DeviceType_Id) REFERENCES devicetype (Id), " +
-                        "CONSTRAINT uk_device UNIQUE (SerialNumber, DeviceTypeId)  " +
+                        "CONSTRAINT uk_device UNIQUE (SerialNumber, DeviceType_Id)  " +
                         "WITH " +
                         "( " +
                             "PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, " +
@@ -2518,6 +2559,19 @@ namespace DeviceControl
                         "), " +
                         "CONSTRAINT fk_devicereading_energy_devicefeature FOREIGN KEY (DeviceFeature_Id) REFERENCES devicefeature (Id) " +
                     ") ";
+            }
+        }
+
+        public override String View_devicedayoutput_v_2000
+        {
+            get
+            {
+                return
+                    "CREATE VIEW devicedayoutput_v " +
+                    "AS SELECT f.Device_Id, CAST(FLOOR(CAST(r.ReadingEnd AS float)) AS DATETIME) OutputDay, SUM(r.EnergyDelta) OutputKwh " +
+                    "from devicereading_energy r, devicefeature f " +
+                    "where r.DeviceFeature_Id = f.Id " +
+                    "group by f.Device_Id, CAST(FLOOR(CAST(r.ReadingEnd AS float)) AS DATETIME) ";
             }
         }
     }
@@ -3658,6 +3712,7 @@ namespace DeviceControl
             success &= CreateRelation(DDL.Table_device_2000, con);
             success &= CreateRelation(DDL.Table_devicefeature_2000, con);
             success &= CreateRelation(DDL.Table_devicereading_energy_2000, con);
+            success &= CreateRelation(DDL.View_devicedayoutput_v_2000, con);
 
             if (success)
                 UpdateVersion("2", "0", "0", "0", con);

@@ -62,7 +62,7 @@ namespace PVPublisherService
         {
             InitializeComponent();
 
-            ApplicationSettings = new ApplicationSettings("settings.xml");
+            ApplicationSettings = new ApplicationSettings();
             SystemServices = new MackayFisher.Utilities.SystemServices(ApplicationSettings.BuildFileName("PVPublisher.log"));
             ApplicationSettings.SetSystemServices(SystemServices);
 

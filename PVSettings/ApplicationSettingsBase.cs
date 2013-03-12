@@ -31,25 +31,30 @@ namespace PVSettings
     public class ApplicationSettingsBase : SettingsBase, INotifyPropertyChanged
     {
         protected String SettingsFileName;
+        protected String SettingsInputFileName;
         protected String SettingsDirectory;
         protected String TemplateFileName;
+        protected String TemplateName;
         protected bool UsingTemplate; // true if settings were loaded from a template
         protected bool WriteWorkingDirectory; // true if workinf dieectory must be written to registry
-        private String ElementName;
+        protected String ElementName;
         private const String Author = "Mackay-Fisher";
         private const String Application = "PV Bean Counter";
 
         internal SettingsNotification PropertyChangedCallback;
-        //public event PropertyChangedEventHandler PropertyChanged;
-
+        
         private SettingsNotification PropertiesSavedCallback;
         private bool CallbacksSet;
 
-        public ApplicationSettingsBase(String settingsFileName, String elementName, String templateName)
+        protected List<String> LegacySettingsNames;
+
+        public ApplicationSettingsBase(String settingsFileName, String elementName, String templateName, List<String> legacyNames = null)
         {
+            LegacySettingsNames = new List<string>();
             SettingsDirectory = GetMachineRegistryValue(Author, Application, "WorkingDirectory");
 
             SettingsFileName = settingsFileName;
+            SettingsInputFileName = settingsFileName; // this is changed if loading from a legacy file
 
             if (SettingsDirectory == NotDefined)
             {
@@ -59,38 +64,13 @@ namespace PVSettings
             else
                 WriteWorkingDirectory = false;
 
-            if (!File.Exists(SettingsDirectory + @"\" + SettingsFileName))
-            {
-                TemplateFileName = AppDomain.CurrentDomain.BaseDirectory + templateName;
-                //File.Copy(template, settingsFileName);
-                UsingTemplate = true;
-            }
-            else
-                UsingTemplate = false;
-
             ElementName = elementName;
-            LoadSettings(ElementName, true);
-
-            CallbacksSet = false;
-
-            if (DateFormat != "yyyy-MM-dd")
-            {
-                if (DateFormat != "")
-                    LegacyDateFormat = DateFormat;
-                DateFormat = "yyyy-MM-dd";
-            }
-
-            if (DateTimeFormat != "yyyy'-'MM'-'dd'T'HH':'mm':'ss")
-            {
-                if (DateTimeFormat != "")
-                    LegacyDateTimeFormat = DateTimeFormat;
-                DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss";
-            }
+            TemplateName = templateName;
         }
 
         public void ReloadSettings()
         {
-            LoadSettings(ElementName);
+            LoadSettings();
         }
 
         public String ApplicationVersion
@@ -114,8 +94,28 @@ namespace PVSettings
             }
         }
 
-        protected void LoadSettings(String elementName, bool isConstructing = false)
+        protected void LoadSettings(bool isConstructing = false)
         {
+            bool useLegacySettings = false;
+
+            if (!File.Exists(SettingsDirectory + @"\" + SettingsFileName))
+            {
+                UsingTemplate = true;
+                foreach (String name in LegacySettingsNames)                    
+                    if (File.Exists(SettingsDirectory + @"\" + name))
+                    {
+                        UsingTemplate = false;
+                        SettingsInputFileName = name;
+                        useLegacySettings = true;
+                        break;
+                    }
+                
+                if (UsingTemplate)
+                    TemplateFileName = AppDomain.CurrentDomain.BaseDirectory + TemplateName;
+            }
+            else
+                UsingTemplate = false;
+
             ApplicationSettingsMutex.WaitOne();
 
             XmlReader reader;
@@ -132,7 +132,7 @@ namespace PVSettings
                 UsingTemplate = false;
             }
             else
-                reader = XmlReader.Create(SettingsDirectory + @"\" + SettingsFileName, readerSettings);
+                reader = XmlReader.Create(SettingsDirectory + @"\" + SettingsInputFileName, readerSettings);
 
             // Pass the validating reader to the XML document.
             // Validation fails due to an undefined attribute, but the 
@@ -146,7 +146,7 @@ namespace PVSettings
             bool found = false;
 
             foreach (XmlNode n in document.ChildNodes)
-                if (n.Name == elementName)
+                if (n.Name == ElementName)
                 {
                     settings = (XmlElement)n;
                     found = true;
@@ -154,12 +154,35 @@ namespace PVSettings
                 }
 
             if (!found)
-                throw new Exception("Cannot find element '" + elementName + "'");
+                throw new Exception("Cannot find element '" + ElementName + "'");
 
             if (!isConstructing)
                 LoadSettingsSub();
 
+            if (useLegacySettings)
+                RemoveLegacyElements();
+
             ApplicationSettingsMutex.ReleaseMutex();
+
+            CallbacksSet = false;
+
+            if (DateFormat != "yyyy-MM-dd")
+            {
+                if (DateFormat != "")
+                    LegacyDateFormat = DateFormat;
+                DateFormat = "yyyy-MM-dd";
+            }
+
+            if (DateTimeFormat != "yyyy'-'MM'-'dd'T'HH':'mm':'ss")
+            {
+                if (DateTimeFormat != "")
+                    LegacyDateTimeFormat = DateTimeFormat;
+                DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss";
+            }
+        }
+
+        protected virtual void RemoveLegacyElements()
+        {
         }
 
         protected virtual void LoadSettingsSub()

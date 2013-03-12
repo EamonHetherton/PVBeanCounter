@@ -90,7 +90,7 @@ namespace PVService
         public ExecutionManager()
         {
             ThisExecutionManager = this;
-            GlobalSettings.ApplicationSettings = new ApplicationSettings("settings.xml");
+            GlobalSettings.ApplicationSettings = new ApplicationSettings();
             GlobalSettings.SystemServices = new MackayFisher.Utilities.SystemServices(GlobalSettings.ApplicationSettings.BuildFileName(GlobalSettings.ApplicationSettings.LogFile));
             LastLogChange = DateTime.Today;
             GlobalSettings.ApplicationSettings.SetSystemServices(GlobalSettings.SystemServices);

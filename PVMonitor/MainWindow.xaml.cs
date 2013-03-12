@@ -79,7 +79,7 @@ namespace PVMonitor
 
             try
             {
-                ApplicationSettings = new ApplicationSettings("settings.xml");
+                ApplicationSettings = new ApplicationSettings();
                 LocateOrCreateDirectory(ApplicationSettings.DefaultDirectory);
                 SystemServices = new MackayFisher.Utilities.SystemServices(ApplicationSettings.BuildFileName("PVMonitor.log"));
                 ApplicationSettings.SetSystemServices(SystemServices);

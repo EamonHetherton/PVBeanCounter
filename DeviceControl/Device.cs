@@ -86,7 +86,7 @@ namespace Device
 
         protected bool EmitEvents;
 
-        public DeviceDataRecorders.DeviceParamsBase DeviceParams;
+        public DeviceDataRecorders.DeviceParamsBase DeviceParams;  
 
         public List<DeviceLink> TargetDevices;
 

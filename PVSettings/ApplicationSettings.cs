@@ -52,9 +52,7 @@ namespace PVSettings
             , { "SQL Server", "SQL Server", "Proprietary", "System.Data.SqlClient", "", "PVHistory", "", @"localhost\SQLEXPRESS" }
             , { "MySQL", "MySql", "Proprietary", "MySql.Data.MySQLClient", "", "pvhistory", "PVRecords", "localhost" } };
 
-        //private ObservableCollection<InverterManagerSettings> _InverterManagerList;
         private ObservableCollection<DeviceManagerSettings> _DeviceManagerList;
-        //private ObservableCollection<MeterManagerSettings> _MeterManagerList;
         private ObservableCollection<PvOutputSiteSettings> _PvOutputSystemList;
         private ObservableCollection<DeviceManagerDeviceSettings> _AllDevicesList;
         private ObservableCollection<DeviceManagerDeviceSettings> _AllConsolidationDevicesList;
@@ -67,15 +65,18 @@ namespace PVSettings
 
         public InverterManagerSettings DeviceInverterManagerSettings { get; private set; }
 
-        public ApplicationSettings(String SettingsFileName)
-            : base(SettingsFileName, "configuration", @"\settings_template_SE_SQLite.xml")
-        {
+        public ApplicationSettings()
+            : base("settings_v2.xml", "configuration", @"\settings_template_SE_SQLite.xml")
+        {            
+            LegacySettingsNames.Add("settings.xml");
+
+            LoadSettings(true);
+
             DeviceManagementSettings = new DeviceManagementSettings();
             
             SystemServices = null;
             DeviceInverterManagerSettings = null;
             LoadSettingsSub();
-            //KnownServiceAccountName = "";
             ServiceAccountPassword = "";
             ServiceDetailsChanged = false;
             LoadingEnergyEvents = false;
@@ -102,6 +103,10 @@ namespace PVSettings
         }
 
         private void RemoveOldElements()
+        {
+        }
+
+        protected override void RemoveLegacyElements()
         {
             DeleteElement("pvforceliveupload");
             DeleteElement("defaultmanagertype");
