@@ -163,6 +163,8 @@ namespace DeviceControl
             DateTime? fromDate = null;
             DateTime toDate = DateTime.Today;
 
+            dateList.Sort();
+
             try
             {
                 // call RunExtract for groups of consecutive days - reduce execution time
@@ -960,14 +962,14 @@ namespace DeviceControl
                 if (startDate == null)
                     cmdStr =
                         "select distinct oh.OutputDay " +
-                        "from dayoutput_v oh, device d " +
+                        "from devicedayoutput_v oh, device d " +
                         "where oh.Device_Id = d.Id " +
                         "and d.SerialNumber in ( @SerialNumbers ) " +
                         "order by oh.OutputDay;";
                 else
                     cmdStr =
                         "select distinct oh.OutputDay " +
-                        "from dayoutput_v oh, device d " +
+                        "from devicedayoutput_v oh, device d " +
                         "where oh.OutputDay >= @StartDate " +
                         "and oh.Device_Id = d.Id " +
                         "and d.SerialNumber in ( @SerialNumbers ) " +
