@@ -1,13 +1,13 @@
 ﻿/*
 * Copyright (c) 2012 Dennis Mackay-Fisher
 *
-* This file is part of PV Scheduler
+* This file is part of PV Bean Counter
 * 
-* PV Scheduler is free software: you can redistribute it and/or 
+* PV Bean Counter is free software: you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License version 3 or later 
 * as published by the Free Software Foundation.
 * 
-* PV Scheduler is distributed in the hope that it will be useful,
+* PV Bean Counter is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
@@ -424,7 +424,7 @@ namespace Device
             ref int? stringNumber, ref int? phaseNumber)
         {
             const string sqlRead =
-                "select Id, MeasureType, IsConsumption, IsAC, IsThreePhase, StringNumber, PhaseNumber" +
+                "select Id, MeasureType, IsConsumption, IsAC, IsThreePhase, StringNumber, PhaseNumber " +
                 "from devicefeature " +
                 "where Device_Id = @Device_Id " +
                 "and FeatureType = @FeatureType " +
@@ -463,7 +463,7 @@ namespace Device
             }
             catch (Exception e)
             {
-                GlobalSettings.SystemServices.LogMessage("ReadDEviceFeature", "Exception: " + e.Message, LogEntryType.ErrorMessage);
+                GlobalSettings.SystemServices.LogMessage("ReadDeviceFeature", "Exception: " + e.Message, LogEntryType.ErrorMessage);
                 throw e;
             }
         }
@@ -559,7 +559,7 @@ namespace Device
             return false;            
         }
 
-        public void BuildOutputReadyFeatureList(List<OutputReadyNotification> featureList, FeatureType featureType, uint featureId, DateTime readingEnd)
+        public static void BuildOutputReadyFeatureList(List<OutputReadyNotification> featureList, FeatureType featureType, uint featureId, DateTime readingEnd)
         {
             OutputReadyNotification notify;
             notify.FeatureType = featureType;

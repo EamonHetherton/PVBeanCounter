@@ -34,7 +34,7 @@ namespace PVBeanCounter
         SystemServices SystemServices;
         CheckEnvironment CheckEnvironment;
         DeviceUpdate DeviceUpdate;
-        OwlDatabaseInfo OwlDatabaseInfo;
+        //OwlDatabaseInfo OwlDatabaseInfo;
 
         bool saveRequired = false;
         bool checkRequired = false;
@@ -94,7 +94,7 @@ namespace PVBeanCounter
 
                 ApplicationSettings.SetSystemServices(SystemServices);
 
-                OwlDatabaseInfo = null;
+                //OwlDatabaseInfo = null;
 
                 gridPVSettings.DataContext = ApplicationSettings;
 
@@ -476,9 +476,9 @@ namespace PVBeanCounter
             {
                 //MeterManagerSettings mmSettings = (MeterManagerSettings)dataGridMeterManagers.SelectedItem;
                 //OwlDatabaseInfo = new OwlDatabaseInfo((OwlMeterManagerSettings)mmSettings, SystemServices);
-                OwlDatabaseInfo.LoadApplianceList();
+                //OwlDatabaseInfo.LoadApplianceList();
 
-                if (OwlDatabaseInfo.OwlAppliances.Count < 1)
+                //if (OwlDatabaseInfo.OwlAppliances.Count < 1)
                 {
                     int cnt = 0;
                     //foreach (MeterApplianceSettings appl in mmSettings.ApplianceList)

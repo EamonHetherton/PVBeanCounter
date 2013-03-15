@@ -1,13 +1,13 @@
 ﻿/*
 * Copyright (c) 2012 Dennis Mackay-Fisher
 *
-* This file is part of PV Scheduler
+* This file is part of PV Bean Counter
 * 
-* PV Scheduler is free software: you can redistribute it and/or 
+* PV Bean Counter is free software: you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License version 3 or later 
 * as published by the Free Software Foundation.
 * 
-* PV Scheduler is distributed in the hope that it will be useful,
+* PV Bean Counter is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
@@ -141,8 +141,13 @@ namespace Device
             }
 
             // found some features and all found are ready
-            if (found && ready || someReady && LastRecordTime < DateTime.Now.AddMinutes(-15.0))
+            if (found && ready 
+                || someReady && (LastRecordTime.HasValue ? LastRecordTime.Value : DateTime.MinValue) < DateTime.Now.AddMinutes(-15.0))
             {
+                if (GlobalSettings.SystemServices.LogTrace)
+                    LogMessage("NotifyConsolidation - Found: " + found + " - Ready: " + ready + " - Some Ready: " + someReady +
+                        " - LastRecordTime: " + LastRecordTime, LogEntryType.Trace);
+
                 LastRecordTime = newTime;
                 if (DeviceManagerDeviceSettings.ConsolidationType == ConsolidationType.PVOutput && DeviceManagerDeviceSettings.PVOutputSystem != "")
                     DeviceManager.ManagerManager.SetOutputReady(DeviceManagerDeviceSettings.PVOutputSystem);

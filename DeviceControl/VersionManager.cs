@@ -1,13 +1,13 @@
 ﻿/*
 * Copyright (c) 2010 Dennis Mackay-Fisher
 *
-* This file is part of PV Scheduler
+* This file is part of PV Bean Counter
 * 
-* PV Scheduler is free software: you can redistribute it and/or 
+* PV Bean Counter is free software: you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License version 3 or later 
 * as published by the Free Software Foundation.
 * 
-* PV Scheduler is distributed in the hope that it will be useful,
+* PV Bean Counter is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
@@ -648,7 +648,6 @@ namespace DeviceControl
                         "`DeviceType` VARCHAR(20) NOT NULL, " +
                         "PRIMARY KEY (`Id` ), " +
                         "CONSTRAINT `uk1_devicetype` UNIQUE (`Manufacturer` ASC, `Model` ASC), " +
-                        "CONSTRAINT `uk2_devicetype` UNIQUE (`DeviceType` ASC) " +
                     ") ENGINE=InnoDB DEFAULT CHARSET=latin1 ";
             }
         }
@@ -1297,8 +1296,7 @@ namespace DeviceControl
                         "Model TEXT NOT NULL, " +
                         "MaxPower INTEGER NULL, " +
                         "DeviceType TEXT NOT NULL, " +
-                        "CONSTRAINT DeviceType_UK1 UNIQUE (Manufacturer, Model),  " +
-                        "CONSTRAINT DeviceType_UK2 UNIQUE (DeviceType) " +
+                        "CONSTRAINT DeviceType_UK1 UNIQUE (Manufacturer, Model)  " +
                     ") ";
             }
         }
@@ -1999,8 +1997,7 @@ namespace DeviceControl
                         "MaxPower INTEGER NULL, " +
                         "DeviceType varchar(20) NOT NULL, " +
                         "CONSTRAINT PK_DeviceType PRIMARY KEY (Id), " +
-                        "CONSTRAINT DeviceType_UK1 UNIQUE (Manufacturer, Model), " +
-                        "CONSTRAINT DeviceType_UK2 UNIQUE (DeviceType) " +
+                        "CONSTRAINT DeviceType_UK1 UNIQUE (Manufacturer, Model) " +
                     ") ";
             }
         }
@@ -2448,13 +2445,7 @@ namespace DeviceControl
                         "( " +
                             "PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, " +
                             "ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON " +
-                        "), " +
-                        "CONSTRAINT DeviceType_UK2 UNIQUE (DeviceType)  " +
-                        "WITH " +
-                        "( " +
-                            "PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, " +
-                            "ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON " +
-                        ") " +
+                        ") " +                        
                     ") ";
             }
         }

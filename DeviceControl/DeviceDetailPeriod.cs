@@ -1,13 +1,13 @@
 ﻿/*
 * Copyright (c) 2012 Dennis Mackay-Fisher
 *
-* This file is part of PV Scheduler
+* This file is part of PV Bean Counter
 * 
-* PV Scheduler is free software: you can redistribute it and/or 
+* PV Bean Counter is free software: you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License version 3 or later 
 * as published by the Free Software Foundation.
 * 
-* PV Scheduler is distributed in the hope that it will be useful,
+* PV Bean Counter is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
@@ -328,7 +328,7 @@ namespace DeviceDataRecorders
             // consolidations override this to ensure current day readings are up to date
         }
 
-        public void UpdateDatabase(GenConnection con, DateTime? activeReadingTime)
+        public void UpdateDatabase(GenConnection con, DateTime? activeReadingTime, bool purgeUnmatched)
         {
             int activeInterval = -1;
             if (activeReadingTime.HasValue)  // this is used on the active day (today) to limit Normalise to the completed intervals only
@@ -345,6 +345,12 @@ namespace DeviceDataRecorders
                     && activeInterval == GetIntervalNo(reading.ReadingEnd))
                         continue;
                     reading.PersistReading(con, DeviceId.Value);
+                    reading.AddReadingMatch = false; // reset ready for next update
+                }
+                else if (purgeUnmatched && !reading.AddReadingMatch) // remove any old reading that was not found in this update
+                {
+                    reading.DeleteReading(con, DeviceId.Value);
+                    ReadingsGeneric.Remove(reading.ReadingEnd);
                 }
             }
             UpdatePending = false;
@@ -417,6 +423,7 @@ namespace DeviceDataRecorders
             try
             {
                 ReadingsGeneric.Add(reading.ReadingEnd, reading);
+                reading.AddReadingMatch = true; // new reading - must set to true - this is a keeper
             }
             catch (ArgumentException eOrig)
             {
@@ -436,6 +443,7 @@ namespace DeviceDataRecorders
                             ReadingsGeneric.Add(reading.ReadingEnd, reading);
                             reading.InDatabase = old.InDatabase;
                         }
+                        reading.AddReadingMatch = true; // matched an existing reading - this is a keeper
                     }
                     catch (Exception e)
                     {

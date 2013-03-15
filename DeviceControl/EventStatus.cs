@@ -1,13 +1,13 @@
 ﻿/*
 * Copyright (c) 2013 Dennis Mackay-Fisher
 *
-* This file is part of PV Scheduler
+* This file is part of PV Bean Counter
 * 
-* PV Scheduler is free software: you can redistribute it and/or 
+* PV Bean Counter is free software: you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License version 3 or later 
 * as published by the Free Software Foundation.
 * 
-* PV Scheduler is distributed in the hope that it will be useful,
+* PV Bean Counter is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
@@ -56,6 +56,9 @@ namespace Device
 
         public List<DeviceLink> ToDeviceLinks;
         public List<DeviceLink> FromDeviceLinks;
+
+        public DateTime LastEventTime = DateTime.MinValue;
+        public DateTime LastEmitTime = DateTime.MinValue;
 
         public EventStatus(DeviceBase device, FeatureType featureType, uint featureId, int frequency, ObservableCollection<DeviceEventSettings> emitEvents)
         {
@@ -129,8 +132,6 @@ namespace Device
                 EnergyTotal = energy;
             else
             {
-                // Don't use the time reported on the event as this can be from a device with bad time sync (eg CC Meter)
-                // if (IntervalEnd.Date != time.Date)
                 if (!IntervalEnd.HasValue || IntervalEnd.Value.Date != eventTime.Date)
                     EnergyTotal = 0.0;
                 double sinceDayStart = (eventTime - eventTime.Date).TotalSeconds;
@@ -143,6 +144,7 @@ namespace Device
             Interval = interval;
             EventPower = power;
             IncrementEventCount( 0);
+            LastEventTime = DateTime.Now;
         }
 
         public void GetCurrentReading(DateTime asAt, out Double energyToday, out int currentPower)

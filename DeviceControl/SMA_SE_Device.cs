@@ -163,6 +163,7 @@ namespace Device
                     stage = "energy";
                     EnergyEventStatus status = FindFeatureStatus(FeatureType.YieldAC, 0);
                     status.SetEventReading(DateTime.Now, 0.0, liveReading.Watts, (int)duration.TotalSeconds, true);
+                    DeviceManager.ManagerManager.EnergyEvents.ScanForEvents();
                 }
 
                 stage = "errors";

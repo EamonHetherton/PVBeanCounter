@@ -1,13 +1,13 @@
 ﻿/*
 * Copyright (c) 2012 Dennis Mackay-Fisher
 *
-* This file is part of PV Scheduler
+* This file is part of PV Bean Counter
 * 
-* PV Scheduler is free software: you can redistribute it and/or 
+* PV Bean Counter is free software: you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License version 3 or later 
 * as published by the Free Software Foundation.
 * 
-* PV Scheduler is distributed in the hope that it will be useful,
+* PV Bean Counter is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
@@ -115,7 +115,7 @@ namespace DeviceDataRecorders
                     if (period.End <= DateTime.Today)
                     {
                         if (period.UpdatePending)
-                            period.UpdateDatabase(con, null);
+                            period.UpdateDatabase(con, null, false);
                         if (period.LastFindTime < DateTime.Now.AddSeconds(DiscardInterval))
                             Periods.RemoveAt(i);
                         else
@@ -136,7 +136,7 @@ namespace DeviceDataRecorders
             }
         }
 
-        public void UpdateDatabase(GenConnection con = null, DateTime? activeReadingTime = null)
+        public void UpdateDatabase(GenConnection con = null, DateTime? activeReadingTime = null, bool purgeUnMatched = false)
         {
             GlobalSettings.SystemServices.GetDatabaseMutex();
             bool conIsLocal = false;
@@ -151,9 +151,9 @@ namespace DeviceDataRecorders
                 foreach (DeviceDetailPeriodBase item in Periods)
                 {
                     if (activeReadingTime.HasValue && activeReadingTime.Value.Date != item.Start)
-                        item.UpdateDatabase(con, null);
+                        item.UpdateDatabase(con, null, purgeUnMatched);
                     else
-                        item.UpdateDatabase(con, activeReadingTime);
+                        item.UpdateDatabase(con, activeReadingTime, purgeUnMatched);
                 }
             }
             finally

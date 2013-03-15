@@ -1,13 +1,13 @@
 ﻿/*
 * Copyright (c) 2012 Dennis Mackay-Fisher
 *
-* This file is part of PV Scheduler
+* This file is part of PV Bean Counter
 * 
-* PV Scheduler is free software: you can redistribute it and/or 
+* PV Bean Counter is free software: you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License version 3 or later 
 * as published by the Free Software Foundation.
 * 
-* PV Scheduler is distributed in the hope that it will be useful,
+* PV Bean Counter is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
@@ -139,63 +139,6 @@ namespace DeviceControl
                 || DeviceBase.IntervalCompare(ManagerParams.RecordingInterval, LastRecordTime.Value, curTime) != 0);
 
             device.ProcessOneLiveReading(liveRecord);
-
-            /*
-            if (SensorStatusList[sensor].initialise)
-            {
-                SensorStatusList[sensor].CurrentMinute = GetMinute(liveRecord.SelTime.Value);
-                SensorStatusList[sensor].PreviousTime = liveRecord.SelTime.Value;
-                SensorStatusList[sensor].initialise = false;
-            }
-
-            DateTime thisMinute = GetMinute(liveRecord.SelTime.Value);
-            DateTime currentMinute = SensorStatusList[sensor].CurrentMinute;
-
-            int duration;
-
-            if (thisMinute > currentMinute)
-            {
-                duration = (int)(currentMinute - SensorStatusList[sensor].PreviousTime).TotalSeconds;
-
-                LogMessage("ProcessOneRecord", "End Minute - Sensor: " + sensor + " - Watts: " + liveRecord.Watts +
-               " - curMin: " + SensorStatusList[sensor].CurrentMinute + " - prevTime: " + SensorStatusList[sensor].PreviousTime +
-               " - Dur: " + duration);
-
-                UpdateSensorList(currentMinute, currentMinute, sensor.ToString(), duration, liveRecord.Watts, liveRecord.Temperature);
-
-                GlobalSettings.SystemServices.GetDatabaseMutex();
-                try
-                {
-                    InsertMeterReading(SensorStatusList[sensor].Record);
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
-                finally
-                {
-                    GlobalSettings.SystemServices.ReleaseDatabaseMutex();
-                }
-
-                ResetSensor(SensorStatusList[sensor], thisMinute);
-            }
-            else if (liveRecord.SelTime.Value < SensorStatusList[sensor].PreviousTime)
-            {
-                LogMessage("ProcessOneRecord", "Time Warp Error: moved back in time - new time: " +
-                    liveRecord.SelTime.Value + " - prev time: " + SensorStatusList[sensor].PreviousTime, LogEntryType.ErrorMessage);
-
-                // discard timewarp records
-                return;
-            }
-
-            duration = (int)(liveRecord.SelTime.Value - SensorStatusList[sensor].PreviousTime).TotalSeconds;
-
-            LogMessage("ProcessOneRecord", "Sensor: " + sensor + " - Time: " + liveRecord.SelTime.Value + " - Watts: " + liveRecord.Watts +
-                " - curMin: " + SensorStatusList[sensor].CurrentMinute + " - prevTime: " + SensorStatusList[sensor].PreviousTime +
-                " - Dur: " + duration);
-
-            UpdateSensorList(thisMinute, liveRecord.SelTime.Value, sensor.ToString(), duration, liveRecord.Watts, liveRecord.Temperature);
-            */
         }
 
         protected override void ProcessOneHistoryRecord(MeterDevice<CC128_LiveRecord, CC128_HistoryRecord, CC128EnergyParams> device, CC128_HistoryRecord histRecord)

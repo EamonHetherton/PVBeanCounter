@@ -89,7 +89,7 @@
     <Compile Include="ApplicationSettingsBase.cs" />
     <Compile Include="BlockMessageSettings.cs" />
     <Compile Include="BlockSettings.cs" />
-    <Compile Include="CCMeterManagerSettings.cs" />
+    <None Include="CCMeterManagerSettings.cs" />
     <Compile Include="AlgorithmSettings.cs" />
     <Compile Include="ConversationSettings.cs" />
     <Compile Include="DeviceEnumerator.cs" />
@@ -98,14 +98,14 @@
     <Compile Include="DeviceManagerSettings.cs" />
     <Compile Include="DeviceSettings.cs" />
     <Compile Include="DynamicDataMap.cs" />
-    <Compile Include="EW4009MeterManagerSettings.cs" />
+    <None Include="EW4009MeterManagerSettings.cs" />
     <Compile Include="InverterSettings.cs" />
     <Compile Include="MessageSettings.cs" />
-    <Compile Include="MeterApplianceSettings.cs" />
+    <None Include="MeterApplianceSettings.cs" />
     <Compile Include="CheckEnvironment.cs" />
     <Compile Include="InverterManagerSettings.cs" />
-    <Compile Include="MeterManagerSettings.cs" />
-    <Compile Include="OwlMeterManagerSettings.cs" />
+    <None Include="MeterManagerSettings.cs" />
+    <None Include="OwlMeterManagerSettings.cs" />
     <Compile Include="ParameterSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtocolSettings.cs" />

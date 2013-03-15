@@ -1,13 +1,13 @@
 ﻿/*
 * Copyright (c) 2011 Dennis Mackay-Fisher
 *
-* This file is part of PV Scheduler
+* This file is part of PV Bean Counter
 * 
-* PV Scheduler is free software: you can redistribute it and/or 
+* PV Bean Counter is free software: you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License version 3 or later 
 * as published by the Free Software Foundation.
 * 
-* PV Scheduler is distributed in the hope that it will be useful,
+* PV Bean Counter is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
@@ -65,16 +65,6 @@ namespace DeviceControl
         {
             try
             {
-                /*
-                // Debug event for testing - MUST BE REMOVED
-                {
-                    testPower += 1.0;
-                    if (testPower > 5.0) testPower = 0.0;
-                    EnergyEvents.NewEnergyReading(SystemServices, EnergyEventType.TotalYield, "Sunny Explorer/1", "Inverters", "2001380621", "", DateTime.Now, testPower, null, 3600);
-                    EnergyEvents.PVEventReadyEvent.Reset(); // ensure it waits below
-                }
-                */
-
                 if (LastEventTypeList <= DateTime.Now.AddMinutes(-2.0))
                 {
                     EnergyEvents.EmitEventTypes(InitialEventRun);
