@@ -63,7 +63,7 @@ namespace PVSettings
 
         public bool LoadingEnergyEvents { get; private set; }
 
-        public InverterManagerSettings DeviceInverterManagerSettings { get; private set; }
+        //public InverterManagerSettings DeviceInverterManagerSettings { get; private set; }
 
         public ApplicationSettings()
             : base("settings_v2.xml", "configuration", @"\settings_template_SE_SQLite.xml")
@@ -75,7 +75,7 @@ namespace PVSettings
             DeviceManagementSettings = new DeviceManagementSettings();
             
             SystemServices = null;
-            DeviceInverterManagerSettings = null;
+            //DeviceInverterManagerSettings = null;
             LoadSettingsSub();
             ServiceAccountPassword = "";
             ServiceDetailsChanged = false;
@@ -281,34 +281,6 @@ namespace PVSettings
                         SettingChangedEventHandler("");
                         return;
                     }
-                }
-            }
-        }
-
-
-        public void DeleteInverterManager(InverterManagerSettings manager)
-        {
-            // Delete default instances is not allowed
-            if (manager.InstanceNo == 1)
-                return;
-
-            XmlElement managers = GetElement("invertermanagerlist");
-            if (managers == null)
-                return;
-
-            //InverterManagerList.Remove(manager);
-
-            foreach (XmlNode child in managers.ChildNodes)
-            {
-                if (child.NodeType == XmlNodeType.Element && child.Name == "invertermanager")
-                {
-                    if (ElementHasChild(child, "managertype", manager.ManagerTypeName)
-                        && ElementHasChild(child, "instanceno", manager.InstanceNo.ToString()))                    
-                    {
-                        managers.RemoveChild(child);
-                        SettingChangedEventHandler("");
-                        return;                                        
-                    }          
                 }
             }
         }
