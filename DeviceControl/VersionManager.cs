@@ -639,15 +639,15 @@ namespace DeviceControl
             get
             {
                 return
-                    "CREATE TABLE `devicetype` " +
+                    "CREATE TABLE if not exists `devicetype` " +
                     "( " +
-                        "`Id` MEDIUMINT UNSIGNED NOT NULL AUTOINCREMENT, " +
+                        "`Id` MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT, " +
                         "`Manufacturer` VARCHAR(60) NOT NULL, " +
                         "`Model` VARCHAR(50) NOT NULL, " +
                         "`MaxPower` MEDIUMINT NULL, " +
                         "`DeviceType` VARCHAR(20) NOT NULL, " +
                         "PRIMARY KEY (`Id` ), " +
-                        "CONSTRAINT `uk1_devicetype` UNIQUE (`Manufacturer` ASC, `Model` ASC), " +
+                        "CONSTRAINT `uk1_devicetype` UNIQUE (`Manufacturer` ASC, `Model` ASC) " +
                     ") ENGINE=InnoDB DEFAULT CHARSET=latin1 ";
             }
         }
@@ -659,11 +659,11 @@ namespace DeviceControl
                 return
                     "CREATE TABLE `device` " +
                     "( " +
-                        "`Id` MEDIUMINT UNSIGNED NOT NULL AUTOINCREMENT, " +
+                        "`Id` MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT, " +
                         "`SerialNumber` VARCHAR(45) NOT NULL, " +
-                        "`DeviceType_Id` MEDIUMINT NOT NULL, " +
+                        "`DeviceType_Id` MEDIUMINT UNSIGNED NOT NULL, " +
                         "PRIMARY KEY (`Id` ), " +
-                        "CONSTRAINT `uk1_devicetype` UNIQUE (`SerialNumber` ASC, `DeviceType_Id` ASC), " +
+                        "CONSTRAINT `uk1_device` UNIQUE (`SerialNumber` ASC, `DeviceType_Id` ASC), " +
                         "CONSTRAINT `fk_device_devicetype` FOREIGN KEY (`DeviceType_Id`) REFERENCES `devicetype` (`Id`) " +
                     ") ENGINE=InnoDB DEFAULT CHARSET=latin1 ";
             }
@@ -676,7 +676,7 @@ namespace DeviceControl
                 return
                     "CREATE TABLE `devicefeature` " +
                     "( " +
-                        "`Id` MEDIUMINT UNSIGNED NOT NULL AUTOINCREMENT, " +
+                        "`Id` MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT, " +
                         "`Device_Id` MEDIUMINT UNSIGNED NOT NULL, " +
                         "`FeatureType` SMALLINT NOT NULL, " +
                         "`FeatureId` TINYINT NOT NULL, " +
@@ -701,7 +701,7 @@ namespace DeviceControl
                     "CREATE TABLE `devicereading_energy` " +
                     "( " +
                         "`ReadingEnd` DATETIME NOT NULL, " +
-                        "`DeviceFeature_Id` MEDIUMINT NOT NULL, " +
+                        "`DeviceFeature_Id` MEDIUMINT UNSIGNED NOT NULL, " +
                         "`ReadingStart` DATETIME NULL, " +
                         "`EnergyTotal` DOUBLE NULL, " +
                         "`EnergyToday` DOUBLE NULL, " +
@@ -715,8 +715,8 @@ namespace DeviceControl
                         "`Amps` FLOAT NULL, " +
                         "`Frequency` FLOAT NULL, " +
                         "`Temperature` FLOAT NULL, " +
-                        "`MinPowerAC` MEDIUMINT NULL, " +
-                        "`MaxPowerAC` MEDIUMINT NULL, " +                        
+                        "`MinPower` MEDIUMINT NULL, " +
+                        "`MaxPower` MEDIUMINT NULL, " +                        
                         "PRIMARY KEY (`ReadingEnd`, `DeviceFeature_Id` ) , " +
                         "CONSTRAINT `uk_devicereading_energy` UNIQUE (`DeviceFeature_Id`, `ReadingEnd`) , " +
                         "CONSTRAINT `fk_devicereadingenergy_devicefeature` FOREIGN KEY (DeviceFeature_Id) REFERENCES `devicefeature` (Id) " +

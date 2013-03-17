@@ -141,6 +141,7 @@ namespace DeviceDataRecorders
             GlobalSettings.SystemServices.GetDatabaseMutex();
             bool conIsLocal = false;
 
+            //GlobalSettings.LogMessage("DeviceDetailPeriodsBase", "UpdateDatabase - Starting", LogEntryType.Trace);
             try
             {
                 if (con == null)
@@ -148,16 +149,26 @@ namespace DeviceDataRecorders
                     con = GlobalSettings.TheDB.NewConnection();
                     conIsLocal = true;
                 }
+                //GlobalSettings.LogMessage("DeviceDetailPeriodsBase", "UpdateDatabase - Before Loop", LogEntryType.Trace);
+                //if (Periods == null)
+                //    GlobalSettings.LogMessage("DeviceDetailPeriodsBase", "Null Periods", LogEntryType.Trace);
                 foreach (DeviceDetailPeriodBase item in Periods)
                 {
                     if (activeReadingTime.HasValue && activeReadingTime.Value.Date != item.Start)
                         item.UpdateDatabase(con, null, purgeUnMatched);
                     else
                         item.UpdateDatabase(con, activeReadingTime, purgeUnMatched);
+                    //GlobalSettings.LogMessage("DeviceDetailPeriodsBase", "UpdateDatabase - After item.UpdateDatabase", LogEntryType.Trace);
                 }
+            }
+            catch (Exception e)
+            {
+                GlobalSettings.LogMessage("DeviceDetailPeriodsBase", "UpdateDatabase - Exception: " + e.Message, LogEntryType.Trace);
+                throw e;
             }
             finally
             {
+                //GlobalSettings.LogMessage("DeviceDetailPeriodsBase", "UpdateDatabase - Finally", LogEntryType.Trace);
                 if (conIsLocal && con != null)
                 {
                     con.Close();

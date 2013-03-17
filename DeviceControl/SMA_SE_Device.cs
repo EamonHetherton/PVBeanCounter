@@ -73,6 +73,12 @@ namespace Device
             }
         }
 
+        public override void SetDeviceFeatures()
+        {
+            if (!DeviceId.HasValue)
+                SetDeviceFeature(Feature_YieldAC, PVSettings.MeasureType.Energy, false, true);
+        }
+
         private bool ProcessOneReading(SMA_SE_Record liveReading, bool isLive)
         {
             if (FaultDetected)
@@ -115,8 +121,7 @@ namespace Device
                 else
                     minPower = liveReading.Watts;
 
-                if (!DeviceId.HasValue)
-                    SetDeviceFeature(Feature_YieldAC, PVSettings.MeasureType.Energy, false, true);
+                SetDeviceFeatures();
                
                 DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_YieldAC.FeatureType, Feature_YieldAC.FeatureId);
                     

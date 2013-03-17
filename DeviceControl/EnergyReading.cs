@@ -815,6 +815,7 @@ namespace DeviceDataRecorders
 
         private bool PersistReadingSub(bool forceAlternate, GenConnection existingCon, int deviceId)
         {
+            //GlobalSettings.LogMessage("EnergyReading", "PersistReadingSub - Starting", LogEntryType.Trace);
             string stage = "Init";
             GenConnection con = null;
             bool haveMutex = false;
@@ -825,6 +826,7 @@ namespace DeviceDataRecorders
 
             try
             {
+                //GlobalSettings.LogMessage("EnergyReading", "PersistReadingSub - Before Connection", LogEntryType.Trace);
                 GlobalSettings.SystemServices.GetDatabaseMutex();
                 haveMutex = true;
                 if (externalCon)
@@ -832,6 +834,7 @@ namespace DeviceDataRecorders
                 else                    
                     con = GlobalSettings.TheDB.NewConnection();
 
+                //GlobalSettings.LogMessage("EnergyReading", "PersistReadingSub - Before Command", LogEntryType.Trace);
                 GenCommand cmd;
                                 
                 if (useInsert)
@@ -839,9 +842,11 @@ namespace DeviceDataRecorders
                 else
                     cmd = new GenCommand(UpdateDeviceReading_AC, con);
 
+                //GlobalSettings.LogMessage("EnergyReading", "PersistReadingSub - Before SetParameters", LogEntryType.Trace);
                 SetParameters(cmd, deviceId);
                 
                 stage = "Execute";
+                //GlobalSettings.LogMessage("EnergyReading", "PersistReadingSub - Before Execute", LogEntryType.Trace);
                 cmd.ExecuteNonQuery();
 
                 if (GlobalSettings.SystemServices.LogTrace)

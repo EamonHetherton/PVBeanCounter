@@ -82,6 +82,12 @@ namespace Device
             return new DeviceDetailPeriods_EnergyMeter(this, featureSettings, PeriodType.Day, TimeSpan.FromTicks(0));
         }
 
+        public override void SetDeviceFeatures()
+        {
+            if (!DeviceId.HasValue)
+                SetDeviceFeature(Feature_EnergyAC, PVSettings.MeasureType.Energy, null, true);
+        }
+
         public override bool ProcessOneLiveReading(CC128_LiveRecord liveReading)      
         {
             if (FaultDetected)
@@ -130,8 +136,7 @@ namespace Device
                 else
                     minPower = liveReading.Watts;
 
-                if (!DeviceId.HasValue)
-                    SetDeviceFeature(Feature_EnergyAC, PVSettings.MeasureType.Energy, null, true, false);
+                SetDeviceFeatures();
 
                 //if (dbWrite)
                 {

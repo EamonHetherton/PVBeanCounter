@@ -263,7 +263,20 @@ namespace DeviceDataRecorders
         public DateTime LastFindTime { get; set; }
         protected TimeSpan PeriodOverlapLimit = TimeSpan.FromHours(4.0);
 
-        public int? DeviceId { get; private set; }
+        private int? _DeviceId = null;
+        public int? DeviceId 
+        {
+            get
+            {
+                if (_DeviceId.HasValue)
+                    return _DeviceId;
+                else
+                {
+                    _DeviceId = DeviceDetailPeriods.Device.DeviceId;
+                    return _DeviceId;
+                }
+            }
+        }
 
         protected SortedList<DateTime, ReadingBase> ReadingsGeneric;
 
@@ -271,7 +284,6 @@ namespace DeviceDataRecorders
             : base(periodType, periodStart, deviceParams.RecordingInterval)
         {
             DeviceDetailPeriods = deviceDetailPeriods;
-            DeviceId = DeviceDetailPeriods.Device.DeviceId;
             DeviceParams = deviceParams;
             FeatureType = feature.FeatureType;
             FeatureId = feature.FeatureId;
@@ -338,31 +350,40 @@ namespace DeviceDataRecorders
 
         public void UpdateDatabase(GenConnection con, DateTime? activeReadingTime, bool purgeUnmatched)
         {
+            //GlobalSettings.LogMessage("DeviceDetailPeriodBase", "UpdateDatabase - Entry", LogEntryType.Trace);
             int activeInterval = -1;
             if (activeReadingTime.HasValue)  // this is used on the active day (today) to limit Normalise to the completed intervals only
                 activeInterval = GetIntervalNo(activeReadingTime.Value);
-
+            //GlobalSettings.LogMessage("DeviceDetailPeriodBase", "UpdateDatabase - Before Normalise", LogEntryType.Trace);
             Normalise(con, activeInterval);
+            //GlobalSettings.LogMessage("DeviceDetailPeriodBase", "UpdateDatabase - Before Loop", LogEntryType.Trace);
             for (int i = 0; i < ReadingsGeneric.Values.Count; )
             {
+                //GlobalSettings.LogMessage("DeviceDetailPeriodBase", "UpdateDatabase - Looping", LogEntryType.Trace);
                 ReadingBase reading = ReadingsGeneric.Values[i];
                 if (reading.UpdatePending)
                 {
+                    //GlobalSettings.LogMessage("DeviceDetailPeriodBase", "UpdateDatabase - UpdatePending", LogEntryType.Trace);
                     if (activeReadingTime.HasValue
                     && activeReadingTime.Value.Date == Start
                     && activeInterval == GetIntervalNo(reading.ReadingEnd))
+                    {
+                        i++;
                         continue;
+                    }
+                    //GlobalSettings.LogMessage("DeviceDetailPeriodBase", "UpdateDatabase - Before PersistReading", LogEntryType.Trace);
                     reading.PersistReading(con, DeviceId.Value);
                     i++;
                 }
                 else if (purgeUnmatched && reading.AddReadingMatch.HasValue ? !reading.AddReadingMatch.Value : false) // remove any old reading that was not found in this update
                 {
+                    //GlobalSettings.LogMessage("DeviceDetailPeriodBase", "UpdateDatabase - BeforeDeleteReading", LogEntryType.Trace);
                     reading.DeleteReading(con, DeviceId.Value);
                     ReadingsGeneric.RemoveAt(i);
                 }
                 else
                     i++;
-
+                //GlobalSettings.LogMessage("DeviceDetailPeriodBase", "UpdateDatabase - Before Purge", LogEntryType.Trace);
                 if (purgeUnmatched)
                     reading.AddReadingMatch = null; // reset ready for next update - only when purge is active
             }

@@ -54,6 +54,7 @@ namespace DeviceDataRecorders
         public override void LoadPeriodFromDatabase(GenConnection existingCon = null)
         {
             ClearReadings();
+            DeviceDetailPeriods.Device.SetDeviceFeatures();
             GenConnection con = existingCon;
             try
             {

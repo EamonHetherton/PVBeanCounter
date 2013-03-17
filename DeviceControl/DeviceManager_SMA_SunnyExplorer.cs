@@ -800,65 +800,93 @@ namespace DeviceControl
 
         private Boolean UpdateHistory(String fileName)
         {
-            Boolean res = ExtractRecords( fileName);
+            Boolean res;
+            String stage = "Starting";
+            try
+            {
+                res = ExtractRecords(fileName);
+            }
+            catch (Exception e)
+            {
+                LogMessage("UpdateHistory - Stage: " + stage + " - Exception: " + e.Message, LogEntryType.ErrorMessage);
+                throw e;
+            }
 
-            if (res)
-            {                
-                for (int i = 0; i < ReadingInfo.LiveRecords.Length; i++ )
-                    if (ReadingInfo.Enabled[i])
-                    {
-                        
-                        CheckReadingSet(ReadingInfo.LiveRecords[i]);
-                        SMA_SE_Device device = FindDevice(ReadingInfo.Models[i], ReadingInfo.SerialNumbers[i]);
+            stage = "Loop";
 
-                        DeviceDataRecorders.DeviceDetailPeriod_EnergyMeter mainPeriod = null;
-                        DeviceDataRecorders.DeviceDetailPeriod_EnergyMeter prevPeriod = null;
-                        DateTime date = DateTime.MinValue;
-                        
-                        int end = ReadingInfo.LiveRecords[i].Count - 1;
-                        if (end >= 0)
-                            try
-                            {
-                                // The SE csv file contains a reading at midnight that is stored as the last reading of the previous day
-                                // Mark all possible readings already known - we want to detect readings that are no longer relevant so they can
-                                // be deleted in UpdateDatabase
-                                date = ReadingInfo.LiveRecords[i][0].TimeStampe.Date;
-                                mainPeriod = (DeviceDataRecorders.DeviceDetailPeriod_EnergyMeter)device.FindOrCreateFeaturePeriod(FeatureType.YieldAC, 0, date);
-                                // mark all of target day except the last 5 min - this is supplied in file for following day
-                                mainPeriod.SetAddReadingMatch(false, date.AddMinutes(5.0), date.AddMinutes(60.0 * 24.0 - 5.0));
-                                prevPeriod = (DeviceDataRecorders.DeviceDetailPeriod_EnergyMeter)device.FindOrCreateFeaturePeriod(FeatureType.YieldAC, 0, ReadingInfo.LiveRecords[i][0].TimeStampe.Date.AddDays(-1.0));
-                                // mark last 5 min of previous day
-                                prevPeriod.SetAddReadingMatch(false, date, date);
-                                for (int j = 0; j <= end; j++)
+            try
+            {
+                if (res)
+                {
+                    for (int i = 0; i < ReadingInfo.LiveRecords.Length; i++)
+                        if (ReadingInfo.Enabled[i])
+                        {
+                            stage = "CheckReadingSet";
+                            CheckReadingSet(ReadingInfo.LiveRecords[i]);
+                            stage = "FindDevice";
+                            SMA_SE_Device device = FindDevice(ReadingInfo.Models[i], ReadingInfo.SerialNumbers[i]);
+
+                            DeviceDataRecorders.DeviceDetailPeriod_EnergyMeter mainPeriod = null;
+                            DeviceDataRecorders.DeviceDetailPeriod_EnergyMeter prevPeriod = null;
+                            DateTime date = DateTime.MinValue;
+
+                            int end = ReadingInfo.LiveRecords[i].Count - 1;
+                            if (end >= 0)
+                                try
                                 {
-                                    SMA_SE_Record reading = ReadingInfo.LiveRecords[i][j];
-                                    bool isLive;
+                                    stage = "Get Periods";
+                                    device.SetDeviceFeatures();
+                                    // The SE csv file contains a reading at midnight that is stored as the last reading of the previous day
+                                    // Mark all possible readings already known - we want to detect readings that are no longer relevant so they can
+                                    // be deleted in UpdateDatabase
+                                    date = ReadingInfo.LiveRecords[i][0].TimeStampe.Date;
+                                    mainPeriod = (DeviceDataRecorders.DeviceDetailPeriod_EnergyMeter)device.FindOrCreateFeaturePeriod(FeatureType.YieldAC, 0, date);
+                                    // mark all of target day except the last 5 min - this is supplied in file for following day
+                                    mainPeriod.SetAddReadingMatch(false, date.AddMinutes(5.0), date.AddMinutes(60.0 * 24.0 - 5.0));
+                                    prevPeriod = (DeviceDataRecorders.DeviceDetailPeriod_EnergyMeter)device.FindOrCreateFeaturePeriod(FeatureType.YieldAC, 0, ReadingInfo.LiveRecords[i][0].TimeStampe.Date.AddDays(-1.0));
+                                    // mark last 5 min of previous day
+                                    prevPeriod.SetAddReadingMatch(false, date, date);
+                                    for (int j = 0; j <= end; j++)
+                                    {
+                                        stage = "Reading Start";
+                                        SMA_SE_Record reading = ReadingInfo.LiveRecords[i][j];
+                                        bool isLive;
 #if (DEBUG)
-                                    isLive = j == end;
+                                        isLive = j == end;
 #else
                                 isLive = j == end && reading.TimeStampe.Date >= DateTime.Now.AddMinutes(-15);    
 #endif
-                                    if (isLive)
-                                        device.ProcessOneLiveReading(reading); // handle latest differently - can emit an event
-                                    else
-                                        device.ProcessOneHistoryReading(reading);
+                                        stage = "ProcessOneLiveReading";
+                                        if (isLive)
+                                            device.ProcessOneLiveReading(reading); // handle latest differently - can emit an event
+                                        else
+                                            device.ProcessOneHistoryReading(reading);
+                                    }
+                                    stage = "UpdateDatabase";
+                                    device.Days.UpdateDatabase(null, null, true);
                                 }
-                                device.Days.UpdateDatabase(null, null, true);
-                            }
-                            catch (Exception e)
-                            {
-                                throw e;
-                            }
-                            finally
-                            {
-                                // ensure marks are reset on exception as lingering values can cause deletions
-                                if (mainPeriod != null)
-                                    mainPeriod.SetAddReadingMatch(null, date.AddMinutes(5.0), date.AddMinutes(60.0 * 24.0 - 5.0));
-                                if (prevPeriod != null)
-                                    prevPeriod.SetAddReadingMatch(null, date, date);
-                            }
-                    }
+                                catch (Exception e)
+                                {
+                                    LogMessage("UpdateHistory - Stage: " + stage + " - Exception: " + e.Message, LogEntryType.ErrorMessage);
+                                    return false;
+                                }
+                                finally
+                                {
+                                    stage = "Finally";
+                                    // ensure marks are reset on exception as lingering values can cause deletions
+                                    if (mainPeriod != null)
+                                        mainPeriod.SetAddReadingMatch(null, date.AddMinutes(5.0), date.AddMinutes(60.0 * 24.0 - 5.0));
+                                    if (prevPeriod != null)
+                                        prevPeriod.SetAddReadingMatch(null, date, date);
+                                }
+                        }
+                }
+
                 return true;
+            }
+            catch (Exception e)
+            {
+                LogMessage("UpdateHistory - Stage: " + stage + " - Exception: " + e.Message, LogEntryType.ErrorMessage);
             }
             return false;
         }

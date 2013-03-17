@@ -96,6 +96,8 @@ namespace Device
 
         public bool Enabled { get; private set; }
 
+        public abstract void SetDeviceFeatures();
+
         public DeviceBase(DeviceControl.DeviceManagerBase deviceManager, DeviceManagerDeviceSettings deviceSettings)
         {
             DeviceParams = new DeviceDataRecorders.DeviceParamsBase();
@@ -468,7 +470,7 @@ namespace Device
             }
         }
 
-        protected void SetDeviceFeature(FeatureSettings feature, MeasureType measureType, 
+        public void SetDeviceFeature(FeatureSettings feature, MeasureType measureType, 
             bool? isConsumption = null, bool? isAC = null, bool? isThreePhase = null, 
             int? stringNumber = null, int? phaseNumber = null)
         {
