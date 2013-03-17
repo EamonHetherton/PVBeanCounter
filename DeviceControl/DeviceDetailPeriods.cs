@@ -187,7 +187,6 @@ namespace DeviceDataRecorders
                 pReadings.AddReading(thisReading, fromHistory ? AddReadingType.History : AddReadingType.NewReading);
             }
         }
-
     }
 
     public abstract class DeviceDetailPeriods<TPeriodReadings, TDeviceReading, TDeviceHistory> : DeviceDetailPeriodsBase

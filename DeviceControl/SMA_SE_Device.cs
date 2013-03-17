@@ -123,8 +123,7 @@ namespace Device
                 EnergyReading reading = new EnergyReading();
 
                 reading.Initialise(days, liveReading.TimeStampe, 
-                    TimeSpan.FromSeconds(
-                    LastRecordTime.HasValue ? (double)(liveReading.TimeStampe - LastRecordTime.Value).TotalSeconds : (double)DeviceInterval), false, (EnergyParams)DeviceParams);
+                    TimeSpan.FromSeconds((double)DeviceInterval), false, (EnergyParams)DeviceParams);  // SE is always 5 minute readings
                 LastRecordTime = liveReading.TimeStampe;
 
                 reading.EnergyToday = null;

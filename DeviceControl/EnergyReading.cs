@@ -902,7 +902,7 @@ namespace DeviceDataRecorders
                 cmd.ExecuteNonQuery();
 
                 if (GlobalSettings.SystemServices.LogTrace)
-                    GlobalSettings.LogMessage("EnergyReading.DeleteReading", "EnergyTotal: " + EnergyTotal +
+                    GlobalSettings.LogMessage("EnergyReading.DeleteReading", "ReadingEnd: " + ReadingEndInternal + " - EnergyTotal: " + EnergyTotal +
                         " - EnergyToday: " + EnergyToday +
                         " - Power: " + Power +
                         " - Calc Adjust: " + CalibrationDelta +

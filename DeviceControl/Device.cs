@@ -190,7 +190,7 @@ namespace Device
             public DeviceDetailPeriodsBase Periods;
         }
 
-        public DeviceDetailPeriodBase FindOrCreateFeaturePeriod(FeatureType featureType, uint featureId, DateTime periodStart)
+        public virtual DeviceDetailPeriodBase FindOrCreateFeaturePeriod(FeatureType featureType, uint featureId, DateTime periodStart)
         {
             DeviceDetailPeriodsBase periodsBase = FindOrCreateFeaturePeriods(featureType, featureId);
             return periodsBase.FindOrCreate(periodStart);

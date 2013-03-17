@@ -810,22 +810,53 @@ namespace DeviceControl
                         
                         CheckReadingSet(ReadingInfo.LiveRecords[i]);
                         SMA_SE_Device device = FindDevice(ReadingInfo.Models[i], ReadingInfo.SerialNumbers[i]);
+
+                        DeviceDataRecorders.DeviceDetailPeriod_EnergyMeter mainPeriod = null;
+                        DeviceDataRecorders.DeviceDetailPeriod_EnergyMeter prevPeriod = null;
+                        DateTime date = DateTime.MinValue;
+                        
                         int end = ReadingInfo.LiveRecords[i].Count - 1;
-                        for (int j = 0; j <= end; j++ )
-                        {
-                            SMA_SE_Record reading = ReadingInfo.LiveRecords[i][j];
-                            bool isLive;
+                        if (end >= 0)
+                            try
+                            {
+                                // The SE csv file contains a reading at midnight that is stored as the last reading of the previous day
+                                // Mark all possible readings already known - we want to detect readings that are no longer relevant so they can
+                                // be deleted in UpdateDatabase
+                                date = ReadingInfo.LiveRecords[i][0].TimeStampe.Date;
+                                mainPeriod = (DeviceDataRecorders.DeviceDetailPeriod_EnergyMeter)device.FindOrCreateFeaturePeriod(FeatureType.YieldAC, 0, date);
+                                // mark all of target day except the last 5 min - this is supplied in file for following day
+                                mainPeriod.SetAddReadingMatch(false, date.AddMinutes(5.0), date.AddMinutes(60.0 * 24.0 - 5.0));
+                                prevPeriod = (DeviceDataRecorders.DeviceDetailPeriod_EnergyMeter)device.FindOrCreateFeaturePeriod(FeatureType.YieldAC, 0, ReadingInfo.LiveRecords[i][0].TimeStampe.Date.AddDays(-1.0));
+                                // mark last 5 min of previous day
+                                prevPeriod.SetAddReadingMatch(false, date, date);
+                                for (int j = 0; j <= end; j++)
+                                {
+                                    SMA_SE_Record reading = ReadingInfo.LiveRecords[i][j];
+                                    bool isLive;
 #if (DEBUG)
-                            isLive = j == end;
+                                    isLive = j == end;
 #else
-                            isLive = j == end && reading.TimeStampe.Date >= DateTime.Now.AddMinutes(-15);    
+                                isLive = j == end && reading.TimeStampe.Date >= DateTime.Now.AddMinutes(-15);    
 #endif
-                            if (isLive)
-                                device.ProcessOneLiveReading(reading); // handle latest differently - can emit an event
-                            else
-                                device.ProcessOneHistoryReading(reading);
-                        }
-                        device.Days.UpdateDatabase(null, null, true);                
+                                    if (isLive)
+                                        device.ProcessOneLiveReading(reading); // handle latest differently - can emit an event
+                                    else
+                                        device.ProcessOneHistoryReading(reading);
+                                }
+                                device.Days.UpdateDatabase(null, null, true);
+                            }
+                            catch (Exception e)
+                            {
+                                throw e;
+                            }
+                            finally
+                            {
+                                // ensure marks are reset on exception as lingering values can cause deletions
+                                if (mainPeriod != null)
+                                    mainPeriod.SetAddReadingMatch(null, date.AddMinutes(5.0), date.AddMinutes(60.0 * 24.0 - 5.0));
+                                if (prevPeriod != null)
+                                    prevPeriod.SetAddReadingMatch(null, date, date);
+                            }
                     }
                 return true;
             }

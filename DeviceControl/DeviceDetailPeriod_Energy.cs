@@ -101,7 +101,7 @@ namespace DeviceDataRecorders
 
                     newRec.SetRestoreComplete();
 
-                    AddReading(newRec);
+                    AddReading(newRec, AddReadingType.Database);
                 }
 
                 dr.Close();

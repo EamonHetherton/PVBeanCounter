@@ -872,8 +872,11 @@ namespace OutputManagers
                         ereader.Close();
                         respStream.Close();
 
-                        PVOutputLimitReported = true;
-                        RequestCount = PVOutputHourLimit;
+                        if (!e.Message.Contains("(401) Unauthorized"))
+                        {
+                            PVOutputLimitReported = true;
+                            RequestCount = PVOutputHourLimit;
+                        }
                     }
                 }
                 else if (!ErrorReported)
@@ -1423,7 +1426,7 @@ namespace OutputManagers
             {
                 //check for shutdown every 5 seconds
                 // if previous attempts did not complete, try again after 3 minutes
-                bool haveOutputReadyEvent = OutputReadyEvent.WaitOne(TimeSpan.FromSeconds(15));
+                bool haveOutputReadyEvent = OutputReadyEvent.WaitOne(TimeSpan.FromSeconds(5));
                 OutputReadyEvent.Reset();
 
                 lock(OutputProcessLock) // ensure only one PVOutputManager does this at any one time
@@ -1471,7 +1474,7 @@ namespace OutputManagers
                             // Incomplete time reset after every attempt
                             if (Complete)
                                 IncompleteTime = null;
-                            else if (IncompleteTime == null)
+                            else 
                                 IncompleteTime = DateTime.Now;
 
                             GlobalSettings.SystemServices.ReleaseDatabaseMutex();

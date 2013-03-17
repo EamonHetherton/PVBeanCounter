@@ -157,6 +157,12 @@ namespace Device
                 UpdateConsolidations(notifyList);
             }
         }
+
+        public override DeviceDetailPeriodBase FindOrCreateFeaturePeriod(FeatureType featureType, uint featureId, DateTime periodStart)
+        {
+            DeviceDetailPeriodsBase periodsBase = FindOrCreateFeaturePeriods(featureType, featureId);
+            return periodsBase.FindOrCreate(periodStart);
+        }
     }
 
     public class EnergyConsolidationParams : EnergyParams

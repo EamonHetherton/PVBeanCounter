@@ -78,6 +78,7 @@ namespace GenThreadManagement
             info.Thread = new Thread(info.GenThread.RunThread);
             info.Thread.Name = info.Name;
             StartThread(info);
+            SystemServices.LogMessage("GenThreadManager.RestartThread", info.Name + " restarted as thread: " + info.GenThread.ThreadNo, LogEntryType.Trace);
         }
 
         public void DoAutoRestart()

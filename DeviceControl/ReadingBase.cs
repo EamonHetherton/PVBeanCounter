@@ -41,7 +41,7 @@ namespace DeviceDataRecorders
 
         // AddReading sets this true for all readings that match an existing reading or are new readings
         // Used to allow auto removal of history readings that no longer exist in the external source e.g. SMA Cunny Explorer data
-        public bool AddReadingMatch = false; 
+        public bool? AddReadingMatch = null; 
 
         private bool IsConsolidationReadingInternal = false;
 

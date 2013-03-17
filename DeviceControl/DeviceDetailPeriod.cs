@@ -42,7 +42,8 @@ namespace DeviceDataRecorders
     {
         NewReading = 0,
         History,
-        Consolidation
+        Consolidation,
+        Database
     }
 
     public class PeriodBase
@@ -328,6 +329,13 @@ namespace DeviceDataRecorders
             // consolidations override this to ensure current day readings are up to date
         }
 
+        public void SetAddReadingMatch(bool? value, DateTime fromTime, DateTime toTime)
+        {
+            foreach (ReadingBase reading in ReadingsGeneric.Values)
+                if (reading.ReadingEnd >= fromTime && reading.ReadingEnd <= toTime)
+                    reading.AddReadingMatch = value;
+        }
+
         public void UpdateDatabase(GenConnection con, DateTime? activeReadingTime, bool purgeUnmatched)
         {
             int activeInterval = -1;
@@ -335,9 +343,9 @@ namespace DeviceDataRecorders
                 activeInterval = GetIntervalNo(activeReadingTime.Value);
 
             Normalise(con, activeInterval);
-
-            foreach (ReadingBase reading in ReadingsGeneric.Values)
+            for (int i = 0; i < ReadingsGeneric.Values.Count; )
             {
+                ReadingBase reading = ReadingsGeneric.Values[i];
                 if (reading.UpdatePending)
                 {
                     if (activeReadingTime.HasValue
@@ -345,13 +353,18 @@ namespace DeviceDataRecorders
                     && activeInterval == GetIntervalNo(reading.ReadingEnd))
                         continue;
                     reading.PersistReading(con, DeviceId.Value);
-                    reading.AddReadingMatch = false; // reset ready for next update
+                    i++;
                 }
-                else if (purgeUnmatched && !reading.AddReadingMatch) // remove any old reading that was not found in this update
+                else if (purgeUnmatched && reading.AddReadingMatch.HasValue ? !reading.AddReadingMatch.Value : false) // remove any old reading that was not found in this update
                 {
                     reading.DeleteReading(con, DeviceId.Value);
-                    ReadingsGeneric.Remove(reading.ReadingEnd);
+                    ReadingsGeneric.RemoveAt(i);
                 }
+                else
+                    i++;
+
+                if (purgeUnmatched)
+                    reading.AddReadingMatch = null; // reset ready for next update - only when purge is active
             }
             UpdatePending = false;
         }
@@ -363,7 +376,7 @@ namespace DeviceDataRecorders
             if (reading.ReadingStart >= End)
                 return;
 
-            if (ReadingsGeneric.ContainsKey(reading.ReadingEnd) && addReadingType != AddReadingType.History)
+            if (addReadingType != AddReadingType.History && ReadingsGeneric.ContainsKey(reading.ReadingEnd))
                 throw new Exception("AddReading - Duplicate reading found - ReadingEnd: " + reading.ReadingEnd);
 
             if (reading.Duration.Ticks == 0 )
@@ -423,27 +436,29 @@ namespace DeviceDataRecorders
             try
             {
                 ReadingsGeneric.Add(reading.ReadingEnd, reading);
-                reading.AddReadingMatch = true; // new reading - must set to true - this is a keeper
+                if (addReadingType != AddReadingType.Database)
+                    reading.AddReadingMatch = true; // new reading - must set to true - this is a keeper
             }
             catch (ArgumentException eOrig)
             {
+                ReadingBase old = ReadingsGeneric.Values[ReadingsGeneric.IndexOfKey(reading.ReadingEnd)];
+                old.AddReadingMatch = true;
                 // duplicates should not occur from live sources
-                if (addReadingType == AddReadingType.NewReading)
+                if (addReadingType == AddReadingType.NewReading || addReadingType == AddReadingType.Database)
                     throw eOrig;
                 // if past date replace existing - must be a history reload request
                 // if current day replace existing if is most recent
                 if (reading.ReadingStart.Date < DateTime.Today
                 || reading.ReadingStart.Date == DateTime.Today && ReadingsGeneric.Values[ReadingsGeneric.Count - 1].ReadingEnd == reading.ReadingEnd)
                     try
-                    {
-                        ReadingBase old = ReadingsGeneric.Values[ReadingsGeneric.IndexOfKey(reading.ReadingEnd)];
+                    {                        
                         if (!reading.IsSameReadingValuesGeneric(old))
                         {
                             ReadingsGeneric.Remove(reading.ReadingEnd);
                             ReadingsGeneric.Add(reading.ReadingEnd, reading);
                             reading.InDatabase = old.InDatabase;
-                        }
-                        reading.AddReadingMatch = true; // matched an existing reading - this is a keeper
+                            reading.AddReadingMatch = true; // matched an existing reading - this is a keeper
+                        }                        
                     }
                     catch (Exception e)
                     {
