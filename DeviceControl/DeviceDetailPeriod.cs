@@ -1006,7 +1006,7 @@ namespace DeviceDataRecorders
 
         protected void BindSelectIdentity(GenCommand cmd)
         {
-            cmd.AddParameterWithValue("@DeviceFeature_Id", DeviceDetailPeriods.FeatureSettings.Id);
+            cmd.AddParameterWithValue("@DeviceFeature_Id", DeviceDetailPeriods.DeviceFeatureId);
             cmd.AddParameterWithValue("@PeriodStart", Start - PeriodOverlapLimit);
             cmd.AddParameterWithValue("@NextPeriodStart", Start.AddDays(1.0) + PeriodOverlapLimit);
         }

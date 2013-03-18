@@ -166,6 +166,7 @@
   <ItemGroup>
     <Content Include="CC_Sample.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="CMS_Emulation.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

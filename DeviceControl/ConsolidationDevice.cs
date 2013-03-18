@@ -201,9 +201,6 @@ namespace Device
             return new DeviceDetailPeriods_EnergyConsolidation(this, featureSettings, PeriodType, TimeSpan.FromTicks(0));
         }
 
-        public override void SetDeviceFeatures()
-        {
-        }
     }
 
 }

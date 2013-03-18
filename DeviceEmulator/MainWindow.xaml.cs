@@ -154,8 +154,16 @@ namespace DeviceEmulator
         Thread EmulatorThread;
         bool DoEmulator;
 
+        // CC128 variables
         XElement XElement;
-
+        int Watts1_0 = 150;
+        int Watts2_0 = 420;
+        int Watts3_0 = 276;
+        int Watts1_1 = 456;
+        int Watts2_1 = 1425;
+        int Watts3_1 = 847;
+        float Tmpr = 17.4F;
+        // CC128
 
         public List<String> Emulators;
 
@@ -1046,14 +1054,45 @@ namespace DeviceEmulator
                 else if (EmulatorType == DeviceEmulator.EmulatorType.CurrentCostEnviR)
                 {
                     XElement time = XElement.Element("time");
+                    XElement sensor = XElement.Element("sensor");
+                    XElement tmpr = XElement.Element("tmpr");
+                    XElement ch = XElement.Element("ch1");
+                    XElement watts1 = ch.Element("watts");
+                    ch = XElement.Element("ch2");
+                    XElement watts2 = ch.Element("watts");
+                    ch = XElement.Element("ch3");
+                    XElement watts3 = ch.Element("watts");
                     do
                     {
                         time.Value = DateTime.Now.ToString("HH:mm:ss");
-                        String xmlText = XElement.ToString();
+                        sensor.Value = "0";
+                        tmpr.Value = Math.Round(Tmpr, 1).ToString();
+                        watts1.Value = Watts1_0.ToString();
+                        watts2.Value = Watts2_0.ToString();
+                        watts3.Value = Watts3_0.ToString();
+                        String xmlText = XElement.ToString();                       
                         byte[] bytes = SystemServices.StringToBytes(xmlText);
                         success = Stream.Write(bytes, 0, bytes.Length);
+
+                        sensor.Value = "1";
+                        watts1.Value = Watts1_1.ToString();
+                        watts2.Value = Watts2_1.ToString();
+                        watts3.Value = Watts3_1.ToString();
+
+                        xmlText = XElement.ToString();
+                        bytes = SystemServices.StringToBytes(xmlText);
+                        success = Stream.Write(bytes, 0, bytes.Length);
+
                         if (success)
                         {
+                            Watts1_0 += (int)(Watts1_0 * 0.01);
+                            Watts2_0 += (int)(Watts1_0 * 0.02);
+                            Watts3_0 += (int)(Watts1_0 * 0.015);
+                            Watts1_1 += (int)(Watts1_1 * 0.015);
+                            Watts2_1 += (int)(Watts1_1 * 0.025);
+                            Watts3_1 += (int)(Watts1_1 * 0.01);
+                            Tmpr *= 1.01F;
+
                             lastTime = lastTime.AddSeconds(6.0);
                             DateTime curTime = DateTime.Now;
                             if (lastTime > curTime)

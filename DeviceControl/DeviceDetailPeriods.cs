@@ -36,6 +36,7 @@ namespace DeviceDataRecorders
         public TimeSpan PeriodStartOffset { get; private set; }
         public FeatureType FeatureType { get; private set; }
         public uint FeatureId { get; private set; }
+        public uint DeviceFeatureId { get; set; }
 
         public FeatureSettings FeatureSettings;
         public DeviceManagerDeviceSettings DeviceSettings;
@@ -54,6 +55,107 @@ namespace DeviceDataRecorders
             FeatureId = FeatureSettings.FeatureId;
 
             Periods = new List<DeviceDetailPeriodBase>();
+            
+            SetDeviceFeature(featureSettings, false, DeviceSettings.DeviceSettings.IsThreePhase); 
+        }
+
+        private void SetDeviceIdentityBindings(bool isInsert, GenCommand cmd, int id, FeatureType featureType, int featureId,
+            bool? isAC, bool? isThreePhase, int? stringNumber, int? phaseNumber)
+        {
+            if (!isInsert)
+                cmd.AddParameterWithValue("@Id", id);
+            else
+            {
+                cmd.AddParameterWithValue("@Device_Id", Device.DeviceId.Value);
+                cmd.AddParameterWithValue("@FeatureType", (int)featureType);
+                cmd.AddParameterWithValue("@FeatureId", (int)featureId);
+            }
+            cmd.AddParameterWithValue("@MeasureType", featureType.ToString());
+            cmd.AddNullableBooleanParameterWithValue("@IsAC", isAC);
+            cmd.AddNullableBooleanParameterWithValue("@IsThreePhase", isThreePhase);
+            cmd.AddParameterWithValue("@StringNumber", stringNumber);
+            cmd.AddParameterWithValue("@PhaseNumber", phaseNumber);
+        }
+
+        public void SetDeviceFeature(FeatureSettings feature, 
+            bool? isConsumption = null, bool? isThreePhase = null,
+            int? stringNumber = null, int? phaseNumber = null)
+        {
+            GenConnection con = null;
+            GlobalSettings.SystemServices.GetDatabaseMutex();
+
+            string sqlInsert =
+                "insert into devicefeature (Device_Id, FeatureType, FeatureId, MeasureType, " +
+                    "IsAC, IsThreePhase, StringNumber, PhaseNumber) " +
+                "values (@Device_Id, @FeatureType, @FeatureId, @MeasureType, " +
+                    "@IsAC, @IsThreePhase, @StringNumber, @PhaseNumber) ";
+
+            string sqlUpdate =
+                "update devicefeature set " +
+                    "MeasureType = @MeasureType, " +
+                    "IsAC = @IsAC, " +
+                    "IsThreePhase = @IsThreePhase, " +
+                    "StringNumber = @StringNumber, " +
+                    "PhaseNumber = @PhaseNumber " +
+                "where Id = @Id ";
+
+            try
+            {
+                con = GlobalSettings.TheDB.NewConnection();
+
+                if (!Device.DeviceId.HasValue)
+                    Device.GetDeviceId(con);
+
+                string curMeasureType = "";
+                bool? curIsConsumption = null;
+                bool? curIsAC = null;
+                bool? curIsThreePhase = null;
+                int? curStringNumber = null;
+                int? curPhaseNumber = null;
+
+                uint? deviceFeatureId = Device.ReadDeviceFeature(con, feature, ref curMeasureType, ref curIsConsumption, ref curIsAC, ref curIsThreePhase, ref curStringNumber, ref curPhaseNumber);
+                if (deviceFeatureId.HasValue)
+                {
+                    DeviceFeatureId = deviceFeatureId.Value;
+                    if (curMeasureType != feature.FeatureType.ToString()
+                        || curIsConsumption != isConsumption
+                        || curIsAC != feature.IsAC
+                        || curIsThreePhase != isThreePhase
+                        || curStringNumber != stringNumber
+                        || curPhaseNumber != phaseNumber)
+                    {
+                        GenCommand cmd = new GenCommand(sqlUpdate, con);
+                        SetDeviceIdentityBindings(false, cmd, (int)DeviceFeatureId, feature.FeatureType, (int)feature.FeatureId, feature.IsAC, isThreePhase, stringNumber, phaseNumber);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                else
+                {
+                    GenCommand cmd = new GenCommand(sqlInsert, con);
+                    SetDeviceIdentityBindings(true, cmd, -1, feature.FeatureType, (int)feature.FeatureId, feature.IsAC, isThreePhase, stringNumber, phaseNumber);
+                    cmd.ExecuteNonQuery();
+                    deviceFeatureId = Device.ReadDeviceFeature(con, feature, ref curMeasureType, ref curIsConsumption, ref curIsAC, ref curIsThreePhase, ref curStringNumber, ref curPhaseNumber);
+                    if (deviceFeatureId.HasValue)
+                        DeviceFeatureId = deviceFeatureId.Value;
+                    else
+                        throw new Exception("SetDeviceFeature - Read failed after insert");
+                }
+
+            }
+            catch (Exception e)
+            {
+                GlobalSettings.SystemServices.LogMessage("SetDeviceIdentity", "Exception: " + e.Message, LogEntryType.ErrorMessage);
+                throw e;
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                    con.Dispose();
+                }
+                GlobalSettings.SystemServices.ReleaseDatabaseMutex();
+            }
         }
 
         public PeriodEnumerator GetPeriodEnumerator(DateTime startTime, DateTime endTime)

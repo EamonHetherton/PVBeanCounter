@@ -34,7 +34,7 @@ namespace Device
 {
     public struct DeviceIdentity
     {
-        // require InvertertID or Make, Model and SerialNo
+        // require DeviceID or Make, Model and SerialNo
         public int? DeviceId;
         public String Make;       // inverter manufacturer
         public String Model;      // inverter model
@@ -96,8 +96,6 @@ namespace Device
 
         public bool Enabled { get; private set; }
 
-        public abstract void SetDeviceFeatures();
-
         public DeviceBase(DeviceControl.DeviceManagerBase deviceManager, DeviceManagerDeviceSettings deviceSettings)
         {
             DeviceParams = new DeviceDataRecorders.DeviceParamsBase();
@@ -106,8 +104,6 @@ namespace Device
 
             NextFileDate = null;
             ResetFirstFullDay = false;
-
-            //LegacyEnabled = null;
 
             LastRecordTime = null;
             LastRunTime = DateTime.MinValue;
@@ -401,28 +397,8 @@ namespace Device
             }
         }
 
-        private void SetDeviceIdentityBindings(bool isInsert, GenCommand cmd, int id, int featureType, int featureId, MeasureType measureType,
-            bool? isConsumption, bool? isAC, bool? isThreePhase, int? stringNumber, int? phaseNumber)
-        {
-            if (!isInsert)
-                cmd.AddParameterWithValue("@Id", id);
-            else
-            {
-
-                cmd.AddParameterWithValue("@Device_Id", DeviceId.Value);
-                cmd.AddParameterWithValue("@FeatureType", (int)featureType);
-                cmd.AddParameterWithValue("@FeatureId", (int)featureId);
-            }
-            cmd.AddParameterWithValue("@MeasureType", measureType.ToString());
-            cmd.AddNullableBooleanParameterWithValue("@IsConsumption", isConsumption);
-            cmd.AddNullableBooleanParameterWithValue("@IsAC", isAC);
-            cmd.AddNullableBooleanParameterWithValue("@IsThreePhase", isThreePhase);
-            cmd.AddParameterWithValue("@StringNumber", stringNumber);
-            cmd.AddParameterWithValue("@PhaseNumber", phaseNumber);
-        }
-
-        private bool ReadDeviceFeature(GenConnection con, FeatureSettings feature,
-            ref String measureType, ref bool? isConsumption, ref bool? isAC, ref bool? isThreePhase,
+        public uint? ReadDeviceFeature(GenConnection con, FeatureSettings feature,
+            ref String featureType, ref bool? isConsumption, ref bool? isAC, ref bool? isThreePhase,
             ref int? stringNumber, ref int? phaseNumber)
         {
             const string sqlRead =
@@ -444,8 +420,10 @@ namespace Device
 
                 if (dr.Read())
                 {
-                    feature.Id = dr.GetInt32(0); 
-                    measureType = dr.GetString(1);
+                    //DeviceDetailPeriodsBase periods = FindOrCreateFeaturePeriods(feature.FeatureType, feature.FeatureId);
+                    uint deviceFeatureId = (uint)dr.GetInt32(0);
+ 
+                    featureType = dr.GetString(1);
                     isConsumption = dr.GetBoolFromChar(2);
                     isAC = dr.GetBoolFromChar(3);
                     isThreePhase = dr.GetBoolFromChar(4);
@@ -454,96 +432,19 @@ namespace Device
 
                     dr.Close();
                     dr.Dispose();
-                    return true;
+                    return deviceFeatureId;
                 }
                 else
                 {
                     dr.Close();
                     dr.Dispose();
-                    return false;
+                    return null;
                 }
             }
             catch (Exception e)
             {
                 GlobalSettings.SystemServices.LogMessage("ReadDeviceFeature", "Exception: " + e.Message, LogEntryType.ErrorMessage);
                 throw e;
-            }
-        }
-
-        public void SetDeviceFeature(FeatureSettings feature, MeasureType measureType, 
-            bool? isConsumption = null, bool? isAC = null, bool? isThreePhase = null, 
-            int? stringNumber = null, int? phaseNumber = null)
-        {
-            GenConnection con = null;
-            GlobalSettings.SystemServices.GetDatabaseMutex();
-                
-            string sqlInsert =
-                "insert into devicefeature (Device_Id, FeatureType, FeatureId, MeasureType, " +
-                    "IsConsumption, IsAC, IsThreePhase, StringNumber, PhaseNumber) " +
-                "values (@Device_Id, @FeatureType, @FeatureId, @MeasureType, " +
-                    "@IsConsumption, @IsAC, @IsThreePhase, @StringNumber, @PhaseNumber) ";
-
-            string sqlUpdate =
-                "update devicefeature set " +
-                    "MeasureType = @MeasureType, " +
-                    "IsConsumption = @IsConsumption, " +
-                    "IsAC = @IsAC, " +
-                    "IsThreePhase = @IsThreePhase, " +
-                    "StringNumber = @StringNumber, " +
-                    "PhaseNumber = @PhaseNumber " +
-                "where Id = @Id ";
-
-            try
-            {
-                con = GlobalSettings.TheDB.NewConnection();
-
-                if (!DeviceId.HasValue)
-                    GetDeviceId(con);
-
-                string curMeasureType = "";
-                bool? curIsConsumption = null;
-                bool? curIsAC = null;
-                bool? curIsThreePhase = null;
-                int? curStringNumber = null;
-                int? curPhaseNumber = null;
-
-                if (ReadDeviceFeature(con, feature, ref curMeasureType, ref curIsConsumption, ref curIsAC, ref curIsThreePhase, ref curStringNumber, ref curPhaseNumber))                
-                {
-                    if (curMeasureType != measureType.ToString() 
-                        || curIsConsumption != isConsumption
-                        || curIsAC != isAC
-                        || curIsThreePhase != isThreePhase
-                        || curStringNumber != stringNumber
-                        || curPhaseNumber != phaseNumber )
-                    {
-                        GenCommand cmd = new GenCommand(sqlUpdate, con);
-                        SetDeviceIdentityBindings(false, cmd, feature.Id, (int)feature.FeatureType, (int)feature.FeatureId, measureType, isConsumption, isAC, isThreePhase, stringNumber, phaseNumber);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                else
-                {
-                    GenCommand cmd = new GenCommand(sqlInsert, con);
-                    SetDeviceIdentityBindings(true, cmd, feature.Id, (int)feature.FeatureType, (int)feature.FeatureId, measureType, isConsumption, isAC, isThreePhase, stringNumber, phaseNumber);
-                    cmd.ExecuteNonQuery();
-                    if (!ReadDeviceFeature(con, feature, ref curMeasureType, ref curIsConsumption, ref curIsAC, ref curIsThreePhase, ref curStringNumber, ref curPhaseNumber))
-                        throw new Exception("SetDeviceFeature - Read failed after insert");
-                }
-
-            }
-            catch (Exception e)
-            {
-                GlobalSettings.SystemServices.LogMessage("SetDeviceIdentity", "Exception: " + e.Message, LogEntryType.ErrorMessage);
-                throw e;
-            }
-            finally
-            {
-                if (con != null)
-                {
-                    con.Close();
-                    con.Dispose();
-                }
-                GlobalSettings.SystemServices.ReleaseDatabaseMutex();
             }
         }
 

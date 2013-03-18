@@ -835,7 +835,7 @@ namespace DeviceControl
                                 try
                                 {
                                     stage = "Get Periods";
-                                    device.SetDeviceFeatures();
+                                    
                                     // The SE csv file contains a reading at midnight that is stored as the last reading of the previous day
                                     // Mark all possible readings already known - we want to detect readings that are no longer relevant so they can
                                     // be deleted in UpdateDatabase

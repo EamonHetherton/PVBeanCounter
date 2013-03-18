@@ -87,12 +87,6 @@ namespace Device
             ClearAttributes();
         }
 
-        public override void SetDeviceFeatures()
-        {
-            if (!DeviceId.HasValue)
-                SetDeviceFeature(Feature_YieldAC, PVSettings.MeasureType.Energy, false, true);
-        }
-
         public override bool DoExtractReadings()
         {
             if (FaultDetected)
@@ -124,8 +118,6 @@ namespace Device
                             + " : No Serial Number - Cannot record", LogEntryType.ErrorMessage);
                         return false;
                     }
-
-                    SetDeviceFeature(Feature_YieldAC, PVSettings.MeasureType.Energy, false, true, null);
 
                     if (GlobalSettings.SystemServices.LogTrace)
                         LogMessage("DoExtractReadings - Identity - Manufacturer: " + Manufacturer
@@ -159,7 +151,7 @@ namespace Device
 
                 if (dbWrite)
                 {
-                    SetDeviceFeatures();
+                    
                     DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_YieldAC.FeatureType, Feature_YieldAC.FeatureId);
                     EnergyReading reading = new EnergyReading();
                     

@@ -53,7 +53,7 @@ namespace PVSettings
         YieldAC,        
         YieldDC,        
         ConsumptionAC,
-        GridFeedIn,
+        GridFeedInAC,
         _TypeCount    // This marker must be last
     }
 
@@ -81,7 +81,7 @@ namespace PVSettings
 
         }
 
-        public int Id = -1;
+        //public int Id = -1;
 
         private uint _FeatureId;
         public uint FeatureId { get { return _FeatureId; } private set { _FeatureId = value; } }
@@ -98,9 +98,22 @@ namespace PVSettings
 
         public static MeasureType MeasureTypeFromFeatureType(FeatureType featureType)
         {
-            if (featureType >= FeatureType.EnergyAC && featureType <= FeatureType.GridFeedIn)
+            if (featureType >= FeatureType.EnergyAC && featureType <= FeatureType.GridFeedInAC)
                 return MeasureType.Energy;
             return MeasureType.Unknown;
+        }
+
+        public bool? IsAC
+        {
+            get
+            {
+                if (FeatureType == PVSettings.FeatureType.YieldAC || FeatureType == PVSettings.FeatureType.ConsumptionAC 
+                    || FeatureType == PVSettings.FeatureType.EnergyAC || FeatureType == PVSettings.FeatureType.GridFeedInAC)
+                    return true;
+                if (FeatureType == PVSettings.FeatureType.YieldDC || FeatureType == PVSettings.FeatureType.EnergyDC)
+                    return false;
+                return null;
+            }
         }
     }
 
@@ -283,6 +296,19 @@ namespace PVSettings
             {
                 String val = GetValue("manager");
                 return val;
+            }
+        }
+
+        public bool? IsThreePhase
+        {
+            get
+            {
+                String val = GetValue("threephase");
+                if (val == "true")
+                    return true;
+                if (val == "false")
+                    return false;
+                return null;
             }
         }
 

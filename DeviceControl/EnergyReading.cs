@@ -764,7 +764,7 @@ namespace DeviceDataRecorders
             string stage = "Device_Id";
             try
             {
-                SetParametersId(cmd, DeviceDetailPeriods.FeatureSettings.Id);
+                SetParametersId(cmd, (int)DeviceDetailPeriods.DeviceFeatureId);
                 stage = "ReadingStart";
                 cmd.AddParameterWithValue("@ReadingStart", ReadingStartInternal);
                 stage = "EnergyTotal";
@@ -901,7 +901,7 @@ namespace DeviceDataRecorders
 
                 GenCommand cmd = new GenCommand(DeleteDeviceReading_AC, con);
 
-                SetParametersId(cmd, DeviceDetailPeriods.FeatureSettings.Id);
+                SetParametersId(cmd, (int)DeviceDetailPeriods.DeviceFeatureId);
 
                 stage = "Execute";
                 cmd.ExecuteNonQuery();
