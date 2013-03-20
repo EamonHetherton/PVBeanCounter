@@ -1121,10 +1121,10 @@ namespace PVSettings
             get
             {
                 String rffd = GetValue("meterhistorytimelineadjust");
-                if (rffd == "false")
-                    return false;
-                else
+                if (rffd == "true")
                     return true;
+                else
+                    return false;
             }
 
             set

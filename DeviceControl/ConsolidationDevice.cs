@@ -140,17 +140,20 @@ namespace Device
                     ready = false;
             }
 
+            if (GlobalSettings.SystemServices.LogTrace)
+                LogMessage("NotifyConsolidation - Found: " + found + " - Ready: " + ready + " - Some Ready: " + someReady +
+                    " - LastRecordTime: " + LastRecordTime, LogEntryType.Trace);
+
             // found some features and all found are ready
             if (found && ready 
-                || someReady && (LastRecordTime.HasValue ? LastRecordTime.Value : DateTime.MinValue) < DateTime.Now.AddMinutes(-15.0))
+                || someReady && (LastRecordTime.HasValue ? LastRecordTime.Value : DateTime.MinValue) <= DateTime.Now.AddMinutes(-5.0))
             {
-                if (GlobalSettings.SystemServices.LogTrace)
-                    LogMessage("NotifyConsolidation - Found: " + found + " - Ready: " + ready + " - Some Ready: " + someReady +
-                        " - LastRecordTime: " + LastRecordTime, LogEntryType.Trace);
-
                 LastRecordTime = newTime;
                 if (DeviceManagerDeviceSettings.ConsolidationType == ConsolidationType.PVOutput && DeviceManagerDeviceSettings.PVOutputSystem != "")
+                {
+                    LogMessage("NotifyConsolidation - Notifying PVOutput OutputManager", LogEntryType.Trace);
                     DeviceManager.ManagerManager.SetOutputReady(DeviceManagerDeviceSettings.PVOutputSystem);
+                }
                 // push update notifications up the consolidation hierarchy
                 foreach (DeviceLink sLink in SourceDevices)                
                     BuildOutputReadyFeatureList(notifyList, sLink.ToFeatureType, sLink.ToFeatureId, newTime);
