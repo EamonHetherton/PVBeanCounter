@@ -136,8 +136,8 @@ namespace Device
                     else if (sLink.LastReadyTime < newTime)
                         newTime = sLink.LastReadyTime;
                 }
-                else
-                    ready = false;
+                else // mark ready if link is silent for over 10 minutes
+                    ready = sLink.LastReadyTime <= DateTime.Now.AddMinutes(-10.0);
             }
 
             if (GlobalSettings.SystemServices.LogTrace)
@@ -145,8 +145,8 @@ namespace Device
                     " - LastRecordTime: " + LastRecordTime, LogEntryType.Trace);
 
             // found some features and all found are ready
-            if (found && ready 
-                || someReady && (LastRecordTime.HasValue ? LastRecordTime.Value : DateTime.MinValue) <= DateTime.Now.AddMinutes(-5.0))
+            if (found && ready)
+            //    || someReady && (LastRecordTime.HasValue ? LastRecordTime.Value : DateTime.MinValue) <= DateTime.Now.AddMinutes(-5.0))
             {
                 LastRecordTime = newTime;
                 if (DeviceManagerDeviceSettings.ConsolidationType == ConsolidationType.PVOutput && DeviceManagerDeviceSettings.PVOutputSystem != "")
