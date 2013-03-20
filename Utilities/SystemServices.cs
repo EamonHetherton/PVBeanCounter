@@ -111,6 +111,8 @@ namespace MackayFisher.Utilities
 
         public bool UseDatabaseMutex { get; set; }
 
+        private bool errorMode = false;
+
         public void GetDatabaseMutex()
         {
             if (UseDatabaseMutex)
@@ -506,6 +508,12 @@ namespace MackayFisher.Utilities
                 LogFile = fileInfo.CreateText();
 
             LogFileName = fileInfo.Name;
+            if (errorMode)
+            {
+                // force error header at log start
+                errorMode = false;
+                CheckErrorMode(true);
+            }
             LogMutex.ReleaseMutex();
         }
 
@@ -516,6 +524,20 @@ namespace MackayFisher.Utilities
                 LogFile.Close();
                 LogFile = null;
             }
+        }
+
+        private void CheckErrorMode(bool errorFound)
+        {
+            if (errorFound && !errorMode)
+            {
+                LogFile.WriteLine(">>>>>> Errors Found");
+                errorMode = true;
+            }
+            else if (!errorFound && errorMode)
+            {
+                LogFile.WriteLine("<<<<<< End Errors");
+                errorMode = false;
+            }            
         }
 
         public void LogMessage(String component, String message, LogEntryType logEntryType)
@@ -538,6 +560,8 @@ namespace MackayFisher.Utilities
                 return;
             if (logEntryType == LogEntryType.Event && !LogEvent)
                 return;
+
+            CheckErrorMode(logEntryType == LogEntryType.ErrorMessage);
 
             int id = Thread.CurrentThread.ManagedThreadId;
             String threadName = "";

@@ -54,22 +54,37 @@ namespace DeviceDataRecorders
         public override void LoadPeriodFromDatabase(GenConnection existingCon = null)
         {
             ClearReadings();
-            
+
+            String stage = "Initial";
             GenConnection con = existingCon;
             try
             {
                 if (con == null)
                     con = GlobalSettings.TheDB.NewConnection();
 
+                if (con == null)
+                    GlobalSettings.LogMessage("DeviceDetailPeriod_EnergyMeter.LoadPeriodFromDatabase", "*******con is null", LogEntryType.ErrorMessage);
+
+                stage = "Before cmd setup";
                 GenCommand cmd;
                 cmd = new GenCommand(SelectDeviceReading_Energy, con);
 
+                if (cmd == null)
+                    GlobalSettings.LogMessage("DeviceDetailPeriod_EnergyMeter.LoadPeriodFromDatabase", "*******cmd is null", LogEntryType.ErrorMessage);
+
+                stage = "Before BindSelectIdentity";
                 BindSelectIdentity(cmd);
 
+                stage = "Before cmd.ExecuteReader";
                 GenDataReader dr = (GenDataReader)cmd.ExecuteReader();
 
+                if (dr == null)
+                    GlobalSettings.LogMessage("DeviceDetailPeriod_EnergyMeter.LoadPeriodFromDatabase", "*******dr is null", LogEntryType.ErrorMessage);
+
+                stage = "Before while";
                 while (dr.Read())
                 {
+                    stage = "loop start";
 
                     DateTime endTime = dr.GetDateTime(0);
                     DateTime startTime = dr.GetDateTime(1);
@@ -77,41 +92,66 @@ namespace DeviceDataRecorders
                     // select included extra readings that probably do not apply
                     // allows for readings to cross period boundaries by up to PeriodOverlapLimit
                     // discard rows with no overlap at all
+                    stage = "Before endTime check";
                     if (endTime <= Start)
                         continue;
+                    stage = "Before startTime check";
                     if (startTime >= End)
                         continue;
 
+                    stage = "Before new EnergyReading";
                     EnergyReading newRec = new EnergyReading();
+
+                    if (newRec == null)
+                        GlobalSettings.LogMessage("DeviceDetailPeriod_EnergyMeter.LoadPeriodFromDatabase", "*******newRec is null", LogEntryType.ErrorMessage);
+
+                    stage = "Before Initialise";
                     newRec.Initialise(DeviceDetailPeriods, endTime, startTime, true, (EnergyParams)DeviceParams);
 
+                    stage = "EnergyTotal";
                     newRec.EnergyTotal = dr.GetNullableDouble(2, EnergyReading.EnergyPrecision);
+                    stage = "EnergyToday";
                     newRec.EnergyToday = dr.GetNullableDouble(3, EnergyReading.EnergyPrecision);
+                    stage = "EnergyDelta";
                     newRec.EnergyDelta = dr.GetDouble(4, EnergyReading.EnergyPrecision);
+                    stage = "CalibrationDelta";
                     newRec.CalibrationDelta = dr.GetNullableDouble(5, EnergyReading.EnergyPrecision);
+                    stage = "HistEnergyDelta";
                     newRec.HistEnergyDelta = dr.GetNullableDouble(6, EnergyReading.EnergyPrecision);
+                    stage = "Mode";
                     newRec.Mode = dr.GetNullableInt32(7);
+                    stage = "ErrorCode";
                     newRec.ErrorCode = dr.GetNullableInt64(8);
+                    stage = "Power";
                     newRec.Power = dr.GetNullableInt32(9);
+                    stage = "Volts";
                     newRec.Volts = dr.GetNullableFloat(10, EnergyReading.EnergyPrecision);
+                    stage = "Amps";
                     newRec.Amps = dr.GetNullableFloat(11, EnergyReading.EnergyPrecision);
+                    stage = "Frequency";
                     newRec.Frequency = dr.GetNullableFloat(12, EnergyReading.EnergyPrecision);
+                    stage = "Temperature";
                     newRec.Temperature = dr.GetNullableFloat(13, EnergyReading.EnergyPrecision);
+                    stage = "MinPower";
                     newRec.MinPower = dr.GetNullableInt32(14);
+                    stage = "MaxPower";
                     newRec.MaxPower = dr.GetNullableInt32(15);
 
+                    stage = "Before SetRestoreComplete";
                     newRec.SetRestoreComplete();
 
+                    stage = "Before AddReading";
                     AddReading(newRec, AddReadingType.Database);
                 }
 
+                stage = "Before close and dispose";
                 dr.Close();
                 dr.Dispose();
                 dr = null;
             }
             catch (Exception e)
             {
-                GlobalSettings.LogMessage("DeviceDetailPeriod_EnergyMeter.LoadPeriodFromDatabase", "Exception: " + e.Message, LogEntryType.ErrorMessage);
+                GlobalSettings.LogMessage("DeviceDetailPeriod_EnergyMeter.LoadPeriodFromDatabase", "Stage: " + stage + " - Exception: " + e.Message, LogEntryType.ErrorMessage);
             }
             finally
             {

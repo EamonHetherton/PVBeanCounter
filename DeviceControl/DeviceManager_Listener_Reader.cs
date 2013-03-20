@@ -112,9 +112,10 @@ namespace DeviceControl
             if (!ReaderStarted)
                 try
                 {
+                    // Read timeout is device message interval + 5 seconds
                     Stream = new SerialStream(GenThreadManager, GlobalSettings.SystemServices,
                         DeviceManager.PortName, DeviceManager.BaudRate, DeviceManager.Parity, 
-                        DeviceManager.DataBits, DeviceManager.StopBits, DeviceManager.Handshake, Settings.MessageIntervalInt * 1000);
+                        DeviceManager.DataBits, DeviceManager.StopBits, DeviceManager.Handshake, (Settings.MessageIntervalInt + 5) * 1000);
                     DeviceManager.Protocol.SetDeviceStream(Stream);
                     Stream.Open();
                     Stream.StartBuffer();

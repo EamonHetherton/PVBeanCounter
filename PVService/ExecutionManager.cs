@@ -288,7 +288,7 @@ namespace PVService
                         {
                             Thread.Sleep(30000);                           
 
-                            if (GlobalSettings.SystemServices.ErrorLogCount > 20)
+                            if (GlobalSettings.SystemServices.ErrorLogCount > 60)
                             {
                                 GlobalSettings.SystemServices.LogMessage("ManageExecutionState", "Too many errors to continue: " + GlobalSettings.SystemServices.ErrorLogCount,
                                         LogEntryType.ErrorMessage);

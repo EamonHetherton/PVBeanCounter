@@ -131,6 +131,19 @@ namespace DeviceControl
             LogMessage("Finalise - Name = " + DeviceManagerSettings.Name + " - manager stopping", LogEntryType.StatusChange);
         }
 
+        public bool InvertersRunning
+        {
+            get
+            {
+                TimeSpan curTime = DateTime.Now.TimeOfDay;
+                if (GlobalSettings.ApplicationSettings.InverterStartTime.HasValue && curTime < GlobalSettings.ApplicationSettings.InverterStartTime.Value)
+                    return false;
+                if (GlobalSettings.ApplicationSettings.InverterStopTime.HasValue && curTime >= GlobalSettings.ApplicationSettings.InverterStopTime.Value)
+                    return false;
+                return true;
+            }
+        }
+
         public abstract List<DeviceBase> GenericDeviceList { get; }
     }
 
@@ -270,6 +283,9 @@ namespace DeviceControl
                 {
                     if (device.Enabled && device.NextRunTime <= NextRunTimeStamp)
                     {
+                        if (device.DeviceSettings.DeviceType == DeviceType.Inverter && !InvertersRunning)
+                            continue;
+
                         bool res = device.DoExtractReadings();
                         if (res)
                         {

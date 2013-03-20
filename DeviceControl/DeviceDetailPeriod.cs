@@ -392,52 +392,85 @@ namespace DeviceDataRecorders
 
         public void AddReading(ReadingBase reading, AddReadingType addReadingType = AddReadingType.NewReading, ConsolidateDeviceSettings.OperationType operation = ConsolidateDeviceSettings.OperationType.Add)
         {
+            String stage = "Initial";
             if (reading.ReadingEnd <= Start)
                 return;
             if (reading.ReadingStart >= End)
                 return;
 
+            stage = "duplicate check";
             if (addReadingType != AddReadingType.History && ReadingsGeneric.ContainsKey(reading.ReadingEnd))
                 throw new Exception("AddReading - Duplicate reading found - ReadingEnd: " + reading.ReadingEnd);
 
+            stage = "duration check";
             if (reading.Duration.Ticks == 0 )
                 throw new Exception("AddReading - Zero duration found - ReadingEnd: " + reading.ReadingEnd);
 
             GenConnection con = null;
             try
             {
+                stage = "ReadingStart";
                 if (reading.ReadingStart < Start)
                 {
                     if ((Start - reading.ReadingStart) > PeriodOverlapLimit)
                         throw new Exception("AddReading - Period overlap exceeds limit - ReadingStart: " + reading.ReadingStart + " - Period Start: " + Start);
+
+                    if (DeviceParams == null)
+                        GlobalSettings.LogMessage("DeviceDetailPeriod.AddReading", "*******DeviceParams is null 1", LogEntryType.ErrorMessage);
+
                     if (DeviceParams.EnforceRecordingInterval)
                     {
                         ReadingBase discardReading;
+                        stage += " - Split";
                         SplitReadingGeneric(reading, Start, out discardReading, out reading);
                         if (con == null)
                         {
                             con = GlobalSettings.TheDB.NewConnection();
                             GlobalSettings.SystemServices.GetDatabaseMutex();
                         }
+
+                        if (discardReading == null)
+                            GlobalSettings.LogMessage("DeviceDetailPeriod.AddReading", "*******discardReading is null 1", LogEntryType.ErrorMessage);
+
+                        if (DeviceId == null)
+                            GlobalSettings.LogMessage("DeviceDetailPeriod.AddReading", "*******DeviceId is null 1", LogEntryType.ErrorMessage);
+
                         discardReading.PersistReading(con, DeviceId.Value);
                     }
                 }
+                stage = "ReadingEnd";
                 if (reading.ReadingEnd > End)
                 {
                     if ((reading.ReadingEnd - End) > PeriodOverlapLimit)
                         throw new Exception("AddReading - Period overlap exceeds limit - ReadingEnd: " + reading.ReadingStart + " - Period End: " + Start);
+
+                    if (DeviceParams == null)
+                        GlobalSettings.LogMessage("DeviceDetailPeriod.AddReading", "*******DeviceParams is null 2", LogEntryType.ErrorMessage);
+
                     if (DeviceParams.EnforceRecordingInterval)
                     {
                         ReadingBase discardReading;
+                        stage += " - Split";
                         SplitReadingGeneric(reading, End, out reading, out discardReading);
                         if (con == null)
                         {
                             con = GlobalSettings.TheDB.NewConnection();
                             GlobalSettings.SystemServices.GetDatabaseMutex();
                         }
+
+                        if (discardReading == null)
+                            GlobalSettings.LogMessage("DeviceDetailPeriod.AddReading", "*******discardReading is null 2", LogEntryType.ErrorMessage);
+
+                        if (DeviceId == null)
+                            GlobalSettings.LogMessage("DeviceDetailPeriod.AddReading", "*******DeviceId is null 2", LogEntryType.ErrorMessage);
+
                         discardReading.PersistReading(con, DeviceId.Value);
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("AddReading Stage: " + stage + " - Exception: " + e.Message, e);
             }
             finally
             {
@@ -1006,6 +1039,11 @@ namespace DeviceDataRecorders
 
         protected void BindSelectIdentity(GenCommand cmd)
         {
+            if (DeviceDetailPeriods == null)
+                GlobalSettings.LogMessage("DeviceDetailPeriod_EnergyMeter.BindSelectIdentity", "*******DeviceDetailPeriods is null", LogEntryType.ErrorMessage);
+            if (Start == null)
+                GlobalSettings.LogMessage("DeviceDetailPeriod_EnergyMeter.BindSelectIdentity", "*******Start is null", LogEntryType.ErrorMessage);
+
             cmd.AddParameterWithValue("@DeviceFeature_Id", DeviceDetailPeriods.DeviceFeatureId);
             cmd.AddParameterWithValue("@PeriodStart", Start - PeriodOverlapLimit);
             cmd.AddParameterWithValue("@NextPeriodStart", Start.AddDays(1.0) + PeriodOverlapLimit);

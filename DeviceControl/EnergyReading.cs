@@ -190,10 +190,12 @@ namespace DeviceDataRecorders
         {
             get
             {
-                if (!EnergyDeltaInternal.HasValue && !HistEnergyDelta.HasValue)
+                if (!EnergyDeltaInternal.HasValue)
                     return null;
-                return EnergyDelta +
-                    (HistEnergyDelta.HasValue ? HistEnergyDelta.Value : 0.0);
+                if (HistEnergyDelta.HasValue)
+                    return EnergyDeltaInternal.Value + HistEnergyDelta.Value;
+                else
+                    return EnergyDeltaInternal;
             }
         }
 
@@ -345,10 +347,17 @@ namespace DeviceDataRecorders
             }
         }
 
-        private void Calibrate()
+        private void Calibrate(bool trace = false)
         {
+            if (trace)
+                GlobalSettings.LogMessage("EnergyReading.Calibrate", "Start", LogEntryType.Trace);
+
             if (!UseInternalCalibration)
+            {
+                if (trace)
+                    GlobalSettings.LogMessage("EnergyReading.Calibrate", "Return", LogEntryType.Trace);
                 return;
+            }
 
             Double? newCalc = CalibrateableReadingDelta;
             if (newCalc.HasValue)

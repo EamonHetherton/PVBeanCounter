@@ -320,11 +320,12 @@ namespace DeviceDataRecorders
             return (TPeriodReadings)base.FindOrCreate(periodStart);
         }
 
+        /*
         public TPeriodReadings NewPeriodReadings(DateTime periodStart, DeviceDataRecorders.DeviceParamsBase deviceParams)
         {
             return (TPeriodReadings)NewPeriodReadingsGeneric(periodStart, deviceParams);
         }
-
+        */
     }
 
     public class DeviceDetailPeriods_EnergyMeter : DeviceDetailPeriods<DeviceDetailPeriod_EnergyMeter, EnergyReading, EnergyReading>

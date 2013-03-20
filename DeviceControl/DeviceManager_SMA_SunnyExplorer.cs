@@ -101,8 +101,8 @@ namespace DeviceControl
 
             try
             {
-                if (!DevicesEnabled)
-                    return true;  // if all devices disabled always succeed
+                if (!DevicesEnabled || !InvertersRunning)
+                    return true;  // if all devices disabled or inverters not running always succeed
 
                 state = "before RunExtracts";
                 RunExtracts(ConfigFileName, Password, OutputDirectory);

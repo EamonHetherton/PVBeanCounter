@@ -143,7 +143,7 @@ namespace DeviceControl
 
         protected override void ProcessOneHistoryRecord(MeterDevice<CC128_LiveRecord, CC128_HistoryRecord, CC128EnergyParams> device, CC128_HistoryRecord histRecord)
         {
-            if (MeterTimeInSync)
+            if (MeterTimeInSync && device.DeviceManagerDeviceSettings.UpdateHistory)
                 device.ProcessOneHistoryReading(histRecord);
         }
     }
