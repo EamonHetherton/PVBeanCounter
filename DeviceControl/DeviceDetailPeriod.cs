@@ -983,9 +983,9 @@ namespace DeviceDataRecorders
             }
         }
 
-        public void AdjustFromHistory(TDeviceHistory histRecord, float historySeconds)
+        public void AdjustFromHistory(TDeviceHistory histRecord)
         {
-            DateTime startTime = histRecord.ReadingEnd.AddSeconds(-historySeconds);
+            DateTime startTime = histRecord.ReadingStart;
             int endInterval = GetIntervalNo(histRecord.ReadingEnd);
             int startInterval = GetIntervalNo(startTime, false);
 
@@ -1002,7 +1002,7 @@ namespace DeviceDataRecorders
                 != startTime + TimeSpan.FromSeconds(DatabaseIntervalSeconds))
                 throw new Exception("DeviceDetailPeriod.AdjustFromHistory - startTime does not align with interval boundary - endTime: " + histRecord.ReadingEnd + " - interval: " + DatabaseIntervalSeconds);
 
-            // clear old calculated
+            // clear old history entries
             ClearHistory(startInterval, endInterval);
             if (DeviceParams.UseCalculateFromPrevious)
                 CalcFromPrevious(default(TDeviceReading));

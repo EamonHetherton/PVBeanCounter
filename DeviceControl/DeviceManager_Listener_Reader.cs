@@ -63,7 +63,7 @@ namespace DeviceControl
             Settings = settings;
         }
 
-        protected void LogMessage(String routine, String message, LogEntryType logEntryType = LogEntryType.MeterTrace)
+        protected void LogMessage(String routine, String message, LogEntryType logEntryType = LogEntryType.Trace)
         {
             GlobalSettings.LogMessage("DeviceManager_Listener_Reader: " + routine, message, logEntryType);
         }

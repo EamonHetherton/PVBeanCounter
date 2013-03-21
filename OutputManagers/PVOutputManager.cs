@@ -156,8 +156,6 @@ namespace OutputManagers
         private bool PVOutputCurrentDayLimitReported;
 
         private int BackloadCount = 0;
-        private bool Complete;
-        private DateTime? IncompleteTime;
         private bool InitialOutputCycle;
 
         DateTime? LastDeleteOld = null;
@@ -195,8 +193,6 @@ namespace OutputManagers
             RequestHour = (int)DateTime.Now.TimeOfDay.TotalHours;
             PVOutputLimitReported = false;
             PVOutputCurrentDayLimitReported = false;
-            Complete = true;
-            IncompleteTime = null;
             InitialOutputCycle = true;
 
             OutputReadyEvent = new ManualResetEvent(true);
@@ -1417,10 +1413,13 @@ namespace OutputManagers
                 PVDateLimit = DateTime.Today.AddDays(-(PVLiveDays - 1));
         }
 
+        private DateTime CompleteTime = DateTime.MinValue;
+
         public override bool DoWork()
         {
             const int maxCount = 4;
             bool cycle = true;
+            bool complete = false;
 
             try
             {
@@ -1429,11 +1428,16 @@ namespace OutputManagers
                 bool haveOutputReadyEvent = OutputReadyEvent.WaitOne(TimeSpan.FromSeconds(5));
                 OutputReadyEvent.Reset();
 
+                Double seconds = Settings.DataIntervalSeconds;
+                DateTime runDue = CompleteTime.Date + TimeSpan.FromSeconds((Math.Truncate(CompleteTime.TimeOfDay.TotalSeconds / seconds) + 1.0) * seconds);
+                DateTime now = DateTime.Now;
+
                 lock(OutputProcessLock) // ensure only one PVOutputManager does this at any one time
                 {
-                    if (haveOutputReadyEvent || InitialOutputCycle
-                    || (!Complete && ((DateTime.Now - IncompleteTime.Value) >= TimeSpan.FromMinutes(3.0))))
+                    if (haveOutputReadyEvent && runDue <= now || InitialOutputCycle
+                    ||  ((now - runDue) >= TimeSpan.FromMinutes(3.0)))
                     {
+                        complete = false;
                         LogMessage("DoWork", "Running update", LogEntryType.Trace);
 
                         GlobalSettings.SystemServices.GetDatabaseMutex();
@@ -1460,7 +1464,7 @@ namespace OutputManagers
                                     PrepareConsumptionLoadList();                                   
 
                                     LogMessage("DoWork", "Running LoadPVOutputBatch", LogEntryType.Trace);
-                                    Complete = LoadPVOutputBatch();
+                                    complete = LoadPVOutputBatch();
                                 }
                             }
                         }
@@ -1471,11 +1475,8 @@ namespace OutputManagers
                         }
                         finally
                         {
-                            // Incomplete time reset after every attempt
-                            if (Complete)
-                                IncompleteTime = null;
-                            else 
-                                IncompleteTime = DateTime.Now;
+                            if (complete)
+                                CompleteTime = now;                            
 
                             GlobalSettings.SystemServices.ReleaseDatabaseMutex();
 

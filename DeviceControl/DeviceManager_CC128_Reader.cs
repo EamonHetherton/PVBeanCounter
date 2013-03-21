@@ -196,8 +196,9 @@ namespace DeviceControl
                                     if ((dev.Enabled && dev.UpdateHistory)
                                         && intervalNo <= ManagerParams.MaxHistoryHours)
                                     {
+                                        TimeSpan tod = TimeSpan.FromHours(time.Hour - (intervalNo - 4));
                                         curRec.Sensor = sensor;
-                                        curRec.Time = (time.Date + TimeSpan.FromHours(time.Hour - (intervalNo - 4)));
+                                        curRec.Time = (time.Date + tod);
                                         curRec.Energy = energy;
                                         curRec.Calculated = null;
                                         curRec.Duration = 7200;
@@ -208,14 +209,33 @@ namespace DeviceControl
                                         curRec.InRange = null;
 
                                         ReadingInfo.RecordsMutex.WaitOne();
-                                        ReadingInfo.HistoryRecords[index].Add(curRec);
+                                        
+                                        // check for history across midnight - must split into two 1 hour entries
+                                        // each history entry only affects one day
+                                        if (tod == TimeSpan.FromHours(1.0))
+                                        {
+                                            DateTime orig = curRec.Time;
+                                            curRec.Time = time.Date; // midnight - end of prev day
+                                            curRec.Duration = 3600;
+                                            curRec.Energy = curRec.Energy / 2.0;
+                                            ReadingInfo.HistoryRecords[index].Add(curRec);
+                                            if (GlobalSettings.SystemServices.LogTrace)
+                                                LogMessage("InsertHistoryMeterReading", "Adding new hour history to List: time: " + curRec.Time
+                                                    + " : Sensor: " + curRec.Sensor + " : Energy: " + curRec.Energy
+                                                    + " : ReadingNo: " + intervalNo, LogEntryType.Trace);
+                                            curRec.Time = orig;
+                                            ReadingInfo.HistoryRecords[index].Add(curRec);
+                                        }
+                                        else                                        
+                                            ReadingInfo.HistoryRecords[index].Add(curRec);
+                                        
                                         ReadingInfo.RecordsMutex.ReleaseMutex();
                                         ReadingInfo.RecordsAvailEvent.Set();
 
-                                        if (GlobalSettings.SystemServices.LogMeterTrace)
+                                        if (GlobalSettings.SystemServices.LogTrace)
                                             LogMessage("InsertHistoryMeterReading", "Adding new hour history to List: time: " + curRec.Time
                                                 + " : Sensor: " + curRec.Sensor + " : Energy: " + curRec.Energy
-                                                + " : ReadingNo: " + intervalNo);
+                                                + " : ReadingNo: " + intervalNo, LogEntryType.Trace);
                                     }
                                 }
                             }

@@ -209,13 +209,18 @@ namespace Device
             try
             {
                 DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_EnergyAC.FeatureType, Feature_EnergyAC.FeatureId);
-                DeviceDetailPeriod_EnergyMeter day = days.FindOrCreate(histReading.Time.Date);
+                DeviceDetailPeriod_EnergyMeter day;
+                // detect end of day history entry - applies to previous day
+                if (histReading.Time.TimeOfDay.Ticks == 0)
+                    day = days.FindOrCreate(histReading.Time.Date.AddDays(-1.0));
+                else
+                    day = days.FindOrCreate(histReading.Time.Date);
 
-                EnergyReading hist = new EnergyReading(days, histReading.Time, TimeSpan.FromSeconds(7200.0), (EnergyParams)DeviceParams);
+                EnergyReading hist = new EnergyReading(days, histReading.Time, TimeSpan.FromSeconds(histReading.Duration), (EnergyParams)DeviceParams);
                 hist.EnergyDelta = histReading.Energy;
                 hist.Temperature = histReading.Temperature;
 
-                day.AdjustFromHistory(hist, 7200.0F);
+                day.AdjustFromHistory(hist);
 
                 return true;
             }
