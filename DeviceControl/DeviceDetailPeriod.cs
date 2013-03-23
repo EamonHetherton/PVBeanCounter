@@ -258,7 +258,6 @@ namespace DeviceDataRecorders
 
         public bool UpdatePending { get; protected set; }
 
-        protected TimeSpan SmallGapLimit = TimeSpan.FromSeconds(120.0);
         protected DeviceDataRecorders.DeviceParamsBase DeviceParams;
         public DateTime LastFindTime { get; set; }
         protected TimeSpan PeriodOverlapLimit = TimeSpan.FromHours(4.0);
@@ -278,7 +277,7 @@ namespace DeviceDataRecorders
             }
         }
 
-        protected SortedList<DateTime, ReadingBase> ReadingsGeneric;
+        protected ReadingsCollection ReadingsGeneric;
 
         public DeviceDetailPeriodBase(DeviceDetailPeriodsBase deviceDetailPeriods, PeriodType periodType, DateTime periodStart, FeatureSettings feature, DeviceDataRecorders.DeviceParamsBase deviceParams)
             : base(periodType, periodStart, deviceParams.RecordingInterval)
@@ -291,7 +290,7 @@ namespace DeviceDataRecorders
             UpdatePending = false;
             LastFindTime = DateTime.Now;
 
-            ReadingsGeneric = new SortedList<DateTime, ReadingBase>(); 
+            ReadingsGeneric = new ReadingsCollection(this); 
         }
 
         public void PeriodIsDirty()
@@ -333,7 +332,7 @@ namespace DeviceDataRecorders
             return ReadingBase.GetIntervalNo(intervalTime.TimeOfDay, DatabaseIntervalSeconds, isEndTime);
         }
 
-        protected abstract void Normalise(GenConnection con, int activeInterval);
+        //protected abstract void Normalise(GenConnection con, int activeInterval);
 
         public virtual void UpdateReadings()
         {
@@ -343,7 +342,7 @@ namespace DeviceDataRecorders
 
         public void SetAddReadingMatch(bool? value, DateTime fromTime, DateTime toTime)
         {
-            foreach (ReadingBase reading in ReadingsGeneric.Values)
+            foreach (ReadingBase reading in ReadingsGeneric.ReadingList)
                 if (reading.ReadingEnd >= fromTime && reading.ReadingEnd <= toTime)
                     reading.AddReadingMatch = value;
         }
@@ -355,12 +354,12 @@ namespace DeviceDataRecorders
             if (activeReadingTime.HasValue)  // this is used on the active day (today) to limit Normalise to the completed intervals only
                 activeInterval = GetIntervalNo(activeReadingTime.Value);
             //GlobalSettings.LogMessage("DeviceDetailPeriodBase", "UpdateDatabase - Before Normalise", LogEntryType.Trace);
-            Normalise(con, activeInterval);
+            ReadingsGeneric.FillSmallGaps(Start, End, false);
             //GlobalSettings.LogMessage("DeviceDetailPeriodBase", "UpdateDatabase - Before Loop", LogEntryType.Trace);
-            for (int i = 0; i < ReadingsGeneric.Values.Count; )
+            for (int i = 0; i < ReadingsGeneric.Count; )
             {
                 //GlobalSettings.LogMessage("DeviceDetailPeriodBase", "UpdateDatabase - Looping", LogEntryType.Trace);
-                ReadingBase reading = ReadingsGeneric.Values[i];
+                ReadingBase reading = ReadingsGeneric.ReadingList[i];
                 if (reading.UpdatePending)
                 {
                     //GlobalSettings.LogMessage("DeviceDetailPeriodBase", "UpdateDatabase - UpdatePending", LogEntryType.Trace);
@@ -391,6 +390,22 @@ namespace DeviceDataRecorders
         }
 
         public void AddReading(ReadingBase reading, AddReadingType addReadingType = AddReadingType.NewReading, ConsolidateDeviceSettings.OperationType operation = ConsolidateDeviceSettings.OperationType.Add)
+        {
+            //String stage = "Initial";
+            if (reading.ReadingEnd <= Start)
+                throw new Exception("DeviceDetailPeriod.AddReading - Reading belongs on a previous day - ReadingEnd: " + reading.ReadingEnd + " - This day: " + Start);
+            if (reading.ReadingStart >= End)
+                throw new Exception("DeviceDetailPeriod.AddReading - Reading belongs on a subsequent day - ReadingEnd: " + reading.ReadingEnd + " - This day: " + Start);
+
+            ReadingsGeneric.AddReading(reading, (addReadingType == AddReadingType.NewReading) ? ReadingsCollection.AddReadingMode.Insert : ReadingsCollection.AddReadingMode.Insert);
+
+            reading.RegisterPeriodInvolvement(this);
+            if (reading.UpdatePending)
+                PeriodIsDirty();
+        }
+        
+        /*
+        public void AddReadingOld(ReadingBase reading, AddReadingType addReadingType = AddReadingType.NewReading, ConsolidateDeviceSettings.OperationType operation = ConsolidateDeviceSettings.OperationType.Add)
         {
             String stage = "Initial";
             if (reading.ReadingEnd <= Start)
@@ -523,6 +538,7 @@ namespace DeviceDataRecorders
             if (reading.UpdatePending)
                 PeriodIsDirty();
         }
+        */
 
         public virtual void SplitReadingGeneric(ReadingBase oldReading, DateTime splitTime, out ReadingBase newReading1, out ReadingBase newReading2)
         {
@@ -538,7 +554,7 @@ namespace DeviceDataRecorders
         {
             // perform reading adjustments based upon a delta with the previous reading
             ReadingBase previous = null;
-            foreach (ReadingBase r in ReadingsGeneric.Values)
+            foreach (ReadingBase r in ReadingsGeneric.ReadingList)
             {
                 r.CalcFromPreviousGeneric(previous);
                 if (r.IsSameReadingGeneric(stopHere))  // used prior to Clone to provide valid EnergyDelta values
@@ -558,29 +574,28 @@ namespace DeviceDataRecorders
         }
 
         // returns the types readings - they are sorted at time of return
-        public List<TDeviceReading> GetReadings()
+        public IList<TDeviceReading> GetReadings()
         {
+            /*
             List<TDeviceReading> readings = new List<TDeviceReading>();
-            foreach (ReadingBase r in ReadingsGeneric.Values)
+            foreach (ReadingBase r in ReadingsGeneric.ReadingList)
             {
                 readings.Add((TDeviceReading)r);
             }
-            return readings;
+            */
+            return (IList<TDeviceReading>)ReadingsGeneric.ReadingList;
         }
 
         public abstract void SplitReading(TDeviceReading oldReading, DateTime splitTime, out TDeviceReading newReading1, out TDeviceReading newReading2);
 
         public void RemoveReadingAt(int index)
-        {
-            ReadingsGeneric.Values[index].DeregisterPeriodInvolvement(this);
+        {            
             ReadingsGeneric.RemoveAt(index);
         }
 
         public void ClearReadings()
-        {
-            foreach (TDeviceReading reading in ReadingsGeneric.Values)
-                reading.RegisterPeriodInvolvement(this);
-            ReadingsGeneric.Clear();
+        {            
+            ReadingsGeneric.ClearReadings();
         }
 
         protected virtual void AdjustHistory(TDeviceReading prevReading, TDeviceReading reading, TDeviceReading nextReading, TDeviceHistory histRecord)
@@ -606,6 +621,7 @@ namespace DeviceDataRecorders
             return 0;
         }
 
+        /*
         private void AlignIntervals()
         {
             int i = 0;  // position in Readings
@@ -668,77 +684,30 @@ namespace DeviceDataRecorders
                 i++;
             }            
         }
+        */
 
-        private void ReplaceWithMerged(GenConnection con, int interval, int start, int count)
+        private TDeviceReading MergeReadings(DateTime consolidatedEndTime, DateTime startTime, DateTime endTime)
         {
-            DateTime intervalEnd = GetDateTime(interval);
-            TDeviceReading newReading = MergeReadings(intervalEnd, start, count);
-
-            for (int j = 0; j < count; j++)
+            
+            TDeviceReading newReading = NewReading(consolidatedEndTime, endTime - startTime, default(TDeviceReading));
+            foreach(TDeviceReading reading in ReadingsGeneric.ReadingList)
             {
-                TDeviceReading reading = (TDeviceReading)ReadingsGeneric.Values[start];
-                if (reading.InDatabase)
-                {
-                    GlobalSettings.LogMessage("DeviceDetailPeriod.ReplaceWithMerged", 
-                        "Unexpected reading deletion - OutputTime: " + reading.ReadingEnd , LogEntryType.Information);
-                    ReadingsGeneric.Values[start].DeleteReading(con, DeviceId.Value);
-                }
-                RemoveReadingAt(start);
-            }
-            AddReading(newReading);
-        }
-
-        private TDeviceReading MergeIntervals(DateTime consolidatedEndTime, int startInterval, int endInterval)
-        {
-            DateTime startOutputTime = GetDateTime(startInterval);
-            DateTime endOutputTime = GetDateTime(endInterval);
-
-            int? startIndex = null;
-            int? endIndex = null;
-
-            for(int i = 0; i < ReadingsGeneric.Keys.Count; i++)
-            {
-                DateTime key = ReadingsGeneric.Keys[i];
-                if (!startIndex.HasValue)
-                {
-                    if (key >= startOutputTime && key <= endOutputTime)
-                    {
-                        startIndex = i;
-                        break;
-                    }
-                }
-            }
-            for (int i = ReadingsGeneric.Keys.Count - 1; i >= 0; i--)
-            {
-                DateTime key = ReadingsGeneric.Keys[i];
-                if (!endIndex.HasValue)
-                {
-                    if (key <= endOutputTime && key >= startOutputTime)
-                    {
-                        startIndex = i;
-                        break;
-                    }
-                }
-            }
-
-            if (startIndex.HasValue && endIndex.HasValue)
-                return MergeReadings(consolidatedEndTime, startIndex.Value, (endIndex.Value - startIndex.Value) + 1);
-            else
-                return NewReading(consolidatedEndTime, TimeSpan.FromSeconds((1 + endInterval - startInterval) * DatabaseIntervalSeconds), default(TDeviceReading));
-        }
-
-        private TDeviceReading MergeReadings(DateTime consolidatedEndTime, int startReading, int readingCount)
-        {
-            int endInterval = startReading + readingCount - 1;
-            TDeviceReading newReading = NewReading(consolidatedEndTime, TimeSpan.Zero, default(TDeviceReading));
-            for (int i = startReading; i <= endInterval; i++)
-            {
-                TDeviceReading reading = (TDeviceReading)ReadingsGeneric.Values[i];               
+                TDeviceReading thisReading = reading;
+                if (thisReading.ReadingEnd <= startTime)
+                    continue;
+                if (thisReading.ReadingStart >= endTime)
+                    break;
 
                 if ((consolidatedEndTime - newReading.ReadingEnd).TotalSeconds > DatabaseIntervalSeconds)
                     throw new Exception("DeviceDetailPeriod.MergeReadings - reading: " + newReading.ReadingEnd + " - too old for: " + consolidatedEndTime);
 
-                newReading.AccumulateReading(reading);
+                // Trim overhangs
+                if (thisReading.ReadingStart < startTime)
+                    thisReading = reading.Clone(thisReading.ReadingEnd, thisReading.ReadingEnd - startTime);
+                if (thisReading.ReadingEnd > endTime)
+                    thisReading = reading.Clone(endTime, endTime - thisReading.ReadingStart);
+
+                newReading.AccumulateReading(thisReading);
 
                 // If the Output time on an existing reading aligns with an interval end, this entry may already be in the DB
                 // mark new entry with existing status as they share the same DB key
@@ -751,6 +720,7 @@ namespace DeviceDataRecorders
             return newReading;
         }
 
+        /*
         protected override void Normalise(GenConnection con, int activeInterval)
         {
             // correct overlaps; ensure readings do not span database intervals
@@ -805,97 +775,7 @@ namespace DeviceDataRecorders
             if (interval.HasValue)
                 FillSmallGaps(0, interval.Value, false); // do not fill past last normalised reading
         }
-
-        private TimeSpan FillSmallGaps(int startInterval, int endInterval, bool fillEndGap)
-        {
-            int i = 0;  // position in Readings
-            TDeviceReading reading = default(TDeviceReading);
-            TDeviceReading prevReading = default(TDeviceReading);
-            TDeviceReading nextReading = default(TDeviceReading);
-            DateTime prevEndTime = GetDateTime(startInterval-1); // decrement interval to return interval start time
-            TimeSpan gap = TimeSpan.Zero;
-            TimeSpan remainingGaps = TimeSpan.Zero;
-            
-            bool readingsAdded = false;
-
-            while (i < ReadingsGeneric.Count)
-            {
-                reading = (TDeviceReading)ReadingsGeneric.Values[i];
-                if ((i+1) < ReadingsGeneric.Count)
-                    nextReading = (TDeviceReading)ReadingsGeneric.Values[i + 1];
-                else
-                    nextReading = default(TDeviceReading);
-
-                int readingInterval = GetIntervalNo(reading.ReadingEnd);
-                // exit at end of relevant intervals
-                if (readingInterval > endInterval)
-                    break;
-                // ignore entries before relevant intervals
-                if (readingInterval < startInterval)
-                {
-                    i++;
-                    continue;
-                }
-
-                //DateTime thisStartTime = reading.ReadingEnd - reading.Duration;
-                gap = reading.ReadingStart - prevEndTime;
-
-                // Fill this gap with reading based on adjacent readings
-                if (gap > TimeSpan.Zero && gap <= SmallGapLimit)
-                {
-                    TDeviceReading newRec;
-                    if (nextReading != null)
-                    {
-                        newRec = nextReading.FillSmallGap(reading.ReadingStart, gap, true);                        
-                        AddReading(newRec);
-                        reading = newRec;
-                        i++;
-                        readingsAdded = true;
-                    }
-                    else if (prevReading != null)
-                    {
-                        newRec = prevReading.FillSmallGap(reading.ReadingStart, gap, false);
-                        AddReading(newRec);
-                        reading = newRec;
-                        i++;
-                        readingsAdded = true;
-                    }
-                    else
-                        remainingGaps += gap;
-                }
-                else
-                    remainingGaps += gap;
-
-                prevEndTime = reading.ReadingEnd;
-                prevReading = reading;
-                i++;
-            }
-
-            // fill end gap if present and small enough
-            if (fillEndGap)
-            {
-                DateTime endTime = GetDateTime(endInterval);
-                if (prevReading == null)
-                    // no readings - gap is the full history interval
-                    gap = TimeSpan.FromSeconds((1 + endInterval - startInterval) * DeviceParams.RecordingInterval);
-                else
-                    gap = endTime - prevReading.ReadingEnd;
-
-                if (gap > TimeSpan.Zero && gap <= SmallGapLimit)
-                {
-                    TDeviceReading newRec = prevReading.FillSmallGap(endTime, gap, false);
-                    AddReading(newRec);
-                    readingsAdded = true;
-                }
-                else
-                    remainingGaps += gap;
-            }
-
-            // Check interval alignment as gap fill can cross a boundary
-            if (readingsAdded)
-                AlignIntervals();
-            return remainingGaps;
-        }
+        */
 
         private void FillLargeGaps(TDeviceReading actualTotal, TDeviceHistory histRecord, TimeSpan gapsRemaining, DateTime startTime, int startInterval, int endInterval)
         {
@@ -908,9 +788,9 @@ namespace DeviceDataRecorders
 
             while (i < ReadingsGeneric.Count)
             {
-                reading = (TDeviceReading)ReadingsGeneric.Values[i];
+                reading = (TDeviceReading)ReadingsGeneric.ReadingList[i];
                 if ((i + 1) < ReadingsGeneric.Count)
-                    nextReading = (TDeviceReading)ReadingsGeneric.Values[i + 1];
+                    nextReading = (TDeviceReading)ReadingsGeneric.ReadingList[i + 1];
                 else
                     nextReading = default(TDeviceReading);
 
@@ -961,10 +841,10 @@ namespace DeviceDataRecorders
         {
             int i = 0;  // position in Readings
             TDeviceReading reading = default(TDeviceReading);
-
-            while (i < ReadingsGeneric.Count)
+            int count = ReadingsGeneric.ReadingList.Count;
+            while (i < count)
             {
-                reading = (TDeviceReading)ReadingsGeneric.Values[i];
+                reading = (TDeviceReading)ReadingsGeneric.ReadingList[i];
 
                 int readingInterval = GetIntervalNo(reading.ReadingEnd);
                 // exit at end of relevant intervals
@@ -987,7 +867,7 @@ namespace DeviceDataRecorders
         {
             DateTime startTime = histRecord.ReadingStart;
             int endInterval = GetIntervalNo(histRecord.ReadingEnd);
-            int startInterval = GetIntervalNo(startTime, false);
+            int startInterval = GetIntervalNo(histRecord.ReadingStart, false);
 
             if (histRecord.ReadingEnd <= Start || (histRecord.ReadingEnd - Start).TotalHours > 24.0)
                 throw new Exception("DeviceDetailPeriod.AdjustFromHistory - End time is wrong day - endTime: " + histRecord.ReadingEnd + " - Day: " + Start);
@@ -1003,34 +883,31 @@ namespace DeviceDataRecorders
                 throw new Exception("DeviceDetailPeriod.AdjustFromHistory - startTime does not align with interval boundary - endTime: " + histRecord.ReadingEnd + " - interval: " + DatabaseIntervalSeconds);
 
             // clear old history entries
-            ClearHistory(startInterval, endInterval);
+            ClearHistory(histRecord.ReadingStart, histRecord.ReadingEnd);
             if (DeviceParams.UseCalculateFromPrevious)
                 CalcFromPrevious(default(TDeviceReading));
             // fill any gaps up to 30 secs with prorata adjacent values - creates actuals not calculated values
-            TimeSpan remainingGaps = FillSmallGaps(startInterval, endInterval, true);
+            TimeSpan remainingGaps = ReadingsGeneric.FillSmallGaps(histRecord.ReadingStart, histRecord.ReadingEnd, true); 
             // obtain actual total - uses Consolidate
-            TDeviceReading actualTotal = MergeIntervals(GetDateTime(endInterval), startInterval, endInterval);
+            TDeviceReading actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd);
             // fill all remaining gaps with prorata history value
             if (remainingGaps > TimeSpan.Zero)
             {
                 FillLargeGaps(actualTotal, histRecord, remainingGaps, startTime, startInterval, endInterval);
                 // recalculate actualTotal to capture large gap additions
-                actualTotal = MergeIntervals(GetDateTime(endInterval), startInterval, endInterval);
+                actualTotal = actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd);
             }
             // apportion outstanding history values by prorata adjustment 
             if (actualTotal.Compare(histRecord) != 0)
                 ProrataRemainingHistory(actualTotal, histRecord, startTime, startInterval, endInterval);
         }
 
-        private void ClearHistory(int startInterval, int endInterval)
+        private void ClearHistory(DateTime readingStart, DateTime readingEnd)
         {
-            DateTime startOutputTime = GetDateTime(startInterval);
-            DateTime endOutputTime = GetDateTime(endInterval);
-
-            foreach (ReadingBase reading in ReadingsGeneric.Values)
+            foreach (ReadingBase reading in ReadingsGeneric.ReadingList)
             {
-                if (reading.ReadingEnd >= startOutputTime) 
-                    if (reading.ReadingEnd <= endOutputTime)
+                if (reading.ReadingEnd > readingStart) 
+                    if (reading.ReadingStart < readingEnd)
                         reading.ClearHistory();
                     else
                         break;
@@ -1097,8 +974,7 @@ namespace DeviceDataRecorders
                             // Note - if it does not exist and empty one will be created
                             DeviceDetailPeriod<TDeviceReading, TDeviceHistory> period = (DeviceDetailPeriod<TDeviceReading, TDeviceHistory>)periods.FindOrCreate(p.Start);
                             // step through the readings in one period and consolidate into this period
-                            List<TDeviceReading> readings = period.GetReadings();
-                            foreach (TDeviceReading r in readings)
+                            foreach (TDeviceReading r in period.GetReadings())
                                 ConsolidateReading(r, devLink.Operation);
                         }
                         devLink.SourceUpdated = false;
@@ -1155,11 +1031,11 @@ namespace DeviceDataRecorders
             if (index < 0)
             {
                 toReading = NewReading(intervalEnd, TimeSpan.FromSeconds(DatabaseIntervalSeconds), null);
-                ReadingsGeneric.Add(intervalEnd, toReading);
+                ReadingsGeneric.AddReading(toReading);
                 toReading.RegisterPeriodInvolvement(this);
             }
             else
-                toReading = (TDeviceReading)ReadingsGeneric.Values[index];
+                toReading = (TDeviceReading)ReadingsGeneric.ReadingList[index];
 
             toReading.AccumulateReading(reading, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);                
         }

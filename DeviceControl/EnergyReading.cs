@@ -176,6 +176,35 @@ namespace DeviceDataRecorders
             return true;
         }
 
+        public override void GapAdjustAdjacent(ReadingBase adjacentReading, bool adjacentIsBeforeThis)
+        {           
+            if (DeviceParams.UseCalculateFromPrevious)
+            {
+                EnergyReading reading = (EnergyReading)adjacentReading;
+                // this EnergyDelta was taken from adjacent reading
+                reading.EnergyDelta -= EnergyDelta;
+
+                if (adjacentIsBeforeThis)
+                {
+                    // must increase new EnergyToday by new EnergyDelta
+                    if (reading.EnergyToday.HasValue)
+                        reading.EnergyToday -= EnergyDelta;
+                    // must increase new EnergyTotal by this EnergyDelta
+                    if (reading.EnergyTotal.HasValue)
+                        reading.EnergyTotal -= EnergyDelta;
+                }
+                else
+                {                   
+                    // must reduce new EnergyToday by this EnergyDelta
+                    if (EnergyToday.HasValue)
+                        EnergyToday -= EnergyDelta;
+                    // must reduce new EnergyTotal by this EnergyDelta
+                    if (EnergyTotal.HasValue)
+                        EnergyTotal -= EnergyDelta;
+                }
+            }
+        }
+
         public Double TotalReadingDelta 
         { 
             get 
@@ -496,37 +525,6 @@ namespace DeviceDataRecorders
             HistEnergyDeltaInternal = null;
         }
 
-        public override EnergyReading FillSmallGap(DateTime outputTime, TimeSpan duration, bool isNext)
-        {
-            EnergyReading newRec = Clone(outputTime, duration);
-
-            if (DeviceParams.UseCalculateFromPrevious)
-            {                
-                if (isNext)
-                {
-                    // new EnergyDelta is taken from this reading
-                    EnergyDelta -= newRec.EnergyDelta;
-                    // must reduce new EnergyToday by this EnergyDelta
-                    if (newRec.EnergyToday.HasValue)
-                        newRec.EnergyToday -= EnergyDelta;
-                    // must reduce new EnergyTotal by this EnergyDelta
-                    if (newRec.EnergyTotal.HasValue)
-                        newRec.EnergyTotal -= EnergyDelta;
-                }
-                else
-                {
-                    // must increase new EnergyToday by new EnergyDelta
-                    if (newRec.EnergyToday.HasValue)
-                        newRec.EnergyToday += newRec.EnergyDelta;
-                    // must increase new EnergyTotal by this EnergyDelta
-                    if (newRec.EnergyTotal.HasValue)
-                        newRec.EnergyTotal += newRec.EnergyDelta;
-                }
-            }
-
-            return newRec;
-        }
-
         protected override void CalcFromPrevious(EnergyReading prevReading)
         {
             // Following test not required - handled at source
@@ -644,7 +642,7 @@ namespace DeviceDataRecorders
 
         public override void AccumulateReading(EnergyReading reading, Double operationFactor = 1.0)
         {
-            Duration += reading.DurationInternal;
+            //Duration += reading.DurationInternal;
             if (reading.Amps.HasValue)
                 Amps = reading.Amps.Value;
 

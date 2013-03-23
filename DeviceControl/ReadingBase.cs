@@ -210,11 +210,11 @@ namespace DeviceDataRecorders
         public abstract bool PersistReading(GenConnection con, int deviceId);
         public abstract void ClearHistory();
         public abstract bool DeleteReading(GenConnection con, int deviceId);
-
         public abstract void CalcFromPreviousGeneric(ReadingBase prevReading);
         public abstract bool IsSameReadingGeneric(ReadingBase other);
         public abstract bool IsSameReadingValuesGeneric(ReadingBase other);
         public abstract ReadingBase CloneGeneric(DateTime outputTime, TimeSpan duration);
+        public abstract void GapAdjustAdjacent(ReadingBase adjacentReading, bool adjacentIsBeforeThis);
     }
 
     public abstract class ReadingBaseTyped<TDeviceReading, TDeviceHistory> : ReadingBase where TDeviceReading : ReadingBase
@@ -223,8 +223,7 @@ namespace DeviceDataRecorders
             : base()
         {
         }      
-
-        public abstract TDeviceReading FillSmallGap(DateTime thisStartTime, TimeSpan duration, bool isNext);
+        
         public abstract void HistoryAdjust_Average(TDeviceReading actualTotal, TDeviceHistory histRecord);
         public abstract void HistoryAdjust_Prorata(TDeviceReading actualTotal, TDeviceHistory histRecord);
         public abstract void AccumulateReading(TDeviceReading reading, Double operationFactor = 1.0);

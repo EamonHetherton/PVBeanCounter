@@ -210,6 +210,7 @@ namespace DeviceDataRecorders
 
             try
             {
+                GlobalSettings.SystemServices.GetDatabaseMutex();
                 con = GlobalSettings.TheDB.NewConnection();
                 for (int i = 0; i < Periods.Count; )
                 {
