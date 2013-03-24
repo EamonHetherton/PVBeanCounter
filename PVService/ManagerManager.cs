@@ -64,7 +64,7 @@ namespace PVService
                 }
             }
             if (!found)
-                LogMessage("SetPVOutputReady - Cannot locate running PVOutput SystemId: " + systemId, LogEntryType.ErrorMessage);
+                LogMessage("SetPVOutputReady - Cannot locate running PVOutput SystemId: " + systemId, LogEntryType.Information);
             
         }
 

@@ -133,7 +133,7 @@ namespace DeviceDataRecorders
             return res;
         }
 
-        protected void InitialiseBase(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, TimeSpan duration, bool readFromDb, DeviceDataRecorders.DeviceParamsBase deviceParams)
+        protected void InitialiseBase(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, TimeSpan duration, bool readFromDb)
         {
             DeviceDetailPeriods = deviceDetailPeriods;
             AttributeRestoreMode = readFromDb;
@@ -141,10 +141,10 @@ namespace DeviceDataRecorders
             Duration = duration;
             InDatabase = readFromDb;
             UpdatePending = !readFromDb;
-            DeviceParams = deviceParams;
+            DeviceParams = DeviceDetailPeriods.Device.DeviceParams;
         }
 
-        protected void InitialiseBase(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, DateTime readingStart, bool readFromDb, DeviceDataRecorders.DeviceParamsBase deviceParams)
+        protected void InitialiseBase(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, DateTime readingStart, bool readFromDb)
         {
             DeviceDetailPeriods = deviceDetailPeriods;
             AttributeRestoreMode = readFromDb;
@@ -153,7 +153,7 @@ namespace DeviceDataRecorders
             DurationInternal = readingEnd - readingStart; ;
             InDatabase = readFromDb;
             UpdatePending = !readFromDb;
-            DeviceParams = deviceParams;
+            DeviceParams = DeviceDetailPeriods.Device.DeviceParams;
         }
         
         protected DateTime ReadingStartInternal = DateTime.Now;
@@ -215,6 +215,7 @@ namespace DeviceDataRecorders
         public abstract bool IsSameReadingValuesGeneric(ReadingBase other);
         public abstract ReadingBase CloneGeneric(DateTime outputTime, TimeSpan duration);
         public abstract void GapAdjustAdjacent(ReadingBase adjacentReading, bool adjacentIsBeforeThis);
+        public abstract void AccumulateReading(ReadingBase reading, Double operationFactor = 1.0);
     }
 
     public abstract class ReadingBaseTyped<TDeviceReading, TDeviceHistory> : ReadingBase where TDeviceReading : ReadingBase
@@ -226,7 +227,7 @@ namespace DeviceDataRecorders
         
         public abstract void HistoryAdjust_Average(TDeviceReading actualTotal, TDeviceHistory histRecord);
         public abstract void HistoryAdjust_Prorata(TDeviceReading actualTotal, TDeviceHistory histRecord);
-        public abstract void AccumulateReading(TDeviceReading reading, Double operationFactor = 1.0);
+
         public override bool IsSameReadingGeneric(ReadingBase other)
         {
             return IsSameReading((TDeviceReading)other);

@@ -156,7 +156,7 @@ namespace Device
                     EnergyReading reading = new EnergyReading();
                     
                     reading.Initialise(days, curTime, 
-                        LastRecordTime.HasValue ? (curTime - LastRecordTime.Value) : TimeSpan.FromSeconds(DeviceInterval), false, (EnergyParams)DeviceParams);
+                        LastRecordTime.HasValue ? (curTime - LastRecordTime.Value) : TimeSpan.FromSeconds(DeviceInterval), false);
                     LastRecordTime = curTime;
 
                     reading.EnergyToday = (double?)InverterAlgorithm.EnergyTodayAC;
@@ -204,7 +204,7 @@ namespace Device
 
                     if (IsNewdatabaseInterval(reading.ReadingEnd))
                     {
-                        days.UpdateDatabase(null, reading.ReadingEnd);
+                        days.UpdateDatabase(null, reading.ReadingEnd, false, true);
                         List<OutputReadyNotification> notificationList = new List<OutputReadyNotification>();
                         BuildOutputReadyFeatureList(notificationList, FeatureType.YieldAC, 0, reading.ReadingEnd);
                         UpdateConsolidations(notificationList);

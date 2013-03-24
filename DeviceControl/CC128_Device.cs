@@ -138,7 +138,7 @@ namespace Device
                     
                     reading.Initialise(days, liveReading.TimeStampe, 
                         TimeSpan.FromSeconds(
-                        LastRecordTime.HasValue ? (double)(liveReading.TimeStampe - LastRecordTime.Value).TotalSeconds : (double)DeviceInterval), false, (EnergyParams)DeviceParams);
+                        LastRecordTime.HasValue ? (double)(liveReading.TimeStampe - LastRecordTime.Value).TotalSeconds : (double)DeviceInterval), false);
                     LastRecordTime = liveReading.TimeStampe;
 
                     reading.EnergyToday = null;
@@ -176,7 +176,7 @@ namespace Device
 
                     if (IsNewdatabaseInterval(reading.ReadingEnd))
                     {
-                        days.UpdateDatabase(null, reading.ReadingEnd);
+                        days.UpdateDatabase(null, reading.ReadingEnd, false, true);
                         stage = "consolidate";
                         List<OutputReadyNotification> notificationList = new List<OutputReadyNotification>();
                         BuildOutputReadyFeatureList(notificationList, FeatureType.EnergyAC, 0, reading.ReadingEnd);
@@ -216,7 +216,7 @@ namespace Device
                 else
                     day = days.FindOrCreate(histReading.Time.Date);
 
-                EnergyReading hist = new EnergyReading(days, histReading.Time, TimeSpan.FromSeconds(histReading.Duration), (EnergyParams)DeviceParams);
+                EnergyReading hist = new EnergyReading(days, histReading.Time, TimeSpan.FromSeconds(histReading.Duration));
                 hist.EnergyDelta = histReading.Energy;
                 hist.Temperature = histReading.Temperature;
 

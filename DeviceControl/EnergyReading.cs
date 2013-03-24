@@ -63,16 +63,16 @@ namespace DeviceDataRecorders
     {
         public static int EnergyPrecision = 5;
 
-        public EnergyReading(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, TimeSpan duration, EnergyParams deviceParams)
+        public EnergyReading(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, TimeSpan duration)
             : base()
         {
-            Initialise(deviceDetailPeriods, readingEnd, duration, false, deviceParams);
+            Initialise(deviceDetailPeriods, readingEnd, duration, false);
         }
 
-        public EnergyReading(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, TimeSpan duration, bool readFromDb, EnergyParams deviceParams)
+        public EnergyReading(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, TimeSpan duration, bool readFromDb)
             : base()
         {
-            Initialise(deviceDetailPeriods, readingEnd, duration, readFromDb, deviceParams);
+            Initialise(deviceDetailPeriods, readingEnd, duration, readFromDb);
         }
 
         public EnergyReading() // Must call Initialise after this
@@ -80,17 +80,17 @@ namespace DeviceDataRecorders
         {
         }
 
-        public void Initialise(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, TimeSpan duration, bool readFromDb, EnergyParams deviceParams)
+        public void Initialise(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, TimeSpan duration, bool readFromDb)
         {
-            InitialiseBase(deviceDetailPeriods, readingEnd, duration, readFromDb, deviceParams);
+            InitialiseBase(deviceDetailPeriods, readingEnd, duration, readFromDb);
             AveragePowerInternal = null;
             UseInternalCalibration = false;
             EnergyCalibrationFactor = DeviceParams.CalibrationFactor;
         }
 
-        public void Initialise(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, DateTime readingStart, bool readFromDb, EnergyParams deviceParams)
+        public void Initialise(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, DateTime readingStart, bool readFromDb)
         {
-            InitialiseBase(deviceDetailPeriods, readingEnd, readingStart, readFromDb, deviceParams);
+            InitialiseBase(deviceDetailPeriods, readingEnd, readingStart, readFromDb);
             AveragePowerInternal = null;
             UseInternalCalibration = false;
             EnergyCalibrationFactor = DeviceParams.CalibrationFactor;
@@ -603,7 +603,7 @@ namespace DeviceDataRecorders
 
         public override EnergyReading Clone(DateTime outputTime, TimeSpan duration)
         {          
-            EnergyReading newRec = new EnergyReading(DeviceDetailPeriods,  outputTime, duration, true, (EnergyParams)DeviceParams);
+            EnergyReading newRec = new EnergyReading(DeviceDetailPeriods,  outputTime, duration, true);
 
             Double factor = (Double)duration.TotalSeconds / DurationInternal.TotalSeconds;
             
@@ -640,8 +640,9 @@ namespace DeviceDataRecorders
             return newRec;
         }
 
-        public override void AccumulateReading(EnergyReading reading, Double operationFactor = 1.0)
+        public override void AccumulateReading(ReadingBase readingGeneric, Double operationFactor = 1.0)
         {
+            EnergyReading reading = (EnergyReading)readingGeneric;
             //Duration += reading.DurationInternal;
             if (reading.Amps.HasValue)
                 Amps = reading.Amps.Value;

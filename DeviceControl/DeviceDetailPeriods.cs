@@ -170,7 +170,7 @@ namespace DeviceDataRecorders
 
             if (periodReadings == null)
             {
-                periodReadings = NewPeriodReadingsGeneric(periodStart, Device.DeviceParams);
+                periodReadings = NewPeriodReadingsGeneric(periodStart);
                 Add(periodReadings);
             }
             else
@@ -202,7 +202,7 @@ namespace DeviceDataRecorders
             return null;
         }
 
-        protected abstract DeviceDetailPeriodBase NewPeriodReadingsGeneric(DateTime periodStart, DeviceDataRecorders.DeviceParamsBase deviceParams);
+        protected abstract DeviceDetailPeriodBase NewPeriodReadingsGeneric(DateTime periodStart);
 
         public void DiscardOldPeriods()
         {
@@ -218,7 +218,7 @@ namespace DeviceDataRecorders
                     if (period.End <= DateTime.Today)
                     {
                         if (period.UpdatePending)
-                            period.UpdateDatabase(con, null, false);
+                            period.UpdateDatabase(con, null, false, false);
                         if (period.LastFindTime < DateTime.Now.AddSeconds(DiscardInterval))
                             Periods.RemoveAt(i);
                         else
@@ -239,7 +239,7 @@ namespace DeviceDataRecorders
             }
         }
 
-        public void UpdateDatabase(GenConnection con = null, DateTime? activeReadingTime = null, bool purgeUnMatched = false)
+        public void UpdateDatabase(GenConnection con, DateTime? activeReadingTime, bool purgeUnMatched, bool consolidate)
         {
             GlobalSettings.SystemServices.GetDatabaseMutex();
             bool conIsLocal = false;
@@ -258,9 +258,9 @@ namespace DeviceDataRecorders
                 foreach (DeviceDetailPeriodBase item in Periods)
                 {
                     if (activeReadingTime.HasValue && activeReadingTime.Value.Date != item.Start)
-                        item.UpdateDatabase(con, null, purgeUnMatched);
+                        item.UpdateDatabase(con, null, purgeUnMatched, consolidate);
                     else
-                        item.UpdateDatabase(con, activeReadingTime, purgeUnMatched);
+                        item.UpdateDatabase(con, activeReadingTime, purgeUnMatched, consolidate);
                     //GlobalSettings.LogMessage("DeviceDetailPeriodsBase", "UpdateDatabase - After item.UpdateDatabase", LogEntryType.Trace);
                 }
             }
@@ -297,7 +297,7 @@ namespace DeviceDataRecorders
                     break;
                 }
                 ReadingBase thisReading;
-                pReadings.SplitReadingGeneric(nextReading, pReadings.End, out thisReading, out nextReading);
+                pReadings.SplitReading(nextReading, pReadings.End, out thisReading, out nextReading);
                 pReadings.AddReading(thisReading, fromHistory ? AddReadingType.History : AddReadingType.NewReading);
             }
         }
@@ -336,9 +336,9 @@ namespace DeviceDataRecorders
         {
         }
 
-        protected override DeviceDetailPeriodBase NewPeriodReadingsGeneric(DateTime periodStart, DeviceDataRecorders.DeviceParamsBase deviceParams)
+        protected override DeviceDetailPeriodBase NewPeriodReadingsGeneric(DateTime periodStart)
         {
-            DeviceDetailPeriod_EnergyMeter periodReadings = new DeviceDetailPeriod_EnergyMeter(this, PeriodType, periodStart, FeatureSettings, deviceParams);
+            DeviceDetailPeriod_EnergyMeter periodReadings = new DeviceDetailPeriod_EnergyMeter(this, PeriodType, periodStart, FeatureSettings);
             periodReadings.LoadPeriodFromDatabase();
             return periodReadings;
         }
@@ -351,9 +351,9 @@ namespace DeviceDataRecorders
         {
         }
 
-        protected override DeviceDetailPeriodBase NewPeriodReadingsGeneric(DateTime periodStart, DeviceDataRecorders.DeviceParamsBase deviceParams)
+        protected override DeviceDetailPeriodBase NewPeriodReadingsGeneric(DateTime periodStart)
         {
-            DeviceDetailPeriod_EnergyConsolidation periodReadings = new DeviceDetailPeriod_EnergyConsolidation(this, PeriodType, periodStart, FeatureSettings, deviceParams);
+            DeviceDetailPeriod_EnergyConsolidation periodReadings = new DeviceDetailPeriod_EnergyConsolidation(this, PeriodType, periodStart, FeatureSettings);
             periodReadings.LoadPeriodFromConsolidations();
             return periodReadings;
         }

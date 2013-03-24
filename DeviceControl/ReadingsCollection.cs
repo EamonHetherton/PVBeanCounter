@@ -50,7 +50,7 @@ namespace DeviceDataRecorders
      
         // the list must pass the following at all times
         // zero duration readings are illegal as well as all reading or reading/period overlaps
-        private void CheckReadingsIntegrity()
+        public void CheckReadingsIntegrity()
         {
             ReadingBase prevReading = null;
             for(int i = 0; i < Readings.Count; i++)
@@ -117,7 +117,7 @@ namespace DeviceDataRecorders
             return list;
         }
 
-        public void RemoveAt(int i)
+        public void RemoveReadingAt(int i)
         {
             Readings.Values[i].DeregisterPeriodInvolvement(DDP);
             Readings.RemoveAt(i);
@@ -250,7 +250,7 @@ namespace DeviceDataRecorders
                     if (reading.ReadingStart > fillReading.ReadingStart)
                     {
                         ReadingBase new1;
-                        DDP.SplitReadingGeneric(fillReading, reading.ReadingStart, out new1, out fillReading);
+                        DDP.SplitReading(fillReading, reading.ReadingStart, out new1, out fillReading);
                         Readings.Add(new1.ReadingEnd, new1);
                     }
                 }
@@ -258,8 +258,8 @@ namespace DeviceDataRecorders
                 else if (prevReading.ReadingEnd < reading.ReadingStart)
                 {
                     ReadingBase new1;
-                    DDP.SplitReadingGeneric(fillReading, prevReading.ReadingEnd, out new1, out fillReading); // Discard this - it shrinks fillReading
-                    DDP.SplitReadingGeneric(fillReading, reading.ReadingStart, out new1, out fillReading);
+                    DDP.SplitReading(fillReading, prevReading.ReadingEnd, out new1, out fillReading); // Discard this - it shrinks fillReading
+                    DDP.SplitReading(fillReading, reading.ReadingStart, out new1, out fillReading);
                     Readings.Add(new1.ReadingEnd, new1);
                 }
                 prevReading = reading;
@@ -272,7 +272,7 @@ namespace DeviceDataRecorders
             else if (prevReading.ReadingEnd < fillReading.ReadingEnd)
             {
                 ReadingBase new1;
-                DDP.SplitReadingGeneric(fillReading, prevReading.ReadingEnd, out new1, out fillReading); 
+                DDP.SplitReading(fillReading, prevReading.ReadingEnd, out new1, out fillReading); 
                 Readings.Add(fillReading.ReadingEnd, fillReading);
             }
         }
@@ -291,7 +291,7 @@ namespace DeviceDataRecorders
                     {
                         ReadingBase new1;
 
-                        DDP.SplitReadingGeneric(localReading, fromTime.Value, out new1, out localReading);
+                        DDP.SplitReading(localReading, fromTime.Value, out new1, out localReading);
                         Readings.Remove(reading.ReadingEnd);
                         removed = true;
                         deleteReqd = true;
@@ -300,7 +300,7 @@ namespace DeviceDataRecorders
                     if (toTime.HasValue && localReading.ReadingStart < toTime && localReading.ReadingEnd > toTime)
                     {
                         ReadingBase new1;
-                        DDP.SplitReadingGeneric(localReading, toTime.Value, out new1, out localReading);
+                        DDP.SplitReading(localReading, toTime.Value, out new1, out localReading);
                         if (!removed)
                             Readings.Remove(localReading.ReadingEnd);
 
@@ -342,7 +342,7 @@ namespace DeviceDataRecorders
             FillGaps
         }
 
-        public int AddReading(ReadingBase reading, AddReadingMode mode = AddReadingMode.Insert)
+        public void AddReading(ReadingBase reading, AddReadingMode mode = AddReadingMode.Insert)
         {
             if (!CheckReadingPeriodCompatibility(reading))
                 throw new Exception("AddReading - Reading invalid for this period - ReadingStart: "
@@ -358,27 +358,149 @@ namespace DeviceDataRecorders
                             + " - First impact start: " + impactedReadings[0].ReadingStart + " - First impact end: " + impactedReadings[0].ReadingEnd);
             else if (mode == AddReadingMode.InsertReplace)
             {
-                DeleteReadings(impactedReadings, reading.ReadingStart, reading.ReadingEnd); // delete any under footprint
+                if (impactedReadings.Count == 1 && impactedReadings[0].ReadingEnd == reading.ReadingEnd && impactedReadings[0].ReadingStart == reading.ReadingStart)
+                {
+                    // use update rather than delete and insert if record already in database
+                    ReadingBase oldReading = impactedReadings[0];
+                    if (reading.IsSameReadingValuesGeneric(oldReading))
+                    {
+                        oldReading.AddReadingMatch = reading.AddReadingMatch;
+                        return;
+                    }
+                    reading.InDatabase = oldReading.InDatabase;
+                    Readings.Remove(oldReading.ReadingEnd);
+                }
+                else
+                {
+                    DeleteReadings(impactedReadings, reading.ReadingStart, reading.ReadingEnd); // delete any under footprint
+                    reading.InDatabase = false;
+                }
                 Readings.Add(reading.ReadingEnd, reading); // add new or replacement
             }
             else if (mode == AddReadingMode.FillGaps)
                 FillGaps(impactedReadings, reading);
 
             CheckReadingsIntegrity();
-            return 0;
         }
 
         public void ClearReadings()
         {
-            foreach (ReadingBase reading in Readings.Values)
-                reading.DeregisterPeriodInvolvement(DDP);
+            if (Readings != null)
+                foreach (ReadingBase reading in Readings.Values)
+                    reading.DeregisterPeriodInvolvement(DDP);
             Readings = new SortedList<DateTime, ReadingBase>();
         }
 
-        public void DeleteReading(ReadingBase reading)
+        public void AlignIntervals()
         {
-            throw new Exception("DeleteReading - Reading not found - ReadingStart: " + reading.ReadingStart + " - ReadingEnd: " + reading.ReadingEnd);
-        }
+            int i = 0;  // position in Readings
 
+            ReadingBase reading;
+            DateTime? lastTime = null;           
+            while (i < Readings.Count)
+            {
+                try
+                {
+                    reading = Readings.Values[i];
+
+                    lastTime = reading.ReadingEnd;
+
+                    // last interval in current reading
+                    int readingEndInterval = DDP.GetIntervalNo(reading.ReadingEnd);  // end time interval of current reading
+                    //startTime = reading.ReadingEnd -reading.Duration;  // start time of current reading
+
+                    // Ensure no readings cross an interval boundary
+
+                    // get the first interval in the current reading
+                    int readingStartInterval = DDP.GetIntervalNo(reading.ReadingStart, false); // start time interval of current reading
+
+                    while (readingStartInterval < readingEndInterval)  // true if interval boundary is crossed
+                    {
+                        ReadingBase newReading1;
+                        ReadingBase newReading2;
+                        // split the reading at end of first interval in reading
+                        DateTime intervalEndTime = DDP.GetDateTime(readingStartInterval);
+                        DDP.SplitReading(reading, intervalEndTime, out newReading1, out newReading2);
+
+                        // remove old and replace with two new readings
+                        RemoveReadingAt(i);
+                        AddReading(newReading1);
+                        AddReading(newReading2);
+                        i++;
+
+                        // setup for next cycle
+                        reading = newReading2;
+                        readingStartInterval = DDP.GetIntervalNo(reading.ReadingStart, false);
+                    }
+
+                    i++;
+                }
+                catch (Exception e)
+                {
+                    GlobalSettings.LogMessage("ReadingsCollection.AlignIntervals", "Exception: " + e.Message);
+                    throw e;
+                }
+            }
+        }
+       
+        public void ConsolidateIntervals()
+        {
+            AlignIntervals();
+            int i = 0;  // position in Readings
+            
+            ReadingBase reading;
+            DateTime? lastTime = null;
+            int currentInterval = -1;
+
+            ReadingBase accumReading = null;
+            bool replaceReadings = false;
+
+            while (i < Readings.Count)
+            {
+                try
+                {
+                    reading = Readings.Values[i];
+
+                    lastTime = reading.ReadingEnd;
+
+                    int readingInterval = DDP.GetIntervalNo(reading.ReadingEnd);  // end time interval of current reading
+
+                    if (readingInterval > currentInterval) // new interval detected
+                    {
+                        if (replaceReadings)
+                        {
+                            // finalise previous consolidated interval
+                            AddReading(accumReading, AddReadingMode.InsertReplace);
+                            replaceReadings = false;
+                        }
+
+                        // reading is one interval only and end time is end of interval
+                        if (DDP.GetDateTime(readingInterval) == reading.ReadingEnd)
+                        {
+                            replaceReadings = false;
+                            i++;
+                            continue;
+                        }
+                        accumReading = DDP.NewReadingGeneric(DDP.GetDateTime(readingInterval), DDP.IntervalDuration);
+                        replaceReadings = true;
+                        currentInterval = readingInterval;
+                    }
+
+                    accumReading.AccumulateReading(reading);
+                    i++;
+                }
+                catch (Exception e)
+                {
+                    GlobalSettings.LogMessage("ReadingsCollection.ConsolidateIntervals", "Exception: " + e.Message);
+                    throw e;
+                }
+            }
+            if (replaceReadings)
+            {
+                // finalise last consolidated interval
+                AddReading(accumReading, AddReadingMode.InsertReplace);
+                replaceReadings = false;
+            }
+        }
     }
 }

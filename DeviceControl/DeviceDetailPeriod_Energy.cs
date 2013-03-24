@@ -30,8 +30,8 @@ namespace DeviceDataRecorders
 {
     public class DeviceDetailPeriod_EnergyMeter : DeviceDetailPeriod_Physical<EnergyReading, EnergyReading>, IComparable<DeviceDetailPeriod_EnergyMeter>
     {
-        public DeviceDetailPeriod_EnergyMeter(DeviceDetailPeriodsBase deviceDetailPeriods, PeriodType periodType, DateTime periodStart, FeatureSettings feature, DeviceDataRecorders.DeviceParamsBase deviceParams)
-            : base(deviceDetailPeriods, periodType, periodStart, feature, deviceParams)
+        public DeviceDetailPeriod_EnergyMeter(DeviceDetailPeriodsBase deviceDetailPeriods, PeriodType periodType, DateTime periodStart, FeatureSettings feature)
+            : base(deviceDetailPeriods, periodType, periodStart, feature)
         {
         }
 
@@ -106,7 +106,7 @@ namespace DeviceDataRecorders
                         GlobalSettings.LogMessage("DeviceDetailPeriod_EnergyMeter.LoadPeriodFromDatabase", "*******newRec is null", LogEntryType.ErrorMessage);
 
                     stage = "Before Initialise";
-                    newRec.Initialise(DeviceDetailPeriods, endTime, startTime, true, (EnergyParams)DeviceParams);
+                    newRec.Initialise(DeviceDetailPeriods, endTime, startTime, true);
 
                     stage = "EnergyTotal";
                     newRec.EnergyTotal = dr.GetNullableDouble(2, EnergyReading.EnergyPrecision);
@@ -163,14 +163,8 @@ namespace DeviceDataRecorders
             }
         }
 
-        public override void SplitReading(EnergyReading oldReading, DateTime splitTime, out EnergyReading newReading1, out EnergyReading newReading2)
+        protected override void SplitReadingSub(EnergyReading oldReading, DateTime splitTime, EnergyReading newReading1, EnergyReading newReading2)
         {
-            ReadingBase newReading1a;
-            ReadingBase newReading2a;
-            base.SplitReadingGeneric((ReadingBase)oldReading, splitTime, out newReading1a, out newReading2a);
-
-            newReading1 = (EnergyReading)newReading1a;
-            newReading2 = (EnergyReading)newReading2a;
             if (newReading1.EnergyToday.HasValue)
                 newReading1.EnergyToday -= newReading2.EnergyDelta;
             if (newReading1.EnergyTotal.HasValue)
@@ -182,7 +176,7 @@ namespace DeviceDataRecorders
             EnergyReading newEnergyReading;
 
             if (pattern == null)
-                newEnergyReading = new EnergyReading(DeviceDetailPeriods, outputTime, duration, (EnergyParams)DeviceParams);
+                newEnergyReading = new EnergyReading(DeviceDetailPeriods, outputTime, duration);
             else
             {
                 newEnergyReading = pattern.Clone(outputTime, duration);
@@ -199,8 +193,8 @@ namespace DeviceDataRecorders
     public class DeviceDetailPeriod_EnergyConsolidation : DeviceDetailPeriod_Consolidation<EnergyReading, EnergyReading>, IComparable<DeviceDetailPeriod_EnergyConsolidation>
     {
         public DeviceDetailPeriod_EnergyConsolidation(DeviceDetailPeriodsBase deviceDetailPeriods, PeriodType periodType, DateTime periodStart, 
-            FeatureSettings feature, DeviceDataRecorders.DeviceParamsBase deviceParams)
-            : base(deviceDetailPeriods, periodType, periodStart, feature, deviceParams)
+            FeatureSettings feature)
+            : base(deviceDetailPeriods, periodType, periodStart, feature)
         {
         }
 
@@ -215,7 +209,7 @@ namespace DeviceDataRecorders
 
             if (pattern == null)
             {
-                newEnergyReading = new EnergyReading(DeviceDetailPeriods, outputTime, duration,  (EnergyParams)DeviceParams);
+                newEnergyReading = new EnergyReading(DeviceDetailPeriods, outputTime, duration);
                 newEnergyReading.IsConsolidationReading = true;
             }
             else
@@ -231,22 +225,15 @@ namespace DeviceDataRecorders
             return newEnergyReading;
         }
 
-        public override void SplitReading(EnergyReading oldReading, DateTime splitTime, out EnergyReading newReading1, out EnergyReading newReading2)
-        {
-            ReadingBase newReading1a;
-            ReadingBase newReading2a;
-            base.SplitReadingGeneric((ReadingBase)oldReading, splitTime, out newReading1a, out newReading2a);
-
-            newReading1 = (EnergyReading)newReading1a;
-            newReading1.IsConsolidationReading = true;
-            newReading2 = (EnergyReading)newReading2a;
+        protected override void SplitReadingSub(EnergyReading oldReading, DateTime splitTime, EnergyReading newReading1, EnergyReading newReading2)
+        {            
+            newReading1.IsConsolidationReading = true;            
             newReading2.IsConsolidationReading = true;
             if (newReading1.EnergyToday.HasValue)
                 newReading1.EnergyToday -= newReading2.EnergyDelta;
             if (newReading1.EnergyTotal.HasValue)
                 newReading1.EnergyTotal -= newReading2.EnergyDelta;
         }
-
     }
 
 }

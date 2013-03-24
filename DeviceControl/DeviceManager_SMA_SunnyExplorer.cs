@@ -863,7 +863,7 @@ namespace DeviceControl
                                             device.ProcessOneHistoryReading(reading);
                                     }
                                     stage = "UpdateDatabase";
-                                    device.Days.UpdateDatabase(null, null, true);
+                                    device.Days.UpdateDatabase(null, null, true, false);
                                 }
                                 catch (Exception e)
                                 {

@@ -120,7 +120,7 @@ namespace Device
                 EnergyReading reading = new EnergyReading();
 
                 reading.Initialise(days, liveReading.TimeStampe, 
-                    TimeSpan.FromSeconds((double)DeviceInterval), false, (EnergyParams)DeviceParams);  // SE is always 5 minute readings
+                    TimeSpan.FromSeconds((double)DeviceInterval), false);  // SE is always 5 minute readings
                 LastRecordTime = liveReading.TimeStampe;
 
                 reading.EnergyToday = null;
@@ -147,6 +147,7 @@ namespace Device
 
                 stage = "record";
 
+                reading.AddReadingMatch = true;
                 days.AddRawReading(reading, true);
                 
                 List<OutputReadyNotification> notificationList = new List<OutputReadyNotification>();
