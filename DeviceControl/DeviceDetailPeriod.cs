@@ -620,16 +620,15 @@ namespace DeviceDataRecorders
         }
 
         // returns the types readings - they are sorted at time of return
-        public IList<TDeviceReading> GetReadings()
-        {
-            /*
+        public List<TDeviceReading> GetReadings()
+        {           
             List<TDeviceReading> readings = new List<TDeviceReading>();
             foreach (ReadingBase r in ReadingsGeneric.ReadingList)
             {
                 readings.Add((TDeviceReading)r);
             }
-            */
-            return (IList<TDeviceReading>)ReadingsGeneric.ReadingList;
+            
+            return readings;
         }
 
         protected void SplitReadingCore(ReadingBase oldReading, DateTime splitTime, out ReadingBase newReading1, out ReadingBase newReading2)
@@ -716,8 +715,8 @@ namespace DeviceDataRecorders
                     newReading.InDatabase = reading.InDatabase;
             }
             
-            if (newReading.GetModeratedSeconds(3) > DatabaseIntervalSeconds)
-                throw new Exception("DeviceDetailPeriod.MergeReadings - Duration too large: " + newReading.Duration);
+            //if (newReading.GetModeratedSeconds(3) > DatabaseIntervalSeconds)
+            //    throw new Exception("DeviceDetailPeriod.MergeReadings - Duration too large: " + newReading.Duration);
             return newReading;
         }
 
