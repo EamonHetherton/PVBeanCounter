@@ -267,9 +267,9 @@ namespace DeviceControl
                 {
                     try
                     {
-                        LogMessage("SunnyExplorer taking too long - over " + MaxSunnyExplorerRunTime + " minutes", LogEntryType.ErrorMessage);
+                        LogMessage("SunnyExplorer taking too long - over " + MaxSunnyExplorerRunTime + " minutes", LogEntryType.Information);
                         exeProcess.Kill();
-                        LogMessage("SunnyExplorer killed", LogEntryType.ErrorMessage);
+                        LogMessage("SunnyExplorer killed", LogEntryType.Trace);
                     }
                     catch (Exception e)
                     {
@@ -313,9 +313,9 @@ namespace DeviceControl
                 }
                 else
                 {
-                    LogMessage("Sunny Explorer - CSV Export Failed" + output, LogEntryType.ErrorMessage);
-                    LogMessage("Sunny Explorer - Standard Output: " + output, LogEntryType.ErrorMessage);
-                    LogMessage("Sunny Explorer - Error Output: " + ErrorOutput.ToString(), LogEntryType.ErrorMessage);
+                    LogMessage("Sunny Explorer - CSV Export Failed" + output, LogEntryType.Information);
+                    LogMessage("Sunny Explorer - Standard Output: " + output, LogEntryType.Trace);
+                    LogMessage("Sunny Explorer - Error Output: " + ErrorOutput.ToString(), LogEntryType.Trace);
                 }
             }
             catch (Exception e)
