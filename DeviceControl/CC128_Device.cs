@@ -176,7 +176,7 @@ namespace Device
 
                     if (IsNewdatabaseInterval(reading.ReadingEnd))
                     {
-                        days.UpdateDatabase(null, reading.ReadingEnd, false, true);
+                        days.UpdateDatabase(null, reading.ReadingEnd, false, PreviousDatabaseIntervalEnd);
                         stage = "consolidate";
                         List<OutputReadyNotification> notificationList = new List<OutputReadyNotification>();
                         BuildOutputReadyFeatureList(notificationList, FeatureType.EnergyAC, 0, reading.ReadingEnd);

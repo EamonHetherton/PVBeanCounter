@@ -443,7 +443,7 @@ namespace DeviceDataRecorders
             }
         }
        
-        public void ConsolidateIntervals()
+        public void ConsolidateIntervals(DateTime consolidateTo)
         {
             AlignIntervals();
             int i = 0;  // position in Readings
@@ -473,6 +473,9 @@ namespace DeviceDataRecorders
                             AddReading(accumReading, AddReadingMode.InsertReplace);
                             replaceReadings = false;
                         }
+
+                        if (reading.ReadingStart >= consolidateTo)
+                            return;
 
                         // reading is one interval only and end time is end of interval
                         if (DDP.GetDateTime(readingInterval) == reading.ReadingEnd)

@@ -111,6 +111,7 @@ namespace DeviceDataRecorders
             }
         }
 
+        /*
         public static int GetIntervalNo(TimeSpan intervalTime, int intervalSeconds, bool isEndTime = true)
         {
             Decimal seconds = Math.Round((Decimal)(intervalTime.TotalSeconds), 3);  // round to nearest millisecond
@@ -132,6 +133,7 @@ namespace DeviceDataRecorders
             }
             return res;
         }
+        */
 
         protected void InitialiseBase(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, TimeSpan duration, bool readFromDb)
         {

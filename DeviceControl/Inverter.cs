@@ -204,7 +204,7 @@ namespace Device
 
                     if (IsNewdatabaseInterval(reading.ReadingEnd))
                     {
-                        days.UpdateDatabase(null, reading.ReadingEnd, false, true);
+                        days.UpdateDatabase(null, reading.ReadingEnd, false, PreviousDatabaseIntervalEnd);
                         List<OutputReadyNotification> notificationList = new List<OutputReadyNotification>();
                         BuildOutputReadyFeatureList(notificationList, FeatureType.YieldAC, 0, reading.ReadingEnd);
                         UpdateConsolidations(notificationList);

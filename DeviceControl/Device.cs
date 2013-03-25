@@ -449,17 +449,38 @@ namespace Device
         }
 
         private int PreviousDatabaseInterval = -1;
+        private int CurrentDatabaseInterval = -1;
         private DateTime PreviousDay = DateTime.MinValue;
+        private DateTime CurrentDay = DateTime.MinValue;
+
         public bool IsNewdatabaseInterval(DateTime checkTime)
         {
-            int thisInterval = DeviceDataRecorders.ReadingBase.GetIntervalNo(checkTime.TimeOfDay, DatabaseInterval);
-            if (PreviousDay != checkTime.Date || thisInterval != PreviousDatabaseInterval)
+            int thisInterval = DeviceDataRecorders.PeriodBase.GetIntervalNo(PeriodType.Day, TimeSpan.Zero, checkTime, DatabaseInterval);
+            if (CurrentDatabaseInterval == -1)
             {
-                PreviousDay = checkTime.Date;
-                PreviousDatabaseInterval = thisInterval;
-                return (PreviousDatabaseInterval != -1);
+                CurrentDatabaseInterval = thisInterval;
+                CurrentDay = PeriodBase.GetPeriodStart(PeriodType.Day, TimeSpan.Zero, checkTime, true);
+            }
+            if (CurrentDay != checkTime.Date || thisInterval != CurrentDatabaseInterval)
+            {
+                PreviousDay = CurrentDay;
+                CurrentDay = PeriodBase.GetPeriodStart(PeriodType.Day, TimeSpan.Zero, checkTime, true);
+                PreviousDatabaseInterval = CurrentDatabaseInterval;
+                CurrentDatabaseInterval = thisInterval;
+                return true;
             }
             return false;            
+        }
+
+        protected DateTime? PreviousDatabaseIntervalEnd
+        {
+            get
+            {
+                if (PreviousDatabaseInterval == -1)
+                    return null;
+                
+                return PreviousDay + TimeSpan.FromSeconds((PreviousDatabaseInterval + 1) * DatabaseInterval);
+            }
         }
 
         public static void BuildOutputReadyFeatureList(List<OutputReadyNotification> featureList, FeatureType featureType, uint featureId, DateTime readingEnd)

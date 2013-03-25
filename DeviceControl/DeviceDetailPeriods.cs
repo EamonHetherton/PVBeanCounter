@@ -218,7 +218,7 @@ namespace DeviceDataRecorders
                     if (period.End <= DateTime.Today)
                     {
                         if (period.UpdatePending)
-                            period.UpdateDatabase(con, null, false, false);
+                            period.UpdateDatabase(con, null, false, null);
                         if (period.LastFindTime < DateTime.Now.AddSeconds(DiscardInterval))
                             Periods.RemoveAt(i);
                         else
@@ -239,7 +239,7 @@ namespace DeviceDataRecorders
             }
         }
 
-        public void UpdateDatabase(GenConnection con, DateTime? activeReadingTime, bool purgeUnMatched, bool consolidate)
+        public void UpdateDatabase(GenConnection con, DateTime? activeReadingTime, bool purgeUnMatched, DateTime? consolidateTo)
         {
             GlobalSettings.SystemServices.GetDatabaseMutex();
             bool conIsLocal = false;
@@ -253,14 +253,12 @@ namespace DeviceDataRecorders
                     conIsLocal = true;
                 }
                 //GlobalSettings.LogMessage("DeviceDetailPeriodsBase", "UpdateDatabase - Before Loop", LogEntryType.Trace);
-                //if (Periods == null)
-                //    GlobalSettings.LogMessage("DeviceDetailPeriodsBase", "Null Periods", LogEntryType.Trace);
                 foreach (DeviceDetailPeriodBase item in Periods)
                 {
                     if (activeReadingTime.HasValue && activeReadingTime.Value.Date != item.Start)
-                        item.UpdateDatabase(con, null, purgeUnMatched, consolidate);
+                        item.UpdateDatabase(con, null, purgeUnMatched, consolidateTo);
                     else
-                        item.UpdateDatabase(con, activeReadingTime, purgeUnMatched, consolidate);
+                        item.UpdateDatabase(con, activeReadingTime, purgeUnMatched, consolidateTo);
                     //GlobalSettings.LogMessage("DeviceDetailPeriodsBase", "UpdateDatabase - After item.UpdateDatabase", LogEntryType.Trace);
                 }
             }

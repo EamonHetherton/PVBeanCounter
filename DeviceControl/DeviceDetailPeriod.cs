@@ -93,6 +93,12 @@ namespace DeviceDataRecorders
             return GetPeriodStart(PeriodType, Offset, readingTime, IsReadingEnd);
         }
 
+        public int GetIntervalNo(DateTime readingTime, bool isReadingEnd = true)
+        {
+            return GetIntervalNo(PeriodType, Offset, readingTime, DatabaseIntervalSeconds, isReadingEnd);
+        }
+
+        /* God only knows how this ever worked!!!
         public static DateTime GetPeriodStart(PeriodType periodType, TimeSpan periodOffset, DateTime readingTime, bool IsReadingEnd = true)
         {
             TimeSpan offset = CalcStandardStartOffset(periodType, readingTime - periodOffset);
@@ -101,11 +107,44 @@ namespace DeviceDataRecorders
                 if (offset == TimeSpan.Zero)
                     return CalcRelativeDateTime(periodType, readingTime, -1);
                 else
-                    return readingTime;
+                    return readingTime;   // *************** This is a nonsense
             }
             else
                 return readingTime - offset;
         }
+        */
+
+        public static DateTime GetPeriodStart(PeriodType periodType, TimeSpan periodOffset, DateTime readingTime, bool isReadingEnd = true)
+        {
+            TimeSpan offset = CalcStandardStartOffset(periodType, readingTime - periodOffset);
+            if (isReadingEnd && offset == TimeSpan.Zero)            
+                return CalcRelativeDateTime(periodType, readingTime, -1);  // for an end time this is the end of the last possible reading in the previous period        
+            else
+                return readingTime - offset;
+        }
+
+        public static int GetIntervalNo(PeriodType periodType, TimeSpan periodOffset, DateTime readingTime, int intervalSeconds, bool isReadingEnd = true)
+        {
+            DateTime periodStart = GetPeriodStart(periodType, periodOffset, readingTime, isReadingEnd);
+            TimeSpan offset = readingTime - periodStart;
+            Decimal seconds = Math.Round((Decimal)(offset.TotalSeconds), 3);  // round to nearest millisecond
+            int res = (int)Math.Truncate(seconds / intervalSeconds);
+            if (!isReadingEnd)
+                return res;
+
+            Decimal rem = seconds % intervalSeconds;
+            if (rem == 0)
+            {
+                if (res > 0)
+                    res--;
+                else
+                    throw new Exception("DeviceDetailPeriod.GetIntervalNo - End of period reading produced incorrect periodStart" 
+                        + " - periodType: " + periodType + " - periodOffset: " + periodOffset
+                        + " - readingTime: " + readingTime + " - periodStart: " + periodStart);
+            }
+            return res;
+        }
+
 
         // Calculates the timespan from the standard period start datetime of the period containing the specified datetime, to the specified datetime
         public static TimeSpan CalcStandardStartOffset(PeriodType periodType, DateTime dateTime)
@@ -322,18 +361,16 @@ namespace DeviceDataRecorders
             return Start.AddSeconds(interval * DatabaseIntervalSeconds);
         }
 
+        /*
         public int GetIntervalNo(DateTime intervalTime, bool isEndTime = true)
         {
-            if (isEndTime)
-            {
-                if (Start == intervalTime || Start != intervalTime.Date && intervalTime != Start.AddDays(1.0))
-                    throw new Exception("DeviceDetailDay.GetIntervalNo - Wrong Day");
-            }
-            else if (Start != intervalTime.Date)
+            DateTime periodStart = GetPeriodStart(intervalTime, isEndTime);
+            if (Start != periodStart)
                 throw new Exception("DeviceDetailDay.GetIntervalNo - Wrong Day");
 
             return ReadingBase.GetIntervalNo(intervalTime.TimeOfDay, DatabaseIntervalSeconds, isEndTime);
         }
+        */
 
         //protected abstract void Normalise(GenConnection con, int activeInterval);
 
@@ -350,7 +387,7 @@ namespace DeviceDataRecorders
                     reading.AddReadingMatch = value;
         }
 
-        public void UpdateDatabase(GenConnection con, DateTime? activeReadingTime, bool purgeUnmatched, bool consolidate)
+        public void UpdateDatabase(GenConnection con, DateTime? activeReadingTime, bool purgeUnmatched, DateTime? consolidateTo)
         {
             //GlobalSettings.LogMessage("DeviceDetailPeriodBase", "UpdateDatabase - Entry", LogEntryType.Trace);
             int activeInterval = -1;
@@ -359,8 +396,8 @@ namespace DeviceDataRecorders
             //GlobalSettings.LogMessage("DeviceDetailPeriodBase", "UpdateDatabase - Before Normalise", LogEntryType.Trace);
             ReadingsGeneric.FillSmallGaps(Start, End, false);
             //GlobalSettings.LogMessage("DeviceDetailPeriodBase", "UpdateDatabase - Before Loop", LogEntryType.Trace);
-            if (consolidate)
-                ReadingsGeneric.ConsolidateIntervals();
+            if (consolidateTo.HasValue)
+                ReadingsGeneric.ConsolidateIntervals(consolidateTo.Value);
             ReadingsGeneric.CheckReadingsIntegrity();
 
             for (int i = 0; i < ReadingsGeneric.Count; )
@@ -414,9 +451,9 @@ namespace DeviceDataRecorders
                 PeriodIsDirty();
         }
 
-        public void ConsolidateReadings()
+        public void ConsolidateReadings(DateTime consolidateTo)
         {
-            ReadingsGeneric.ConsolidateIntervals();
+            ReadingsGeneric.ConsolidateIntervals(consolidateTo);
         }
         
         /*
