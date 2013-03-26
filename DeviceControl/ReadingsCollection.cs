@@ -159,82 +159,98 @@ namespace DeviceDataRecorders
             TimeSpan remainingGaps = TimeSpan.Zero;
 
             bool readingsAdded = false;
+            String stage = "initial";
 
-            while (i < Readings.Count)
+            try
             {
-                reading = Readings.Values[i];
-                if ((i + 1) < Readings.Count)
-                    nextReading = Readings.Values[i + 1];
-                else
-                    nextReading = null;
-
-                // exit when end of range reached
-                if (reading.ReadingEnd >= readingEnd)
-                    break;
-
-                // ignore readings before start time
-                if (reading.ReadingStart < readingStart)
+                while (i < Readings.Count)
                 {
-                    i++;
-                    continue;
-                }
-
-                gap = reading.ReadingStart - prevEndTime;
-
-                // Fill this gap with reading based on adjacent readings
-                if (gap > TimeSpan.Zero && gap <= SmallGapLimit)
-                {
-                    ReadingBase newRec;
-                    if (prevReading != null)
-                    {
-                        newRec = FillSmallGap(prevReading, reading.ReadingStart);
-                        AddReading(newRec);
-                        reading = newRec;
-                        i++;
-                        readingsAdded = true;
-                    }
+                    reading = Readings.Values[i];
+                    if ((i + 1) < Readings.Count)
+                        nextReading = Readings.Values[i + 1];
                     else
+                        nextReading = null;
+
+                    // exit when end of range reached
+                    if (reading.ReadingEnd >= readingEnd)
                     {
-                        newRec = FillSmallGap(reading, prevEndTime);
-                        AddReading(newRec);
-                        i++;
-                        readingsAdded = true;
+                        // prevent fillEndGap from acting
+                        prevReading = reading;
+
+                        break;
                     }
-                }
-                else
-                    remainingGaps += gap;
 
-                prevEndTime = reading.ReadingEnd;
-                prevReading = reading;
-                i++;
-            }
-
-            // fill end gap if present and small enough
-            if (fillEndGap)
-                if (prevReading != null)
-                {
-                    if (prevReading.ReadingEnd < readingEnd)
+                    // ignore readings before start time
+                    if (reading.ReadingStart < readingStart)
                     {
-                        gap = readingEnd - prevReading.ReadingEnd;
+                        i++;
+                        continue;
+                    }
 
-                        if (gap > TimeSpan.Zero && gap <= SmallGapLimit)
+                    gap = reading.ReadingStart - prevEndTime;
+
+                    // Fill this gap with reading based on adjacent readings
+                    if (gap > TimeSpan.Zero && gap <= SmallGapLimit)
+                    {
+                        ReadingBase newRec;
+                        if (prevReading != null)
                         {
-                            ReadingBase newRec = FillSmallGap(prevReading, readingEnd);
+                            stage = "FillSmallGap 1";
+                            newRec = FillSmallGap(prevReading, reading.ReadingStart);
                             AddReading(newRec);
+                            reading = newRec;
+                            i++;
                             readingsAdded = true;
                         }
                         else
-                            remainingGaps += gap;
+                        {
+                            stage = "FillSmallGap 2";
+                            newRec = FillSmallGap(reading, prevEndTime);
+                            AddReading(newRec);
+                            i++;
+                            readingsAdded = true;
+                        }
                     }
-                }
-                else
-                {
-                    remainingGaps += (readingEnd - readingStart);
+                    else
+                        remainingGaps += gap;
+
+                    prevEndTime = reading.ReadingEnd;
+                    prevReading = reading;
+                    i++;
                 }
 
-            // Check interval alignment as gap fill can cross a boundary
-            if (readingsAdded)
-                CheckReadingsIntegrity();
+                // fill end gap if present and small enough
+                stage = "FillEndGap";
+                if (fillEndGap)
+                    if (prevReading != null)
+                    {
+                        if (prevReading.ReadingEnd < readingEnd)
+                        {
+                            gap = readingEnd - prevReading.ReadingEnd;
+
+                            if (gap > TimeSpan.Zero && gap <= SmallGapLimit)
+                            {
+                                ReadingBase newRec = FillSmallGap(prevReading, readingEnd);
+                                AddReading(newRec);
+                                readingsAdded = true;
+                            }
+                            else
+                                remainingGaps += gap;
+                        }
+                    }
+                    else
+                    {
+                        remainingGaps += (readingEnd - readingStart);
+                    }
+                stage = "Check";
+                // Check interval alignment as gap fill can cross a boundary
+                if (readingsAdded)
+                    CheckReadingsIntegrity();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("FillSmallGaps - Stage: " + stage + " - Exception: " + e.Message, e);
+            }
 
             return remainingGaps;
         }

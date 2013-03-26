@@ -210,6 +210,7 @@ namespace DeviceControl
 
                                         ReadingInfo.RecordsMutex.WaitOne();
                                         
+                                        /*
                                         // check for history across midnight - must split into two 1 hour entries
                                         // each history entry only affects one day
                                         if (tod == TimeSpan.FromHours(1.0))
@@ -220,22 +221,23 @@ namespace DeviceControl
                                             curRec.Energy = curRec.Energy / 2.0;
                                             ReadingInfo.HistoryRecords[index].Add(curRec);
                                             if (GlobalSettings.SystemServices.LogTrace)
-                                                LogMessage("InsertHistoryMeterReading", "Adding new hour history to List: time: " + curRec.Time
+                                                LogMessage("ExtractNewHistory", "Adding new hour history to List (12:00AM): time: " + curRec.Time
                                                     + " : Sensor: " + curRec.Sensor + " : Energy: " + curRec.Energy
                                                     + " : ReadingNo: " + intervalNo, LogEntryType.Trace);
                                             curRec.Time = orig;
                                             ReadingInfo.HistoryRecords[index].Add(curRec);
                                         }
-                                        else                                        
-                                            ReadingInfo.HistoryRecords[index].Add(curRec);
-                                        
-                                        ReadingInfo.RecordsMutex.ReleaseMutex();
-                                        ReadingInfo.RecordsAvailEvent.Set();
+                                        else 
+                                        */
+                                        ReadingInfo.HistoryRecords[index].Add(curRec);                                       
 
                                         if (GlobalSettings.SystemServices.LogTrace)
-                                            LogMessage("InsertHistoryMeterReading", "Adding new hour history to List: time: " + curRec.Time
+                                            LogMessage("ExtractNewHistory", "Adding new 2 hour history to List: time: " + curRec.Time
                                                 + " : Sensor: " + curRec.Sensor + " : Energy: " + curRec.Energy
                                                 + " : ReadingNo: " + intervalNo, LogEntryType.Trace);
+
+                                        ReadingInfo.RecordsMutex.ReleaseMutex();
+                                        ReadingInfo.RecordsAvailEvent.Set();
                                     }
                                 }
                             }

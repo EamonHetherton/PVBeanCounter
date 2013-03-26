@@ -230,6 +230,8 @@ namespace Device
                 
                 day = days.FindOrCreate(histReading.Time.Date); // get correct day
                 hist = new EnergyReading(days, histReading.Time, TimeSpan.FromSeconds(histReading.Duration));
+                hist.EnergyDelta = histReading.Energy;
+                hist.Temperature = histReading.Temperature;
                 day.AdjustFromHistory(hist);
 
                 return true;

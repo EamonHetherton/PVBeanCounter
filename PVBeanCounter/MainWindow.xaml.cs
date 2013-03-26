@@ -672,8 +672,20 @@ namespace PVBeanCounter
             {
                 comboBoxDeviceType.ItemsSource = ((DeviceManagerSettings)gridDeviceManagers.DataContext).DeviceListItems;
                 comboBoxListenerDevice.ItemsSource = ((DeviceManagerSettings)gridDeviceManagers.DataContext).DeviceListItems;
-                gridSunnyExplorerAdvanced.Visibility =
-                    ((DeviceManagerSettings)gridDeviceManagers.DataContext).ManagerType == DeviceManagerType.SMA_SunnyExplorer ? Visibility.Visible : Visibility.Collapsed;
+                if (((DeviceManagerSettings)gridDeviceManagers.DataContext).ManagerType == DeviceManagerType.SMA_SunnyExplorer)
+                {
+                    gridSunnyExplorerAdvanced.Visibility = Visibility.Visible;
+                    labelDeviceDB.Visibility = Visibility.Hidden;
+                    textBoxDeviceDB.Visibility = Visibility.Hidden;
+                    butBrowseOwlDb.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    gridSunnyExplorerAdvanced.Visibility = Visibility.Collapsed;
+                    labelDeviceDB.Visibility = Visibility.Hidden;
+                    textBoxDeviceDB.Visibility = Visibility.Hidden;
+                    butBrowseOwlDb.Visibility = Visibility.Hidden;
+                }
                 gridHistoryHours.Visibility =
                         ((DeviceManagerSettings)gridDeviceManagers.DataContext).ManagerType == DeviceManagerType.CC128 ? Visibility.Visible : Visibility.Collapsed;
                 gridHistoryDays.Visibility =

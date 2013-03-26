@@ -865,41 +865,60 @@ namespace DeviceDataRecorders
 
         public void AdjustFromHistory(TDeviceHistory histRecord)
         {
-            DateTime startTime = histRecord.ReadingStart;
-            int endInterval = GetIntervalNo(histRecord.ReadingEnd);
-            int startInterval = GetIntervalNo(histRecord.ReadingStart, false);
-
-            if (histRecord.ReadingEnd <= Start || (histRecord.ReadingEnd - Start).TotalHours > 24.0)
-                throw new Exception("DeviceDetailPeriod.AdjustFromHistory - End time is wrong day - endTime: " + histRecord.ReadingEnd + " - Day: " + Start);
-
-            if (GetDateTime(endInterval) != histRecord.ReadingEnd)
-                throw new Exception("DeviceDetailPeriod.AdjustFromHistory - End time does not align with interval boundary - endTime: " + histRecord.ReadingEnd + " - interval: " + DatabaseIntervalSeconds);
-
-            if (startTime < Start)
-                throw new Exception("DeviceDetailPeriod.AdjustFromHistory - startTime is wrong day - startTime: " + startTime + " - Day: " + Start);
-
-            if (GetDateTime(startInterval) 
-                != startTime + TimeSpan.FromSeconds(DatabaseIntervalSeconds))
-                throw new Exception("DeviceDetailPeriod.AdjustFromHistory - startTime does not align with interval boundary - endTime: " + histRecord.ReadingEnd + " - interval: " + DatabaseIntervalSeconds);
-
-            // clear old history entries
-            ClearHistory(histRecord.ReadingStart, histRecord.ReadingEnd);
-            if (DeviceParams.UseCalculateFromPrevious)
-                CalcFromPrevious(default(TDeviceReading));
-            // fill any gaps up to 30 secs with prorata adjacent values - creates actuals not calculated values
-            TimeSpan remainingGaps = ReadingsGeneric.FillSmallGaps(histRecord.ReadingStart, histRecord.ReadingEnd, true); 
-            // obtain actual total - uses Consolidate
-            TDeviceReading actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd);
-            // fill all remaining gaps with prorata history value
-            if (remainingGaps > TimeSpan.Zero)
+            String stage = "initial";
+            try
             {
-                FillLargeGaps(actualTotal, histRecord, remainingGaps, startTime, startInterval, endInterval);
-                // recalculate actualTotal to capture large gap additions
-                actualTotal = actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd);
+                DateTime startTime = histRecord.ReadingStart;
+                int endInterval = GetIntervalNo(histRecord.ReadingEnd);
+                int startInterval = GetIntervalNo(histRecord.ReadingStart, false);
+
+                stage = "validation";
+                if (histRecord.ReadingEnd <= Start || (histRecord.ReadingEnd - Start).TotalHours > 24.0)
+                    throw new Exception("DeviceDetailPeriod.AdjustFromHistory - End time is wrong day - endTime: " + histRecord.ReadingEnd + " - Day: " + Start);
+
+                if (GetDateTime(endInterval) != histRecord.ReadingEnd)
+                    throw new Exception("DeviceDetailPeriod.AdjustFromHistory - End time does not align with interval boundary - endTime: " + histRecord.ReadingEnd + " - interval: " + DatabaseIntervalSeconds);
+
+                if (startTime < Start)
+                    throw new Exception("DeviceDetailPeriod.AdjustFromHistory - startTime is wrong day - startTime: " + startTime + " - Day: " + Start);
+
+                if (GetDateTime(startInterval)
+                    != startTime + TimeSpan.FromSeconds(DatabaseIntervalSeconds))
+                    throw new Exception("DeviceDetailPeriod.AdjustFromHistory - startTime does not align with interval boundary - endTime: " + histRecord.ReadingEnd + " - interval: " + DatabaseIntervalSeconds);
+
+                stage = "ClearHistory";
+                // clear old history entries
+                ClearHistory(histRecord.ReadingStart, histRecord.ReadingEnd);
+                if (DeviceParams.UseCalculateFromPrevious)
+                {
+                    stage = "CalcFromPrevious";
+                    CalcFromPrevious(default(TDeviceReading));
+                }
+
+                stage = "FillSmallGaps";
+                // fill any gaps up to 30 secs with prorata adjacent values - creates actuals not calculated values
+                TimeSpan remainingGaps = ReadingsGeneric.FillSmallGaps(histRecord.ReadingStart, histRecord.ReadingEnd, true);
+                // obtain actual total - uses Consolidate
+                stage = "MergeReadings 1";
+                TDeviceReading actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd);
+                // fill all remaining gaps with prorata history value
+                if (remainingGaps > TimeSpan.Zero)
+                {
+                    stage = "FillLargeGaps";
+                    FillLargeGaps(actualTotal, histRecord, remainingGaps, startTime, startInterval, endInterval);
+                    stage = "MergeReadings 1";
+                    // recalculate actualTotal to capture large gap additions
+                    actualTotal = actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd);
+                }
+                stage = "ProrataRemainingHistory";
+                // apportion outstanding history values by prorata adjustment 
+                if (actualTotal.Compare(histRecord) != 0)
+                    ProrataRemainingHistory(actualTotal, histRecord, startTime, startInterval, endInterval);
             }
-            // apportion outstanding history values by prorata adjustment 
-            if (actualTotal.Compare(histRecord) != 0)
-                ProrataRemainingHistory(actualTotal, histRecord, startTime, startInterval, endInterval);
+            catch (Exception e)
+            {
+                throw new Exception("AdjustFromHistory - Stage: " + stage + " - Exception: " + e.Message, e);
+            }
         }
 
         private void ClearHistory(DateTime readingStart, DateTime readingEnd)

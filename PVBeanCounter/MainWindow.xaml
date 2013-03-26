@@ -424,8 +424,8 @@
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <Label Grid.Column="0" Content="Device DB" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" Margin="25,0,0,0" />
-                                        <TextBox Grid.Row="0" Grid.Column="1"  Text="{Binding Path=DeviceDatabase, Converter={StaticResource NullableValueConverter}}" VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="200" HorizontalAlignment="Left" FontSize="9" />
+                                        <Label Grid.Column="0" Name="labelDeviceDB" Content="Device DB" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" Margin="25,0,0,0" />
+                                        <TextBox Grid.Row="0" Name="textBoxDeviceDB" Grid.Column="1"  Text="{Binding Path=DeviceDatabase, Converter={StaticResource NullableValueConverter}}" VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="200" HorizontalAlignment="Left" FontSize="9" />
                                         <Button Grid.Row="0" Grid.Column="2" Content="..." Height="18" Name="butBrowseOwlDb" ToolTip="Browse for the Owl database file" Width="24" Click="butBrowseOwlDb_Click" FontSize="9" Margin="5,0,10,0" />
                                         <CheckBox Grid.Row="0" Grid.Column="3" Content="Reload" IsChecked="{Binding Path=ReloadDays, Converter={StaticResource NullableValueConverter}}" Height="16" Name="checkBoxOwlReload" Click="checkBoxOwlReload_Click" ToolTip="Check to force a reload of data from the Owl database starting at the specified date" />
                                         <DatePicker Grid.Row="0" Grid.Column="4" Height="24" SelectedDate="{Binding Path=ReloadDaysFromDate, Converter={StaticResource NullableValueConverter}}" Margin="10,0,10,0" Name="datePickerOwlReload" FontSize="9" ToolTip="The date at which an Owl meter data reload starts" HorizontalContentAlignment="Stretch"  />
