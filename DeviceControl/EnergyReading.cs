@@ -319,17 +319,30 @@ namespace DeviceDataRecorders
         }
         */
         private Double? EnergyDeltaInternal = null;
-        public virtual Double EnergyDelta
+
+        public Double? EnergyDeltaNullable
+        {
+            set
+            {
+                EnergyDeltaInternal = value;
+                if (value.HasValue)
+                    AveragePower = (int)(value.Value * 1000.0 / DurationInternal.TotalHours);
+                else
+                    AveragePower = 0;
+            }
+        }
+
+        public Double EnergyDelta
         {
             get
             {
                 return EnergyDeltaInternal.HasValue ? EnergyDeltaInternal.Value : 0.0; ;                
             }
             set
-            {
-                EnergyDeltaInternal = Math.Round(value, EnergyPrecision);               
-                AveragePower = (int)(EnergyDeltaInternal * 1000.0 / DurationInternal.TotalHours);
-                
+            {                
+                EnergyDeltaInternal = Math.Round(value, EnergyPrecision);
+                AveragePower = (int)(EnergyDeltaInternal.Value * 1000.0 / DurationInternal.TotalHours);               
+                                
                 if (!AttributeRestoreMode)
                 {
                     if (UseInternalCalibration)

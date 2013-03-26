@@ -113,7 +113,7 @@ namespace DeviceDataRecorders
                     stage = "EnergyToday";
                     newRec.EnergyToday = dr.GetNullableDouble(3, EnergyReading.EnergyPrecision);
                     stage = "EnergyDelta";
-                    newRec.EnergyDelta = dr.GetDouble(4, EnergyReading.EnergyPrecision);
+                    newRec.EnergyDeltaNullable = dr.GetNullableDouble(4, EnergyReading.EnergyPrecision);
                     stage = "CalibrationDelta";
                     newRec.CalibrationDelta = dr.GetNullableDouble(5, EnergyReading.EnergyPrecision);
                     stage = "HistEnergyDelta";

@@ -247,7 +247,7 @@ namespace MackayFisher.Utilities
         }
 
         public int ErrorLogCount { get; set; }
-
+        
         private String LogFileFullName;
         private String LogFileName;
         private System.IO.TextWriter LogFile;
@@ -409,6 +409,7 @@ namespace MackayFisher.Utilities
         {
             LogFile = null;
             UseDatabaseMutex = false;
+            ErrorLogCount = 0;
         }
 
         public SystemServices(String logFileName)

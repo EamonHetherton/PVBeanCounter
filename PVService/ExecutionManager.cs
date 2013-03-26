@@ -60,6 +60,8 @@ namespace PVService
 
         private Thread ExecutionManagerThread;
 
+        private DateTime ErrorCountCleared = DateTime.Now;
+
         ExecutionTimeLine ExecutionTimeLine;
 
         public ExecutionState ExecutionState
@@ -286,11 +288,17 @@ namespace PVService
 
                         if (ExecutionState != ExecutionState.ShutdownPending)
                         {
-                            Thread.Sleep(30000);                           
+                            Thread.Sleep(30000);
+
+                            if (ErrorCountCleared.TimeOfDay.Hours != DateTime.Now.TimeOfDay.Hours)
+                            {
+                                ErrorCountCleared = DateTime.Today + TimeSpan.FromHours(DateTime.Now.TimeOfDay.Hours);
+                                GlobalSettings.SystemServices.ErrorLogCount = 0;
+                            }
 
                             if (GlobalSettings.SystemServices.ErrorLogCount > 60)
                             {
-                                GlobalSettings.SystemServices.LogMessage("ManageExecutionState", "Too many errors to continue: " + GlobalSettings.SystemServices.ErrorLogCount,
+                                GlobalSettings.SystemServices.LogMessage("ManageExecutionState", "Too many errors in last hour to continue: " + GlobalSettings.SystemServices.ErrorLogCount,
                                         LogEntryType.ErrorMessage);
                                 InternalStopRequest = true;
                                 ManagerManager.StopService();
