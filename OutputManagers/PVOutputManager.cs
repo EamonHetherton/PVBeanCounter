@@ -489,7 +489,7 @@ namespace OutputManagers
             }
         }
 
-        private void RecordYield(DateTime readingTime, int timeVal, long energy, long power, bool intervalHasEnergy, Double? temperature)
+        private void RecordYield(DateTime readingTime, long energy, long power, bool intervalHasEnergy, Double? temperature)
         {
             // Check for an existing record in the pvoutputlog table. 
             // If it exists update it if the yield energy or power values have changed.
@@ -499,8 +499,9 @@ namespace OutputManagers
             GenConnection con = null;
             GenDataReader drCheck = null;
 
+            int timeVal = (int)readingTime.TimeOfDay.TotalSeconds;
             try
-            {
+            {                
                 con = GlobalSettings.TheDB.NewConnection();
                 cmdCheck = new GenCommand(CmdCheckStr, con);
                 cmdCheck.AddParameterWithValue("@SiteId", SystemId);
@@ -586,18 +587,17 @@ namespace OutputManagers
 
                     foreach (EnergyReading reading in yieldPeriod.GetReadings())
                     {
-                        int timeVal = (int)reading.ReadingEnd.TimeOfDay.TotalSeconds;
-
+                        int timeVal = (int)(reading.ReadingEnd.AddMinutes(-PVInterval).TimeOfDay.TotalSeconds);
                         // do not have instantaneous power - do have min and max power 
                         // values averaged over a 10 minute period - alternate between the two
                         if (((int)((int)(timeVal / 600) % 2)) == 0)                        
                             power = reading.MaxPower.HasValue ? reading.MaxPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;  
                         else
-                            power = reading.MinPower.HasValue ? reading.MaxPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;  
+                            power = reading.MinPower.HasValue ? reading.MinPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;  
                         
-                        energy += (long)(reading.EnergyDelta * 1000.0);
+                        energy += (long)(reading.TotalReadingDelta * 1000.0);
                         // PVOutput treats 12:00AM as the start of the day - use period start time rather than end time so that 12:00AM appears as 11:50PM or 11:55PM
-                        RecordYield(reading.ReadingEnd.AddMinutes(-PVInterval), timeVal, energy, power, reading.EnergyDelta > 0.0, reading.Temperature);
+                        RecordYield(reading.ReadingEnd.AddMinutes(-PVInterval), energy, power, reading.EnergyDelta > 0.0, reading.Temperature);
                     }
                 }
 
@@ -613,7 +613,7 @@ namespace OutputManagers
             }           
         }
 
-        private void RecordConsumption(DateTime readingTime, int timeVal, long energy, long power, Double? temperature)
+        private void RecordConsumption(DateTime readingTime, long energy, long power, Double? temperature)
         {
             // Check for an existing record in the pvoutputlog table. 
             // If it exists update it if the consumption energy or power values have changed.
@@ -626,8 +626,9 @@ namespace OutputManagers
             GenConnection con = null;
             GenDataReader drCheck = null;
 
+            int timeVal = (int)readingTime.TimeOfDay.TotalSeconds;
             try
-            {
+            {                
                 con = GlobalSettings.TheDB.NewConnection();
                 cmdCheck = new GenCommand(CmdCheckStr, con);
                 cmdCheck.AddParameterWithValue("@SiteId", SystemId);
@@ -705,17 +706,17 @@ namespace OutputManagers
 
                     foreach (EnergyReading reading in consumptionPeriod.GetReadings())
                     {
-                        int timeVal = (int)reading.ReadingEnd.TimeOfDay.TotalSeconds;
+                        int timeVal = (int)(reading.ReadingEnd.AddMinutes(-PVInterval).TimeOfDay.TotalSeconds);
                         // do not have instantaneous power - do have min and max power 
                         // values averaged over a 10 minute period - alternate between the two
                         if (((int)((int)(timeVal / 600) % 2)) == 0)
                             power = reading.MaxPower.HasValue ? reading.MaxPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;
                         else
-                            power = reading.MinPower.HasValue ? reading.MaxPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;
+                            power = reading.MinPower.HasValue ? reading.MinPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;
 
-                        energy += (long)(reading.EnergyDelta * 1000.0);
+                        energy += (long)(reading.TotalReadingDelta * 1000.0);
                         // PVOutput treats 12:00AM as the start of the day - use period start time rather than end time so that 12:00AM appears as 11:50PM or 11:55PM
-                        RecordConsumption(reading.ReadingEnd.AddMinutes(-PVInterval), timeVal, energy, power, reading.Temperature);
+                        RecordConsumption(reading.ReadingEnd.AddMinutes(-PVInterval), energy, power, reading.Temperature);
                     }
                 }
 

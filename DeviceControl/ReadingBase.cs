@@ -224,9 +224,22 @@ namespace DeviceDataRecorders
         public abstract void CalcFromPreviousGeneric(ReadingBase prevReading);
         public abstract bool IsSameReadingGeneric(ReadingBase other);
         public abstract bool IsSameReadingValuesGeneric(ReadingBase other);
+        public abstract bool IsGapFillReading();
         public abstract ReadingBase CloneGeneric(DateTime outputTime, TimeSpan duration);
         public abstract void GapAdjustAdjacent(ReadingBase adjacentReading, bool adjacentIsBeforeThis);
         public abstract void AccumulateReading(ReadingBase reading, Double operationFactor = 1.0);
+
+        public String GetReadingLogIdDetails()
+        {
+            return "Feature: " + DeviceDetailPeriods.FeatureType.ToString() + " - ReadingEnd: " + ReadingEnd + " - ReadingStart: " + ReadingStart;
+        }
+
+        public String GetReadingLogDetails()
+        {
+            return GetReadingLogIdDetails() + " - " + GetReadingLogTypeDetails();
+        }
+
+        public abstract String GetReadingLogTypeDetails();
     }
 
     public abstract class ReadingBaseTyped<TDeviceReading, TDeviceHistory> : ReadingBase where TDeviceReading : ReadingBase
@@ -260,6 +273,5 @@ namespace DeviceDataRecorders
         }
         public abstract TDeviceReading Clone(DateTime outputTime, TimeSpan duration);
         public abstract int Compare(TDeviceHistory other, int? precision = null);
-
     }
 }

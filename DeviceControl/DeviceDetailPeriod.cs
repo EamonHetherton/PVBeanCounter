@@ -805,6 +805,10 @@ namespace DeviceDataRecorders
                     continue;
                 }
 
+                if (reading.IsGapFillReading())
+                    // this reading was created in a previous Gap Fill operation and needs a history value based on duration
+                    reading.HistoryAdjust_Average(actualTotal, histRecord); 
+
                 histGap -= reading.Duration;
 
                 //DateTime thisStartTime = reading.ReadingEnd - reading.Duration;
@@ -814,11 +818,10 @@ namespace DeviceDataRecorders
                 {
                     TDeviceReading newRec = NewReading(reading.ReadingStart, gap, (nextReading != null) ? nextReading : ((prevReading != null) ? prevReading : default(TDeviceReading)));
                     newRec.HistoryAdjust_Average(actualTotal, histRecord);
-                    AddReading(newRec);
-                    reading = newRec;
-                    histGap -= gap;
+                    AddReading(newRec);                    
                     i++;                    
                 }
+                histGap -= gap;
 
                 prevEndTime = reading.ReadingEnd;
                 prevReading = reading;
@@ -829,7 +832,7 @@ namespace DeviceDataRecorders
             if ((prevEndTime + histGap) != endTime)
                 throw new Exception("DeviceDetailPeriod.FillLargeGaps - end gap mismatch - endTime: " + endTime + " - prevEndTime: " + prevEndTime + " - histGap: " + histGap);
 
-            if (histGap > TimeSpan.Zero)
+            if (histGap > ReadingsGeneric.SmallGapUpperLimit)
             {                
                 TDeviceReading newRec = NewReading(endTime, histGap, prevReading == null ? default(TDeviceReading) : prevReading);
                 newRec.HistoryAdjust_Average(actualTotal, histRecord);
@@ -898,17 +901,24 @@ namespace DeviceDataRecorders
                 stage = "FillSmallGaps";
                 // fill any gaps up to 30 secs with prorata adjacent values - creates actuals not calculated values
                 TimeSpan remainingGaps = ReadingsGeneric.FillSmallGaps(histRecord.ReadingStart, histRecord.ReadingEnd, true);
+
                 // obtain actual total - uses Consolidate
-                stage = "MergeReadings 1";
+                stage = "MergeReadings 1";                
                 TDeviceReading actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd);
+                if (GlobalSettings.SystemServices.LogTrace)
+                    GlobalSettings.SystemServices.LogMessage("DeviceDetailPeriod.AdjustFromHistory", "Merge 1 - " + actualTotal.GetReadingLogDetails(), LogEntryType.Trace);
                 // fill all remaining gaps with prorata history value
-                if (remainingGaps > ReadingsGeneric.SmallGapUpperLimit)
+                // FillLargeGaps also restores hist values to previous history readings cleared by ClearHistory
+                //if (remainingGaps > ReadingsGeneric.SmallGapUpperLimit)
                 {
                     stage = "FillLargeGaps";
                     FillLargeGaps(actualTotal, histRecord, remainingGaps, startTime, startInterval, endInterval);
-                    stage = "MergeReadings 1";
+
+                    stage = "MergeReadings 2";
                     // recalculate actualTotal to capture large gap additions
                     actualTotal = actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd);
+                    if (GlobalSettings.SystemServices.LogTrace)
+                        GlobalSettings.SystemServices.LogMessage("DeviceDetailPeriod.AdjustFromHistory", "Merge 2 - " + actualTotal.GetReadingLogDetails(), LogEntryType.Trace);
                 }
                 stage = "ProrataRemainingHistory";
                 // apportion outstanding history values by prorata adjustment 

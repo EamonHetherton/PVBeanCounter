@@ -96,6 +96,11 @@ namespace DeviceDataRecorders
             EnergyCalibrationFactor = DeviceParams.CalibrationFactor;
         }
 
+        public override String GetReadingLogTypeDetails()
+        {
+            return "EnergyDelta: " + EnergyDelta + " - CalibrationDelta: " + CalibrationDelta + " - HistEnergyDelta: " + HistEnergyDelta;
+        }
+
         private float EnergyCalibrationFactorInternal = 1.0F;
         public float EnergyCalibrationFactor
         {
@@ -215,16 +220,14 @@ namespace DeviceDataRecorders
             } 
         }
 
-        public Double? CalibrateableReadingDelta
+        public Double CalibrateableReadingDelta
         {
             get
             {
-                if (!EnergyDeltaInternal.HasValue)
-                    return null;
                 if (HistEnergyDelta.HasValue)
-                    return EnergyDeltaInternal.Value + HistEnergyDelta.Value;
+                    return EnergyDelta + HistEnergyDelta.Value;
                 else
-                    return EnergyDeltaInternal;
+                    return EnergyDelta;
             }
         }
 
@@ -536,6 +539,13 @@ namespace DeviceDataRecorders
         public override void ClearHistory()
         {
             HistEnergyDeltaInternal = null;
+            UpdatePending = true;
+        }
+
+        public override bool IsGapFillReading()
+        {
+            // Reading created from history to fill large gaps
+            return (EnergyDeltaInternal == null);
         }
 
         protected override void CalcFromPrevious(EnergyReading prevReading)
@@ -557,9 +567,7 @@ namespace DeviceDataRecorders
 
         public override void HistoryAdjust_Average(EnergyReading actualTotal, EnergyReading histRecord)
         {
-            Double prorataEnergy = histRecord.EnergyDelta -
-                (actualTotal.EnergyDelta  
-                + (actualTotal.HistEnergyDeltaInternal.HasValue ? actualTotal.HistEnergyDeltaInternal.Value : 0.0));
+            Double prorataEnergy = histRecord.CalibrateableReadingDelta;
             double prorataSeconds = histRecord.Duration.TotalSeconds;
             double actualSeconds = actualTotal.GetModeratedSeconds(3);
 
@@ -568,6 +576,12 @@ namespace DeviceDataRecorders
                     " - prorataSeconds: " + prorataSeconds + " - actualTotal.Seconds: " + actualSeconds);
 
             Double adjust = (prorataEnergy * Duration.TotalSeconds) / prorataSeconds;
+
+            if (GlobalSettings.SystemServices.LogTrace)
+                GlobalSettings.SystemServices.LogMessage("EnergyReading.HistoryAdjust_Prorata", "hist.Duration: " + prorataSeconds
+                    + " - prorataEnergy: " + prorataEnergy + " - this.Duration: " + Duration.TotalSeconds
+                    + " - adjust: " + adjust , LogEntryType.Trace);
+
             if (Math.Round(adjust, EnergyPrecision - 2) != 0.0) // damp out adjustment oscilliations
                 if (HistEnergyDelta.HasValue)                    
                     HistEnergyDelta += adjust;                
@@ -577,22 +591,27 @@ namespace DeviceDataRecorders
 
         public override void HistoryAdjust_Prorata(EnergyReading actualTotal, EnergyReading histRecord)
         {
-            double thisEnergyDelta = CalibrateableReadingDelta.HasValue ? CalibrateableReadingDelta.Value : 0.0;
+            double thisEnergyDelta = CalibrateableReadingDelta;
             if (thisEnergyDelta <= 0.0)
                 return;
 
-            Double prorataEnergy = histRecord.EnergyDelta -
-                (actualTotal.EnergyDelta
-                + (actualTotal.HistEnergyDeltaInternal.HasValue ? actualTotal.HistEnergyDeltaInternal.Value : 0.0));
+            Double actualEnergy = actualTotal.CalibrateableReadingDelta;
+            Double prorataEnergy = histRecord.CalibrateableReadingDelta - actualTotal.CalibrateableReadingDelta;
             double prorataSeconds = histRecord.Duration.TotalSeconds;
-            double scaleFactor = prorataEnergy / thisEnergyDelta;
+            double scaleFactor = prorataEnergy / actualEnergy;
             double actualSeconds = actualTotal.GetModeratedSeconds(3);
 
             if (prorataSeconds != actualSeconds)
                 throw new Exception("EnergyReading.HistoryAdjust_Prorata - prorataSeconds != acualTotal.Seconds - outputTime: " + ReadingEnd +
                     " - prorataSeconds: " + prorataSeconds + " - actualTotal.Seconds: " + actualSeconds);
 
-            Double adjust = thisEnergyDelta * scaleFactor;
+            Double adjust = (thisEnergyDelta * scaleFactor) - thisEnergyDelta;
+
+            if (GlobalSettings.SystemServices.LogTrace)
+                GlobalSettings.SystemServices.LogMessage("EnergyReading.HistoryAdjust_Prorata", "actualEnergy: " + actualEnergy
+                    + " - prorataEnergy: " + prorataEnergy + " - thisEnergyDelta: " + thisEnergyDelta 
+                    + " - adjust: " + adjust + " - scaleFactor: " + scaleFactor, LogEntryType.Trace);
+
             if (Math.Round(adjust, EnergyPrecision - 2) != 0.0) // damp out adjustment oscilliations
                 if (HistEnergyDelta.HasValue)
                     HistEnergyDelta += adjust;
@@ -603,8 +622,8 @@ namespace DeviceDataRecorders
         public override int Compare(EnergyReading other, int? precision = null)
         {
             int thisPrecision = (precision.HasValue ? precision.Value : EnergyPrecision) - 2;
-            double otherEnergy = Math.Round(other.CalibrateableReadingDelta.HasValue ? other.CalibrateableReadingDelta.Value : 0.0, thisPrecision);
-            double thisEnergy = Math.Round(CalibrateableReadingDelta.HasValue ? CalibrateableReadingDelta.Value : 0.0, thisPrecision);
+            double otherEnergy = Math.Round(other.CalibrateableReadingDelta, thisPrecision);
+            double thisEnergy = Math.Round(CalibrateableReadingDelta, thisPrecision);
 
             if (otherEnergy == thisEnergy)
                 return 0;
