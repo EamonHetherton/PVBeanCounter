@@ -139,7 +139,7 @@ namespace DeviceDataRecorders
         {
             DeviceDetailPeriods = deviceDetailPeriods;
             AttributeRestoreMode = readFromDb;
-            ReadingEndInternal = readingEnd;
+            ReadingEndInternal = Device.DeviceBase.NormaliseReadingTime(readingEnd);
             Duration = duration;
             InDatabase = readFromDb;
             UpdatePending = !readFromDb;
@@ -150,8 +150,8 @@ namespace DeviceDataRecorders
         {
             DeviceDetailPeriods = deviceDetailPeriods;
             AttributeRestoreMode = readFromDb;
-            ReadingEndInternal = readingEnd;
-            ReadingStartInternal = readingStart;
+            ReadingEndInternal = Device.DeviceBase.NormaliseReadingTime(readingEnd);
+            ReadingStartInternal = Device.DeviceBase.NormaliseReadingTime(readingStart);
             DurationInternal = readingEnd - readingStart; ;
             InDatabase = readFromDb;
             UpdatePending = !readFromDb;
@@ -164,6 +164,14 @@ namespace DeviceDataRecorders
             get
             {
                 return ReadingStartInternal;
+            }
+            set
+            {
+                if (value > ReadingEndInternal)
+                    throw new Exception("ReadingBase.ReadingStart - Attempt to set start after end");
+                ReadingStartInternal = value;
+                DurationInternal = ReadingEndInternal - value;
+                if (!AttributeRestoreMode) UpdatePending = true;
             }
         }
 
@@ -201,7 +209,8 @@ namespace DeviceDataRecorders
 
         protected virtual void DurationChanged()
         {
-            ReadingStartInternal = ReadingEndInternal - DurationInternal;
+            ReadingStartInternal = Device.DeviceBase.NormaliseReadingTime(ReadingEndInternal - DurationInternal);
+            DurationInternal = ReadingEndInternal - ReadingStartInternal; // consistency after normalise
         }
 
         public virtual void SetRestoreComplete()

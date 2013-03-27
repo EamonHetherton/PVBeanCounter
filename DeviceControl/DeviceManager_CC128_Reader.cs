@@ -194,7 +194,7 @@ namespace DeviceControl
                                     DeviceManagerDeviceSettings dev = Settings.GetDevice(sensor);
 
                                     if ((dev.Enabled && dev.UpdateHistory)
-                                        && intervalNo <= ManagerParams.MaxHistoryHours)
+                                        && intervalNo <= ManagerParams.HistoryHours)
                                     {
                                         TimeSpan tod = TimeSpan.FromHours(time.Hour - (intervalNo - 4));
                                         curRec.Sensor = sensor;
@@ -282,7 +282,7 @@ namespace DeviceControl
                                 DeviceManagerDeviceSettings dev = Settings.GetDevice(sensor);
 
                                 if ((dev.Enabled && dev.UpdateHistory)
-                                        && intervalNo <= ManagerParams.MaxHistoryHours && intervalNo > 2)
+                                        && intervalNo <= ManagerParams.HistoryHours && intervalNo > 2)
                                 {
                                     curRec.Sensor = sensor;
                                     curRec.Time = (time.Date + TimeSpan.FromHours(time.Hour - (intervalNo - 4)));

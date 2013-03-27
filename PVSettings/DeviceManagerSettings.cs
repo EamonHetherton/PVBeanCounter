@@ -493,23 +493,6 @@ namespace PVSettings
             }
         }
 
-        public int MaxHistoryHours
-        {
-            get
-            {
-                String val = GetValue("maxhistoryhours");
-                if (val == "")
-                    return 300;
-                else
-                    return int.Parse(val);
-            }
-
-            set
-            {
-                SetValue("maxhistoryhours", value.ToString(), "MaxHistoryHours");
-            }
-        }
-
         public String ExecutablePath
         {
             get
@@ -600,6 +583,23 @@ namespace PVSettings
             }
         }
 
+        public int MaxSMAHistoryDays
+        {
+            get
+            {
+                String rffd = GetValue("maxsmahistorydays");
+                if (rffd == "")
+                    return 64;
+                else
+                    return Convert.ToInt32(rffd);
+            }
+
+            set
+            {
+                SetValue("maxsmahistorydays", value.ToString(), "MaxSMAHistoryDays");
+            }
+        }
+
         public int? HistoryHours
         {
             get
@@ -637,22 +637,6 @@ namespace PVSettings
             }
         }
 
-        public int MaxHistoryDays
-        {
-            get
-            {
-                String rffd = GetValue("historyhours");
-                if (rffd == "")
-                    return 64;
-                else
-                    return Convert.ToInt32(rffd) / 24;
-            }
-
-            set
-            {
-                SetValue("historyhours", (value * 24).ToString(), "HistoryHours");
-            }
-        }
 
         public bool ResetFirstFullDay
         {

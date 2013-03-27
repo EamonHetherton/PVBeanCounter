@@ -596,7 +596,8 @@ namespace OutputManagers
                             power = reading.MinPower.HasValue ? reading.MaxPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;  
                         
                         energy += (long)(reading.EnergyDelta * 1000.0);
-                        RecordYield(reading.ReadingEnd, timeVal, energy, power, reading.EnergyDelta > 0.0, reading.Temperature);
+                        // PVOutput treats 12:00AM as the start of the day - use period start time rather than end time so that 12:00AM appears as 11:50PM or 11:55PM
+                        RecordYield(reading.ReadingEnd.AddMinutes(-PVInterval), timeVal, energy, power, reading.EnergyDelta > 0.0, reading.Temperature);
                     }
                 }
 
@@ -713,7 +714,8 @@ namespace OutputManagers
                             power = reading.MinPower.HasValue ? reading.MaxPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;
 
                         energy += (long)(reading.EnergyDelta * 1000.0);
-                        RecordConsumption(reading.ReadingEnd, timeVal, energy, power, reading.Temperature);
+                        // PVOutput treats 12:00AM as the start of the day - use period start time rather than end time so that 12:00AM appears as 11:50PM or 11:55PM
+                        RecordConsumption(reading.ReadingEnd.AddMinutes(-PVInterval), timeVal, energy, power, reading.Temperature);
                     }
                 }
 

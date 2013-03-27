@@ -129,7 +129,7 @@ namespace Device
 
                 stage = "Reading";
 
-                DateTime curTime = DateTime.Now;
+                DateTime curTime = DeviceBase.NormaliseReadingTime(DateTime.Now);
                 bool dbWrite = (LastRecordTime == null
                     || DeviceBase.IntervalCompare(DatabaseInterval, LastRecordTime.Value, curTime) != 0);
                 res = InverterAlgorithm.ExtractReading(dbWrite, ref alarmFound, ref errorFound);
@@ -154,9 +154,12 @@ namespace Device
                     
                     DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_YieldAC.FeatureType, Feature_YieldAC.FeatureId);
                     EnergyReading reading = new EnergyReading();
+
+                    if (LastRecordTime.HasValue)
+                        reading.Initialise(days, curTime, LastRecordTime.Value, false);
+                    else
+                        reading.Initialise(days, curTime, TimeSpan.FromSeconds(DeviceInterval), false);
                     
-                    reading.Initialise(days, curTime, 
-                        LastRecordTime.HasValue ? (curTime - LastRecordTime.Value) : TimeSpan.FromSeconds(DeviceInterval), false);
                     LastRecordTime = curTime;
 
                     reading.EnergyToday = (double?)InverterAlgorithm.EnergyTodayAC;

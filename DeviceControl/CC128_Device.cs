@@ -135,10 +135,13 @@ namespace Device
                     days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_EnergyAC.FeatureType, Feature_EnergyAC.FeatureId);
                     
                     EnergyReading reading = new EnergyReading();
-                    
-                    reading.Initialise(days, liveReading.TimeStampe, 
-                        TimeSpan.FromSeconds(
-                        LastRecordTime.HasValue ? (double)(liveReading.TimeStampe - LastRecordTime.Value).TotalSeconds : (double)DeviceInterval), false);
+                    liveReading.TimeStampe = DeviceBase.NormaliseReadingTime(liveReading.TimeStampe);
+
+                    if (LastRecordTime.HasValue)
+                        reading.Initialise(days, liveReading.TimeStampe, LastRecordTime.Value, false);
+                    else
+                        reading.Initialise(days, liveReading.TimeStampe, TimeSpan.FromSeconds(DeviceInterval), false);
+
                     LastRecordTime = liveReading.TimeStampe;
 
                     reading.EnergyToday = null;

@@ -955,8 +955,8 @@ namespace DeviceControl
                     {
                         // limit history retrieval to configured device history limit
                         startDate = completeDays[0];
-                        if (startDate == DateTime.Today.AddDays(1 - DeviceManagerSettings.MaxHistoryDays))
-                            startDate = DateTime.Today.AddDays(1 - DeviceManagerSettings.MaxHistoryDays);
+                        if (startDate == DateTime.Today.AddDays(1 - DeviceManagerSettings.MaxSMAHistoryDays))
+                            startDate = DateTime.Today.AddDays(1 - DeviceManagerSettings.MaxSMAHistoryDays);
                     }
                     else
                         startDate = DateTime.Today;

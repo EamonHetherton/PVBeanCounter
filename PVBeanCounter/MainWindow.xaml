@@ -359,7 +359,7 @@
                                                     <RowDefinition />
                                                 </Grid.RowDefinitions>
                                                 <Label Content="History Days" Padding="0,5,5,2" FontSize="10.5" VerticalAlignment="Top" />
-                                                <TextBox Grid.Row="1" Height="18" MinWidth="70" HorizontalAlignment="Left" Text="{Binding Path=MaxHistoryDays, Converter={StaticResource NullableValueConverter}}" VerticalAlignment="Center" ToolTip="Enter the number of days history stored in the device" />
+                                                <TextBox Grid.Row="1" Height="18" MinWidth="70" HorizontalAlignment="Left" Text="{Binding Path=MaxSMAHistoryDays}" VerticalAlignment="Center" ToolTip="Enter the number of days history stored in the device" />
                                             </Grid>
 
                                         </Grid>

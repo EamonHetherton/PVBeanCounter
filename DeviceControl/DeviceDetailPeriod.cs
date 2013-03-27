@@ -810,7 +810,7 @@ namespace DeviceDataRecorders
                 //DateTime thisStartTime = reading.ReadingEnd - reading.Duration;
                 TimeSpan gap = reading.ReadingStart - prevEndTime;
 
-                if (gap > TimeSpan.Zero)
+                if (gap > ReadingsGeneric.SmallGapUpperLimit)
                 {
                     TDeviceReading newRec = NewReading(reading.ReadingStart, gap, (nextReading != null) ? nextReading : ((prevReading != null) ? prevReading : default(TDeviceReading)));
                     newRec.HistoryAdjust_Average(actualTotal, histRecord);
@@ -902,7 +902,7 @@ namespace DeviceDataRecorders
                 stage = "MergeReadings 1";
                 TDeviceReading actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd);
                 // fill all remaining gaps with prorata history value
-                if (remainingGaps > TimeSpan.Zero)
+                if (remainingGaps > ReadingsGeneric.SmallGapUpperLimit)
                 {
                     stage = "FillLargeGaps";
                     FillLargeGaps(actualTotal, histRecord, remainingGaps, startTime, startInterval, endInterval);

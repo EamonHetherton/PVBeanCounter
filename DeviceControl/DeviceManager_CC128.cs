@@ -38,14 +38,14 @@ namespace DeviceControl
 {
     public class CC128ManagerParams : DeviceParamsBase
     {
-        public int MaxHistoryHours { get; set; }
+        public int HistoryHours { get; set; }
 
         public CC128ManagerParams()
         {
             DeviceType = PVSettings.DeviceType.EnergyMeter;
             QueryInterval = 6;
             RecordingInterval = 60;
-            MaxHistoryHours = 24;
+            HistoryHours = 24;
             EnforceRecordingInterval = true;
         }
     }
@@ -79,7 +79,7 @@ namespace DeviceControl
             ManagerParams.DeviceType = PVSettings.DeviceType.EnergyMeter;
             ManagerParams.RecordingInterval = DeviceManagerSettings.DBIntervalInt;
             ManagerParams.QueryInterval = DeviceManagerSettings.MessageIntervalInt;
-            ManagerParams.MaxHistoryHours = DeviceManagerSettings.MaxHistoryHours;
+            ManagerParams.HistoryHours = DeviceManagerSettings.HistoryHours.Value;
         }
 
         protected override DeviceManager_Listener_Reader<CC128ManagerParams> GetReader(GenThreadManager threadManager)

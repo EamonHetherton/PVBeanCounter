@@ -46,7 +46,8 @@ namespace DeviceDataRecorders
         public int IndexOfKey(DateTime intervalEnd) { return Readings.IndexOfKey(intervalEnd); }
         public int Count { get { return Readings.Count; } }
 
-        public TimeSpan SmallGapLimit = TimeSpan.FromSeconds(120.0);
+        public TimeSpan SmallGapUpperLimit = TimeSpan.FromSeconds(120.0);
+        public TimeSpan SmallGapLowerLimit = TimeSpan.FromSeconds(1.0);
      
         // the list must pass the following at all times
         // zero duration readings are illegal as well as all reading or reading/period overlaps
@@ -126,26 +127,22 @@ namespace DeviceDataRecorders
         private ReadingBase FillSmallGap(ReadingBase reading, DateTime outputTime)
         {
             TimeSpan duration;
-            bool gapIsAfterThis;
             ReadingBase newRec;
             if (outputTime < reading.ReadingStart)
             {
-                duration = reading.ReadingStart - outputTime;
-                gapIsAfterThis = false;
-                newRec = reading.CloneGeneric(reading.ReadingStart, duration);
+                // just alter this reading by moving ReadingStart (ReadingEnd is the DB key for the record; ReadingStart is just an attribute)
+                reading.ReadingStart = outputTime;
+                return null;
             }
             else if (outputTime > reading.ReadingEnd)
             {
                 duration = outputTime - reading.ReadingEnd;
-                gapIsAfterThis = true;
                 newRec = reading.CloneGeneric(outputTime, duration);
+                newRec.GapAdjustAdjacent(reading, true);
+                return newRec;
             }
-            else
-                throw new Exception("EnergyReading.FillSmallGap - Invalid outputTime: " + outputTime);
-
-            newRec.GapAdjustAdjacent(reading, gapIsAfterThis);
-
-            return newRec;
+            
+            throw new Exception("EnergyReading.FillSmallGap - Invalid outputTime: " + outputTime);            
         }
 
         public TimeSpan FillSmallGaps(DateTime readingStart, DateTime readingEnd, bool fillEndGap)
@@ -190,29 +187,15 @@ namespace DeviceDataRecorders
                     gap = reading.ReadingStart - prevEndTime;
 
                     // Fill this gap with reading based on adjacent readings
-                    if (gap > TimeSpan.Zero && gap <= SmallGapLimit)
-                    {
-                        ReadingBase newRec;
-                        if (prevReading != null)
+                    if (gap >= SmallGapLowerLimit) 
+                        if (gap <= SmallGapUpperLimit)
                         {
-                            stage = "FillSmallGap 1";
-                            newRec = FillSmallGap(prevReading, reading.ReadingStart);
-                            AddReading(newRec);
-                            reading = newRec;
-                            i++;
+                            stage = "FillSmallGap 2";
+                            FillSmallGap(reading, prevEndTime);
                             readingsAdded = true;
                         }
                         else
-                        {
-                            stage = "FillSmallGap 2";
-                            newRec = FillSmallGap(reading, prevEndTime);
-                            AddReading(newRec);
-                            i++;
-                            readingsAdded = true;
-                        }
-                    }
-                    else
-                        remainingGaps += gap;
+                            remainingGaps += gap;  // tiny gaps excluded
 
                     prevEndTime = reading.ReadingEnd;
                     prevReading = reading;
@@ -228,20 +211,22 @@ namespace DeviceDataRecorders
                         {
                             gap = readingEnd - prevReading.ReadingEnd;
 
-                            if (gap > TimeSpan.Zero && gap <= SmallGapLimit)
-                            {
-                                ReadingBase newRec = FillSmallGap(prevReading, readingEnd);
-                                AddReading(newRec);
-                                readingsAdded = true;
-                            }
-                            else
-                                remainingGaps += gap;
+                            if (gap >= SmallGapLowerLimit)
+                                if (gap <= SmallGapUpperLimit)
+                                {
+                                    ReadingBase newRec = FillSmallGap(prevReading, readingEnd);
+                                    AddReading(newRec);
+                                    readingsAdded = true;
+                                }
+                                else
+                                    remainingGaps += gap;
                         }
                     }
                     else
                     {
                         remainingGaps += (readingEnd - readingStart);
                     }
+
                 stage = "Check";
                 // Check interval alignment as gap fill can cross a boundary
                 if (readingsAdded)
