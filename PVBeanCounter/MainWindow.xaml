@@ -321,7 +321,7 @@
                                                 <ColumnDefinition />
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
-                                            <Grid Name="gridSerialDetail" Visibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,10,0">
+                                            <Grid Name="gridSerialDetail" Visibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="85,0,10,0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="Auto" />
@@ -358,10 +358,7 @@
                                                     <RowDefinition />
                                                     <RowDefinition />
                                                 </Grid.RowDefinitions>
-                                                <Label Content="History Days" Padding="0,5,5,2" FontSize="10.5" VerticalAlignment="Top" />
-                                                <TextBox Grid.Row="1" Height="18" MinWidth="70" HorizontalAlignment="Left" Text="{Binding Path=MaxSMAHistoryDays}" VerticalAlignment="Center" ToolTip="Enter the number of days history stored in the device" />
                                             </Grid>
-
                                         </Grid>
                                         
                                         <Grid Grid.Row="1" >
@@ -370,13 +367,16 @@
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
                                             
-                                            <Grid Name="gridListenerDevice">
+                                            <Grid Name="gridListenerDevice" Margin="85,0,0,0">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition />
                                                     <RowDefinition />
                                                 </Grid.RowDefinitions>
-                                                <Label Content="Listener Device" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="10.5" VerticalContentAlignment="Bottom"  />
-                                                <ComboBox Name="comboBoxListenerDevice" Grid.Row="1" Height="18" HorizontalAlignment="Left" Margin="0,0,8,0" VerticalAlignment="Top" MinWidth="300" SelectedValue="{Binding Path=ListenerDeviceId, Mode=TwoWay, Converter={StaticResource NullableValueConverter}}" SelectedValuePath="Id" DisplayMemberPath="Description" FontSize="9" />
+                                                <Label Content="Listener Device" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="10.5" VerticalContentAlignment="Center" Padding="0,5,5,2"  />
+                                                <ComboBox Name="comboBoxListenerDevice" Grid.Row="1" Height="18" HorizontalAlignment="Left" Margin="0,0,8,0" 
+                                                          ItemsSource="{Binding Path=DeviceListItems, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" VerticalAlignment="Top" 
+                                                          MinWidth="290" Text="{Binding Path=ListenerDeviceId, Converter={StaticResource NullableValueConverter}}" SelectedValuePath="Id" 
+                                                          DisplayMemberPath="Description" FontSize="9" />
                                             </Grid>
                                             <Grid Name="gridDeviceManagerTimings" Grid.Column="1">
                                                 <Grid.RowDefinitions>
@@ -387,10 +387,10 @@
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <Label Content="Query Interval" Grid.Column="0" Margin="0,0,5,0"  VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"  FontSize="10.5" />
-                                                <Label Content="DB Interval" Grid.Column="1"  VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"  FontSize="10.5" />
-                                                <ComboBox Grid.Row="1" Grid.Column="0" Height="18" HorizontalAlignment="Left" Margin="0,0,10,0" Name="comboBoxMessageInterval" VerticalAlignment="Top" Width="58" Text="{Binding Path=MessageInterval, Converter={StaticResource NullableValueConverter}}" FontSize="9" />
-                                                <ComboBox Grid.Row="1" Grid.Column="1" Height="18" HorizontalAlignment="Left" Margin="0,0,10,0" Name="comboBoxDBInterval" VerticalAlignment="Top" Width="59" Text="{Binding Path=DBInterval, Converter={StaticResource NullableValueConverter}}" FontSize="9" />
+                                                <Label Content="Query Int" Grid.Column="0" Margin="-5,0,0,0"  VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"  FontSize="10.5" Padding="0,5,5,2" />
+                                                <Label Content="DB Int" Grid.Column="1" Margin="-5,0,0,0"   VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"  FontSize="10.5" Padding="5,5,5,2" />
+                                                <ComboBox Grid.Row="1" Grid.Column="0" Height="18" HorizontalAlignment="Left" Margin="0,0,0,0" Name="comboBoxMessageInterval" VerticalAlignment="Top" Width="40" Text="{Binding Path=MessageInterval, Converter={StaticResource NullableValueConverter}}" FontSize="9" />
+                                                <ComboBox Grid.Row="1" Grid.Column="1" Height="18" HorizontalAlignment="Left" Margin="0,0,0,0" Name="comboBoxDBInterval" VerticalAlignment="Top" Width="40" Text="{Binding Path=DBInterval, Converter={StaticResource NullableValueConverter}}" FontSize="9" />
                                             </Grid>
                                         </Grid>
                                         <Grid Name="gridExecutablePath" Grid.Row="2">
@@ -408,12 +408,16 @@
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="35" />
                                                 <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="60" />
                                             </Grid.ColumnDefinitions>
                                             <Label Content="Plant Name" Margin="18,0,0,0" Grid.Column="0" HorizontalContentAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="10.5" />
-                                            <TextBox Name="textBoxSunnyExplorerPlantName" Grid.Column="1" Text="{Binding Path=SunnyExplorerPlantName}" ToolTip="The &quot;Plant Name&quot; recorded in the &quot;SunnyExplorer.sx2&quot; file" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="10.5" />
-                                            <Label Content="Password" Height="28" HorizontalContentAlignment="Right" Grid.Column="2" Padding="10,0,5,0" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                                            <TextBox Name="textBoxSunnyExplorerPassword" Text="{Binding Path=SunnyExplorerPassword}" ToolTip="The inverter password (default is '0000')" Grid.Column="3" MinWidth="60" Margin="0,0,10,0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="10.5" />
+                                            <TextBox Name="textBoxSunnyExplorerPlantName" Grid.Column="1" Text="{Binding Path=SunnyExplorerPlantName}" ToolTip="The &quot;Plant Name&quot; recorded in the &quot;SunnyExplorer.sx2&quot; file" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="10.5" Margin="0,4,4,4" />
+                                            <Label Grid.Column="2" Content="Hist Days" Padding="8,0,5,0" VerticalAlignment="Center" FontSize="10.5" />
+                                            <TextBox Grid.Column="3" Height="18" MinWidth="70" HorizontalAlignment="Left" Text="{Binding Path=MaxSMAHistoryDays}" VerticalAlignment="Center" ToolTip="Enter the number of days history stored in the device" />
+                                            <Label Content="Password" Height="28" HorizontalContentAlignment="Right" Grid.Column="4" Padding="8,0,5,0" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                                            <TextBox Name="textBoxSunnyExplorerPassword" Text="{Binding Path=SunnyExplorerPassword}" ToolTip="The inverter password (default is '0000')" Grid.Column="5" MinWidth="60" Margin="0,0,10,0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="10.5" />
                                         </Grid>
                                     </Grid>
                                     <Grid Name="gridDeviceDatabase">
@@ -433,7 +437,7 @@
                                 </StackPanel>
                             </Expander>
                         </Grid>
-                        <Grid Name="gridDevice" Row="1"  Background="#FFDAFFBB" >
+                        <Grid Name="gridDevice" Row="1"  Background="#FFDAFFBB" Margin="0,0,0,-8" >
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
@@ -449,7 +453,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition />
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Label Content="Device Configuration" Grid.ColumnSpan="2" Padding="8,4,0,4" FontSize="13" FontWeight="Bold"/>
                             <Label Content="Name" Grid.Row="1" HorizontalAlignment="Right" HorizontalContentAlignment="Right" />
@@ -635,7 +639,7 @@
                                     </Grid.RowDefinitions>
                                     <CheckBox Name="checkBoxAutoEvents_Manual" Content="Auto Events" IsChecked="{Binding Path=AutoEvents}" Margin="25,10,10,5" FontSize="10.5"
                                               ToolTip="Check to configure all suitable features as triggers for device events"/>
-                                    <DataGrid Name="dataGridDeviceEvents" Grid.Column="1" Grid.Row="0" ItemsSource="{Binding Path=DeviceEvents}" Margin="0,-20,0,32" AutoGenerateColumns="false" MinHeight="72" 
+                                    <DataGrid Name="dataGridDeviceEvents" Grid.Column="1" Grid.Row="0" ItemsSource="{Binding Path=DeviceEvents}" Margin="0,-18,0,24" AutoGenerateColumns="false" MinHeight="52" 
                                               ColumnHeaderHeight="20" SelectionMode="Single" Width="350" HorizontalAlignment="Left" FontSize="10" IsReadOnly="{Binding Path=AutoEvents}" 
                                               Grid.RowSpan="2" SelectionChanged="dataGridDeviceEvents_SelectionChanged" 
                                               ToolTip="Details of all device features configured to emit a device event" >
@@ -673,13 +677,13 @@
                                             
                                         </DataGrid.Columns>
                                     </DataGrid>
-                                    <Grid Margin="0,7,0,0" Grid.Row="1" Grid.Column="1">
+                                    <Grid Margin="0,0,0,0" Grid.Row="1" Grid.Column="1">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <Button Content="Add" Height="23" HorizontalAlignment="Left" Name="buttonAddDeviceEvent"  VerticalAlignment="Top" ToolTip="Add a new Device Event to the selected device." Margin="0,0,2,0" Padding="5,0" Click="buttonAddDeviceEvent_Click" FontSize="10" IsEnabled="{Binding Path=ManualEvents}" />
-                                        <Button Content="Delete" Height="23" HorizontalAlignment="Right" Name="buttonDeleteDeviceEvent" VerticalAlignment="Top" Grid.Column="1" ToolTip="Delete the selected Device Event." Margin="4,0,5,4" Padding="5,0" FontSize="10" Click="buttonDeleteDeviceEvent_Click" IsEnabled="False" />
+                                        <Button Content="Add" Height="20" HorizontalAlignment="Left" Name="buttonAddDeviceEvent"  ToolTip="Add a new Device Event to the selected device." Margin="0,0,2,0" Padding="5,0" Click="buttonAddDeviceEvent_Click" FontSize="10" IsEnabled="{Binding Path=ManualEvents}" />
+                                        <Button Content="Delete" Height="20"  HorizontalAlignment="Right" Name="buttonDeleteDeviceEvent" Grid.Column="1" ToolTip="Delete the selected Device Event." Margin="4,0,5,0" Padding="5,0" FontSize="10" Click="buttonDeleteDeviceEvent_Click" IsEnabled="False" />
                                     </Grid>
                                 </Grid>
                             </Expander>
@@ -688,7 +692,7 @@
                         </Grid>
                     </Grid>
 
-                    <Grid Name="gridDeviceManagerDeviceList" Margin="0,10,10,10" Column="2" Background="#FFDAFFBB" >
+                    <Grid Name="gridDeviceManagerDeviceList" Margin="0,10,10,0" Column="2" Background="#FFDAFFBB" >
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="26*" />

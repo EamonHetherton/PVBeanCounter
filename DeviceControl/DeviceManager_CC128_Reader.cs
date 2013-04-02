@@ -191,6 +191,9 @@ namespace DeviceControl
                                 if (name.Length == 4 && name[0] == 'h')
                                 {
                                     int intervalNo = Convert.ToInt32(name.Substring(1));
+                                    // interval represents up to intervalNo hours ago
+                                    // in 2 hour steps - h004 is the lowest - it contains from 4 hours ago to 2 hours ago
+                                    // h002 is not transmitted as 2 hours ago to now is not history it is the current 2 hour interval - constantly changing
                                     DeviceManagerDeviceSettings dev = Settings.GetDevice(sensor);
 
                                     if ((dev.Enabled && dev.UpdateHistory)

@@ -344,7 +344,7 @@ namespace PVBeanCounter
             if (mmSettings != gridDeviceManagers.DataContext)
                 SetDeviceContext(null);
             gridDeviceManagers.DataContext = null;
-            comboBoxListenerDevice.ItemsSource = mmSettings == null ? null : mmSettings.DeviceListItems;
+            //comboBoxListenerDevice.ItemsSource = mmSettings == null ? null : mmSettings.DeviceListItems;
             gridDeviceManagers.DataContext = mmSettings;
             comboBoxProtocol_SelectionChanged();
             //gridDeviceManagerDeviceList.DataContext = mmSettings;
@@ -557,7 +557,7 @@ namespace PVBeanCounter
             gridDevice.DataContext = device;
             gridConsolidations.DataContext = device;
             comboBoxDeviceType.ItemsSource = device == null ? null : device.DeviceManagerSettings.DeviceListItems;
-            comboBoxListenerDevice.ItemsSource = device == null ? null : device.DeviceManagerSettings.DeviceListItems;
+            //comboBoxListenerDevice.ItemsSource = device == null ? null : device.DeviceManagerSettings.DeviceListItems;
         }
 
         private void SelectDevice()
@@ -641,6 +641,17 @@ namespace PVBeanCounter
                 gridDeviceManagerTimings.Visibility = gridListenerDevice.Visibility;
                 gridExecutablePath.Visibility = p.Type == ProtocolSettings.ProtocolType.Executable ? Visibility.Visible : Visibility.Collapsed;
 
+                if (((ProtocolSettings)comboBoxProtocol.SelectedItem).Name == "Owl Database")
+                {
+                    checkBoxOwlReload.Visibility = System.Windows.Visibility.Visible;
+                    datePickerOwlReload.Visibility = System.Windows.Visibility.Visible;
+                }
+                else
+                {
+                    checkBoxOwlReload.Visibility = System.Windows.Visibility.Collapsed;
+                    datePickerOwlReload.Visibility = System.Windows.Visibility.Collapsed;
+                }
+
                 AdjustAfterProtocolChange();
                 
                 if (p.Type == ProtocolSettings.ProtocolType.Listener)
@@ -671,20 +682,20 @@ namespace PVBeanCounter
             if (gridDeviceManagers.DataContext != null)
             {
                 comboBoxDeviceType.ItemsSource = ((DeviceManagerSettings)gridDeviceManagers.DataContext).DeviceListItems;
-                comboBoxListenerDevice.ItemsSource = ((DeviceManagerSettings)gridDeviceManagers.DataContext).DeviceListItems;
+                //comboBoxListenerDevice.ItemsSource = ((DeviceManagerSettings)gridDeviceManagers.DataContext).DeviceListItems;
                 if (((DeviceManagerSettings)gridDeviceManagers.DataContext).ManagerType == DeviceManagerType.SMA_SunnyExplorer)
                 {
                     gridSunnyExplorerAdvanced.Visibility = Visibility.Visible;
-                    labelDeviceDB.Visibility = Visibility.Hidden;
-                    textBoxDeviceDB.Visibility = Visibility.Hidden;
-                    butBrowseOwlDb.Visibility = Visibility.Hidden;
+                    labelDeviceDB.Visibility = Visibility.Collapsed;
+                    textBoxDeviceDB.Visibility = Visibility.Collapsed;
+                    butBrowseOwlDb.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
                     gridSunnyExplorerAdvanced.Visibility = Visibility.Collapsed;
-                    labelDeviceDB.Visibility = Visibility.Hidden;
-                    textBoxDeviceDB.Visibility = Visibility.Hidden;
-                    butBrowseOwlDb.Visibility = Visibility.Hidden;
+                    labelDeviceDB.Visibility = Visibility.Collapsed;
+                    textBoxDeviceDB.Visibility = Visibility.Collapsed;
+                    butBrowseOwlDb.Visibility = Visibility.Collapsed;
                 }
                 gridHistoryHours.Visibility =
                         ((DeviceManagerSettings)gridDeviceManagers.DataContext).ManagerType == DeviceManagerType.CC128 ? Visibility.Visible : Visibility.Collapsed;

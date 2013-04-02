@@ -155,7 +155,10 @@ namespace DeviceEmulator
         bool DoEmulator;
 
         // CC128 variables
-        XElement XElement;
+        XElement rootElement;
+        XElement liveElement;
+        XElement histElements;
+        IEnumerator<XElement> histList = null;
         int Watts1_0 = 150;
         int Watts2_0 = 420;
         int Watts3_0 = 276;
@@ -164,6 +167,8 @@ namespace DeviceEmulator
         int Watts3_1 = 847;
         float Tmpr = 17.4F;
         // CC128
+
+        public static System.Threading.Mutex ExecutionMutex = new System.Threading.Mutex();
 
         public List<String> Emulators;
 
@@ -201,8 +206,12 @@ namespace DeviceEmulator
             Services.LogMeterTrace = true;
             Services.LogTrace = true;
             Converse = null;
-            XElement = null;
+            liveElement = null;
+            histElements = null;
+            rootElement = null;
             EmulatorThread = null;
+            butSendHist.Visibility = System.Windows.Visibility.Hidden;
+            buttonStop.IsEnabled = false;
 
             Emulators = new List<String>(EmulatorMatrix.GetLength(0));
 
@@ -242,7 +251,8 @@ namespace DeviceEmulator
             UsePortReader = false;
             EmulatorType = DeviceEmulator.EmulatorType.CMS;
             Converse = null;
-            XElement = null;
+            liveElement = null;
+            rootElement = null;
 
             if (EmulatorName == "CMS Inverter")
             {
@@ -346,7 +356,8 @@ namespace DeviceEmulator
                 EmulatorType = DeviceEmulator.EmulatorType.CurrentCostEnviR;               
                 configFile = EmulatorMatrix[(int)EmulatorType, 1];
                 configFile = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configFile);
-                XElement = XElement.Load(configFile, LoadOptions.None);
+                rootElement = XElement.Load(configFile, LoadOptions.None);
+                liveElement = rootElement.Element("live").Element("msg");
                 UsePortReader = false;
             }
             else if (EmulatorName == "GenericReader")
@@ -366,24 +377,25 @@ namespace DeviceEmulator
 
         public void RunEmulator()
         {
+            ExecutionMutex.WaitOne();
             bool success = true;
             DoEmulator = true;
             DateTime lastTime = DateTime.Now;
             EndianConverter32Bit e32 = new EndianConverter32Bit(EndianConverter.BigEndian32Bit);
 
-            Services.OpenLogFile(LogFileName);
-
-            LoadConverse();
-            if (UsePortReader)
-                StartPortReader();
-            else
-            {
-                Stream = new SerialStream(GenThreadManager, Services, PortName, BaudRate, Parity, DataBits, StopBits, Handshake, 20000);
-                Stream.Open();
-            }
-
             try
             {
+                Services.OpenLogFile(LogFileName);
+
+                LoadConverse();
+                if (UsePortReader)
+                    StartPortReader();
+                else
+                {
+                    Stream = new SerialStream(GenThreadManager, Services, PortName, BaudRate, Parity, DataBits, StopBits, Handshake, 20000);
+                    Stream.Open();
+                }
+
                 if (EmulatorType == DeviceEmulator.EmulatorType.CMS)
                 {
                     // bool started = false;
@@ -432,7 +444,7 @@ namespace DeviceEmulator
 
                                 var = (ByteVar)Converse.GetSessionVariable("EnergyToday", null);
                                 var.SetBytes(System.Convert.ToUInt16(inv.EToday), 0);
-                                
+
                                 var = (ByteVar)Converse.GetSessionVariable("VoltsPV", null);
                                 var.SetBytes(System.Convert.ToUInt16(inv.VoltagePV), 0);
 
@@ -463,10 +475,10 @@ namespace DeviceEmulator
 
                                 var = (ByteVar)Converse.GetSessionVariable("Mode", null);
                                 var.SetBytes(0, 0);
-                                
+
                                 var = (ByteVar)Converse.GetSessionVariable("ErrorMode", null);
                                 var.SetBytes(0, 0);
-                                
+
                                 Converse.DoConversation("RunDevice");
                                 continue;
                             }
@@ -477,8 +489,8 @@ namespace DeviceEmulator
                 {
                     while (DoEmulator)
                     {
-                        
-                            Converse.DoConversation("Read");
+
+                        Converse.DoConversation("Read");
                     }
                 }
                 else if (EmulatorType == DeviceEmulator.EmulatorType.Fronius)
@@ -653,10 +665,10 @@ namespace DeviceEmulator
                             byte[] start = Converse.GetSessionVariable("StartRegister", null).GetBytes();
                             if (cmd[0] == 3)
                             {
-                                if (start[1] == 177)  
+                                if (start[1] == 177)
                                 {
                                     Converse.DoConversation("Identity");
-                                }                           
+                                }
                                 else if (start[1] == 32)
                                 {
                                     inv.UpdateEnergy(Services);
@@ -672,18 +684,18 @@ namespace DeviceEmulator
                                     var.SetBytes(System.Convert.ToUInt16(inv.VoltageAC), 0);
                                     var = (ByteVar)Converse.GetSessionVariable("CurrentAC1", null);
                                     var.SetBytes(System.Convert.ToUInt16(inv.CurrentAC), 0);
-                   
+
                                     var = (ByteVar)Converse.GetSessionVariable("VoltagePV1", null);
                                     var.SetBytes(System.Convert.ToUInt16(inv.VoltagePV), 0);
                                     var = (ByteVar)Converse.GetSessionVariable("CurrentPV1", null);
                                     var.SetBytes(System.Convert.ToUInt16(inv.CurrentPV), 0);
-                                    
+
                                     Converse.DoConversation("Reading");
                                 }
-                                else if (start[1] == 0)  
+                                else if (start[1] == 0)
                                 {
                                     Converse.DoConversation("Status");
-                                } 
+                                }
                             }
                         }
                     }
@@ -752,7 +764,7 @@ namespace DeviceEmulator
                                     var.SetBytes(250, 0);
                                     var = (ByteVar)Converse.GetSessionVariable("ErrorCode", null);
                                     var.SetBytes(0, 0);
-                                    
+
                                     Converse.DoConversation("Reading");
                                 }
                             }
@@ -863,7 +875,7 @@ namespace DeviceEmulator
                                     if (cmdStr == "0x0000")
                                     {
                                         ByteVar var = (ByteVar)Converse.GetSessionVariable("Model");
-                                        var.SetBytes("Fireball XL5", (byte) 0);
+                                        var.SetBytes("Fireball XL5", (byte)0);
                                         var = (ByteVar)Converse.GetSessionVariable("SerialNo");
                                         var.SetBytes("XL5-007", (byte)0);
                                         Converse.DoConversation("Identity");
@@ -963,8 +975,8 @@ namespace DeviceEmulator
                 {
                     // bool started = false;
                     Inverter inv = new Inverter(10.0, 10.0, 10.0, 10.0, 10.0);
-                    int errCount  = 0;
-                    
+                    int errCount = 0;
+
                     while (DoEmulator)
                     {
                         ByteVar response = ((ByteVar)Converse.GetSessionVariable("Response"));
@@ -995,7 +1007,7 @@ namespace DeviceEmulator
                             }
                             else if (cmd == "MEASIN?")
                             {
-                                String val = "V:" + inv.VoltagePV + " I:" 
+                                String val = "V:" + inv.VoltagePV + " I:"
                                     + inv.CurrentPV + " P:" + inv.PowerPV;
                                 response.Resize((UInt16)val.Length);
                                 response.SetBytes(val);
@@ -1053,14 +1065,14 @@ namespace DeviceEmulator
                 }
                 else if (EmulatorType == DeviceEmulator.EmulatorType.CurrentCostEnviR)
                 {
-                    XElement time = XElement.Element("time");
-                    XElement sensor = XElement.Element("sensor");
-                    XElement tmpr = XElement.Element("tmpr");
-                    XElement ch = XElement.Element("ch1");
+                    XElement time = liveElement.Element("time");
+                    XElement sensor = liveElement.Element("sensor");
+                    XElement tmpr = liveElement.Element("tmpr");
+                    XElement ch = liveElement.Element("ch1");
                     XElement watts1 = ch.Element("watts");
-                    ch = XElement.Element("ch2");
+                    ch = liveElement.Element("ch2");
                     XElement watts2 = ch.Element("watts");
-                    ch = XElement.Element("ch3");
+                    ch = liveElement.Element("ch3");
                     XElement watts3 = ch.Element("watts");
                     do
                     {
@@ -1070,7 +1082,7 @@ namespace DeviceEmulator
                         watts1.Value = Watts1_0.ToString();
                         watts2.Value = Watts2_0.ToString();
                         watts3.Value = Watts3_0.ToString();
-                        String xmlText = XElement.ToString();                       
+                        String xmlText = liveElement.ToString();
                         byte[] bytes = SystemServices.StringToBytes(xmlText);
                         success = Stream.Write(bytes, 0, bytes.Length);
 
@@ -1079,7 +1091,7 @@ namespace DeviceEmulator
                         watts2.Value = Watts2_1.ToString();
                         watts3.Value = Watts3_1.ToString();
 
-                        xmlText = XElement.ToString();
+                        xmlText = liveElement.ToString();
                         bytes = SystemServices.StringToBytes(xmlText);
                         success = Stream.Write(bytes, 0, bytes.Length);
 
@@ -1103,22 +1115,30 @@ namespace DeviceEmulator
                     }
                     while (success && DoEmulator);
                 }
+
+                if (UsePortReader)
+                    StopPortReader();
+                else
+                    Stream.Close();
+
+                Services.CloseLogFile();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Services.LogMessage("RunEmulator", "Exception: " + e.Message, LogEntryType.ErrorMessage);
             }
-
-            if (UsePortReader)
-                StopPortReader();
-            else
-                Stream.Close();
-
-            Services.CloseLogFile();
+            finally
+            {
+                ExecutionMutex.ReleaseMutex();
+            }
         }
 
         private void buttonStart_Click(object sender, RoutedEventArgs e)
         {
+            butSendHist.IsEnabled = false;
+            buttonStart.IsEnabled = false;
+            buttonStop.IsEnabled = true;
+
             EmulatorThread = new Thread(new ThreadStart(RunEmulator));
             EmulatorThread.Name = "Emulator";
             EmulatorThread.Start();
@@ -1128,12 +1148,70 @@ namespace DeviceEmulator
         {            
             DoEmulator = false;
             EmulatorThread = null;
+            butSendHist.IsEnabled = true;
+            buttonStart.IsEnabled = true;
+            buttonStop.IsEnabled = false;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             DoEmulator = false;
             EmulatorThread = null;
+        }
+
+        private void SendOneHistory()
+        {
+            bool first;
+            if (histList == null)
+            {
+                histList = histElements.Elements().GetEnumerator();
+                first = true;
+            }
+            else
+                first = false;
+
+            if (histList.MoveNext())
+            {
+                XElement hist = histList.Current;
+                String xmlText = hist.ToString();
+                byte[] bytes = SystemServices.StringToBytes(xmlText);
+                Stream.Write(bytes, 0, bytes.Length);
+            }
+            else if (!first) // avoid recursion on empty list
+            {
+                histList = null;
+                SendOneHistory();
+            }
+            else
+                histList = null;
+        }
+
+        private void butSendHist_Click(object sender, RoutedEventArgs e)
+        {
+            ExecutionMutex.WaitOne();
+            Services.OpenLogFile(LogFileName);
+            Stream = new SerialStream(GenThreadManager, Services, PortName, BaudRate, Parity, DataBits, StopBits, Handshake, 20000);
+            Stream.Open();
+
+            SendOneHistory();
+
+            Stream.Close();
+            Services.CloseLogFile();
+            ExecutionMutex.ReleaseMutex();
+        }
+
+        private void comboBoxType_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
+            if (EmulatorName == "CC EnviR")
+            {
+                butSendHist.Visibility = System.Windows.Visibility.Visible;
+                histList = null;
+                EmulatorType = DeviceEmulator.EmulatorType.CurrentCostEnviR;
+                String configFile = EmulatorMatrix[(int)EmulatorType, 1];
+                configFile = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configFile);
+                XElement root = XElement.Load(configFile, LoadOptions.None);
+                histElements = root.Element("history");
+            }
         }
     }
 }

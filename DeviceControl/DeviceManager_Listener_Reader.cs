@@ -94,15 +94,15 @@ namespace DeviceControl
             DateTime time2 = now.Date + time;
             DateTime time3 = now.Date + time + TimeSpan.FromDays(1);
 
-            int diff1 = Math.Abs((int)(now - time1).TotalMinutes);
-            int diff2 = Math.Abs((int)(now - time2).TotalMinutes);
-            int diff3 = Math.Abs((int)(time3 - now).TotalMinutes);
+            int diff1 = Math.Abs((int)(now - time1).TotalMinutes); // expect 24hours plus a bit
+            int diff2 = Math.Abs((int)(now - time2).TotalMinutes); // expect just a bit
+            int diff3 = Math.Abs((int)(time3 - now).TotalMinutes); // expect just a bit less than 24 hours
 
-            if (diff2 <= diff1)
-                if (diff2 <= diff3)
-                    return time2;
+            if (diff2 <= diff1)         // expect true
+                if (diff2 <= diff3)     // expect true
+                    return time2;       // expect this
             if (diff3 <= diff1)
-                return time3;
+                return time3;           // try to return right day when way off sync - perhaps better to turn off history!!!
             else
                 return time1;
         }
