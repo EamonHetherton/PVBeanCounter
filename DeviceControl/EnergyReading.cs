@@ -300,7 +300,7 @@ namespace DeviceDataRecorders
             get
             {
                 if (!AveragePowerInternal.HasValue)
-                    return (int)((1000.0 * EnergyDelta) / Duration.TotalHours);
+                    return (int)((1000.0 * TotalReadingDelta) / Duration.TotalHours);
                 return AveragePowerInternal.Value;
             }
             private set
@@ -578,7 +578,7 @@ namespace DeviceDataRecorders
             Double adjust = (prorataEnergy * Duration.TotalSeconds) / prorataSeconds;
 
             if (GlobalSettings.SystemServices.LogTrace)
-                GlobalSettings.SystemServices.LogMessage("EnergyReading.HistoryAdjust_Prorata", "hist.Duration: " + prorataSeconds
+                GlobalSettings.SystemServices.LogMessage("EnergyReading.HistoryAdjust_Average", "hist.Duration: " + prorataSeconds
                     + " - prorataEnergy: " + prorataEnergy + " - this.Duration: " + Duration.TotalSeconds
                     + " - adjust: " + adjust , LogEntryType.Trace);
 

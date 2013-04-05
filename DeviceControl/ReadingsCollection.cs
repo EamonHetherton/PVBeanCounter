@@ -392,19 +392,25 @@ namespace DeviceDataRecorders
             Readings = new SortedList<DateTime, ReadingBase>();
         }
 
+
+        // AlignIntervals will slice readings at Interval boundaries
         public void AlignIntervals()
         {
             int i = 0;  // position in Readings
-
             ReadingBase reading;
-            DateTime? lastTime = null;           
+            
             while (i < Readings.Count)
             {
                 try
                 {
                     reading = Readings.Values[i];
 
-                    lastTime = reading.ReadingEnd;
+                    if (reading.IsGapFillReading())
+                    {
+                        // do not split GapFillReadings (from history) - they are expected to span multiple intervals and conform with required alignment
+                        i++;
+                        continue;
+                    }                    
 
                     // last interval in current reading
                     int readingEndInterval = DDP.GetIntervalNo(reading.ReadingEnd);  // end time interval of current reading
@@ -446,15 +452,17 @@ namespace DeviceDataRecorders
        
         public void ConsolidateIntervals(DateTime consolidateTo)
         {
-            AlignIntervals();
+            AlignIntervals(); // This chops on interval boundaries for all but GapFillReading (history) readings
+
             int i = 0;  // position in Readings
             
             ReadingBase reading;
-            DateTime? lastTime = null;
+            
             int currentInterval = -1;
 
             ReadingBase accumReading = null;
             bool replaceReadings = false;
+            bool suppressAccum = false; // set to true when GapFillReading occurs in the interval - no accum allowed
 
             while (i < Readings.Count)
             {
@@ -462,12 +470,24 @@ namespace DeviceDataRecorders
                 {
                     reading = Readings.Values[i];
 
-                    lastTime = reading.ReadingEnd;
-
                     int readingInterval = DDP.GetIntervalNo(reading.ReadingEnd);  // end time interval of current reading
+                    int readingStartInterval = DDP.GetIntervalNo(reading.ReadingStart, false);
+
+                    if (readingInterval != readingStartInterval || reading.IsGapFillReading())
+                    {
+                        // reading crosses interval boundary - do not consolidate - probably history record
+                        // GapFillReading should not be merged with regular readings - needs to retain the history signature for future history adjustments
+                        accumReading = null;
+                        replaceReadings = false;
+                        currentInterval = readingInterval;
+                        suppressAccum = true;
+                        i++;                        
+                        continue;
+                    }
 
                     if (readingInterval > currentInterval) // new interval detected
                     {
+                        suppressAccum = false;
                         if (replaceReadings)
                         {
                             // finalise previous consolidated interval
@@ -478,11 +498,12 @@ namespace DeviceDataRecorders
                         if (reading.ReadingStart >= consolidateTo)
                             return;
 
-                        // reading is one interval only and end time is end of interval
+                        // end time is end of interval on first reading in interval - no accum required
                         if (DDP.GetDateTime(readingInterval) == reading.ReadingEnd)
                         {
                             replaceReadings = false;
                             i++;
+                            currentInterval = readingInterval;
                             continue;
                         }
                         accumReading = DDP.NewReadingGeneric(DDP.GetDateTime(readingInterval), DDP.IntervalDuration);
@@ -490,7 +511,8 @@ namespace DeviceDataRecorders
                         currentInterval = readingInterval;
                     }
 
-                    accumReading.AccumulateReading(reading, true);
+                    if (!suppressAccum)
+                        accumReading.AccumulateReading(reading, true);
                     i++;
                 }
                 catch (Exception e)
