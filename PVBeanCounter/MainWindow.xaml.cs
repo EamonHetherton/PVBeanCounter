@@ -33,7 +33,7 @@ namespace PVBeanCounter
         ApplicationSettings ApplicationSettings;
         SystemServices SystemServices;
         CheckEnvironment CheckEnvironment;
-        DeviceUpdate DeviceUpdate;
+        DeviceDisplay DeviceUpdate;
         //OwlDatabaseInfo OwlDatabaseInfo;
 
         bool saveRequired = false;
@@ -105,7 +105,7 @@ namespace PVBeanCounter
                 comboBoxMMStopBits.ItemsSource = SerialPortSettings.StopBitsList;
                 comboBoxMMHandshake.ItemsSource = SerialPortSettings.HandshakeList;
 
-                DeviceUpdate = new DeviceUpdate(ApplicationSettings, SystemServices);
+                DeviceUpdate = new DeviceDisplay(ApplicationSettings, SystemServices);
 
                 dataGridInverterList.ItemsSource = DeviceUpdate.DeviceList;
                 //applianceConsumeSiteIdColumn.ItemsSource = ApplicationSettings.PvOutputSiteList;
@@ -389,7 +389,7 @@ namespace PVBeanCounter
 
         private void buttonInverterRefresh_Click(object sender, RoutedEventArgs e)
         {
-            DeviceUpdate iu = new DeviceUpdate(ApplicationSettings, SystemServices);
+            DeviceDisplay iu = new DeviceDisplay(ApplicationSettings, SystemServices);
             DeviceUpdate.LoadDeviceList();
         }
 
@@ -576,10 +576,10 @@ namespace PVBeanCounter
                 dSettings.NotifySelectionChange();
             }
 
-            SetConsolidationVisibility();
+            SetDeviceVisibility();
         }
 
-        private void SetConsolidationVisibility()
+        private void SetDeviceVisibility()
         {
             DeviceManagerDeviceSettings dSettings = (DeviceManagerDeviceSettings)dataGridDeviceList.SelectedItem;
             if (dSettings == null)
@@ -589,34 +589,49 @@ namespace PVBeanCounter
             {
                 gridConsolidatedFrom.Visibility = System.Windows.Visibility.Visible;
                 gridConsolidationType.Visibility = System.Windows.Visibility.Visible;
-                checkBoxDeviceEnabled.Visibility = System.Windows.Visibility.Hidden;
+                
                 if (dSettings.ConsolidationType == ConsolidationType.PVOutput)
                 {
                     labelPVOutputSystem.Visibility = System.Windows.Visibility.Visible;
                     comboBoxPVOutputSystem.Visibility = System.Windows.Visibility.Visible;
-                    rowEnabledOrPVOutput.Height = GridLength.Auto;
-                    labelModel.Visibility = System.Windows.Visibility.Hidden;
-                    textBoxModel.Visibility = System.Windows.Visibility.Hidden;
+                    rowPVOutput.Height = GridLength.Auto;
                 }
                 else
                 {
                     labelPVOutputSystem.Visibility = System.Windows.Visibility.Hidden;
                     comboBoxPVOutputSystem.Visibility = System.Windows.Visibility.Hidden;
-                    rowEnabledOrPVOutput.Height = new GridLength(0.0);
-                    labelModel.Visibility = System.Windows.Visibility.Visible;
-                    textBoxModel.Visibility = System.Windows.Visibility.Visible;
+                    rowPVOutput.Height = new GridLength(0.0);
                 }
+                labelDeviceAddress.Visibility = System.Windows.Visibility.Collapsed;
+                textBoxDeviceAddress.Visibility = System.Windows.Visibility.Collapsed;
+                labelSerialNo.Visibility = System.Windows.Visibility.Collapsed;
+                textBoxSerialNo.Visibility = System.Windows.Visibility.Collapsed;
+                rowAddressSerialNo.Height = new GridLength(0.0);
             }
             else
             {
                 gridConsolidatedFrom.Visibility = System.Windows.Visibility.Collapsed;
                 gridConsolidationType.Visibility = System.Windows.Visibility.Collapsed;
-                rowEnabledOrPVOutput.Height = GridLength.Auto;
-                checkBoxDeviceEnabled.Visibility = System.Windows.Visibility.Visible;
+                rowPVOutput.Height = new GridLength(0.0);
+                
                 labelPVOutputSystem.Visibility = System.Windows.Visibility.Hidden;
-                comboBoxPVOutputSystem.Visibility = System.Windows.Visibility.Hidden;
-                labelModel.Visibility = System.Windows.Visibility.Visible;
-                textBoxModel.Visibility = System.Windows.Visibility.Visible;
+                comboBoxPVOutputSystem.Visibility = System.Windows.Visibility.Collapsed;
+
+                labelSerialNo.Visibility = System.Windows.Visibility.Visible;
+                textBoxSerialNo.Visibility = System.Windows.Visibility.Visible;
+
+                if (((PVSettings.DeviceManagementSettings.DeviceListItem)comboBoxDeviceType.SelectedItem).DeviceSettings.DeviceTypeName == "SMA_SunnyExplorer")
+                {
+                    labelDeviceAddress.Visibility = System.Windows.Visibility.Hidden;
+                    textBoxDeviceAddress.Visibility = System.Windows.Visibility.Hidden;
+                    rowAddressSerialNo.Height = GridLength.Auto;
+                }
+                else
+                {
+                    labelDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                    textBoxDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                    rowAddressSerialNo.Height = GridLength.Auto;
+                }
             }
         }
 
@@ -775,7 +790,7 @@ namespace PVBeanCounter
 
         private void comboBoxConsolidationType_SourceUpdated(object sender, DataTransferEventArgs e)
         {
-            SetConsolidationVisibility();
+            SetDeviceVisibility();
         }
 
         private void expanderConsolidatedFrom_Expanded(object sender, RoutedEventArgs e)

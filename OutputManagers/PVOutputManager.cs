@@ -168,7 +168,7 @@ namespace OutputManagers
 
         public ManualResetEvent OutputReadyEvent { get; private set; }
 
-        private static Object OutputProcessLock;
+        private static Object OutputProcessLock;  // used to prevent collisions between output managers accessing consolidations
 
         private Device.EnergyConsolidationDevice ConsolidationDevice = null;
 
@@ -564,7 +564,7 @@ namespace OutputManagers
             }
         }
 
-        private void PrepareYieldLoadList()
+        private void PrepareYieldLoadList(DateTime runLimit)
         {            
             try
             {
@@ -587,13 +587,20 @@ namespace OutputManagers
 
                     foreach (EnergyReading reading in yieldPeriod.GetReadings())
                     {
+                        // exclude readings beyond limit to prevent exposure of values in incomplete intervals
+                        if (reading.ReadingEnd > runLimit)
+                            break;
+
                         int timeVal = (int)(reading.ReadingEnd.AddMinutes(-PVInterval).TimeOfDay.TotalSeconds);
-                        // do not have instantaneous power - do have min and max power 
-                        // values averaged over a 10 minute period - alternate between the two
-                        if (((int)((int)(timeVal / 600) % 2)) == 0)                        
-                            power = reading.MaxPower.HasValue ? reading.MaxPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;  
+                        if (Settings.PowerMinMax)
+                            // do not have instantaneous power - do have min and max power 
+                            // alternale between min and max in each interval
+                            if (((int)((int)(timeVal / Settings.DataIntervalSeconds) % 2)) == 0)
+                                power = reading.MaxPower.HasValue ? reading.MaxPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;
+                            else
+                                power = reading.MinPower.HasValue ? reading.MinPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;
                         else
-                            power = reading.MinPower.HasValue ? reading.MinPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;  
+                            power = reading.Power.HasValue ? reading.Power.Value : reading.AveragePower; 
                         
                         energy += (long)(reading.TotalReadingDelta * 1000.0);
                         // PVOutput treats 12:00AM as the start of the day - use period start time rather than end time so that 12:00AM appears as 11:50PM or 11:55PM
@@ -683,7 +690,7 @@ namespace OutputManagers
             }
         }
 
-        private void PrepareConsumptionLoadList()
+        private void PrepareConsumptionLoadList(DateTime runLimit)
         {
             try
             {
@@ -706,13 +713,21 @@ namespace OutputManagers
 
                     foreach (EnergyReading reading in consumptionPeriod.GetReadings())
                     {
+                        // exclude readings beyond limit to prevent exposure of values in incomplete intervals
+                        if (reading.ReadingEnd > runLimit)
+                            break;
+
                         int timeVal = (int)(reading.ReadingEnd.AddMinutes(-PVInterval).TimeOfDay.TotalSeconds);
-                        // do not have instantaneous power - do have min and max power 
-                        // values averaged over a 10 minute period - alternate between the two
-                        if (((int)((int)(timeVal / 600) % 2)) == 0)
-                            power = reading.MaxPower.HasValue ? reading.MaxPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;
+
+                        if (Settings.PowerMinMax)
+                            // do not have instantaneous power - do have min and max power 
+                            // alternale between min and max in each interval
+                            if (((int)((int)(timeVal / Settings.DataIntervalSeconds) % 2)) == 0)
+                                power = reading.MaxPower.HasValue ? reading.MaxPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;
+                            else
+                                power = reading.MinPower.HasValue ? reading.MinPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;
                         else
-                            power = reading.MinPower.HasValue ? reading.MinPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;
+                            power = reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;
 
                         energy += (long)(reading.TotalReadingDelta * 1000.0);
                         // PVOutput treats 12:00AM as the start of the day - use period start time rather than end time so that 12:00AM appears as 11:50PM or 11:55PM
@@ -1438,7 +1453,7 @@ namespace OutputManagers
                 lock(OutputProcessLock) // ensure only one PVOutputManager does this at any one time
                 {
                     if (haveOutputReadyEvent && runDue <= now || InitialOutputCycle
-                    ||  ((now - runDue) >= TimeSpan.FromMinutes(3.0)))
+                    ||  ((now - runDue) >= TimeSpan.FromMinutes(4.0)))
                     {
                         complete = false;
                         LogMessage("DoWork", "Running update", LogEntryType.Trace);
@@ -1463,8 +1478,8 @@ namespace OutputManagers
 
                                 if (ManagerManager.RunMonitors)
                                 {                                    
-                                    PrepareYieldLoadList();                                    
-                                    PrepareConsumptionLoadList();                                   
+                                    PrepareYieldLoadList(runDue);                                    
+                                    PrepareConsumptionLoadList(runDue);                                   
 
                                     LogMessage("DoWork", "Running LoadPVOutputBatch", LogEntryType.Trace);
                                     complete = LoadPVOutputBatch();

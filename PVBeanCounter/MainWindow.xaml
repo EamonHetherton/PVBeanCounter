@@ -248,8 +248,8 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Button Content="Add Manager" Height="23" HorizontalAlignment="Left" Name="buttonAddDeviceMgr" VerticalAlignment="Top" Click="buttonAddModbusMgr_Click" ToolTip="Add a new Inverter Manager of the same type as the current Inverter Manager selection." Margin="10,0,2,10" Padding="2,1" />
-                                <Button Content="Delete Manager" Height="23" HorizontalAlignment="Right" Name="buttonDeleteDeviceMgr" VerticalAlignment="Top" Click="buttonDeleteModbusMgr_Click" Grid.Column="1" ToolTip="Delete the selected Inverter Manager." Margin="2,0,10,10" Padding="2,1" IsEnabled="False" />
+                                <Button Content="Add Manager" Height="23" HorizontalAlignment="Left" Name="buttonAddDeviceMgr" VerticalAlignment="Top" Click="buttonAddModbusMgr_Click" ToolTip="Add a new Device Manager" Margin="10,0,2,10" Padding="2,1" />
+                                <Button Content="Delete Manager" Height="23" HorizontalAlignment="Right" Name="buttonDeleteDeviceMgr" VerticalAlignment="Top" Click="buttonDeleteModbusMgr_Click" Grid.Column="1" ToolTip="Delete the selected Device Manager" Margin="2,0,10,10" Padding="2,1" IsEnabled="False" />
                             </Grid>
                         </Grid>
                     </Grid>
@@ -448,8 +448,8 @@
                                 <RowDefinition Height="Auto"  />
                                 <RowDefinition Height="Auto"  />
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto" Name="rowEnabledOrPVOutput"/>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto" Name="rowPVOutput"/>
+                                <RowDefinition Height="Auto" Name="rowAddressSerialNo"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -476,15 +476,13 @@
                             </Grid>
                             <Label Grid.Row="3" Grid.Column="0" Name="labelPVOutputSystem" Content="System" HorizontalAlignment="Right" />
                             <ComboBox Name="comboBoxPVOutputSystem" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,5,0,5" ItemsSource="{Binding PVOutputSystemList}" SelectedValue="{Binding Path=PVOutputSystem}" SelectedValuePath="SystemId" DisplayMemberPath="Description" ToolTip="Select the PVOutput System ID that consumes readings from this device" />
-                            <CheckBox Name="checkBoxDeviceEnabled" Content="Enabled" Grid.Row="3" Grid.Column="1" IsChecked="{Binding Path=Enabled, Converter={StaticResource NullableValueConverter}}" HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" Padding="4,0,0,0" Margin="0,2" FontWeight="Bold" />
                             
-                            <Label Name="labelModel" Content="Model" Grid.Column="2" Grid.Row="3" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="20,0,0,0"/>
-                            <TextBox Name="textBoxModel" Text="{Binding Path=Model, Converter={StaticResource NullableValueConverter}}" Grid.Row="3" Grid.Column="3" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="9" />
-
-                            <Label Content="Address" Grid.Row="4" HorizontalContentAlignment="Right" HorizontalAlignment="Right"/>
-                            <TextBox Text="{Binding Path=Address, Converter={StaticResource NullableValueConverter}}" Grid.Row="4" Grid.Column="1" VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="40" HorizontalAlignment="Left" FontSize="9" />
-                            <Label Content="Serial No." Grid.Column="2" Grid.Row="4" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="20,0,0,0"/>
-                            <TextBox Text="{Binding Path=SerialNo, Converter={StaticResource NullableValueConverter}}" Grid.Row="4" Grid.Column="3" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="9" />
+                            <Label Name="labelDeviceAddress" Content="Address" Grid.Row="4" HorizontalContentAlignment="Right" HorizontalAlignment="Right"/>
+                            <TextBox Name="textBoxDeviceAddress" Text="{Binding Path=Address, Converter={StaticResource NullableValueConverter}}" Grid.Row="4" Grid.Column="1" 
+                                     VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="40" HorizontalAlignment="Left" FontSize="9" />
+                            <Label Name="labelSerialNo" Content="Serial No." Grid.Column="2" Grid.Row="4" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="20,0,0,0"/>
+                            <TextBox Name="textBoxSerialNo" Text="{Binding Path=SerialNo, Converter={StaticResource NullableValueConverter}}" 
+                                     Grid.Row="4" Grid.Column="3" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="9" />
                             
                             <Expander Name="expanderDeviceAdvanced" Header="Advanced Settings" Grid.Row="5" Grid.ColumnSpan="4" Expanded="expanderDeviceAdvanced_Expanded" FontSize="11">
                                 <StackPanel>
@@ -519,8 +517,7 @@
                                             <Label Grid.Row="2" Grid.Column="2" Content="(zero watts)" HorizontalContentAlignment="Right" HorizontalAlignment="Left" FontSize="10.5" />
                                         </StackPanel>
                                         <CheckBox Content="History Adjust" Grid.Row="3" Grid.Column="1" IsChecked="{Binding Path=UpdateHistory, Converter={StaticResource NullableValueConverter}}" HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" Padding="4,0,0,0" Margin="0,2" FontSize="10.5" />
-                                        <CheckBox Content="Store History" Grid.Row="3" Grid.Column="3" IsChecked="{Binding Path=StoreHistory, Converter={StaticResource NullableValueConverter}}" HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" Padding="4,0,0,0" Margin="0,2" FontSize="10.5" />
-                                        
+
                                     </Grid>
 
                                 </StackPanel>
@@ -538,7 +535,10 @@
                                                 <RowDefinition Height="*"/>
                                                 <RowDefinition Height="Auto"/>
                                             </Grid.RowDefinitions>
-                                            <DataGrid Name="datGridConsolidateToDevices" ItemsSource="{Binding Path=ConsolidateToDevices}" Margin="0,5,0,0" AutoGenerateColumns="False" MinHeight="22" ColumnHeaderHeight="20" SelectionMode="Single" FontSize="10" CanUserDeleteRows="False" CanUserAddRows="False" ColumnWidth="Auto" SelectionChanged="datGridConsolidateToDevices_SelectionChanged" >
+                                            <DataGrid Name="datGridConsolidateToDevices" ItemsSource="{Binding Path=ConsolidateToDevices}" Margin="0,5,0,0" 
+                                                      AutoGenerateColumns="False" MinHeight="22" ColumnHeaderHeight="20" SelectionMode="Single" FontSize="10" 
+                                                      CanUserDeleteRows="False" CanUserAddRows="False" ColumnWidth="Auto" SelectionChanged="datGridConsolidateToDevices_SelectionChanged" 
+                                                      ToolTip="List of Device Feature consolidations sourced from the selected Device">
                                                 <DataGrid.Columns>
                                                     <DataGridComboBoxColumn x:Name="consolidateToDeviceColumn" Header="Device" DisplayMemberPath="Name"  Width="Auto" MinWidth="100" SelectedItemBinding="{Binding ConsolidateToDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserResize="False" />
                                                     <DataGridComboBoxColumn x:Name="consolidateToFeatureColumn" Header="To Feature" DisplayMemberPath="Name" Width="Auto" MinWidth="75" SelectedItemBinding="{Binding ConsolidateToFeature, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource NullableValueConverter}}" CanUserResize="False">
@@ -567,6 +567,7 @@
                                                         </DataGridComboBoxColumn.ElementStyle>
                                                     </DataGridComboBoxColumn>
                                                     <DataGridTextColumn Binding="{Binding Operation}" Header="Operation" IsReadOnly="True" CanUserResize="False" />
+                                                    <DataGridCheckBoxColumn Header="Use Temp" Binding="{Binding Path=UseTemperature, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                 </DataGrid.Columns>
                                             </DataGrid>
                                             <Grid Margin="0,7,0,0" Grid.Row="1">
@@ -574,8 +575,8 @@
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
-                                                <Button Content="Add" Height="23" HorizontalAlignment="Left" Name="buttonAddConsolidateTo"  VerticalAlignment="Top" ToolTip="Add a new Inverter Manager of the same type as the current Inverter Manager selection." Margin="0,0,2,0" Padding="5,0" Click="buttonAddConsolidateTo_Click" FontSize="10" />
-                                                <Button Content="Delete" Height="23" HorizontalAlignment="Right" Name="buttonDeleteConsolidateTo" VerticalAlignment="Top" Grid.Column="1" ToolTip="Delete the selected Inverter Manager." Margin="2,0,5,4" Padding="5,0" IsEnabled="False" FontSize="10" Click="buttonDeleteConsolidateTo_Click" />
+                                                <Button Content="Add" Height="23" HorizontalAlignment="Left" Name="buttonAddConsolidateTo"  VerticalAlignment="Top" ToolTip="Identify a Feature of a consolidation device that consolidates a specific feature of the selected Device" Margin="0,0,2,0" Padding="5,0" Click="buttonAddConsolidateTo_Click" FontSize="10" />
+                                                <Button Content="Delete" Height="23" HorizontalAlignment="Right" Name="buttonDeleteConsolidateTo" VerticalAlignment="Top" Grid.Column="1" ToolTip="Delete the selected Consolidation" Margin="2,0,5,4" Padding="5,0" IsEnabled="False" FontSize="10" Click="buttonDeleteConsolidateTo_Click" />
                                             </Grid>
                                         </Grid>
                                     </Expander>
@@ -590,7 +591,9 @@
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="*"/>
                                                 </Grid.RowDefinitions>
-                                                <DataGrid ItemsSource="{Binding Path=ConsolidateFromDevices}" Margin="0,5,5,10" AutoGenerateColumns="False" MinHeight="22" ColumnHeaderHeight="20" SelectionMode="Single" FontSize="10">
+                                                <DataGrid ItemsSource="{Binding Path=ConsolidateFromDevices}" Margin="0,5,5,10" AutoGenerateColumns="False" MinHeight="22" 
+                                                          ColumnHeaderHeight="20" SelectionMode="Single" FontSize="10"
+                                                          ToolTip="List of Device Features that consolidate to the selected Device">
                                                     <DataGrid.Columns>
                                                         <DataGridComboBoxColumn x:Name="consolidateFromDeviceColumn" Header="Device" DisplayMemberPath="Name"  Width="Auto" MinWidth="100" SelectedItemBinding="{Binding ConsolidateFromDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserResize="False" IsReadOnly="True" />
                                                         <DataGridComboBoxColumn  DisplayMemberPath="Name" Header="From Feature"  Width="Auto" MinWidth="75" SelectedItemBinding="{Binding ConsolidateFromFeature, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserResize="False" IsReadOnly="True">
@@ -682,8 +685,8 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <Button Content="Add" Height="20" HorizontalAlignment="Left" Name="buttonAddDeviceEvent"  ToolTip="Add a new Device Event to the selected device." Margin="0,0,2,0" Padding="5,0" Click="buttonAddDeviceEvent_Click" FontSize="10" IsEnabled="{Binding Path=ManualEvents}" />
-                                        <Button Content="Delete" Height="20"  HorizontalAlignment="Right" Name="buttonDeleteDeviceEvent" Grid.Column="1" ToolTip="Delete the selected Device Event." Margin="4,0,5,0" Padding="5,0" FontSize="10" Click="buttonDeleteDeviceEvent_Click" IsEnabled="False" />
+                                        <Button Content="Add" Height="20" HorizontalAlignment="Left" Name="buttonAddDeviceEvent"  ToolTip="Add a new Device Event to the selected Device" Margin="0,0,2,0" Padding="5,0" Click="buttonAddDeviceEvent_Click" FontSize="10" IsEnabled="{Binding Path=ManualEvents}" />
+                                        <Button Content="Delete" Height="20"  HorizontalAlignment="Right" Name="buttonDeleteDeviceEvent" Grid.Column="1" ToolTip="Delete the selected Device Event" Margin="4,0,5,0" Padding="5,0" FontSize="10" Click="buttonDeleteDeviceEvent_Click" IsEnabled="False" />
                                     </Grid>
                                 </Grid>
                             </Expander>
@@ -758,8 +761,8 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Button Content="Add Device" Height="23" HorizontalAlignment="Left" Name="buttonAddDevice" VerticalAlignment="Top" ToolTip="Add a new Inverter Manager of the same type as the current Inverter Manager selection." Margin="10,0,2,0" Padding="2,1" Click="buttonAddDevice_Click" />
-                            <Button Content="Delete Device" Height="23" HorizontalAlignment="Right" Name="buttonDeleteDevice" VerticalAlignment="Top" Grid.Column="1" ToolTip="Delete the selected Inverter Manager." Margin="2,0,10,0" Padding="2,1" IsEnabled="False" Click="buttonDeleteDevice_Click" />
+                            <Button Content="Add Device" Height="23" HorizontalAlignment="Left" Name="buttonAddDevice" VerticalAlignment="Top" ToolTip="Add a new Device to the selected Device Manager" Margin="10,0,2,0" Padding="2,1" Click="buttonAddDevice_Click" />
+                            <Button Content="Delete Device" Height="23" HorizontalAlignment="Right" Name="buttonDeleteDevice" VerticalAlignment="Top" Grid.Column="1" ToolTip="Delete the selected Device" Margin="2,0,10,0" Padding="2,1" IsEnabled="False" Click="buttonDeleteDevice_Click" />
                         </Grid>
                     </Grid>
 
@@ -883,7 +886,7 @@
                                 <CheckBox Content="Enable Upload" IsChecked="{Binding Path=Enable, Converter={StaticResource NullableValueConverter}}" ToolTip="Turns pvoutput.org on or off" Grid.Column="1" Grid.Row="5" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5" />
                                 <CheckBox Content="Enable Auto Backload" IsChecked="{Binding Path=AutoBackload, Converter={StaticResource NullableValueConverter}}" ToolTip="Auto upload daily yield for missing days at pvoutput.org beyond the 14 day live upload limit" Grid.Column="1" Grid.Row="6" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5" />
                                 <CheckBox Content="Include Current Cost Temperature" IsChecked="{Binding Path=UseCCTemperature, Converter={StaticResource NullableValueConverter}}" ToolTip="Include temperature readings from Current Cost meter consumption if available" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5" />
-                                <CheckBox Content="Consumption Power Alternates Min / Max" IsChecked="{Binding Path=ConsumptionPowerMinMax, Converter={StaticResource NullableValueConverter}}" ToolTip="Use consumption power to alternately display minimum and maximum interval power " Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="2" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5" />
+                                <CheckBox Content="Power Alternates Min / Max" IsChecked="{Binding Path=PowerMinMax, Converter={StaticResource NullableValueConverter}}" ToolTip="Alternately display minimum and maximum interval power " Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="2" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5" />
                             </Grid>
                             <Grid Grid.Column="1">
                                 <Grid.ColumnDefinitions>
@@ -1078,13 +1081,17 @@
                         <RowDefinition Height="36*" />
                         <RowDefinition Height="46" />
                     </Grid.RowDefinitions>
-                    <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" DataContext="{Binding}" HorizontalAlignment="Stretch" Margin="10,10,10,0" Name="dataGridInverterList" SelectionMode="Single" VerticalAlignment="Stretch" >
+                    <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" DataContext="{Binding}" 
+                              HorizontalAlignment="Stretch" Margin="10,10,10,0" Name="dataGridInverterList" SelectionMode="Single" VerticalAlignment="Stretch" 
+                              ToolTip="Lists the Device Features currently recorded in the PV Bean Counter database. No configuration required here">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Path=Id}" Header="Id" IsReadOnly="True" MinWidth="20" />
                             <DataGridTextColumn Binding="{Binding Path=DeviceType}" Header="Device Type" IsReadOnly="True" MinWidth="180" />
                             <DataGridTextColumn Binding="{Binding Path=SerialNumber}" Header="Serial No" IsReadOnly="True" MinWidth="120" />
                             <DataGridTextColumn Binding="{Binding Path=Manufacturer}" Header="Manufacturer" IsReadOnly="True" MinWidth="150" />
                             <DataGridTextColumn Binding="{Binding Path=Model}" Header="Model" IsReadOnly="True" MinWidth="150" />
+                            <DataGridTextColumn Binding="{Binding Path=FeatureType}" Header="Feature Type" IsReadOnly="True" MinWidth="180" />
+                            <DataGridTextColumn Binding="{Binding Path=FeatureId}" Header="Feature Id" IsReadOnly="True" MinWidth="20" />
                         </DataGrid.Columns>
                     </DataGrid>
                     <Button Content="Retrieve / Refresh" Height="23" HorizontalAlignment="Left" Margin="10,10,0,0" Name="buttonInverterRefresh" VerticalAlignment="Top" Width="119" Click="buttonInverterRefresh_Click" ToolTip="Retrieve or Refresh the Inverter List" Grid.Row="1" />

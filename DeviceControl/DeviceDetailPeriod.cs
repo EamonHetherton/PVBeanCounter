@@ -707,7 +707,7 @@ namespace DeviceDataRecorders
                 if (thisReading.ReadingEnd > endTime)
                     thisReading = reading.Clone(endTime, endTime - thisReading.ReadingStart);
 
-                newReading.AccumulateReading(thisReading);
+                newReading.AccumulateReading(thisReading, true);
 
                 // If the Output time on an existing reading aligns with an interval end, this entry may already be in the DB
                 // mark new entry with existing status as they share the same DB key
@@ -955,7 +955,7 @@ namespace DeviceDataRecorders
             cmd.AddParameterWithValue("@NextPeriodStart", Start.AddDays(1.0) + PeriodOverlapLimit);
         }
 
-        public void ConsolidateReading(TDeviceReading reading, ConsolidateDeviceSettings.OperationType operation = ConsolidateDeviceSettings.OperationType.Add)
+        public void ConsolidateReading(TDeviceReading reading, bool useTemperature, ConsolidateDeviceSettings.OperationType operation = ConsolidateDeviceSettings.OperationType.Add)
         {
             // discard readings that are not relevant to this consolidation period
             if (reading.ReadingEnd <= Start)
@@ -1009,7 +1009,7 @@ namespace DeviceDataRecorders
             else
                 toReading = (TDeviceReading)ReadingsGeneric.ReadingList[index];
 
-            toReading.AccumulateReading(reading, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
+            toReading.AccumulateReading(reading, useTemperature, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
         }
     }
 
@@ -1059,7 +1059,7 @@ namespace DeviceDataRecorders
                             DeviceDetailPeriod<TDeviceReading, TDeviceHistory> period = (DeviceDetailPeriod<TDeviceReading, TDeviceHistory>)periods.FindOrCreate(p.Start);
                             // step through the readings in one period and consolidate into this period
                             foreach (TDeviceReading r in period.GetReadings())
-                                ConsolidateReading(r, devLink.Operation);
+                                ConsolidateReading(r, devLink.UseTemperature, devLink.Operation);
                         }
                         devLink.SourceUpdated = false;
                     }

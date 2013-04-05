@@ -44,11 +44,13 @@ namespace Device
         public EnergyEventStatus FromEventStatus;
         public EnergyEventStatus ToEventStatus = null;
 
+        public bool UseTemperature = false;
+
         public bool SourceUpdated = true;
 
         public DeviceLink(DeviceBase fromDevice, FeatureType fromFeatureType, uint fromFeatureId, 
             ConsolidationDevice toDevice, FeatureType toFeatureType, uint toFeatureId,
-            ConsolidateDeviceSettings.OperationType operation, EnergyEventStatus fromEventStatus)
+            ConsolidateDeviceSettings.OperationType operation, EnergyEventStatus fromEventStatus, bool useTemperature)
         {
             FromDevice = fromDevice;
             FromFeatureType = fromFeatureType;
@@ -57,6 +59,7 @@ namespace Device
             ToFeatureType = toFeatureType;
             ToFeatureId = toFeatureId;
             Operation = operation;
+            UseTemperature = useTemperature;
             FromEventStatus = fromEventStatus;
             FromEventStatus.ToDeviceLinks.Add(this);
         }

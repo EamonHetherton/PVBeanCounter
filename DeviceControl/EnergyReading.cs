@@ -672,7 +672,7 @@ namespace DeviceDataRecorders
             return newRec;
         }
 
-        public override void AccumulateReading(ReadingBase readingGeneric, Double operationFactor = 1.0)
+        public override void AccumulateReading(ReadingBase readingGeneric, bool useTemperature, Double operationFactor = 1.0)
         {
             EnergyReading reading = (EnergyReading)readingGeneric;
             //Duration += reading.DurationInternal;
@@ -707,7 +707,7 @@ namespace DeviceDataRecorders
             if (reading.Mode.HasValue)
                 Mode = reading.Mode.Value;
 
-            if (reading.Temperature.HasValue)
+            if (useTemperature && reading.Temperature.HasValue)
                 Temperature = reading.Temperature.Value;
 
             if (reading.EnergyToday.HasValue)

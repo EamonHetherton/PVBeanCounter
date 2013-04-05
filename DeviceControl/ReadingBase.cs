@@ -227,7 +227,7 @@ namespace DeviceDataRecorders
         public abstract bool IsGapFillReading();
         public abstract ReadingBase CloneGeneric(DateTime outputTime, TimeSpan duration);
         public abstract void GapAdjustAdjacent(ReadingBase adjacentReading, bool adjacentIsBeforeThis);
-        public abstract void AccumulateReading(ReadingBase reading, Double operationFactor = 1.0);
+        public abstract void AccumulateReading(ReadingBase reading, bool useTemperature, Double operationFactor = 1.0);
 
         public String GetReadingLogIdDetails()
         {

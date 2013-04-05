@@ -562,7 +562,19 @@ namespace PVSettings
             {
                 SetValue("operation", value.ToString(), "Operation");
             }
-        }        
+        }
+
+        public bool UseTemperature
+        {
+            get
+            {
+                return GetValue("usetemperature") == "true";
+            }
+            set
+            {
+                SetValue("usetemperature", value ? "true" : "false", "UseTemperature");
+            }
+        }
     }
 
 
@@ -1136,22 +1148,6 @@ namespace PVSettings
             set
             {
                 SetValue("updatehistory", value ? "true" : "false", "UpdateHistory");
-            }
-        }
-
-        public bool StoreHistory
-        {
-            get
-            {
-                string val = GetValue("storehistory");
-                if (val == "")
-                    return true;
-                return val == "true";
-            }
-
-            set
-            {
-                SetValue("storehistory", value ? "true" : "false", "StoreHistory");
             }
         }
 

@@ -359,11 +359,13 @@ namespace PVSettings
             }
         }
 
-        public bool ConsumptionPowerMinMax
+        public bool PowerMinMax
         {
             get
             {
-                String rffd = GetValue("consumptionpowerminmax");
+                String rffd = GetValue("powerminmax");
+                if (rffd == "")
+                    rffd = GetValue("consumptionpowerminmax");
                 if (rffd == "false")
                     return false;
                 else
@@ -373,9 +375,11 @@ namespace PVSettings
             set
             {
                 if (value)
-                    SetValue("consumptionpowerminmax", "true", "ConsumptionPowerMinMax");
+                    SetValue("powerminmax", "true", "PowerMinMax");
                 else
-                    SetValue("consumptionpowerminmax", "false", "ConsumptionPowerMinMax");
+                    SetValue("powerminmax", "false", "PowerMinMax");
+
+                DeleteElement("consumptionpowerminmax");
             }
         }
     }

@@ -490,7 +490,7 @@ namespace DeviceDataRecorders
                         currentInterval = readingInterval;
                     }
 
-                    accumReading.AccumulateReading(reading);
+                    accumReading.AccumulateReading(reading, true);
                     i++;
                 }
                 catch (Exception e)

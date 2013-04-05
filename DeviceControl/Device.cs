@@ -178,7 +178,7 @@ namespace Device
                         d.AddSourceDevice
                             (new DeviceLink( this, cds.ConsolidateFromFeatureType.Value, cds.ConsolidateFromFeatureId.Value, 
                                 d, cds.ConsolidateToFeatureType, cds.ConsolidateToFeatureId, 
-                                cds.Operation, FindFeatureStatus(cds.ConsolidateFromFeatureType.Value, cds.ConsolidateFromFeatureId.Value)));
+                                cds.Operation, FindFeatureStatus(cds.ConsolidateFromFeatureType.Value, cds.ConsolidateFromFeatureId.Value), cds.UseTemperature));
                 }
         }
 
