@@ -299,6 +299,11 @@ namespace PVSettings
             }
         }
 
+        public String DeviceDatabase
+        {
+            get { return ""; } 
+        }
+
         public String Name
         {
             get

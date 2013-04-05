@@ -620,18 +620,19 @@ namespace PVBeanCounter
                 labelSerialNo.Visibility = System.Windows.Visibility.Visible;
                 textBoxSerialNo.Visibility = System.Windows.Visibility.Visible;
 
-                if (((PVSettings.DeviceManagementSettings.DeviceListItem)comboBoxDeviceType.SelectedItem).DeviceSettings.DeviceTypeName == "SMA_SunnyExplorer")
-                {
-                    labelDeviceAddress.Visibility = System.Windows.Visibility.Hidden;
-                    textBoxDeviceAddress.Visibility = System.Windows.Visibility.Hidden;
-                    rowAddressSerialNo.Height = GridLength.Auto;
-                }
-                else
-                {
-                    labelDeviceAddress.Visibility = System.Windows.Visibility.Visible;
-                    textBoxDeviceAddress.Visibility = System.Windows.Visibility.Visible;
-                    rowAddressSerialNo.Height = GridLength.Auto;
-                }
+                if ((PVSettings.DeviceManagementSettings.DeviceListItem)comboBoxDeviceType.SelectedItem != null)
+                    if (((PVSettings.DeviceManagementSettings.DeviceListItem)comboBoxDeviceType.SelectedItem).DeviceSettings.DeviceTypeName == "SMA_SunnyExplorer")
+                    {
+                        labelDeviceAddress.Visibility = System.Windows.Visibility.Hidden;
+                        textBoxDeviceAddress.Visibility = System.Windows.Visibility.Hidden;
+                        rowAddressSerialNo.Height = GridLength.Auto;
+                    }
+                    else
+                    {
+                        labelDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                        textBoxDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                        rowAddressSerialNo.Height = GridLength.Auto;
+                    }
             }
         }
 

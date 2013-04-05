@@ -134,7 +134,8 @@
             <RowDefinition />
             <RowDefinition MaxHeight="40" />
         </Grid.RowDefinitions>
-        <TabControl Height="Auto" Name="tabControl1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="2" Background="{x:Null}">
+        <TabControl Height="Auto" Name="tabControl1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" 
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="2" Background="{x:Null}">
 
             <TabItem Header="General" Name="tabItem4" ToolTip="Perform basic setup steps. Always start here." Padding="6,3" >
 
@@ -1009,7 +1010,7 @@
                     <Label Content="Connection String" DataContext="{Binding}" Height="28" IsEnabled="True" Name="label10" HorizontalContentAlignment="Right" Canvas.Left="60" Canvas.Top="238" />
                 </Canvas>
             </TabItem>
-            <TabItem Header="Log Files" Name="tabItem5" ToolTip="Log file content control" Padding="6,3">
+            <TabItem Header="Log Files" ToolTip="Log file content control" Padding="6,3">
                 <Grid Margin="20,20,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -1034,7 +1035,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <CheckBox Grid.Column="0" Content="Trace" Height="16" IsChecked="{Binding Path=LogTrace, Converter={StaticResource NullableValueConverter}}" IsEnabled="True" Margin="0,5,5,5" Name="checkBox8" ToolTip="Log trace messages - This can produce a large log file - use with caution" />
+                        <CheckBox Grid.Column="0" Content="Trace" Height="16" IsChecked="{Binding Path=LogTrace, Converter={StaticResource NullableValueConverter}}" IsEnabled="True" Margin="0,5,5,5" ToolTip="Log trace messages - This can produce a large log file - use with caution" />
                         <CheckBox Grid.Column="0" Grid.Row="1" Content="Meter Trace" Height="16" IsChecked="{Binding Path=LogMeterTrace, Converter={StaticResource NullableValueConverter}}" Margin="0,5,5,5" Name="checkBox13" ToolTip="Log power meter trace messages. This can produce a large log file very quickly." />
                         <CheckBox Grid.Column="0" Grid.Row="2" Content="Message Content" Height="16" IsChecked="{Binding Path=LogMessageContent, Converter={StaticResource NullableValueConverter}}" Margin="0,5,5,5" Name="checkBox7" ToolTip="Log all message content - produces a very large log file" />
                         <CheckBox Grid.Column="1" Content="DB Trace" DataContext="{Binding}" Height="16" IsChecked="{Binding Path=LogDatabase, Converter={StaticResource NullableValueConverter}}" Margin="10,5,5,5" Name="checkBox4" ToolTip="Log database commands" />
