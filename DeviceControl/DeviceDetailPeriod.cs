@@ -689,7 +689,8 @@ namespace DeviceDataRecorders
                 stage = "MergeReadings 1";                
                 TDeviceReading actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd, true);
                 if (GlobalSettings.SystemServices.LogTrace)
-                    GlobalSettings.SystemServices.LogMessage("DeviceDetailPeriod.AdjustFromHistory", "Merge 1 - " + actualTotal.GetReadingLogDetails(), LogEntryType.Trace);
+                    GlobalSettings.SystemServices.LogMessage("DeviceDetailPeriod.AdjustFromHistory", "Merge 1 - actualTotal: " + actualTotal.GetReadingLogDetails() 
+                        + " - histRecord: " + histRecord.GetReadingLogDetails(), LogEntryType.Trace);
                 // fill all remaining gaps with prorata history value
                 // FillLargeGaps also restores hist values to previous history readings cleared by ClearHistory
                 //if (remainingGaps > ReadingsGeneric.SmallGapUpperLimit)
@@ -701,7 +702,8 @@ namespace DeviceDataRecorders
                     // recalculate actualTotal to capture large gap additions
                     actualTotal = actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd, false); // include large gap additions
                     if (GlobalSettings.SystemServices.LogTrace)
-                        GlobalSettings.SystemServices.LogMessage("DeviceDetailPeriod.AdjustFromHistory", "Merge 2 - " + actualTotal.GetReadingLogDetails(), LogEntryType.Trace);
+                        GlobalSettings.SystemServices.LogMessage("DeviceDetailPeriod.AdjustFromHistory", "Merge 2 - actualTotal: " + actualTotal.GetReadingLogDetails()
+                            + " - histRecord: " + histRecord.GetReadingLogDetails(), LogEntryType.Trace);
                 }
                 stage = "ProrataRemainingHistory";
                 // apportion outstanding history values by prorata adjustment 
