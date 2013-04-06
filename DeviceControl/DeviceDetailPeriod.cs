@@ -520,10 +520,14 @@ namespace DeviceDataRecorders
             return 0;
         }
 
-        private TDeviceReading MergeReadings(DateTime consolidatedEndTime, DateTime startTime, DateTime endTime)
+        private TDeviceReading MergeReadings(DateTime consolidatedEndTime, DateTime startTime, DateTime endTime, bool accumulateDuration)
         {
-            
-            TDeviceReading newReading = NewReading(consolidatedEndTime, endTime - startTime, default(TDeviceReading));
+            TDeviceReading newReading;
+            if (accumulateDuration)
+                newReading = NewReading(consolidatedEndTime, TimeSpan.Zero, default(TDeviceReading));
+            else
+                newReading = NewReading(consolidatedEndTime, endTime - startTime, default(TDeviceReading));
+
             foreach(TDeviceReading reading in ReadingsGeneric.ReadingList)
             {
                 TDeviceReading thisReading = reading;
@@ -531,6 +535,9 @@ namespace DeviceDataRecorders
                     continue;
                 if (thisReading.ReadingStart >= endTime)
                     break;
+
+                if (accumulateDuration && reading.IsGapFillReading()) // no accumulation of gap fill readings when accumulateDuration
+                    continue;
 
                 if ((consolidatedEndTime - newReading.ReadingEnd).TotalSeconds > DatabaseIntervalSeconds)
                     throw new Exception("DeviceDetailPeriod.MergeReadings - reading: " + newReading.ReadingEnd + " - too old for: " + consolidatedEndTime);
@@ -541,7 +548,7 @@ namespace DeviceDataRecorders
                 if (thisReading.ReadingEnd > endTime)
                     thisReading = reading.Clone(endTime, endTime - thisReading.ReadingStart);
 
-                newReading.AccumulateReading(thisReading, true);
+                newReading.AccumulateReading(thisReading, true, accumulateDuration);
 
                 // If the Output time on an existing reading aligns with an interval end, this entry may already be in the DB
                 // mark new entry with existing status as they share the same DB key
@@ -680,7 +687,7 @@ namespace DeviceDataRecorders
 
                 // obtain actual total - uses Consolidate
                 stage = "MergeReadings 1";                
-                TDeviceReading actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd);
+                TDeviceReading actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd, true);
                 if (GlobalSettings.SystemServices.LogTrace)
                     GlobalSettings.SystemServices.LogMessage("DeviceDetailPeriod.AdjustFromHistory", "Merge 1 - " + actualTotal.GetReadingLogDetails(), LogEntryType.Trace);
                 // fill all remaining gaps with prorata history value
@@ -692,7 +699,7 @@ namespace DeviceDataRecorders
 
                     stage = "MergeReadings 2";
                     // recalculate actualTotal to capture large gap additions
-                    actualTotal = actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd);
+                    actualTotal = actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd, false); // include large gap additions
                     if (GlobalSettings.SystemServices.LogTrace)
                         GlobalSettings.SystemServices.LogMessage("DeviceDetailPeriod.AdjustFromHistory", "Merge 2 - " + actualTotal.GetReadingLogDetails(), LogEntryType.Trace);
                 }
@@ -785,7 +792,7 @@ namespace DeviceDataRecorders
             else
                 toReading = (TDeviceReading)ReadingsGeneric.ReadingList[index];
 
-            toReading.AccumulateReading(reading, useTemperature, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
+            toReading.AccumulateReading(reading, useTemperature, false, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
         }
     }
 

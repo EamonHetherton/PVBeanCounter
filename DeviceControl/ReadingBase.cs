@@ -111,30 +111,6 @@ namespace DeviceDataRecorders
             }
         }
 
-        /*
-        public static int GetIntervalNo(TimeSpan intervalTime, int intervalSeconds, bool isEndTime = true)
-        {
-            Decimal seconds = Math.Round((Decimal)(intervalTime.TotalSeconds), 3);  // round to nearest millisecond
-            int res = (int)Math.Truncate(seconds / intervalSeconds);
-            if (!isEndTime)
-                return res;
-
-            Decimal rem = seconds % intervalSeconds;
-            if (rem == 0)
-            {
-                if (res > 0)
-                    res--;
-            }
-            else
-            {
-                int maxRes = (24 * 60 * 60) / intervalSeconds;
-                if (res >= maxRes)
-                    res--;
-            }
-            return res;
-        }
-        */
-
         protected void InitialiseBase(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, TimeSpan duration, bool readFromDb)
         {
             DeviceDetailPeriods = deviceDetailPeriods;
@@ -227,7 +203,7 @@ namespace DeviceDataRecorders
         public abstract bool IsGapFillReading();
         public abstract ReadingBase CloneGeneric(DateTime outputTime, TimeSpan duration);
         public abstract void GapAdjustAdjacent(ReadingBase adjacentReading, bool adjacentIsBeforeThis);
-        public abstract void AccumulateReading(ReadingBase reading, bool useTemperature, Double operationFactor = 1.0);
+        public abstract void AccumulateReading(ReadingBase reading, bool useTemperature, bool accumulateDuration = false, Double operationFactor = 1.0);
 
         public String GetReadingLogIdDetails()
         {
