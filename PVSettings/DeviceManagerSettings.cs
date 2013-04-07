@@ -301,7 +301,11 @@ namespace PVSettings
 
         public String DeviceDatabase
         {
-            get { return ""; } 
+            get { return GetValue("devicedatabase"); }
+            set
+            {
+                SetValue("devicedatabase", value.Trim(), "DeviceDatabase");
+            }
         }
 
         public String Name

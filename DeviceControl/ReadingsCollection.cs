@@ -394,7 +394,7 @@ namespace DeviceDataRecorders
 
 
         // AlignIntervals will slice readings at Interval boundaries
-        public void AlignIntervals()
+        private void AlignIntervals(bool sliceGapFillReadings)
         {
             int i = 0;  // position in Readings
             ReadingBase reading;
@@ -405,7 +405,7 @@ namespace DeviceDataRecorders
                 {
                     reading = Readings.Values[i];
 
-                    if (reading.IsGapFillReading())
+                    if (!sliceGapFillReadings && reading.IsGapFillReading())
                     {
                         // do not split GapFillReadings (from history) - they are expected to span multiple intervals and conform with required alignment
                         i++;
@@ -452,7 +452,7 @@ namespace DeviceDataRecorders
        
         public void ConsolidateIntervals(DateTime consolidateTo)
         {
-            AlignIntervals(); // This chops on interval boundaries for all but GapFillReading (history) readings
+            AlignIntervals(false); // This chops on interval boundaries for all but GapFillReading (history) readings
 
             int i = 0;  // position in Readings
             

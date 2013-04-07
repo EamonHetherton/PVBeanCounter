@@ -421,11 +421,6 @@ namespace DeviceDataRecorders
                 PeriodIsDirty();
         }
 
-        public void ConsolidateReadings(DateTime consolidateTo)
-        {
-            ReadingsGeneric.ConsolidateIntervals(consolidateTo);
-        }
-        
         public abstract ReadingBase NewReadingGeneric(DateTime outputTime, TimeSpan duration, ReadingBase pattern = null);
 
         public abstract void SplitReading(ReadingBase oldReading, DateTime splitTime, out ReadingBase newReading1, out ReadingBase newReading2);
@@ -778,23 +773,42 @@ namespace DeviceDataRecorders
             uint interval;
             bool isIntervalStart;
             DateTime start;
-            GetIntervalInfo(reading.ReadingStart, out start, out interval, out isIntervalStart);
-            if (start != Start)
-                throw new Exception("ConsolidateReading - consolidation mismatch - Calc start: " + start + " - Required start: " + Start);
-            DateTime intervalEnd = start + TimeSpan.FromSeconds((interval + 1) * DatabaseIntervalSeconds);
+            DateTime currentStart = reading.ReadingStart;
 
-            int index = ReadingsGeneric.IndexOfKey(intervalEnd);
-            TDeviceReading toReading;
-            if (index < 0)
+            do // if source reading spans multiple consolidation readings - divide at consolidation interval boundaries
             {
-                toReading = NewReading(intervalEnd, TimeSpan.FromSeconds(DatabaseIntervalSeconds), null);
-                ReadingsGeneric.AddReading(toReading);
-                toReading.RegisterPeriodInvolvement(this);
-            }
-            else
-                toReading = (TDeviceReading)ReadingsGeneric.ReadingList[index];
+                GetIntervalInfo(currentStart, out start, out interval, out isIntervalStart);
+                if (start != Start)
+                    throw new Exception("ConsolidateReading - consolidation mismatch - Calc start: " + start + " - Required start: " + Start);
+                DateTime intervalEnd = start + TimeSpan.FromSeconds((interval + 1) * DatabaseIntervalSeconds);
 
-            toReading.AccumulateReading(reading, useTemperature, false, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
+                int index = ReadingsGeneric.IndexOfKey(intervalEnd);
+                TDeviceReading toReading;
+                if (index < 0)
+                {
+                    toReading = NewReading(intervalEnd, TimeSpan.FromSeconds(DatabaseIntervalSeconds), null);
+                    ReadingsGeneric.AddReading(toReading);
+                    toReading.RegisterPeriodInvolvement(this);
+                }
+                else
+                    toReading = (TDeviceReading)ReadingsGeneric.ReadingList[index];
+
+                if (currentStart == reading.ReadingStart && intervalEnd >= reading.ReadingEnd)  // no division required - reading fits in one consolidation interval
+                    toReading.AccumulateReading(reading, useTemperature, false, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
+                else
+                {
+                    TimeSpan duration;
+                    if (intervalEnd >= reading.ReadingEnd)
+                        duration = reading.ReadingEnd - currentStart; // tail end of reading - may be less tha one interval duration
+                    else
+                        duration = intervalEnd - currentStart; // beginning or middle of spanned reading
+                    TDeviceReading intervalReading = reading.Clone(intervalEnd, duration); // get time adjusted reading
+                    toReading.AccumulateReading(intervalReading, useTemperature, false, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
+                }
+
+                currentStart = intervalEnd; // prepare for next interval iteration
+            }
+            while (currentStart < reading.ReadingEnd);
         }
     }
 
