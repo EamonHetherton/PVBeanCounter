@@ -102,9 +102,10 @@ namespace Device
                 //    || DeviceInfo.IntervalCompare(DatabaseInterval, LastRecordTime.Value, curTime) != 0);
                 
                 TimeSpan duration;
+                int power  = liveReading.Watts >= DeviceManagerDeviceSettings.ZeroThreshold ? liveReading.Watts : 0;
                 try
                 {
-                    duration = EstimateEnergy((double)liveReading.Watts, curTime, 6.0F);
+                    duration = EstimateEnergy((double)power, curTime, 6.0F);
                 }
                 catch (Exception e)
                 {
@@ -114,84 +115,82 @@ namespace Device
 
                 if (maxPower.HasValue)
                 {
-                    if (maxPower.Value < liveReading.Watts)
-                        maxPower = liveReading.Watts;
+                    if (maxPower.Value < power)
+                        maxPower = power;
                 }
                 else
-                    maxPower = liveReading.Watts;
+                    maxPower = power;
 
                 if (minPower.HasValue)
                 {
-                    if (minPower.Value > liveReading.Watts)
-                        minPower = liveReading.Watts;
+                    if (minPower.Value > power)
+                        minPower = power;
                 }
                 else
-                    minPower = liveReading.Watts;
-
-                //SetDeviceFeatures();
-
-                //if (dbWrite)
-                {
-                    days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_EnergyAC.FeatureType, Feature_EnergyAC.FeatureId);
+                    minPower = power;
+               
+                days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_EnergyAC.FeatureType, Feature_EnergyAC.FeatureId);
                     
-                    EnergyReading reading = new EnergyReading();
-                    liveReading.TimeStampe = DeviceBase.NormaliseReadingTime(liveReading.TimeStampe);
+                EnergyReading reading = new EnergyReading();
+                liveReading.TimeStampe = DeviceBase.NormaliseReadingTime(liveReading.TimeStampe);
 
-                    if (LastRecordTime.HasValue)
-                        reading.Initialise(days, liveReading.TimeStampe, LastRecordTime.Value, false);
-                    else
-                        reading.Initialise(days, liveReading.TimeStampe, TimeSpan.FromSeconds(DeviceInterval), false);
+                if (LastRecordTime.HasValue)
+                    reading.Initialise(days, liveReading.TimeStampe, LastRecordTime.Value, false);
+                else
+                    reading.Initialise(days, liveReading.TimeStampe, TimeSpan.FromSeconds(DeviceInterval), false);
 
-                    LastRecordTime = liveReading.TimeStampe;
+                LastRecordTime = liveReading.TimeStampe;
 
-                    reading.EnergyToday = null;
-                    reading.EnergyTotal = null;
-                    reading.Power = liveReading.Watts;
-                    reading.MinPower = minPower;
-                    reading.MaxPower = maxPower;
-                    reading.Mode = null;                    
-                    reading.Volts = null;
-                    reading.Amps = null;                    
-                    reading.Frequency = null;                    
-                    reading.Temperature = (double)liveReading.Temperature;
-                    reading.ErrorCode = null;
-                    reading.EnergyDelta = EstEnergy; // EstEnergy is an accumulation from the contributing 6 sec power values
+                reading.EnergyCalibrationFactor = DeviceManagerDeviceSettings.CalibrationFactor;
+                reading.EnergyToday = null;
+                reading.EnergyTotal = null;
+                reading.Power = power;
+                reading.MinPower = minPower;
+                reading.MaxPower = maxPower;
+                reading.Mode = null;                    
+                reading.Volts = null;
+                reading.Amps = null;                    
+                reading.Frequency = null;                    
+                reading.Temperature = (double)liveReading.Temperature;
+                reading.ErrorCode = null;
+                reading.EnergyDelta = EstEnergy; // EstEnergy is an accumulation from the contributing 6 sec power values
+                //if (DeviceManagerDeviceSettings.CalibrationFactor != 1.0F)
+                //    reading.CalibrationDelta = reading.CalibrateableReadingDelta * DeviceManagerDeviceSettings.CalibrationFactor;
 
-                    EstEnergy = 0.0;
-                    minPower = null;
-                    maxPower = null;
+                EstEnergy = 0.0;
+                minPower = null;
+                maxPower = null;
                                         
-                    if (GlobalSettings.SystemServices.LogTrace)
-                        LogMessage("ProcessOneLiveReading - Reading - Time: " + liveReading.TimeStampe + " - Duration: " + (int) reading.Duration.TotalSeconds + " - EnergyToday: " + reading.EnergyToday
-                            + " - EnergyTotal: " + reading.EnergyTotal
-                            + " - EstEnergy: " + EstEnergy
-                            + " - Power: " + reading.Power
-                            + " - Mode: " + reading.Mode
-                            + " - FreqAC: " + reading.Frequency
-                            + " - Volts: " + reading.Volts
-                            + " - Current: " + reading.Amps
-                            + " - Temperature: " + reading.Temperature
-                            , LogEntryType.Trace);
+                if (GlobalSettings.SystemServices.LogTrace)
+                    LogMessage("ProcessOneLiveReading - Reading - Time: " + liveReading.TimeStampe + " - Duration: " + (int) reading.Duration.TotalSeconds + " - EnergyToday: " + reading.EnergyToday
+                        + " - EnergyTotal: " + reading.EnergyTotal
+                        + " - EstEnergy: " + EstEnergy
+                        + " - Power: " + reading.Power
+                        + " - Mode: " + reading.Mode
+                        + " - FreqAC: " + reading.Frequency
+                        + " - Volts: " + reading.Volts
+                        + " - Current: " + reading.Amps
+                        + " - Temperature: " + reading.Temperature
+                        , LogEntryType.Trace);
 
-                    stage = "record";
+                stage = "record";
 
-                    days.AddRawReading(reading);
+                days.AddRawReading(reading);
 
-                    if (IsNewdatabaseInterval(reading.ReadingEnd))
-                    {
-                        days.UpdateDatabase(null, reading.ReadingEnd, false, PreviousDatabaseIntervalEnd);
-                        stage = "consolidate";
-                        List<OutputReadyNotification> notificationList = new List<OutputReadyNotification>();
-                        BuildOutputReadyFeatureList(notificationList, FeatureType.EnergyAC, 0, reading.ReadingEnd);
-                        UpdateConsolidations(notificationList);
-                    }
+                if (IsNewdatabaseInterval(reading.ReadingEnd))
+                {
+                    days.UpdateDatabase(null, reading.ReadingEnd, false, PreviousDatabaseIntervalEnd);
+                    stage = "consolidate";
+                    List<OutputReadyNotification> notificationList = new List<OutputReadyNotification>();
+                    BuildOutputReadyFeatureList(notificationList, FeatureType.EnergyAC, 0, reading.ReadingEnd);
+                    UpdateConsolidations(notificationList);
                 }
 
                 if (EmitEvents)
                 {
                     stage = "energy";
                     EnergyEventStatus status = FindFeatureStatus(FeatureType.EnergyAC, 0);
-                    status.SetEventReading(curTime, 0.0, liveReading.Watts, (int)duration.TotalSeconds, true);
+                    status.SetEventReading(curTime, 0.0, power, (int)duration.TotalSeconds, true);
                     DeviceManager.ManagerManager.EnergyEvents.ScanForEvents();
                 }
 

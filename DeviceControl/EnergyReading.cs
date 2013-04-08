@@ -83,7 +83,6 @@ namespace DeviceDataRecorders
         public void Initialise(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, TimeSpan duration, bool readFromDb)
         {
             InitialiseBase(deviceDetailPeriods, readingEnd, duration, readFromDb);
-            AveragePowerInternal = null;
             UseInternalCalibration = false;
             EnergyCalibrationFactor = DeviceParams.CalibrationFactor;
         }
@@ -91,7 +90,6 @@ namespace DeviceDataRecorders
         public void Initialise(DeviceDetailPeriodsBase deviceDetailPeriods, DateTime readingEnd, DateTime readingStart, bool readFromDb)
         {
             InitialiseBase(deviceDetailPeriods, readingEnd, readingStart, readFromDb);
-            AveragePowerInternal = null;
             UseInternalCalibration = false;
             EnergyCalibrationFactor = DeviceParams.CalibrationFactor;
         }
@@ -123,10 +121,6 @@ namespace DeviceDataRecorders
         protected override void DurationChanged()
         {
             base.DurationChanged();
-            if (EnergyDeltaInternal.HasValue)
-                AveragePower = (int)(EnergyDeltaInternal.Value * 1000.0 / DurationInternal.TotalHours);
-            else
-                AveragePowerInternal = null;
         }
 
         // Comparer allows readings to be sorted
@@ -294,18 +288,12 @@ namespace DeviceDataRecorders
             }
         }
 
-        public int? AveragePowerInternal = null;
+        
         public int AveragePower 
         {
             get
-            {
-                if (!AveragePowerInternal.HasValue)
-                    return (int)((1000.0 * TotalReadingDelta) / Duration.TotalHours);
-                return AveragePowerInternal.Value;
-            }
-            private set
-            {
-                AveragePowerInternal = value;
+            {                
+                return (int)((1000.0 * TotalReadingDelta) / Duration.TotalHours);
             }
         }
         
@@ -328,10 +316,6 @@ namespace DeviceDataRecorders
             set
             {
                 EnergyDeltaInternal = value;
-                if (value.HasValue)
-                    AveragePower = (int)(value.Value * 1000.0 / DurationInternal.TotalHours);
-                else
-                    AveragePower = 0;
             }
         }
 
@@ -343,8 +327,7 @@ namespace DeviceDataRecorders
             }
             set
             {                
-                EnergyDeltaInternal = Math.Round(value, EnergyPrecision);
-                AveragePower = (int)(EnergyDeltaInternal.Value * 1000.0 / DurationInternal.TotalHours);               
+                EnergyDeltaInternal = Math.Round(value, EnergyPrecision);       
                                 
                 if (!AttributeRestoreMode)
                 {
@@ -394,13 +377,13 @@ namespace DeviceDataRecorders
 
         private void Calibrate(bool trace = false)
         {
-            if (trace)
-                GlobalSettings.LogMessage("EnergyReading.Calibrate", "Start", LogEntryType.Trace);
+            //if (trace)
+            //    GlobalSettings.LogMessage("EnergyReading.Calibrate", "Start", LogEntryType.Trace);
 
             if (!UseInternalCalibration)
             {
-                if (trace)
-                    GlobalSettings.LogMessage("EnergyReading.Calibrate", "Return", LogEntryType.Trace);
+                //if (trace)
+                //    GlobalSettings.LogMessage("EnergyReading.Calibrate", "Return", LogEntryType.Trace);
                 return;
             }
 
@@ -664,11 +647,11 @@ namespace DeviceDataRecorders
             
             EnergyDelta += reading.EnergyDelta * operationFactor;
                 
-            if (reading.CalibrationDelta.HasValue)
-                if (CalibrationDelta.HasValue)
-                    CalibrationDelta += reading.CalibrationDelta.Value * operationFactor;
+            if (reading.CalibrationDeltaInternal.HasValue)
+                if (CalibrationDeltaInternal.HasValue)
+                    CalibrationDeltaInternal += reading.CalibrationDeltaInternal.Value * operationFactor;
                 else
-                    CalibrationDelta = reading.CalibrationDelta.Value * operationFactor;
+                    CalibrationDeltaInternal = reading.CalibrationDeltaInternal.Value * operationFactor;
 
             if (reading.HistEnergyDelta.HasValue)
                 if (HistEnergyDelta.HasValue)
@@ -722,8 +705,8 @@ namespace DeviceDataRecorders
 
         public override void HistoryAdjust_Prorata(EnergyReading actualTotal, EnergyReading histRecord)
         {
-            double thisTotalReadingDelta = TotalReadingDelta;
-            if (thisTotalReadingDelta <= 0.0)
+            double thisReadingDelta = CalibrateableReadingDelta;
+            if (thisReadingDelta <= 0.0)
                 return;
 
             Double actualEnergy = actualTotal.CalibrateableReadingDelta;
@@ -739,12 +722,12 @@ namespace DeviceDataRecorders
                 throw new Exception("EnergyReading.HistoryAdjust_Prorata - histSeconds < acualTotal.Seconds - outputTime: " + ReadingEnd + " - FeatureId: " + FeatureId +
                     " - histSeconds: " + histSeconds + " - actualTotal.Seconds: " + actualSeconds);
 
-            Double adjust = (thisTotalReadingDelta * scaleFactor) - thisTotalReadingDelta;
+            Double adjust = (thisReadingDelta * scaleFactor) - thisReadingDelta;
 
             if (GlobalSettings.SystemServices.LogTrace)
                 GlobalSettings.SystemServices.LogMessage("EnergyReading.HistoryAdjust_Prorata", "outputTime: " + ReadingEnd 
                     + " - FeatureId: " + FeatureId + " - actualEnergy: " + actualEnergy
-                    + " - histEnergy: " + histEnergy + " - thisEnergyDelta: " + thisTotalReadingDelta
+                    + " - histEnergy: " + histEnergy + " - thisEnergyDelta: " + thisReadingDelta
                     + " - adjust: " + adjust + " - scaleFactor: " + scaleFactor, LogEntryType.Trace);
 
             if (Math.Round(adjust, EnergyPrecision - 2) != 0.0) // damp out adjustment oscilliations

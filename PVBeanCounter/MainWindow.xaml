@@ -385,8 +385,8 @@
                                                     <RowDefinition />
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" Name="columnDeviceAdvancedTiming_Qry" />
+                                                    <ColumnDefinition Width="Auto" Name="columnDeviceAdvancedTiming_DB" />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Content="Query Int" Grid.Column="0" Margin="-5,0,0,0"  VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"  FontSize="10.5" Padding="0,5,5,2" />
                                                 <Label Content="DB Int" Grid.Column="1" Margin="-5,0,0,0"   VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"  FontSize="10.5" Padding="5,5,5,2" />
@@ -495,21 +495,23 @@
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
+                                            <RowDefinition Name="rowDeviceAdvanced_0" />
+                                            <RowDefinition Name="rowDeviceAdvanced_1" />
+                                            <RowDefinition Name="rowDeviceAdvanced_2" />
+                                            <RowDefinition Name="rowDeviceAdvanced_3" />
+                                            <RowDefinition Name="rowDeviceAdvanced_4" />
                                         </Grid.RowDefinitions>
                                         <Label Content="Make" HorizontalAlignment="Right" FontSize="10.5"/>
                                         <TextBox Text="{Binding Path=Manufacturer, Converter={StaticResource NullableValueConverter}}" Grid.Column="1" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="9" />
                                         <Label Content="Model" Grid.Column="2" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="20,0,0,0" FontSize="10.5"/>
                                         <TextBox Text="{Binding Path=Model, Converter={StaticResource NullableValueConverter}}" Grid.Column="3" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="9"  />
-                                        <Label Content="QueryInterval" Grid.Row="1" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />
-                                                                           
+                                        
+                                        <Label Name="labelDeviceQueryInterval" Content="QueryInterval" Grid.Row="1" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />                                                                           
                                         <ComboBox Grid.Row="1"  Grid.Column="1" Height="Auto" HorizontalAlignment="Left" Margin="0,3,10,3" Name="comboBoxDeviceQueryInterval" VerticalAlignment="Center" Width="45" Text="{Binding Path=QueryInterval, Converter={StaticResource NullableValueConverter}}" FontSize="9" VerticalContentAlignment="Center" />
+
                                         <Label Grid.Row="1" Grid.Column="2" Content="DB Interval" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />
-                                        <ComboBox Grid.Row="1" Grid.Column="3" Height="Auto" HorizontalAlignment="Left" Margin="0,3,10,3" Name="comboBoxDeviceDBInterval" VerticalAlignment="Center" Width="45" Text="{Binding Path=DBInterval, Converter={StaticResource NullableValueConverter}}" FontSize="9" VerticalContentAlignment="Center" />
+                                        <ComboBox Grid.Row="1" Grid.Column="3" Height="Auto" HorizontalAlignment="Left" Margin="0,3,10,3" 
+                                                  Name="comboBoxDeviceDBInterval" VerticalAlignment="Center" Width="45" Text="{Binding Path=DBInterval, Converter={StaticResource NullableValueConverter}}" FontSize="9" VerticalContentAlignment="Center" />
                                         <Label Grid.Row="2" Content="Calibrate" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />
                                         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=CalibrationFactor, Converter={StaticResource NullableValueConverter}}" VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="50" FontSize="9" MaxWidth="70" HorizontalAlignment="Left" />
                                         <Label Grid.Row="2" Grid.Column="2" Content="Threshold" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />
@@ -517,7 +519,9 @@
                                             <TextBox Text="{Binding Path=ZeroThreshold, Converter={StaticResource NullableValueConverter}}" VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="50" FontSize="9" MaxWidth="70" HorizontalAlignment="Left" />
                                             <Label Grid.Row="2" Grid.Column="2" Content="(zero watts)" HorizontalContentAlignment="Right" HorizontalAlignment="Left" FontSize="10.5" />
                                         </StackPanel>
-                                        <CheckBox Content="History Adjust" Grid.Row="3" Grid.Column="1" IsChecked="{Binding Path=UpdateHistory, Converter={StaticResource NullableValueConverter}}" HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" Padding="4,0,0,0" Margin="0,2" FontSize="10.5" />
+                                        <CheckBox Content="History Adjust" Grid.Row="3" Grid.Column="1" Name="checkBoxHistoryAdjust"
+                                                  IsChecked="{Binding Path=UpdateHistory, Converter={StaticResource NullableValueConverter}}" 
+                                                  HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" Padding="4,0,0,0" Margin="0,2" FontSize="10.5" />
 
                                     </Grid>
 
@@ -643,8 +647,9 @@
                                     </Grid.RowDefinitions>
                                     <CheckBox Name="checkBoxAutoEvents_Manual" Content="Auto Events" IsChecked="{Binding Path=AutoEvents}" Margin="25,10,10,5" FontSize="10.5"
                                               ToolTip="Check to configure all suitable features as triggers for device events"/>
-                                    <DataGrid Name="dataGridDeviceEvents" Grid.Column="1" Grid.Row="0" ItemsSource="{Binding Path=DeviceEvents}" Margin="0,-18,0,24" AutoGenerateColumns="false" MinHeight="52" 
-                                              ColumnHeaderHeight="20" SelectionMode="Single" Width="350" HorizontalAlignment="Left" FontSize="10" IsReadOnly="{Binding Path=AutoEvents}" 
+                                    <DataGrid Name="dataGridDeviceEvents" Grid.Column="1" Grid.Row="0" ItemsSource="{Binding Path=DeviceEvents}" Margin="0,-18,0,30" AutoGenerateColumns="false" 
+                                              MinHeight="22" ColumnHeaderHeight="20"  
+                                              SelectionMode="Single" Width="350" HorizontalAlignment="Left" FontSize="10" IsReadOnly="{Binding Path=AutoEvents}" 
                                               Grid.RowSpan="2" SelectionChanged="dataGridDeviceEvents_SelectionChanged" 
                                               ToolTip="Details of all device features configured to emit a device event" >
                                         <DataGrid.Columns>
@@ -686,8 +691,8 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <Button Content="Add" Height="20" HorizontalAlignment="Left" Name="buttonAddDeviceEvent"  ToolTip="Add a new Device Event to the selected Device" Margin="0,0,2,0" Padding="5,0" Click="buttonAddDeviceEvent_Click" FontSize="10" IsEnabled="{Binding Path=ManualEvents}" />
-                                        <Button Content="Delete" Height="20"  HorizontalAlignment="Right" Name="buttonDeleteDeviceEvent" Grid.Column="1" ToolTip="Delete the selected Device Event" Margin="4,0,5,0" Padding="5,0" FontSize="10" Click="buttonDeleteDeviceEvent_Click" IsEnabled="False" />
+                                        <Button Content="Add" Height="23" HorizontalAlignment="Left" Name="buttonAddDeviceEvent"  ToolTip="Add a new Device Event to the selected Device" Margin="0,0,2,0" Padding="5,0" Click="buttonAddDeviceEvent_Click" FontSize="10" IsEnabled="{Binding Path=ManualEvents}" />
+                                        <Button Content="Delete" Height="23"  HorizontalAlignment="Right" Name="buttonDeleteDeviceEvent" Grid.Column="1" ToolTip="Delete the selected Device Event" Margin="4,0,5,0" Padding="5,0" FontSize="10" Click="buttonDeleteDeviceEvent_Click" IsEnabled="False" />
                                     </Grid>
                                 </Grid>
                             </Expander>

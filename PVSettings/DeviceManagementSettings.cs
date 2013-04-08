@@ -62,6 +62,14 @@ namespace PVSettings
             _IntervalList.Add("20");
             _IntervalList.Add("30");
             _IntervalList.Add("60");
+            _IntervalList.Add("120");
+            _IntervalList.Add("180");
+            _IntervalList.Add("240");
+            _IntervalList.Add("300");
+            _IntervalList.Add("600");
+            _IntervalList.Add("900");
+            _IntervalList.Add("1800");
+            _IntervalList.Add("3600");
         }
 
         private void LoadSettings()
