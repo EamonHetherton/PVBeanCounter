@@ -39,6 +39,8 @@ namespace PVBeanCounter
         bool saveRequired = false;
         bool checkRequired = false;
 
+        PvOutputSiteSettings PVSettings = null;
+
         void SettingsChangedCallback()
         {
             butSavePVSettings.IsEnabled = true;
@@ -333,9 +335,13 @@ namespace PVBeanCounter
 
         private void dataGridPvOutputSiteList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            PvOutputSiteSettings pvSettings = (PvOutputSiteSettings) dataGridPvOutputSiteIds.SelectedItem;
+            PVSettings = (PvOutputSiteSettings) dataGridPvOutputSiteIds.SelectedItem;
 
-            gridPvOutputSite.DataContext = pvSettings;
+            gridPvOutputSite.DataContext = PVSettings;
+            if (PVSettings.HaveSubscription)
+                SetLiveDaysComboBox(90);
+            else
+                SetLiveDaysComboBox(14);
         }
 
         private void dataGridDeviceManagers_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -828,6 +834,30 @@ namespace PVBeanCounter
         {
             DeviceEventSettings de = (DeviceEventSettings)dataGridDeviceEvents.SelectedItem;
             buttonDeleteDeviceEvent.IsEnabled = de != null && de.Device.ManualEvents;
+        }
+
+        private void checkBoxHaveSubscription_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
+            if (PVSettings.HaveSubscription)
+                SetLiveDaysComboBox(90);
+            else               
+                SetLiveDaysComboBox(14);            
+        }
+
+        private void SetLiveDaysComboBox(int days)
+        {
+            int? val = PVSettings.LiveDaysInternal;
+            comboBoxLiveDays.Items.Clear();
+            comboBoxLiveDays.Items.Add("");
+            for (int i = 1; i <= days; i++)
+            {
+                comboBoxLiveDays.Items.Add(i);
+            }
+            if (val > days)
+                PVSettings.LiveDaysInternal = days;
+            else
+                PVSettings.LiveDaysInternal = val;
+            
         }
 
     }

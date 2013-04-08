@@ -815,6 +815,7 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -848,46 +849,27 @@
                                 <CheckBox Content="Upload Yield" IsChecked="{Binding Path=UploadYield, Converter={StaticResource NullableValueConverter}}" Name="checkBoxUploadYield" ToolTip="Upload inverter yield to pvoutput" Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" VerticalContentAlignment="Center" />
 
 
-                                <Label Content="Live Upload Days" HorizontalContentAlignment="Right" Grid.Row="4" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                                <ComboBox Text="{Binding Path=LiveDays, Converter={StaticResource NullableValueConverter}}" ToolTip="Number of days to monitor for pvoutput upload - 1 for today only" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" MinWidth="40" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5">
-                                    <ComboBoxItem Content="1" />
-                                    <ComboBoxItem Content="2" />
-                                    <ComboBoxItem Content="3" />
-                                    <ComboBoxItem Content="4" />
-                                    <ComboBoxItem Content="5" />
-                                    <ComboBoxItem Content="6" />
-                                    <ComboBoxItem Content="7" />
-                                    <ComboBoxItem Content="8" />
-                                    <ComboBoxItem Content="9" />
-                                    <ComboBoxItem Content="10" />
-                                    <ComboBoxItem Content="11" />
-                                    <ComboBoxItem Content="12" />
-                                    <ComboBoxItem Content="13" />
-                                    <ComboBoxItem Content="14" />
-                                    <ComboBoxItem Content="15" />
-                                    <ComboBoxItem Content="16" />
-                                    <ComboBoxItem Content="17" />
-                                    <ComboBoxItem Content="18" />
-                                    <ComboBoxItem Content="19" />
-                                    <ComboBoxItem Content="20" />
-                                    <ComboBoxItem Content="21" />
-                                    <ComboBoxItem Content="22" />
-                                    <ComboBoxItem Content="23" />
-                                    <ComboBoxItem Content="24" />
-                                    <ComboBoxItem Content="25" />
-                                    <ComboBoxItem Content="26" />
-                                    <ComboBoxItem Content="27" />
-                                    <ComboBoxItem Content="28" />
-                                    <ComboBoxItem Content="29" />
-                                    <ComboBoxItem Content="30" />
-                                    <ComboBoxItem Content="31" />
-                                </ComboBox>
                                 <CheckBox Content="Upload Consumption" IsChecked="{Binding Path=UploadConsumption, Converter={StaticResource NullableValueConverter}}" ToolTip="Update consumption to pvoutput" Grid.Column="2" Grid.Row="4" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                                <Label Content="Live Upload Days" HorizontalContentAlignment="Right" Grid.Row="5" VerticalAlignment="Center" VerticalContentAlignment="Center" />
 
-                                <CheckBox Content="Enable Upload" IsChecked="{Binding Path=Enable, Converter={StaticResource NullableValueConverter}}" ToolTip="Turns pvoutput.org on or off" Grid.Column="1" Grid.Row="5" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5" />
-                                <CheckBox Content="Enable Auto Backload" IsChecked="{Binding Path=AutoBackload, Converter={StaticResource NullableValueConverter}}" ToolTip="Auto upload daily yield for missing days at pvoutput.org beyond the 14 day live upload limit" Grid.Column="1" Grid.Row="6" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5" />
-                                <CheckBox Content="Include Current Cost Temperature" IsChecked="{Binding Path=UseCCTemperature, Converter={StaticResource NullableValueConverter}}" ToolTip="Include temperature readings from Current Cost meter consumption if available" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5" />
-                                <CheckBox Content="Power Alternates Min / Max" IsChecked="{Binding Path=PowerMinMax, Converter={StaticResource NullableValueConverter}}" ToolTip="Alternately display minimum and maximum interval power " Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="2" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5" />
+                                <ComboBox Text="{Binding Path=LiveDays, Converter={StaticResource NullableValueConverter}}" Name="comboBoxLiveDays"
+                                          ToolTip="Number of days to monitor for pvoutput upload - 1 for today only" 
+                                          Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" MinWidth="40" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5" />
+
+                                <CheckBox Content="Have PVOutput Subscription" IsChecked="{Binding Path=HaveSubscription, NotifyOnSourceUpdated=True}" Name="checkBoxHaveSubscription"
+                                          ToolTip="I Have a PVOutput Subscription" Grid.Column="2" Grid.Row="5" VerticalAlignment="Center" VerticalContentAlignment="Center" SourceUpdated="checkBoxHaveSubscription_SourceUpdated" />
+
+                                <CheckBox Content="Enable Upload" IsChecked="{Binding Path=Enable, Converter={StaticResource NullableValueConverter}}" 
+                                          ToolTip="Turns pvoutput.org on or off" Grid.Column="1" Grid.Row="6" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5" />
+                                <CheckBox Content="Enable Auto Backload" 
+                                          IsChecked="{Binding Path=AutoBackload, Converter={StaticResource NullableValueConverter}}" 
+                                          ToolTip="Auto upload daily totals for missing days at pvoutput.org beyond live upload limit" 
+                                          Grid.Column="1" Grid.Row="7" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5" />
+                                
+                                <CheckBox Content="Power Alternates Min / Max" 
+                                          IsChecked="{Binding Path=PowerMinMax, Converter={StaticResource NullableValueConverter}}" 
+                                          ToolTip="Alternately display minimum and maximum interval power " 
+                                          Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="2" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5" />
                             </Grid>
                             <Grid Grid.Column="1">
                                 <Grid.ColumnDefinitions>

@@ -39,7 +39,7 @@ namespace PVSettings
             LoadPVOutputDays();
         }
 
-        private void AdjustPVOutputDayList(bool initialLoad = false)
+        private void AdjustPVOutputDayList(bool initialLoadx = false)
         {
             int dayCount = LiveDays == null ? 2 : LiveDays.Value;
             if (dayCount < 1)
@@ -117,6 +117,15 @@ namespace PVSettings
 
                     pvOutputDayList.Add(day);
                 }
+            }
+        }
+
+        public bool HaveSubscription
+        {
+            get { return GetValue("havesubscription") == "true"; }
+            set 
+            { 
+                SetValue("havesubscription", value ? "true" : "false", "HaveSubscription");
             }
         }
 
@@ -277,6 +286,28 @@ namespace PVSettings
             }
         }
 
+        public int? LiveDaysInternal
+        {
+            get
+            {
+                String rffd = GetValue("livedays");
+                if (rffd == "")
+                    return null;
+                else
+                    return Convert.ToInt32(rffd);
+            }
+
+            set
+            {
+                if (value == null)
+                    SetValue("livedays", "", "LiveDays", true);
+                else
+                    SetValue("livedays", value.ToString(), "LiveDays", true);
+                AdjustPVOutputDayList();
+                OnPropertyChanged(new PropertyChangedEventArgs("PvOutputDayList"));
+            }
+        }
+
         public int? LiveDays
         {
             get
@@ -296,26 +327,6 @@ namespace PVSettings
                     SetValue("livedays", value.ToString(), "LiveDays");
                 AdjustPVOutputDayList();
                 OnPropertyChanged(new PropertyChangedEventArgs("PvOutputDayList"));
-            }
-        }
-
-        public bool UseCCTemperature
-        {
-            get
-            {
-                String rffd = GetValue("usecctemperature");
-                if (rffd == "false")
-                    return false;
-                else
-                    return true;
-            }
-
-            set
-            {
-                if (value)
-                    SetValue("usecctemperature", "true", "UseCCTemperature");
-                else
-                    SetValue("usecctemperature", "false", "UseCCTemperature");
             }
         }
 

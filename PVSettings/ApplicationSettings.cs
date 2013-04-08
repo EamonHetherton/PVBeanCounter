@@ -313,7 +313,6 @@ namespace PVSettings
                 site.AutoBackload = true;
                 site.DataInterval = PVOutputDataInterval;
                 site.Enable = EnablePVOutput;
-                site.UseCCTemperature = UseCCTemperatureOld;
 
                 _PvOutputSystemList.Add(site);
             }

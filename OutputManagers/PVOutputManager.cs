@@ -123,13 +123,6 @@ namespace OutputManagers
 
         private const String CmdSelectOldestDay = "select min(ReadingEnd) from devicereading_energy";
 
-        // caution - the following query was one of few I could get to work with SQLite
-        // SQLite date handling is pure crap and totally incompatible with any other version of SQL I have ever seen!!!
-        // I could not get it to work at all with a view. I was forced to write the query against a base table
-        private const String CmdSelectDayOutput = "select SUM(OutputKwh) " +
-            "from outputhistory " +
-            "where OutputTime >= @OutputDay and OutputTime < @NextOutputDay";
-
         public override String ThreadName { get { return "PVOutput/" + Settings.SystemId; } }
 
         private PvOutputSiteSettings Settings;
@@ -142,7 +135,7 @@ namespace OutputManagers
         const int PVOutputDelay = 1100;
         const int PVOutputr1Multiple = 2;
         const int PVOutputr2Multiple = 30;
-        const int PVOutputHourLimit = 60;
+        int PVOutputHourLimit = 60;
         const int PVOutputr1Size = 10;
         const int PVOutputr2Size = 30;
 
@@ -188,6 +181,11 @@ namespace OutputManagers
                 PVLiveDays = PVLiveDaysDefault;
             else
                 PVLiveDays = settings.LiveDays.Value;
+
+            if (Settings.HaveSubscription)
+                PVOutputHourLimit = 100;
+            else
+                PVOutputHourLimit = 60;
 
             RequestCount = 0;
             RequestHour = (int)DateTime.Now.TimeOfDay.TotalHours;
@@ -256,9 +254,8 @@ namespace OutputManagers
 
             try
             {
-                bool useTemp = !Settings.UseCCTemperature;
                 con = GlobalSettings.TheDB.NewConnection();
-                if (useTemp)
+                if (temperature.HasValue)
                     cmdIns = new GenCommand(CmdInsert_Temp, con);
                 else
                     cmdIns = new GenCommand(CmdInsert, con);
@@ -268,11 +265,8 @@ namespace OutputManagers
                 cmdIns.AddParameterWithValue("@Energy", (Double)energy);
                 cmdIns.AddParameterWithValue("@Power", (Double)power);
 
-                if (useTemp)
-                    if (temperature == null)
-                        cmdIns.AddParameterWithValue("@Temperature", DBNull.Value);
-                    else
-                        cmdIns.AddParameterWithValue("@Temperature", Math.Round(temperature.Value, 1));
+                if (temperature.HasValue)
+                    cmdIns.AddParameterWithValue("@Temperature", Math.Round(temperature.Value, 1));
 
                 cmdIns.ExecuteNonQuery();
             }
@@ -306,9 +300,8 @@ namespace OutputManagers
 
             try
             {
-                bool useTemp = Settings.UseCCTemperature;
                 con = GlobalSettings.TheDB.NewConnection();
-                if (useTemp)
+                if (temperature.HasValue)
                     cmdInsConsume = new GenCommand(CmdInsertConsume_Temp, con);
                 else
                     cmdInsConsume = new GenCommand(CmdInsertConsume, con);
@@ -318,11 +311,8 @@ namespace OutputManagers
                 cmdInsConsume.AddParameterWithValue("@Energy", (Double)energy);
                 cmdInsConsume.AddParameterWithValue("@Power", (Double)power);
 
-                if (useTemp)
-                    if (temperature == null)
-                        cmdInsConsume.AddParameterWithValue("@Temperature", DBNull.Value);
-                    else
-                        cmdInsConsume.AddParameterWithValue("@Temperature", Math.Round(temperature.Value, 1));
+                if (temperature.HasValue)
+                    cmdInsConsume.AddParameterWithValue("@Temperature", Math.Round(temperature.Value, 1));
 
                 cmdInsConsume.ExecuteNonQuery();
             }
@@ -356,20 +346,16 @@ namespace OutputManagers
 
             try
             {
-                bool useTemp = Settings.UseCCTemperature;
                 con = GlobalSettings.TheDB.NewConnection();
-                if (useTemp)
+                if (temperature.HasValue)
                     cmdUpdConsume = new GenCommand(CmdUpdateConsume_Temp, con);
                 else
                     cmdUpdConsume = new GenCommand(CmdUpdateConsume, con);
                 cmdUpdConsume.AddParameterWithValue("@Energy", (Double)energy);
                 cmdUpdConsume.AddParameterWithValue("@Power", (Double)power);
 
-                if (useTemp)
-                    if (temperature == null)
-                        cmdUpdConsume.AddParameterWithValue("@Temperature", DBNull.Value);
-                    else
-                        cmdUpdConsume.AddParameterWithValue("@Temperature", Math.Round(temperature.Value, 1));
+                if (temperature.HasValue)
+                    cmdUpdConsume.AddParameterWithValue("@Temperature", Math.Round(temperature.Value, 1));
 
                 cmdUpdConsume.AddParameterWithValue("@SiteId", SystemId);
                 cmdUpdConsume.AddParameterWithValue("@OutputDay", outputDay);
@@ -410,9 +396,8 @@ namespace OutputManagers
 
             try
             {
-                bool useTemp = !Settings.UseCCTemperature;
                 con = GlobalSettings.TheDB.NewConnection();
-                if (useTemp)
+                if (temperature.HasValue)
                     cmdUpd = new GenCommand(CmdUpdate_Temp, con);
                 else
                     cmdUpd = new GenCommand(CmdUpdate, con);
@@ -422,11 +407,8 @@ namespace OutputManagers
                 cmdUpd.AddParameterWithValue("@OutputDay", outputDay);
                 cmdUpd.AddParameterWithValue("@OutputTime", outputTime);
 
-                if (useTemp)
-                    if (temperature == null)
-                        cmdUpd.AddParameterWithValue("@Temperature", DBNull.Value);
-                    else
-                        cmdUpd.AddParameterWithValue("@Temperature", Math.Round(temperature.Value, 1));
+                if (temperature.HasValue)
+                    cmdUpd.AddParameterWithValue("@Temperature", Math.Round(temperature.Value, 1));
 
                 int rows = cmdUpd.ExecuteNonQuery();
                 if (rows != 1)
@@ -564,19 +546,27 @@ namespace OutputManagers
             }
         }
 
+        private bool LocateConsolidationDevice()
+        {
+            if (ConsolidationDevice == null)
+            {
+                ConsolidationDevice = ManagerManager.FindPVOutputConsolidationDevice(SystemId);
+                if (ConsolidationDevice == null)
+                {
+                    GlobalSettings.LogMessage("LocateConsolidationDevice", "Cannot find ConsolidationDevice for: " + SystemId, LogEntryType.Information);
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
         private void PrepareYieldLoadList(DateTime runLimit)
         {            
             try
             {
-                if (ConsolidationDevice == null)
-                {
-                    ConsolidationDevice = ManagerManager.FindPVOutputConsolidationDevice(SystemId);
-                    if (ConsolidationDevice == null)
-                    {
-                        GlobalSettings.LogMessage("PrepareYieldLoadList", "Cannot find ConsolidationDevice for: " + SystemId, LogEntryType.Information);
-                        return;
-                    }
-                }
+                if (!LocateConsolidationDevice())
+                    return;
 
                 for(DateTime day = DateTime.Today; day >= PVDateLimit; day = day.AddDays(-1.0))
                 {
@@ -1126,7 +1116,7 @@ namespace OutputManagers
             return oldestDay;
         }
 
-        private void BackloadMissingDay(DateTime missingDay, Double outputKwh)
+        private void BackloadMissingDay(DateTime missingDay, Double yieldKwh, Double consumptionKwh)
         {
             CheckResetRequestCount();
 
@@ -1136,8 +1126,13 @@ namespace OutputManagers
             request.SendChunked = false;
             request.Method = "POST";
 
-            // today and last 6 days are autoupdated by live update
-            String postData = "d=" + missingDay.Date.ToString("yyyyMMdd") + "&g=" + (outputKwh*1000).ToString();
+            String postData = "d=" + missingDay.Date.ToString("yyyyMMdd");
+            if (Settings.UploadYield)
+                postData += "&g=" + (yieldKwh * 1000).ToString();
+            if (Settings.UploadConsumption)
+                postData += "&c=" + (consumptionKwh * 1000).ToString();
+            else if (!Settings.UploadYield)
+                return;  // settings indicate no data to upload!!!
 
             LogMessage("BackloadMissingDay", "Upload day: postData: " + postData, LogEntryType.Trace);
 
@@ -1201,97 +1196,84 @@ namespace OutputManagers
         {
             DateTime lastTime = DateTime.Now;
             int pos = 0;
-            GenDataReader dr = null;
+            
             CultureInfo provider = CultureInfo.InvariantCulture;
 
             LogMessage("BackloadMissingDays", "dayList: " + dayList, LogEntryType.Trace);
+          
+            if (!LocateConsolidationDevice())
+                return;
 
-            GenCommand cmdSelDayOutput = null;
-            GenConnection con = null;
-
-            bool hasParams = false;
-
-            try
+            while (pos <= (dayList.Length - 8) && ManagerManager.RunMonitors)
             {
-                con = GlobalSettings.TheDB.NewConnection();
-                cmdSelDayOutput = new GenCommand(CmdSelectDayOutput, con);
+                String dateString = dayList.Substring(pos, 8);
+                pos += 9;
+                ErrorReported = false;
 
-                while (pos <= (dayList.Length - 8) && ManagerManager.RunMonitors)
+                try
                 {
-                    String dateString = dayList.Substring(pos, 8);
-                    pos += 9;
-                    ErrorReported = false;
+                    DateTime missingDay = DateTime.ParseExact(dateString, "yyyyMMdd", provider);                  
 
-                    try
+                    DeviceDetailPeriod_EnergyConsolidation yieldPeriod = (DeviceDetailPeriod_EnergyConsolidation)ConsolidationDevice.FindOrCreateFeaturePeriod(FeatureType.YieldAC, 0, missingDay);
+                    int yieldCount = 0;
+                    Double yield = 0.0;
+
+                    if (Settings.UploadYield)
                     {
-                        DateTime missingDay = DateTime.ParseExact(dateString, "yyyyMMdd", provider);
-
-                        if (hasParams)
+                        List<EnergyReading> yieldReadings = yieldPeriod.GetReadings();
+                        foreach (EnergyReading reading in yieldReadings)
                         {
-                            cmdSelDayOutput.Parameters["@OutputDay"].Value = missingDay;
-                            cmdSelDayOutput.Parameters["@NextOutputDay"].Value = missingDay.AddDays(1);
+                            yield += reading.TotalReadingDelta;
                         }
-                        else
+                        yieldCount = yieldReadings.Count;
+                    }
+
+                    DeviceDetailPeriod_EnergyConsolidation consumptionPeriod = (DeviceDetailPeriod_EnergyConsolidation)ConsolidationDevice.FindOrCreateFeaturePeriod(FeatureType.ConsumptionAC, 0, missingDay);
+                    int consumptionCount = 0;
+                    Double consumption = 0.0;
+
+                    if (Settings.UploadConsumption)
+                    {
+                        List<EnergyReading> consumptionReadings = consumptionPeriod.GetReadings();
+                        foreach (EnergyReading reading in consumptionReadings)
                         {
-                            cmdSelDayOutput.AddParameterWithValue("@OutputDay", missingDay);
-                            cmdSelDayOutput.AddParameterWithValue("@NextOutputDay", missingDay.AddDays(1));
-                            hasParams = true;
+                            consumption += reading.TotalReadingDelta;
+                            consumptionCount = consumptionReadings.Count;
                         }
-
-                        dr = (GenDataReader)cmdSelDayOutput.ExecuteReader();
-
-                        bool valueFound = false;
-                        if (dr.Read())
-                        {
-                            Type tp = dr.GetFieldType(0);
-                            String tpStr = tp.ToString();
-                            if (!dr.IsDBNull(0))
-                            {
-                                int delay = PVOutputDelay - (int)((DateTime.Now - lastTime).TotalMilliseconds);
-                                if (delay > 0)
-                                    Thread.Sleep(delay);
-                                BackloadMissingDay(missingDay, dr.GetDouble(0));
-                                valueFound = true;
-                                lastTime = DateTime.Now;
-                            }
-                        }
-
-                        if (!valueFound)
-                            LogMessage("BackloadMissingDays", "Day not found in database: " + missingDay, LogEntryType.Information);
-
-                        dr.Close();
                     }
-                    catch (GenException e)
+
+                    if (yieldCount > 0 || consumptionCount > 0)
                     {
-                        throw new Exception("BackloadMissingDays - Database exception: " + e.Message, e);
+                        int delay = PVOutputDelay - (int)((DateTime.Now - lastTime).TotalMilliseconds);
+                        if (delay > 0)
+                            Thread.Sleep(delay);
+                        BackloadMissingDay(missingDay, yield, consumption);
+                        lastTime = DateTime.Now;                            
                     }
-                    catch (Exception e)
-                    {
-                        throw new Exception("BackloadMissingDays: " + e.Message, e);
-                    }
-                    finally
-                    {
-                        if (dr != null)
-                            dr.Dispose();
-                    }
+                    else if (Settings.UploadYield || Settings.UploadConsumption)
+                        LogMessage("BackloadMissingDays", "Day not found in database: " + missingDay, LogEntryType.Information);
+                    else
+                        LogMessage("BackloadMissingDays", "Neither Yield nor Consumption selected for PVOutput upload", LogEntryType.Information);
+
                 }
-            }
-            finally 
-            {
-                if (cmdSelDayOutput != null)
-                    cmdSelDayOutput.Dispose();
-                if (con != null)
+                catch (GenException e)
                 {
-                    con.Close();
-                    con.Dispose();
+                    throw new Exception("BackloadMissingDays - Database exception: " + e.Message, e);
                 }
+                catch (Exception e)
+                {
+                    throw new Exception("BackloadMissingDays: " + e.Message, e);
+                }                
             }
         }
 
         public void BackloadPVOutput()
         {  
             DateTime? oldestDay = GetOldestDay();
-            DateTime maxDay = DateTime.Today.AddDays(-14);
+            int? liveDays = Settings.LiveDays;
+            if (!liveDays.HasValue || liveDays.Value < 14)
+                liveDays = 14;
+            DateTime maxDay = DateTime.Today.AddDays(-liveDays.Value); // PVOutput supports at least 14 days of live upload - more with a subscription
 
             // last 14 days are autoupdated by live update
             if (oldestDay == null || oldestDay > maxDay)
