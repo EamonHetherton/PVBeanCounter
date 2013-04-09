@@ -71,6 +71,9 @@ namespace Device
 
         public String DeviceIdentifier { get; protected set; }  // used for serial number on real devices; 
                                                                 // generic identifier for consolidation devices
+
+        private static int ConsolidationCount = 0;  // Used to create unique DeviceIdentifiers for each Consolidation Device
+
         protected String DefaultSerialNo;
 
         public DeviceType DeviceType { get { return DeviceParams.DeviceType; } }
@@ -371,6 +374,14 @@ namespace Device
             {
                 if (DeviceId.HasValue)
                     return DeviceId.Value;
+
+                if (DeviceSettings.DeviceType == PVSettings.DeviceType.Consolidation)
+                {
+                    // force obvious identity
+                    Manufacturer = "PVBC";
+                    Model = "Consolidation";
+                    DeviceIdentifier = "Consolidation_" + ConsolidationCount++;
+                }
 
                 if (con == null)
                 {                    

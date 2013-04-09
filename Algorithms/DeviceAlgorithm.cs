@@ -290,7 +290,7 @@ namespace Algorithms
                         return new RegisterBytes(block, settings, ((VariableEntry_Bytes)var).SetValueDelegate, ((VariableEntry_Bytes)var).GetValueDelegate);
                 }
                 // some devices do not need external exposure of the Register entries - eg CC128
-                LogMessage("Device.GetRegister - Cannot find 'Content': " + itemName, LogEntryType.Trace);
+                // LogMessage("Device.GetRegister - Cannot find 'Content': " + itemName, LogEntryType.Trace);
             }
 
             RegisterSettings.RegisterValueType type = settings.Type;

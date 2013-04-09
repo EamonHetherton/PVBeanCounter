@@ -75,7 +75,7 @@ namespace Device
         {
             Manufacturer = settings.Manufacturer;
             Model = settings.Model;
-            DeviceIdentifier = settings.SerialNo;
+            //DeviceIdentifier = settings.SerialNo;
             SourceDevices = new List<DeviceLink>();
             PeriodType = periodType;
         }
@@ -177,7 +177,7 @@ namespace Device
         
         public EnergyConsolidationParams(int recordingInterval)
         {
-            DeviceType = PVSettings.DeviceType.Unknown;
+            DeviceType = PVSettings.DeviceType.Consolidation;
             RecordingInterval = recordingInterval;
             EnforceRecordingInterval = true; // Consolidations are always aligned to formal intervals
         }

@@ -590,6 +590,8 @@ namespace PVSettings
 
         public ObservableCollection<DeviceEventSettings> deviceEvents = null;
 
+        public bool IsRealDevice { get { return DeviceType != DeviceType.Consolidation; } }
+
         public DeviceManagerDeviceSettings(ApplicationSettings root, XmlElement element, DeviceManagerSettings deviceManagerSettings)
             : base(root, element)
         {
@@ -1052,6 +1054,8 @@ namespace PVSettings
         {
             get
             {
+                if (DeviceType == PVSettings.DeviceType.Consolidation)
+                    return false;
                 string val = GetValue("enabled");
                 if (val == "")
                     val = GetValue("enable");  // check legacy value
@@ -1060,7 +1064,9 @@ namespace PVSettings
 
             set
             {
-                if (Id == "")
+                if (DeviceType == PVSettings.DeviceType.Consolidation)
+                    value = false;
+                else if (Id == "")
                     value = false;
 
                 SetValue("enabled", value ? "true" : "false", "Enabled");

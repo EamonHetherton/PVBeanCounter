@@ -92,10 +92,10 @@ namespace PVBeanCounter
                 db = GetDatabase();
                 con = db.NewConnection();
                 String getDevices =
-                    "select i.Id, i.SerialNumber, it.DeviceType, it.Manufacturer, it.Model, if.FeatureType, if.FeatureId, if.MeasureType " +
-                    "from device i, devicetype it, devicefeature if " +
-                    "where i.DeviceType_Id = it.Id and i.Id = if.Device_Id " +
-                    "order by it.DeviceType, i.SerialNumber ";
+                    "select i.Id, i.SerialNumber, itp.DeviceType, itp.Manufacturer, itp.Model, ift.FeatureType, ift.FeatureId, ift.MeasureType " +
+                    "from device i, devicetype itp, devicefeature ift " +
+                    "where i.DeviceType_Id = itp.Id and i.Id = ift.Device_Id " +
+                    "order by itp.DeviceType, i.SerialNumber ";
 
                 cmd = new GenCommand(getDevices, con);
 

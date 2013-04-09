@@ -189,7 +189,10 @@ namespace GenericConnector
         public void AddNullableBooleanParameterWithValue(String paramName, bool? value)
         {
             if (value.HasValue)
-                AddParameterWithValue(paramName, value.Value ? 'Y' : 'N' );
+                if (GenDatabase.GenDBType == GenDBType.SQLite)
+                    AddParameterWithValue(paramName, value.Value ? "Y" : "N"); // char is recorded as a text numeric character value - use string instead
+                else
+                    AddParameterWithValue(paramName, value.Value ? 'Y' : 'N' );
             else
                 AddParameterWithValue(paramName, null);
         }

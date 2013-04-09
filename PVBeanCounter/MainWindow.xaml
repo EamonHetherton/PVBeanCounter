@@ -712,10 +712,23 @@
 
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" MinWidth="140" IsReadOnly="True" Binding="{Binding Name}"/>
-                                <DataGridCheckBoxColumn Binding="{Binding Enabled}" Header="Enabled" />
+                                <DataGridCheckBoxColumn Binding="{Binding Path=Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Enabled" >
+                                    <DataGridCheckBoxColumn.EditingElementStyle>
+                                        <Style TargetType="CheckBox">
+                                            <Setter Property="IsEnabled"  Value="{Binding Path=IsRealDevice}" />
+                                            <Setter Property="HorizontalAlignment"  Value="Center" />
+                                        </Style>
+                                    </DataGridCheckBoxColumn.EditingElementStyle>
+                                    <DataGridCheckBoxColumn.ElementStyle>
+                                        <Style TargetType="CheckBox">
+                                            <Setter Property="IsEnabled"  Value="{Binding Path=IsRealDevice}" />
+                                            <Setter Property="HorizontalAlignment"  Value="Center" />
+                                        </Style>
+                                    </DataGridCheckBoxColumn.ElementStyle>
+                                </DataGridCheckBoxColumn>
                             </DataGrid.Columns>
 
-                            <DataGrid.Resources>
+                        <DataGrid.Resources>
                                 <Style TargetType="DataGridRow">
                                     <Style.Resources>
                                         <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Transparent"/>
