@@ -380,7 +380,15 @@ namespace Device
                     // force obvious identity
                     Manufacturer = "PVBC";
                     Model = "Consolidation";
-                    DeviceIdentifier = "Consolidation_" + ConsolidationCount++;
+                    if (DeviceIdentifier.Trim() == "")
+                    {
+                        DeviceIdentifier = "Consolidation_" + ConsolidationCount++;
+                        DeviceManagerDeviceSettings.SerialNo = DeviceIdentifier;
+                        // must save settings to make consolidation device serialno visible in configuration
+                        GlobalSettings.ApplicationSettings.SaveSettings();
+                    }
+                    else
+                        ConsolidationCount++;
                 }
 
                 if (con == null)

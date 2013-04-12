@@ -2027,7 +2027,7 @@ namespace DeviceControl
             get
             {
                 return
-                    "CREATE TABLE `devicefeature` " +
+                    "CREATE TABLE devicefeature " +
                     "( " +
                         "Id AUTOINCREMENT, " +
                         "Device_Id INTEGER NOT NULL, " +
@@ -2039,12 +2039,12 @@ namespace DeviceControl
                         "IsThreePhase CHAR(1) NULL, " +
                         "StringNumber INTEGER NULL, " +
                         "PhaseNumber INTEGER NULL, " +
-                        "CONSTRAINT PK_device PRIMARY KEY " +
+                        "CONSTRAINT PK_devicefeature PRIMARY KEY " +
                         "( " +
                             "Id " +
                         "), " +
-                        "CONSTRAINT uk_devicefeature UNIQUE (Device_Id, FeatureType, FeatureId)  " +
-                        "CONSTRAINT fk_devicefeature_device FOREIGN KEY (Device_Id) REFERENCES device (Id), " +
+                        "CONSTRAINT uk_devicefeature UNIQUE (Device_Id, FeatureType, FeatureId),  " +
+                        "CONSTRAINT fk_devicefeature_device FOREIGN KEY (Device_Id) REFERENCES device (Id) " +
                     ") ";
             }
         }
@@ -2086,7 +2086,7 @@ namespace DeviceControl
             {
                 return
                     "CREATE VIEW devicedayoutput_v " +
-                    "AS SELECT f.Device_Id, DateValue(r.ReadingEnd) OutputDay, SUM(r.EnergyDelta) OutputKwh " +
+                    "AS SELECT f.Device_Id, DateValue(r.ReadingEnd) as OutputDay, SUM(r.EnergyDelta) as OutputKwh " +
                     "from devicereading_energy r, devicefeature f " +
                     "where r.DeviceFeature_Id = f.Id " +
                     "group by f.Device_Id, DateValue(r.ReadingEnd) ";

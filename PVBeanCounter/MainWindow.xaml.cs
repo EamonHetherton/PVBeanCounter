@@ -612,8 +612,8 @@ namespace PVBeanCounter
                     comboBoxPVOutputSystem.Visibility = System.Windows.Visibility.Hidden;
                     rowPVOutput.Height = new GridLength(0.0);
                 }
-                labelDeviceAddress.Visibility = System.Windows.Visibility.Collapsed;
-                textBoxDeviceAddress.Visibility = System.Windows.Visibility.Collapsed;
+                labelDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                textBoxDeviceAddress.Visibility = System.Windows.Visibility.Visible;
                 labelSerialNo.Visibility = System.Windows.Visibility.Collapsed;
                 textBoxSerialNo.Visibility = System.Windows.Visibility.Collapsed;
                 checkBoxHistoryAdjust.Visibility = System.Windows.Visibility.Collapsed;

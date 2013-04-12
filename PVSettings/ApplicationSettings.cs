@@ -63,6 +63,8 @@ namespace PVSettings
 
         public bool LoadingEnergyEvents { get; private set; }
 
+        private static Mutex SaveSettingsMutex = new Mutex();
+
         //public InverterManagerSettings DeviceInverterManagerSettings { get; private set; }
 
         public ApplicationSettings()
@@ -84,7 +86,15 @@ namespace PVSettings
 
         public override void SaveSettings()
         {
-            base.SaveSettings();
+            SaveSettingsMutex.WaitOne();
+            try
+            {
+                base.SaveSettings();
+            }
+            finally
+            {
+                SaveSettingsMutex.ReleaseMutex();
+            }
         }
 
         public PvOutputSiteSettings FindPVOutputBySystemId(String systemId)

@@ -740,7 +740,7 @@ namespace DeviceDataRecorders
         #endregion HistoryCalcs
 
         #region Persistance
-
+        /*
         private static String InsertDeviceReading_AC =
             "INSERT INTO devicereading_energy " +
                 "( ReadingEnd, DeviceFeature_Id, ReadingStart, EnergyTotal, EnergyToday, EnergyDelta, " +
@@ -749,7 +749,7 @@ namespace DeviceDataRecorders
                 "MinPower," +
                 "MaxPower) " +
             "VALUES " +
-                "(@ReadingEnd, @DeviceFeature_Id, @ReadingStart, @EnergyTotal, @EnergyToday, @EnergyDelta, " +
+                "(@ReadingEnd, @DeviceFeatureId, @ReadingStart, @EnergyTotal, @EnergyToday, @EnergyDelta, " +
                 "@CalcEnergyDelta, @HistEnergyDelta, @Mode, @ErrorCode, @Power, @Volts, " +
                 "@Amps, @Frequency, @Temperature, " +
                 "@MinPower, " +
@@ -774,21 +774,56 @@ namespace DeviceDataRecorders
                 "MaxPower = @MaxPower " +
             "WHERE " +
                 "ReadingEnd = @ReadingEnd " +
-                "AND DeviceFeature_Id = @DeviceFeature_Id ";
+                "AND DeviceFeature_Id = @DeviceFeatureId ";
+        */
+        /*
+        private static String InsertDeviceReading_AC =
+            "INSERT INTO devicereading_energy " +
+                "( ReadingEnd, DeviceFeature_Id, ReadingStart, Power, FrogEnd, FrogId) " +
+            "VALUES " +
+                "(@REnd, @DFId, @ReadingStart, @Power, @FrogEnd, @FrogId ) ";
+                
+
+        private static String UpdateDeviceReading_AC =
+            "UPDATE devicereading_energy set " +
+                "ReadingStart = @ReadingStart, " +                
+                "Power = @Power, " +
+                "FrogEnd = @FrogEnd, " +
+                "FrogId = @FrogId " +
+            "WHERE " +
+                "ReadingEnd = @REnd " +
+                "AND DeviceFeature_Id = @DFId ";
+        */
+
+        private static String InsertDeviceReading_AC =
+            "INSERT INTO devicereading_energy " +
+                "( DeviceFeature_Id, Power, FrogId) " +
+            "VALUES " +
+                "(@DFId, @Power, @FrogId ) ";
+
+
+        private static String UpdateDeviceReading_AC =
+            "UPDATE devicereading_energy set " +
+                "Power = @Power, " +
+                "FrogId = @FrogId " +
+            "WHERE " +
+                "DeviceFeature_Id = @DFId ";
 
         private static String DeleteDeviceReading_AC =
             "DELETE from devicereading_energy " +
              "WHERE " +
-                "ReadingEnd = @ReadingEnd " +
-                "AND DeviceFeature_Id = @DeviceFeature_Id ";
+                "ReadingEnd = @REnd " +
+                "AND DeviceFeature_Id = @DFId ";
 
-        private void SetParametersId(GenCommand cmd, int deviceFeature_Id)
+        private void SetParametersId(GenCommand cmd, Int32 deviceFeature_Id)
         {
             string stage = "Id";
             try
             {
-                cmd.AddParameterWithValue("@DeviceFeature_Id", deviceFeature_Id);
-                cmd.AddParameterWithValue("@ReadingEnd", ReadingEndInternal);
+                Int32 tempId = deviceFeature_Id;
+                DateTime dateTime = ReadingEndInternal;
+                cmd.AddParameterWithValue("@DFId", tempId);
+                //cmd.AddParameterWithValue("@REnd", dateTime);
             }
             catch (Exception e)
             {
@@ -801,9 +836,21 @@ namespace DeviceDataRecorders
             string stage = "Device_Id";
             try
             {
-                SetParametersId(cmd, (int)DeviceDetailPeriods.DeviceFeatureId);
+                // Jet is fucked - cannot get these bindings to work with jet - removing support in v2
+                //int? tmp = (int)DeviceDetailPeriods.DeviceFeatureId;
+                //cmd.AddParameterWithValue("@DeviceFeatureId", tmp);
+                //cmd.AddParameterWithValue("@ReadingEnd", ReadingEndInternal);
+
+                // junk bindings - it looks like the first of each always fails!!!!
+                //cmd.AddParameterWithValue("@FrogEnd", ReadingEndInternal);
+                cmd.AddParameterWithValue("@FrogId", (Int32)DeviceDetailPeriods.DeviceFeatureId);
+
+                SetParametersId(cmd, (Int32)DeviceDetailPeriods.DeviceFeatureId);
+                
                 stage = "ReadingStart";
                 cmd.AddParameterWithValue("@ReadingStart", ReadingStartInternal);
+                
+                /*
                 stage = "EnergyTotal";
                 cmd.AddRoundedParameterWithValue("@EnergyTotal", EnergyTotalInternal, EnergyPrecision);
                 stage = "EnergyToday";
@@ -823,10 +870,10 @@ namespace DeviceDataRecorders
                     cmd.AddParameterWithValue("@ErrorCode", (long)ErrorCodeInternal.Value);
                 else
                     cmd.AddParameterWithValue("@ErrorCode", null);
-
+                */
                 stage = "Power";
                 cmd.AddParameterWithValue("@Power", PowerInternal);
-                
+                /*
                 stage = "Volts";
                 cmd.AddRoundedParameterWithValue("@Volts", VoltsInternal, 2);
                 
@@ -843,6 +890,7 @@ namespace DeviceDataRecorders
                 
                 stage = "MaxPower";
                 cmd.AddParameterWithValue("@MaxPower", MaxPowerInternal);
+                */
             }
             catch (Exception e)
             {
