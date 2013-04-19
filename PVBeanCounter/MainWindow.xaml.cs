@@ -91,6 +91,7 @@ namespace PVBeanCounter
             {
                 ManageService = new ManageService();                
                 ApplicationSettings = new PVSettings.ApplicationSettings();
+                GlobalSettings.ApplicationSettings = ApplicationSettings;
                 SystemServices = new MackayFisher.Utilities.SystemServices("Configuration.log");
                 //SystemServices = new SystemServices();
             

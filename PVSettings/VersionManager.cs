@@ -24,20 +24,19 @@ using System.Text;
 using GenericConnector;
 using System.Data.Common;
 using MackayFisher.Utilities;
-using PVBCInterfaces;
-using PVSettings;
 
-namespace DeviceControl
+namespace PVSettings
 {
     // DDL is the abstract class representing DDL commands used to bring a database from an earlier version to a later version
     // Must be implemented for each target database type as the DDL is similar but not generic
     internal abstract class DDL
     {
-        public virtual String Table_version
-        { get { return ""; } }
+        public abstract String Table_version { get; }
+        public virtual String CurrentTable_version { get { return Table_version; } }
 
-        public virtual String Table_pvoutputlog
-        { get { return ""; } }
+        public abstract String Table_pvoutputlog { get; } // original tab;e
+        public abstract String Table_pvoutputlog_2000 { get; }  // version  2000
+        public virtual String CurrentTable_pvoutputlog { get { return Table_pvoutputlog_2000; } }
 
         public virtual String View_pvoutput_v
         { get { return ""; } }
@@ -128,15 +127,22 @@ namespace DeviceControl
 
         public abstract string Create_inverter_index_1902 { get; }
 
+
+
         public abstract string Table_devicetype_2000 { get; }
+        public virtual String CurrentTable_devicetype { get { return Table_devicetype_2000; } }
 
         public abstract string Table_devicefeature_2000 { get; }
+        public virtual String CurrentTable_devicefeature { get { return Table_devicefeature_2000; } }
 
         public abstract string Table_device_2000 { get; }
+        public virtual String CurrentTable_device { get { return Table_device_2000; } }
 
         public abstract string Table_devicereading_energy_2000 { get; }
+        public virtual String CurrentTable_devicereading_energy { get { return Table_devicereading_energy_2000; } }
 
         public abstract String View_devicedayoutput_v_2000 { get; }
+        public virtual String CurrentView_devicedayoutput_v { get { return View_devicedayoutput_v_2000; } }
 
     }
 
@@ -631,6 +637,25 @@ namespace DeviceControl
             get
             {
                 return "create unique index InverterIdentity_UK on inverter (SerialNumber, InverterType_Id, InverterManager_Id) ";
+            }
+        }
+
+        public override string Table_pvoutputlog_2000
+        {
+            get
+            {
+                return
+                    "create table `pvoutputlog` " +
+                    "( " +
+                        "`SiteId` varchar(10) NOT NULL, " +
+                        "`OutputDay` date NOT NULL, " +
+                        "`OutputTime` mediumint(9) NOT NULL, " +
+                        "`Loaded` tinyint(1) NOT NULL DEFAULT '0', " +
+                        "`ImportEnergy` double NULL, " +
+                        "`ImportPower` double NULL, " +
+                        "`Temperature` double NULL, " +
+                        "PRIMARY KEY (`SiteId`,`OutputDay`,`OutputTime`) " +
+                     ") ENGINE=InnoDB DEFAULT CHARSET=latin1";
             }
         }
 
@@ -1283,6 +1308,28 @@ namespace DeviceControl
                 return "create unique index InverterIdentity_UK on inverter (SerialNumber, InverterType_Id, InverterManager_Id) ";
             }
         }
+
+        public override string Table_pvoutputlog_2000
+        {
+            get
+            {
+                return
+                    "create table `pvoutputlog` " +
+                    "( " +
+                        "`SiteId` TEXT NOT NULL, " +
+                        "`OutputDay` date NOT NULL, " +
+                        "`OutputTime` INTEGER NOT NULL, " +
+                        "`Energy` REAL NULL, " +
+                        "`Power` REAL NULL, " +
+                        "`Loaded` INTEGER NOT NULL DEFAULT '0', " +
+                        "`ImportEnergy` REAL NULL, " +
+                        "`ImportPower` REAL NULL, " +
+                        "`Temperature` REAL NULL, " +
+                        "PRIMARY KEY (`SiteId`,`OutputDay`,`OutputTime`) " +
+                     ")";
+            }
+        }
+
 
         public override string Table_devicetype_2000
         {
@@ -1984,6 +2031,27 @@ namespace DeviceControl
             }
         }
 
+        public override string Table_pvoutputlog_2000
+        {
+            get
+            {
+                return
+                    "create table pvoutputlog " +
+                    "( " +
+                        "SiteId varchar(10) NOT NULL, " +
+                        "OutputDay date NOT NULL, " +
+                        "OutputTime integer NOT NULL, " +
+                        "Energy double NULL, " +
+                        "Power double NULL, " +
+                        "Loaded smallint NOT NULL default 0, " +
+                        "ImportEnergy double NULL, " +
+                        "ImportPower double NULL, " +
+                        "Temperature double NULL, " +
+                        "constraint pvoutputlog_pk PRIMARY KEY ( SiteId, OutputDay, OutputTime ) " +
+                     ")";
+            }
+        }
+
         public override string Table_devicetype_2000
         {
             get
@@ -2096,6 +2164,21 @@ namespace DeviceControl
 
     internal class SQLServer_DDL : DDL
     {
+        public override String Table_version
+        {
+            get
+            {
+                return
+                    "create table version " +
+                    "( " +
+                        "Major [varchar](4) NOT NULL, " +
+                        "Minor [varchar](4) NOT NULL, " +
+                        "Release [varchar](4) NOT NULL, " +
+                        "Patch [varchar](4) NOT NULL " +
+                     ") ";
+            }
+        }
+
         // required for 1.4.2.1 and later
         public override string Alter_pvoutputlog_1421
         {
@@ -2422,6 +2505,33 @@ namespace DeviceControl
             }
         }
 
+        public override string Table_pvoutputlog_2000
+        {
+            get
+            {
+                return
+                    "create table pvoutputlog " +
+                    "( " +
+                        "SiteId [varchar](10) NOT NULL, " +
+                        "OutputDay [date] NOT NULL, " +
+                        "OutputTime [int] NOT NULL, " +
+                        "Loaded int NOT NULL DEFAULT 0, " +
+                        "ImportEnergy [float] NULL, " +
+                        "ImportPower [float] NULL, " +
+                        "Temperature [float] NULL, " +
+                        "CONSTRAINT PK_pvoutputlog PRIMARY KEY CLUSTERED ([SiteId] ASC, [OutputDay] ASC,[OutputTime] ASC) " +
+                     ") ";
+            }
+        }
+
+        public override string Table_pvoutputlog
+        {
+            get
+            {
+                return Table_pvoutputlog_2000;
+            }
+        }
+
         public override string Table_devicetype_2000
         {
             get
@@ -2497,7 +2607,7 @@ namespace DeviceControl
                         "IsThreePhase [char](1) NULL, " +
                         "StringNumber [int] NULL, " +
                         "PhaseNumber [int] NULL, " +
-                        "CONSTRAINT PK_device PRIMARY KEY CLUSTERED " +
+                        "CONSTRAINT PK_devicefeature PRIMARY KEY CLUSTERED " +
                         "( " +
                             "Id ASC " +
                         ") " +
@@ -2506,7 +2616,7 @@ namespace DeviceControl
                             "PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, " +
                             "ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON " +
                         "), " +
-                        "CONSTRAINT uk_devicefeature UNIQUE (Device_Id, FeatureType, FeatureId)  " +
+                        "CONSTRAINT uk_devicefeature UNIQUE (Device_Id, FeatureType, FeatureId), " +
                         "CONSTRAINT FK_devicefeature_device FOREIGN KEY(Device_Id) REFERENCES device (Id) " +
                     ") ";
             }
@@ -2542,7 +2652,7 @@ namespace DeviceControl
                             "PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, " +
                             "ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON " +
                         "), " +
-                        "CONSTRAINT uk_devicereading_energy UNIQUE (DeviceFeature_Id, FeatureType)  " +
+                        "CONSTRAINT uk_devicereading_energy UNIQUE (DeviceFeature_Id, ReadingEnd)  " +
                         "WITH " +
                         "( " +
                             "PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, " +
@@ -2569,6 +2679,8 @@ namespace DeviceControl
 
     public class VersionManager
     {
+        private DBVersion Version;
+
         private bool CopyToTable(String fromRelation, String toTable, List<String> columns, GenConnection con)
         {
             if (columns == null || columns.Count == 0)
@@ -2937,24 +3049,29 @@ namespace DeviceControl
                 cmd.AddParameterWithValue("@Release", release);
                 cmd.AddParameterWithValue("@Patch", patch);
                 cmd.ExecuteNonQuery();
+                Version.major = major;
+                Version.minor = minor;
+                Version.release = release;
+                Version.patch = patch;
             }
             catch (Exception e)
             {
-                throw new PVException(PVExceptionType.UnexpectedError, "UpdateVersion: error updating version table: " + e.Message, e);
+                throw new Exception("UpdateVersion: error updating version table: " + e.Message, e);
             }
         }
 
-        public bool GetCurrentVersion(GenConnection con, String databaseType, out String major, out String minor, out String release, out String patch)
+        public bool GetCurrentVersion(GenConnection con, String databaseType, out DBVersion version)
         {
             GenCommand cmd;
             if (databaseType == "SQL Server")
                 cmd = new GenCommand("Select Major, Minor, [Release], Patch from [version]", con);
             else
                 cmd = new GenCommand("Select Major, Minor, `Release`, Patch from version", con);
-            major = "";
-            minor = "";
-            release = "";
-            patch = "";
+
+            version.major = "";
+            version.minor = "";
+            version.release = "";
+            version.patch = "";
 
             try
             {
@@ -2964,10 +3081,10 @@ namespace DeviceControl
                 if (dr.HasRows)
                 {
                     dr.Read();
-                    major = dr.GetString("Major");
-                    minor = dr.GetString("Minor");
-                    release = dr.GetString("Release");
-                    patch = dr.GetString("Patch");
+                    version.major = dr.GetString("Major");
+                    version.minor = dr.GetString("Minor");
+                    version.release = dr.GetString("Release");
+                    version.patch = dr.GetString("Patch");
 
                     dr.Close();
                     return true;
@@ -2980,50 +3097,21 @@ namespace DeviceControl
             }
             catch (Exception e)
             {
-                GlobalSettings.LogMessage("GetCurrentVersion", "Exception: " + e.Message);
+                if (GlobalSettings.SystemServices != null) // true when service is running
+                    GlobalSettings.LogMessage("GetCurrentVersion", "Exception: " + e.Message);
                 return false;
             }
         }
 
-        public int CompareVersion(String major, String minor, String release, String patch, String majorR, String minorR, String releaseR, String patchR)
-        {
-            int res;
-
-            if ((res = int.Parse(major).CompareTo(int.Parse(majorR))) > 0)
-                return res;
-            else if (res == 0)
-            {
-                if ((res = int.Parse(minor).CompareTo(int.Parse(minorR))) > 0)
-                    return res;
-                else if (res == 0)
-                {
-                    if ((res = int.Parse(release).CompareTo(int.Parse(releaseR))) > 0)
-                        return res;
-                    else if (res == 0)
-                        res  = int.Parse(patch).CompareTo(int.Parse(patchR));
-                }
-            }
-            return res;
-        }
-
         public bool UpdateTo_1_3_5_4(GenConnection con, String databaseType)
         {
-            String major;
-            String minor;
-            String release;
-            String patch;
-
             DDL DDL;
             int res;
 
-            if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
-            {
-                res = CompareVersion(major, minor, release, patch, "1", "3", "5", "4");
-                if (res >= 0)
-                    return false;
-            }
-            else res = -1;
-
+            res = Version.CompareVersion( "1", "3", "5", "4");
+            if (res >= 0)
+                return false;
+            
             if (databaseType == "MySql")
                 DDL = new MySql_DDL();
             else if (databaseType == "Jet")
@@ -3031,7 +3119,7 @@ namespace DeviceControl
             else if (databaseType == "SQLite")
                 DDL = new SQLite_DDL();
             else
-                throw new PVException(PVExceptionType.UnexpectedError, "Unexpected database type: " + databaseType);
+                throw new Exception("Unexpected database type: " + databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_3_5_4", "Updating database structure to suit version 1.3.5.4", LogEntryType.Information);
 
@@ -3052,21 +3140,12 @@ namespace DeviceControl
 
         public bool UpdateTo_1_3_6_0(GenConnection con, String databaseType)
         {
-            String major;
-            String minor;
-            String release;
-            String patch;
-
             DDL DDL;
             int res;
-
-            if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
-            {
-                res = CompareVersion(major, minor, release, patch, "1", "3", "6", "0");
-                if (res >= 0)
-                    return false;
-            }
-            else res = -1;
+            
+            res = Version.CompareVersion("1", "3", "6", "0");
+            if (res >= 0)
+                return false;            
 
             if (databaseType == "MySql")
                 DDL = new MySql_DDL();
@@ -3075,7 +3154,7 @@ namespace DeviceControl
             else if (databaseType == "SQLite")
                 DDL = new SQLite_DDL();
             else
-                throw new PVException(PVExceptionType.UnexpectedError, "Unexpected database type: " + databaseType);
+                throw new Exception("Unexpected database type: " + databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_3_6_0", "Updating database structure to suit version 1.3.6.0", LogEntryType.Information);
 
@@ -3103,21 +3182,12 @@ namespace DeviceControl
 
         public bool UpdateTo_1_4_0_0(GenConnection con, String databaseType)
         {
-            String major;
-            String minor;
-            String release;
-            String patch;
-
             DDL DDL;
             int res;
-
-            if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
-            {
-                res = CompareVersion(major, minor, release, patch, "1", "4", "0", "0");
-                if (res >= 0)
-                    return false;
-            }
-            else res = -1;
+            
+            res = Version.CompareVersion("1", "4", "0", "0");
+            if (res >= 0)
+                return false;           
 
             if (databaseType == "MySql")
                 DDL = new MySql_DDL();
@@ -3126,7 +3196,7 @@ namespace DeviceControl
             else if (databaseType == "SQLite")
                 DDL = new SQLite_DDL();
             else
-                throw new PVException(PVExceptionType.UnexpectedError, "Unexpected database type: " + databaseType);
+                throw new Exception("Unexpected database type: " + databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_4_0_0", "Updating database structure to suit version 1.4.0.1", LogEntryType.Information);
 
@@ -3157,22 +3227,13 @@ namespace DeviceControl
 
         public bool UpdateTo_1_4_0_1(GenConnection con, String databaseType)
         {
-            String major;
-            String minor;
-            String release;
-            String patch;
-
             DDL DDL;
             int res;
 
-            if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
-            {
-                res = CompareVersion(major, minor, release, patch, "1", "4", "0", "1");
+            res = Version.CompareVersion("1", "4", "0", "1");
                 if (res >= 0)
                     return false;
-            }
-            else res = -1;
-
+            
             if (databaseType == "MySql")
                 DDL = new MySql_DDL();
             else if (databaseType == "Jet")
@@ -3180,7 +3241,7 @@ namespace DeviceControl
             else if (databaseType == "SQLite")
                 DDL = new SQLite_DDL();
             else
-                throw new PVException(PVExceptionType.UnexpectedError, "Unexpected database type: " + databaseType);
+                throw new Exception("Unexpected database type: " + databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_4_0_1", "Updating database structure to suit version 1.4.0.1", LogEntryType.Information);
 
@@ -3211,22 +3272,13 @@ namespace DeviceControl
 
         public bool UpdateTo_1_4_0_3(GenConnection con, String databaseType)
         {
-            String major;
-            String minor;
-            String release;
-            String patch;
-
             DDL DDL;
             int res;
 
-            if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
-            {
-                res = CompareVersion(major, minor, release, patch, "1", "4", "0", "3");
+            res = Version.CompareVersion("1", "4", "0", "3");
                 if (res >= 0)
                     return false;
-            }
-            else res = -1;
-
+            
             if (databaseType == "MySql")
                 DDL = new MySql_DDL();
             else if (databaseType == "Jet")
@@ -3234,7 +3286,7 @@ namespace DeviceControl
             else if (databaseType == "SQLite")
                 DDL = new SQLite_DDL();
             else
-                throw new PVException(PVExceptionType.UnexpectedError, "Unexpected database type: " + databaseType);
+                throw new Exception("Unexpected database type: " + databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_4_0_3", "Updating database structure to suit version 1.4.0.3", LogEntryType.Information);
 
@@ -3262,22 +3314,13 @@ namespace DeviceControl
 
         public bool UpdateTo_1_4_1_9(GenConnection con, String databaseType)
         {
-            String major;
-            String minor;
-            String release;
-            String patch;
-
             DDL DDL;
             int res;
 
-            if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
-            {
-                res = CompareVersion(major, minor, release, patch, "1", "4", "1", "9");
+            res = Version.CompareVersion("1", "4", "1", "9");
                 if (res >= 0)
                     return false;
-            }
-            else res = -1;
-
+            
             bool success = true;
 
             if (databaseType == "Jet")
@@ -3298,22 +3341,13 @@ namespace DeviceControl
 
         public bool UpdateTo_1_4_2_1(GenConnection con, String databaseType)
         {
-            String major;
-            String minor;
-            String release;
-            String patch;
-
             DDL DDL;
             int res;
 
-            if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
-            {
-                res = CompareVersion(major, minor, release, patch, "1", "4", "2", "1");
-                if (res >= 0)
-                    return false;
-            }
-            else res = -1;
-
+            res = Version.CompareVersion("1", "4", "2", "1");
+            if (res >= 0)
+                return false;
+            
             bool success = true;
 
             if (databaseType == "MySql")
@@ -3325,7 +3359,7 @@ namespace DeviceControl
             else if (databaseType == "SQL Server")
                 DDL = new SQLServer_DDL();
             else
-                throw new PVException(PVExceptionType.UnexpectedError, "Unexpected database type: " + databaseType);
+                throw new Exception("Unexpected database type: " + databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_4_2_1", "Updating database structure to suit version 1.4.2.1", LogEntryType.Information);
 
@@ -3339,22 +3373,13 @@ namespace DeviceControl
 
         public bool UpdateTo_1_5_0_0(GenConnection con, String databaseType)
         {
-            String major;
-            String minor;
-            String release;
-            String patch;
-
             DDL DDL;
             int res;
 
-            if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
-            {
-                res = CompareVersion(major, minor, release, patch, "1", "5", "0", "0");
-                if (res >= 0)
-                    return false;
-            }
-            else res = -1;
-
+            res = Version.CompareVersion("1", "5", "0", "0");
+            if (res >= 0)
+                return false;
+            
             bool success = true;
 
             if (databaseType == "MySql")
@@ -3366,7 +3391,7 @@ namespace DeviceControl
             else if (databaseType == "SQL Server")
                 DDL = new SQLServer_DDL();
             else
-                throw new PVException(PVExceptionType.UnexpectedError, "Unexpected database type: " + databaseType);
+                throw new Exception("Unexpected database type: " + databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_5_0_0", "Updating database structure to suit version 1.5.0.0", LogEntryType.Information);
 
@@ -3386,22 +3411,13 @@ namespace DeviceControl
 
         public bool UpdateTo_1_5_0_2(GenConnection con, String databaseType)
         {
-            String major;
-            String minor;
-            String release;
-            String patch;
-
             DDL DDL;
             int res;
 
-            if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
-            {
-                res = CompareVersion(major, minor, release, patch, "1", "5", "0", "2");
-                if (res >= 0)
-                    return false;
-            }
-            else res = -1;
-
+            res = Version.CompareVersion("1", "5", "0", "2");
+            if (res >= 0)
+                return false;
+            
             bool success = true;
 
             if (databaseType == "SQL Server")
@@ -3422,22 +3438,13 @@ namespace DeviceControl
 
         public bool UpdateTo_1_7_0_0(GenConnection con, String databaseType)
         {
-            String major;
-            String minor;
-            String release;
-            String patch;
-
             DDL DDL;
             int res;
 
-            if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
-            {
-                res = CompareVersion(major, minor, release, patch, "1", "7", "0", "0");
-                if (res >= 0)
-                    return false;
-            }
-            else res = -1;
-
+            res = Version.CompareVersion("1", "7", "0", "0");
+            if (res >= 0)
+                return false;
+            
             bool success = true;
 
             if (databaseType == "MySql")
@@ -3449,7 +3456,7 @@ namespace DeviceControl
             else if (databaseType == "SQL Server")
                 DDL = new SQLServer_DDL();
             else
-                throw new PVException(PVExceptionType.UnexpectedError, "Unexpected database type: " + databaseType);
+                throw new Exception("Unexpected database type: " + databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_7_0_0", "Updating database structure to suit version 1.7.0.0", LogEntryType.Information);
 
@@ -3467,22 +3474,13 @@ namespace DeviceControl
 
         public bool UpdateTo_1_7_1_0(GenConnection con, String databaseType)
         {
-            String major;
-            String minor;
-            String release;
-            String patch;
-
             DDL DDL;
             int res;
 
-            if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
-            {
-                res = CompareVersion(major, minor, release, patch, "1", "7", "1", "0");
+            res = Version.CompareVersion("1", "7", "1", "0");
                 if (res >= 0)
                     return false;
-            }
-            else res = -1;
-
+            
             bool success = true;
 
             if (databaseType == "MySql")
@@ -3494,7 +3492,7 @@ namespace DeviceControl
             else if (databaseType == "SQL Server")
                 DDL = new SQLServer_DDL();
             else
-                throw new PVException(PVExceptionType.UnexpectedError, "Unexpected database type: " + databaseType);
+                throw new Exception("Unexpected database type: " + databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_7_1_0", "Updating database structure to suit version 1.7.1.0", LogEntryType.Information);
 
@@ -3514,22 +3512,13 @@ namespace DeviceControl
 
         public bool UpdateTo_1_8_3_0(GenConnection con, String databaseType)
         {
-            String major;
-            String minor;
-            String release;
-            String patch;
-
             DDL DDL;
             int res;
 
-            if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
-            {
-                res = CompareVersion(major, minor, release, patch, "1", "8", "3", "0");
-                if (res >= 0)
-                    return false;
-            }
-            else res = -1;
-
+            res = Version.CompareVersion("1", "8", "3", "0");
+            if (res >= 0)
+                return false;
+            
             bool success = true;
 
             if (databaseType == "MySql")
@@ -3541,7 +3530,7 @@ namespace DeviceControl
             else if (databaseType == "SQL Server")
                 DDL = new SQLServer_DDL();
             else
-                throw new PVException(PVExceptionType.UnexpectedError, "Unexpected database type: " + databaseType);
+                throw new Exception("Unexpected database type: " + databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_8_3_0", "Updating database structure to suit version 1.8.3.0", LogEntryType.Information);
 
@@ -3568,22 +3557,13 @@ namespace DeviceControl
 
         public bool UpdateTo_1_8_3_6(GenConnection con, String databaseType)
         {
-            String major;
-            String minor;
-            String release;
-            String patch;
-
             DDL DDL;
             int res;
 
-            if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
-            {
-                res = CompareVersion(major, minor, release, patch, "1", "8", "3", "6");
-                if (res >= 0)
-                    return false;
-            }
-            else res = -1;
-
+            res = Version.CompareVersion("1", "8", "3", "6");
+            if (res >= 0)
+                return false;
+            
             bool success = true;
 
             if (databaseType == "MySql")
@@ -3595,7 +3575,7 @@ namespace DeviceControl
             else if (databaseType == "SQL Server")
                 DDL = new SQLServer_DDL();
             else
-                throw new PVException(PVExceptionType.UnexpectedError, "Unexpected database type: " + databaseType);
+                throw new Exception("Unexpected database type: " + databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_8_3_6", "Updating database structure to suit version 1.8.3.6", LogEntryType.Information);
 
@@ -3626,22 +3606,13 @@ namespace DeviceControl
 
         public bool UpdateTo_1_9_0_2(GenConnection con, String databaseType)
         {
-            String major;
-            String minor;
-            String release;
-            String patch;
-
             DDL DDL;
             int res;
 
-            if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
-            {
-                res = CompareVersion(major, minor, release, patch, "1", "9", "0", "2");
-                if (res >= 0)
-                    return false;
-            }
-            else res = -1;
-
+            res = Version.CompareVersion("1", "9", "0", "2");
+            if (res >= 0)
+                return false;
+            
             bool success = true;
 
             if (databaseType == "MySql")
@@ -3653,7 +3624,7 @@ namespace DeviceControl
             else if (databaseType == "SQL Server")
                 DDL = new SQLServer_DDL();
             else
-                throw new PVException(PVExceptionType.UnexpectedError, "Unexpected database type: " + databaseType);
+                throw new Exception("Unexpected database type: " + databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_9_0_2", "Updating database structure to suit version 1.9.0.2", LogEntryType.Information);
 
@@ -3668,22 +3639,13 @@ namespace DeviceControl
 
         public bool UpdateTo_2_0_0_0(GenConnection con, String databaseType)
         {
-            String major;
-            String minor;
-            String release;
-            String patch;
-
             DDL DDL;
             int res;
 
-            if (GetCurrentVersion(con, databaseType, out major, out minor, out release, out patch))
-            {
-                res = CompareVersion(major, minor, release, patch, "2", "0", "0", "0");
-                if (res >= 0)
-                    return false;
-            }
-            else res = -1;
-
+            res = Version.CompareVersion("2", "0", "0", "0");
+            if (res >= 0)
+                return false;
+            
             bool success = true;
 
             if (databaseType == "MySql")
@@ -3695,7 +3657,7 @@ namespace DeviceControl
             else if (databaseType == "SQL Server")
                 DDL = new SQLServer_DDL();
             else
-                throw new PVException(PVExceptionType.UnexpectedError, "Unexpected database type: " + databaseType);
+                throw new Exception("Unexpected database type: " + databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_2_0_0_0", "Updating database structure to suit version 2.0.0.0", LogEntryType.Information);
 
@@ -3711,30 +3673,137 @@ namespace DeviceControl
             return success;
         }
 
+        public struct DBVersion
+        {
+            public String major;
+            public String minor;
+            public String release;
+            public String patch;
+
+            public int CompareVersion(String majorR, String minorR, String releaseR, String patchR)
+            {
+                int res;
+
+                if ((res = int.Parse(major).CompareTo(int.Parse(majorR))) > 0)
+                    return res;
+                else if (res == 0)
+                {
+                    if ((res = int.Parse(minor).CompareTo(int.Parse(minorR))) > 0)
+                        return res;
+                    else if (res == 0)
+                    {
+                        if ((res = int.Parse(release).CompareTo(int.Parse(releaseR))) > 0)
+                            return res;
+                        else if (res == 0)
+                            res = int.Parse(patch).CompareTo(int.Parse(patchR));
+                    }
+                }
+                return res;
+            }
+        }
+
+        private bool RelationExists(GenConnection con, string relationName)
+        {
+            GenCommand cmd = null;
+
+            try
+            {
+                cmd = new GenCommand("Select * from " + relationName + " where 0 = 1 ", con);
+                GenDataReader dr;
+                dr = (GenDataReader)cmd.ExecuteReader();                
+                dr.Close();
+                return true;
+            }
+            catch (Exception e)
+            {
+                if (GlobalSettings.SystemServices != null) // true when service is running
+                    GlobalSettings.LogMessage("RelationExists", "Exception: " + e.Message);
+                return false;
+            }
+        }
+
+        private bool PopulateEmptyDatabase(GenConnection con, String databaseType)
+        {
+            DDL DDL;
+            
+            if (databaseType == "MySql")
+                DDL = new MySql_DDL();
+            else if (databaseType == "Jet")
+                DDL = new Jet_DDL();
+            else if (databaseType == "SQLite")
+                DDL = new SQLite_DDL();
+            else if (databaseType == "SQL Server")
+                DDL = new SQLServer_DDL();
+            else
+                throw new Exception("Unexpected database type: " + databaseType);
+
+            bool success = true;
+            
+            if (success && !RelationExists(con, "devicetype"))
+                success &= CreateRelation(DDL.CurrentTable_devicetype, con);
+            if (success && !RelationExists(con, "device"))
+                success &= CreateRelation(DDL.CurrentTable_device, con);
+            if (success && !RelationExists(con, "devicefeature"))
+                success &= CreateRelation(DDL.CurrentTable_devicefeature, con);
+            if (success && !RelationExists(con, "devicereading_energy"))
+                success &= CreateRelation(DDL.CurrentTable_devicereading_energy, con);
+            if (success && !RelationExists(con, "devicedayoutput_v"))
+                success &= CreateRelation(DDL.CurrentView_devicedayoutput_v, con);
+            if (success && !RelationExists(con, "pvoutputlog"))
+                success &= CreateRelation(DDL.CurrentTable_pvoutputlog, con);
+
+            if (success && !RelationExists(con, "version"))
+                success &= CreateRelation(DDL.CurrentTable_version, con);
+
+            if (success)
+                UpdateVersion("2", "0", "0", "0", con);
+
+            return success;
+        }
+
+        public void PopulateDatabaseIfEmpty(GenConnection con)
+        {
+            try
+            {
+                if (!GetCurrentVersion(con, GlobalSettings.ApplicationSettings.DatabaseType, out Version))
+                    PopulateEmptyDatabase(con, GlobalSettings.ApplicationSettings.DatabaseType);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Exception in PopulateDatabaseIfEmpty: " + e.Message, e);
+            }
+        }
+
         public void UpdateVersion(GenConnection con, String databaseType)
         {
-            if (databaseType != "SQL Server")
+            if (GetCurrentVersion(con, databaseType, out Version))
             {
-                UpdateTo_1_3_5_4(con, databaseType);
-                UpdateTo_1_3_6_0(con, databaseType);
-                UpdateTo_1_4_0_0(con, databaseType);
-                UpdateTo_1_4_0_1(con, databaseType);
-                UpdateTo_1_4_0_3(con, databaseType);
+
+                if (databaseType != "SQL Server")
+                {
+                    UpdateTo_1_3_5_4(con, databaseType);
+                    UpdateTo_1_3_6_0(con, databaseType);
+                    UpdateTo_1_4_0_0(con, databaseType);
+                    UpdateTo_1_4_0_1(con, databaseType);
+                    UpdateTo_1_4_0_3(con, databaseType);
+                }
+
+                UpdateTo_1_4_1_9(con, databaseType);
+                UpdateTo_1_4_2_1(con, databaseType);
+                UpdateTo_1_5_0_0(con, databaseType);
+
+                if (databaseType == "SQL Server")
+                    UpdateTo_1_5_0_2(con, databaseType);
+
+                UpdateTo_1_7_0_0(con, databaseType);
+                UpdateTo_1_7_1_0(con, databaseType);
+                UpdateTo_1_8_3_0(con, databaseType);
+                UpdateTo_1_8_3_6(con, databaseType);
+                UpdateTo_1_9_0_2(con, databaseType);
+                UpdateTo_2_0_0_0(con, databaseType);
             }
-
-            UpdateTo_1_4_1_9(con, databaseType);
-            UpdateTo_1_4_2_1(con, databaseType);
-            UpdateTo_1_5_0_0(con, databaseType);
-
-            if (databaseType == "SQL Server")
-                UpdateTo_1_5_0_2(con, databaseType);
-
-            UpdateTo_1_7_0_0(con, databaseType);
-            UpdateTo_1_7_1_0(con, databaseType);
-            UpdateTo_1_8_3_0(con, databaseType);
-            UpdateTo_1_8_3_6(con, databaseType);
-            UpdateTo_1_9_0_2(con, databaseType);
-            UpdateTo_2_0_0_0(con, databaseType);
+            else
+                PopulateEmptyDatabase(con, databaseType);
         }
 
     }

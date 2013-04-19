@@ -51,7 +51,9 @@ namespace PVSettings
                 db = GetDatabase();
                 stage = "Get Database connection";
                 con = db.NewConnection();
-                con.GetSchemaTable("Fred");
+                VersionManager vm = new VersionManager();                
+                vm.PopulateDatabaseIfEmpty(con);
+                //con.GetSchemaTable("Fred");
                 String cmd1 = "select count(*) from pvoutputlog ";
                 stage = "Creating select command";
                 cmd = new GenCommand(cmd1, con);

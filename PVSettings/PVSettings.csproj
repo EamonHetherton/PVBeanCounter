@@ -108,6 +108,7 @@
     <Compile Include="SerialPortSettings.cs" />
     <Compile Include="SettingsBase.cs" />
     <Compile Include="TestDatabase.cs" />
+    <Compile Include="VersionManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DeviceManagement.xml">

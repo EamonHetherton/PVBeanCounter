@@ -39,7 +39,8 @@ namespace PVSettings
 
         public static void LogMessage(String component, String message, LogEntryType logEntryType = LogEntryType.Trace)
         {
-            SystemServices.LogMessage(component, message, logEntryType);
+            if (SystemServices != null)
+                SystemServices.LogMessage(component, message, logEntryType);
         }
     }
 

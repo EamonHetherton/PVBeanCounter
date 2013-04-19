@@ -89,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConnectionStringBuilder.cs" />
+    <Compile Include="DBDateTime.cs" />
     <Compile Include="GenCommand.cs">
       <SubType>Component</SubType>
     </Compile>

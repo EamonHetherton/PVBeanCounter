@@ -118,7 +118,6 @@
     <Compile Include="ReadingBase.cs" />
     <Compile Include="ReadingsCollection.cs" />
     <Compile Include="SMA_SE_Device.cs" />
-    <Compile Include="VersionManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Algorithms\Algorithms.csproj">

@@ -258,7 +258,7 @@ namespace PVService
             if (fullStartup)
             {
                 LogMessage("StartService: connecting to database: " + GlobalSettings.TheDB.ConnectionString, LogEntryType.Information);
-                VersionManager vm = new VersionManager();
+                PVSettings.VersionManager vm = new VersionManager();
                 GenConnection con = GlobalSettings.TheDB.NewConnection();
                 vm.UpdateVersion(con, GlobalSettings.ApplicationSettings.DatabaseType);
                 con.Close();
