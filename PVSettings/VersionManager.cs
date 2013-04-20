@@ -725,9 +725,9 @@ namespace PVSettings
                 return
                     "CREATE TABLE `devicereading_energy` " +
                     "( " +
-                        "`ReadingEnd` DATETIME NOT NULL, " +
+                        "`ReadingEnd` DATETIME(3) NOT NULL, " +
                         "`DeviceFeature_Id` MEDIUMINT UNSIGNED NOT NULL, " +
-                        "`ReadingStart` DATETIME NULL, " +
+                        "`ReadingStart` DATETIME(3) NOT NULL, " +
                         "`EnergyTotal` DOUBLE NULL, " +
                         "`EnergyToday` DOUBLE NULL, " +
                         "`EnergyDelta` FLOAT NULL, " +
@@ -2629,9 +2629,9 @@ namespace PVSettings
                 return
                     "CREATE TABLE devicereading_energy " +
                     "( " +
-                        "ReadingEnd DATETIME NOT NULL, " +
+                        "ReadingEnd DATETIMEOFFSET(3) NOT NULL, " +
                         "DeviceFeature_Id INT NOT NULL, " +
-                        "ReadingStart DATETIME NOT NULL, " +
+                        "ReadingStart DATETIMEOFFSET(3) NOT NULL, " +
                         "EnergyTotal FLOAT NULL, " +
                         "EnergyToday FLOAT NULL, " +
                         "EnergyDelta REAL NULL, " +

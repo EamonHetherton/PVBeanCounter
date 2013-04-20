@@ -99,10 +99,12 @@ namespace Device
 
         public bool Enabled { get; private set; }
 
+        /* Replaced by DBDateTimeGeneric
         public static DateTime NormaliseReadingTime(DateTime readingTime, int decimals = 1)
         {
             return readingTime.Date + TimeSpan.FromSeconds((int)Math.Round(readingTime.TimeOfDay.TotalSeconds, decimals));
         }
+        */
 
         public DeviceBase(DeviceControl.DeviceManagerBase deviceManager, DeviceManagerDeviceSettings deviceSettings)
         {

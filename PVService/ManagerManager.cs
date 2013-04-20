@@ -249,6 +249,11 @@ namespace PVService
 
         public void StartService(bool fullStartup)
         {
+            // The following establishes an appropriate DateTime precision for use with the selected database
+            // Need to ensure that an inserted value can be retrieved with a select equality operation
+            // and the value bound for insertion is the value returned to the binding after a row retrieval
+
+            DBDateTimeGeneric.SetDefaultDBType(GenDatabase.GetDBType(GlobalSettings.ApplicationSettings.DatabaseType));
             GlobalSettings.TheDB = new GenDatabase(GlobalSettings.ApplicationSettings.Host, GlobalSettings.ApplicationSettings.Database,
                 GlobalSettings.ApplicationSettings.UserName, GlobalSettings.ApplicationSettings.Password,
                 GlobalSettings.ApplicationSettings.DatabaseType, GlobalSettings.ApplicationSettings.ProviderType,

@@ -134,9 +134,9 @@ namespace DeviceDataRecorders
             else if (y == null)
                 return 1;  // y is null x is not null
 
-            if (x.ReadingEndInternal > y.ReadingEndInternal)
+            if (x.ReadingEndInternal.Value > y.ReadingEndInternal.Value)
                 return 1;
-            else if (x.ReadingEndInternal < y.ReadingEndInternal)
+            else if (x.ReadingEndInternal.Value < y.ReadingEndInternal.Value)
                 return -1;
 
             return 0; // equal
@@ -158,7 +158,7 @@ namespace DeviceDataRecorders
 
         protected override bool IsSameReadingValues(EnergyReading other)
         {
-            if (ReadingEndInternal != other.ReadingEndInternal
+            if (ReadingEndInternal.Value != other.ReadingEndInternal.Value
              || DurationInternal != other.DurationInternal
              || FeatureType != other.FeatureType
              || FeatureId != other.FeatureId)
@@ -788,7 +788,7 @@ namespace DeviceDataRecorders
             try
             {
                 Int32 tempId = deviceFeature_Id;
-                DateTime dateTime = ReadingEndInternal;
+                DateTime dateTime = ReadingEndInternal.Value;
                 cmd.AddParameterWithValue("@DeviceFeature_Id", tempId);
                 cmd.AddParameterWithValue("@ReadingEnd", dateTime);
             }
@@ -806,7 +806,7 @@ namespace DeviceDataRecorders
                 SetParametersId(cmd, (Int32)DeviceDetailPeriods.DeviceFeatureId);
                 
                 stage = "ReadingStart";
-                cmd.AddParameterWithValue("@ReadingStart", ReadingStartInternal);
+                cmd.AddParameterWithValue("@ReadingStart", ReadingStartInternal.Value);
                 
                 stage = "EnergyTotal";
                 cmd.AddRoundedParameterWithValue("@EnergyTotal", EnergyTotalInternal, EnergyPrecision);

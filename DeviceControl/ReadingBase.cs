@@ -115,7 +115,7 @@ namespace DeviceDataRecorders
         {
             DeviceDetailPeriods = deviceDetailPeriods;
             AttributeRestoreMode = readFromDb;
-            ReadingEndInternal = Device.DeviceBase.NormaliseReadingTime(readingEnd);
+            ReadingEndInternal.Value = readingEnd;
             Duration = duration;
             InDatabase = readFromDb;
             UpdatePending = !readFromDb;
@@ -126,27 +126,27 @@ namespace DeviceDataRecorders
         {
             DeviceDetailPeriods = deviceDetailPeriods;
             AttributeRestoreMode = readFromDb;
-            ReadingEndInternal = Device.DeviceBase.NormaliseReadingTime(readingEnd);
-            ReadingStartInternal = Device.DeviceBase.NormaliseReadingTime(readingStart);
-            DurationInternal = readingEnd - readingStart; ;
+            ReadingEndInternal.Value = readingEnd;
+            ReadingStartInternal.Value = readingStart;
+            DurationInternal = ReadingEndInternal.Value - ReadingStartInternal.Value;
             InDatabase = readFromDb;
             UpdatePending = !readFromDb;
             DeviceParams = DeviceDetailPeriods.Device.DeviceParams;
         }
         
-        protected DateTime ReadingStartInternal = DateTime.Now;
+        protected DBDateTimeGeneric ReadingStartInternal;
         public virtual DateTime ReadingStart
         {
             get
             {
-                return ReadingStartInternal;
+                return ReadingStartInternal.Value;
             }
             set
             {
-                if (value > ReadingEndInternal)
+                if (value > ReadingEndInternal.Value)
                     throw new Exception("ReadingBase.ReadingStart - Attempt to set start after end");
-                ReadingStartInternal = value;
-                DurationInternal = ReadingEndInternal - value;
+                ReadingStartInternal.Value = value;
+                DurationInternal = ReadingEndInternal.Value - value;
                 if (!AttributeRestoreMode) UpdatePending = true;
             }
         }
@@ -154,12 +154,12 @@ namespace DeviceDataRecorders
         public FeatureType FeatureType { get { return DeviceDetailPeriods.FeatureType; } }
         public uint FeatureId { get { return DeviceDetailPeriods.FeatureId; } }
         
-        protected DateTime ReadingEndInternal = DateTime.Now;
+        protected DBDateTimeGeneric ReadingEndInternal;
         public virtual DateTime ReadingEnd
         {
             get
             {
-                return ReadingEndInternal;
+                return ReadingEndInternal.Value;
             }
         }
 
@@ -185,8 +185,8 @@ namespace DeviceDataRecorders
 
         protected virtual void DurationChanged()
         {
-            ReadingStartInternal = Device.DeviceBase.NormaliseReadingTime(ReadingEndInternal - DurationInternal);
-            DurationInternal = ReadingEndInternal - ReadingStartInternal; // consistency after normalise
+            ReadingStartInternal.Value = ReadingEndInternal.Value - DurationInternal;
+            DurationInternal = ReadingEndInternal.Value - ReadingStartInternal.Value; // consistency after possible date precision adjustments - DBDateTimeGeneric
         }
 
         public virtual void SetRestoreComplete()

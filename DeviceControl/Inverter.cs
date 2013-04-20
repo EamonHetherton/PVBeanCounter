@@ -129,7 +129,7 @@ namespace Device
 
                 stage = "Reading";
 
-                DateTime curTime = DeviceBase.NormaliseReadingTime(DateTime.Now);
+                DateTime curTime = DateTime.Now;
                 bool dbWrite = (LastRecordTime == null
                     || DeviceBase.IntervalCompare(DatabaseInterval, LastRecordTime.Value, curTime) != 0);
                 res = InverterAlgorithm.ExtractReading(dbWrite, ref alarmFound, ref errorFound);

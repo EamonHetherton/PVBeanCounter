@@ -132,7 +132,7 @@ namespace Device
                 days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_EnergyAC.FeatureType, Feature_EnergyAC.FeatureId);
                     
                 EnergyReading reading = new EnergyReading();
-                liveReading.TimeStampe = DeviceBase.NormaliseReadingTime(liveReading.TimeStampe);
+                //liveReading.TimeStampe = DeviceBase.NormaliseReadingTime(liveReading.TimeStampe);
 
                 if (LastRecordTime.HasValue)
                     reading.Initialise(days, liveReading.TimeStampe, LastRecordTime.Value, false);
