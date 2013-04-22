@@ -34,8 +34,6 @@ namespace Device
     {
         private InverterAlgorithm InverterAlgorithm { get { return (InverterAlgorithm)DeviceAlgorithm; } }
 
-        private FeatureSettings Feature_YieldAC;
-
         public Inverter(DeviceControl.DeviceManager_ActiveController<Device.Inverter> deviceManager, DeviceManagerDeviceSettings deviceSettings, PVSettings.DeviceType deviceType, string manufacturer, string model, string serialNo = "")
             : base(deviceManager, deviceSettings, new InverterAlgorithm(deviceSettings, deviceManager.Protocol, deviceManager.ErrorLogger), manufacturer, model, serialNo)
         {
@@ -44,7 +42,6 @@ namespace Device
             DeviceParams.RecordingInterval = deviceSettings.DBIntervalInt;
 
             ResetDevice();
-            Feature_YieldAC = DeviceSettings.GetFeatureSettings(FeatureType.YieldAC, deviceSettings.Feature);
         }
 
         protected override DeviceDetailPeriodsBase CreateNewPeriods(FeatureSettings featureSettings)
@@ -85,6 +82,114 @@ namespace Device
             InverterAlgorithm.SetAddress(Address);
 
             ClearAttributes();
+        }
+
+        private void ExtractFeatureReading(FeatureType featureType, uint featureId, DateTime curTime, bool newInterval)
+        {
+                                
+            DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(featureType, featureId);
+            EnergyReading reading = new EnergyReading();
+
+            if (LastRecordTime.HasValue)
+                reading.Initialise(days, curTime, LastRecordTime.Value, false);
+            else
+                reading.Initialise(days, curTime, TimeSpan.FromSeconds(DeviceInterval), false);
+                    
+            reading.Mode = (Int16?)InverterAlgorithm.Status;
+            reading.Temperature = (double?)InverterAlgorithm.Temperature;
+            reading.ErrorCode = (uint?)InverterAlgorithm.ErrorCode;
+
+            if (InverterAlgorithm.ErrorCodeHigh.HasValue)
+                if (reading.ErrorCode.HasValue)
+                    reading.ErrorCode += (UInt32)(InverterAlgorithm.ErrorCodeHigh.Value * 65536);
+                else
+                    reading.ErrorCode = (UInt32)(InverterAlgorithm.ErrorCodeHigh.Value * 65536);
+
+            if (featureType == FeatureType.YieldAC || featureType == FeatureType.EnergyAC || featureType == FeatureType.ConsumptionAC)
+            {
+                if (featureId == 0)
+                {
+                    reading.EnergyToday = (double?)InverterAlgorithm.EnergyTodayAC;
+                    reading.EnergyTotal = (double?)InverterAlgorithm.EnergyTotalAC;
+                    if (reading.EnergyTotal.HasValue && InverterAlgorithm.EnergyTotalACHigh.HasValue)
+                        reading.EnergyTotal += (Double)(InverterAlgorithm.EnergyTotalACHigh.Value * 65536);
+                    reading.EnergyDelta = EstEnergy;
+
+                    reading.Power = (int?)InverterAlgorithm.PowerAC1;
+                    reading.Volts = (float?)InverterAlgorithm.VoltsAC1;
+                    reading.Amps = (float?)InverterAlgorithm.CurrentAC1;
+                    reading.Frequency = (float?)InverterAlgorithm.Frequency;
+
+                    if (GlobalSettings.SystemServices.LogTrace)
+                        LogMessage("ExtractFeatureReading - FeatureType: " + featureType + " - FeatureId: " + featureId
+                            + " - EnergyToday: " + reading.EnergyToday
+                            + " - EnergyTotal: " + reading.EnergyTotal
+                            + " - CalculatedDelta: " + EstEnergy
+                            + " - Power: " + reading.Power
+                            + " - Mode: " + reading.Mode
+                            + " - FreqAC: " + reading.Frequency
+                            + " - Volts: " + reading.Volts
+                            + " - Current: " + reading.Amps
+                            + " - Temperature: " + reading.Temperature
+                            , LogEntryType.Trace);
+                }
+                else
+                {
+                    if (featureId == 1)
+                    {
+                        reading.Power = (int?)InverterAlgorithm.PowerAC2;
+                        reading.Volts = (float?)InverterAlgorithm.VoltsAC2;
+                        reading.Amps = (float?)InverterAlgorithm.CurrentAC2;
+                        reading.Frequency = (float?)InverterAlgorithm.Frequency;
+                    }
+                    else if (featureId == 2)
+                    {
+                        reading.Power = (int?)InverterAlgorithm.PowerAC3;
+                        reading.Volts = (float?)InverterAlgorithm.VoltsAC3;
+                        reading.Amps = (float?)InverterAlgorithm.CurrentAC3;
+                        reading.Frequency = (float?)InverterAlgorithm.Frequency;
+                    }
+                    if (GlobalSettings.SystemServices.LogTrace)
+                        LogMessage("ExtractFeatureReading - FeatureType: " + featureType + " - FeatureId: " + featureId
+                            + " - Power: " + reading.Power
+                            + " - Mode: " + reading.Mode
+                            + " - FreqAC: " + reading.Frequency
+                            + " - Volts: " + reading.Volts
+                            + " - Current: " + reading.Amps
+                            + " - Temperature: " + reading.Temperature
+                            , LogEntryType.Trace);
+                }
+            }
+            else if (featureType == FeatureType.YieldDC || featureType == FeatureType.EnergyDC)
+            {
+                if (featureId == 0)
+                {
+                    reading.Volts = (float?)InverterAlgorithm.VoltsPV1;
+                    reading.Amps = (float?)InverterAlgorithm.CurrentPV1;
+                }
+                else if (featureId == 1)
+                {
+                    reading.Volts = (float?)InverterAlgorithm.VoltsPV2;
+                    reading.Amps = (float?)InverterAlgorithm.CurrentPV2;
+                }
+                if (GlobalSettings.SystemServices.LogTrace)
+                    LogMessage("ExtractFeatureReading - FeatureType: " + featureType + " - FeatureId: " + featureId
+                        + " - Mode: " + reading.Mode
+                        + " - Volts: " + reading.Volts
+                        + " - Current: " + reading.Amps
+                        + " - Temperature: " + reading.Temperature
+                        , LogEntryType.Trace);
+            }
+                                           
+            days.AddRawReading(reading);
+
+            if (newInterval)
+            {
+                days.UpdateDatabase(null, reading.ReadingEnd, false, PreviousDatabaseIntervalEnd);
+                List<OutputReadyNotification> notificationList = new List<OutputReadyNotification>();
+                BuildOutputReadyFeatureList(notificationList, featureType, featureId, reading.ReadingEnd);
+                UpdateConsolidations(notificationList);
+            }
         }
 
         public override bool DoExtractReadings()
@@ -147,71 +252,20 @@ namespace Device
                     return false;
                 }
 
-                int curPower = InverterAlgorithm.PowerAC1.HasValue ? (int)InverterAlgorithm.PowerAC1.Value : 0;
+                int curPower = (int)((InverterAlgorithm.PowerAC1.HasValue ? InverterAlgorithm.PowerAC1.Value : 0)
+                    + (InverterAlgorithm.PowerAC2.HasValue ? (int)InverterAlgorithm.PowerAC2.Value : 0)
+                    + (InverterAlgorithm.PowerAC3.HasValue ? (int)InverterAlgorithm.PowerAC3.Value : 0));
+
+                GenericConnector.DBDateTimeGeneric readingEnd = new GenericConnector.DBDateTimeGeneric();
+                readingEnd.Value = curTime; // reproduce reading date precision adjustment
+                curTime = readingEnd.Value;
 
                 if (dbWrite)
-                {
-                    
-                    DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_YieldAC.FeatureType, Feature_YieldAC.FeatureId);
-                    EnergyReading reading = new EnergyReading();
-
-                    if (LastRecordTime.HasValue)
-                        reading.Initialise(days, curTime, LastRecordTime.Value, false);
-                    else
-                        reading.Initialise(days, curTime, TimeSpan.FromSeconds(DeviceInterval), false);
-                    
+                {                    
                     LastRecordTime = curTime;
-
-                    reading.EnergyToday = (double?)InverterAlgorithm.EnergyTodayAC;
-                    reading.EnergyTotal = (double?)InverterAlgorithm.EnergyTotalAC;
-                    if (reading.EnergyTotal.HasValue && InverterAlgorithm.EnergyTotalACHigh.HasValue)
-                        reading.EnergyTotal += (Double)(InverterAlgorithm.EnergyTotalACHigh.Value * 65536);
-                    reading.Power = (int?)InverterAlgorithm.PowerAC1;
-                    reading.EnergyDelta = EstEnergy;
-                    reading.Mode = (Int16?)InverterAlgorithm.Status;
-                    //reading.PowerPV = (float?)InverterAlgorithm.PowerPV;
-                    //reading.VoltsPV1 = (double?)InverterAlgorithm.VoltsPV1;
-                    //reading.CurrentPV1 = (double?)InverterAlgorithm.CurrentPV1;
-                    //reading.VoltsPV2 = (double?)InverterAlgorithm.VoltsPV2;
-                    //reading.CurrentPV2 = (double?)InverterAlgorithm.CurrentPV2;
-                    reading.Frequency = (float?)InverterAlgorithm.Frequency;
-                    reading.Volts = (float?)InverterAlgorithm.VoltsAC1;
-                    reading.Amps = (float?)InverterAlgorithm.CurrentAC1;                    
-                    reading.Temperature = (double?)InverterAlgorithm.Temperature;
-                    reading.ErrorCode = (uint?)InverterAlgorithm.ErrorCode;
-                    if (InverterAlgorithm.ErrorCodeHigh.HasValue)
-                        if (reading.ErrorCode.HasValue)
-                            reading.ErrorCode += (UInt32)(InverterAlgorithm.ErrorCodeHigh.Value * 65536);
-                        else
-                            reading.ErrorCode = (UInt32)(InverterAlgorithm.ErrorCodeHigh.Value * 65536);
-
-                    if (GlobalSettings.SystemServices.LogTrace)
-                        LogMessage("DoExtractReadings - Reading - EnergyToday: " + reading.EnergyToday
-                            + " - EnergyTotal: " + reading.EnergyTotal
-                            + " - CalculatedDelta: " + EstEnergy
-                            + " - Power: " + reading.Power
-                            + " - Mode: " + reading.Mode                            
-                            //+ " - VoltsPV1: " + reading.VoltsPV1
-                            //+ " - CurrentPV1: " + reading.CurrentPV1
-                            //+ " - VoltsPV2: " + reading.VoltsPV2
-                            //+ " - CurrentPV2: " + reading.CurrentPV2
-                            + " - FreqAC: " + reading.Frequency
-                            + " - Volts: " + reading.Volts
-                            + " - Current: " + reading.Amps
-                            + " - Temperature: " + reading.Temperature
-                            , LogEntryType.Trace);
-
-                    stage = "record";
-                    
-                    days.AddRawReading(reading);
-
-                    if (IsNewdatabaseInterval(reading.ReadingEnd))
-                    {
-                        days.UpdateDatabase(null, reading.ReadingEnd, false, PreviousDatabaseIntervalEnd);
-                        List<OutputReadyNotification> notificationList = new List<OutputReadyNotification>();
-                        BuildOutputReadyFeatureList(notificationList, FeatureType.YieldAC, 0, reading.ReadingEnd);
-                        UpdateConsolidations(notificationList);
-                    }
+                    bool newInterval = IsNewdatabaseInterval(curTime);
+                    foreach (FeatureSettings fs in DeviceSettings.FeatureList)
+                        ExtractFeatureReading(fs.FeatureType, fs.FeatureId, curTime, newInterval);                 
                 }
 
                 if (EmitEvents)

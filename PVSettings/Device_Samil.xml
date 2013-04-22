@@ -12,7 +12,7 @@
 
     <features>
       <feature type="YieldAC" />
-      <feature type="PowerAC" />
+      
       <feature type="PowerPV" string="0"/>
       <feature type="PowerPV" string="1"/>
       <feature type="PowerPV" string="2"/>
