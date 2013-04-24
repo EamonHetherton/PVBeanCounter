@@ -647,7 +647,7 @@ namespace PVBeanCounter
                     rowDeviceAdvanced_1.Height = new GridLength(0.0);
                     rowDeviceAdvanced_2.Height = new GridLength(0.0);
                 }
-                else
+                else if (DeviceManagerSettings.ManagerType == DeviceManagerType.CC128)
                 {
                     labelDeviceAddress.Visibility = System.Windows.Visibility.Visible;
                     textBoxDeviceAddress.Visibility = System.Windows.Visibility.Visible;
@@ -656,10 +656,49 @@ namespace PVBeanCounter
                     rowDeviceAdvanced_1.Height = GridLength.Auto;
                     rowDeviceAdvanced_2.Height = GridLength.Auto;
 
-                    labelDeviceQueryInterval.Visibility =
-                        ((DeviceManagerSettings)gridDeviceManagers.DataContext).ManagerType == DeviceManagerType.CC128 ? Visibility.Hidden : Visibility.Visible;
-                    comboBoxDeviceQueryInterval.Visibility =
-                        ((DeviceManagerSettings)gridDeviceManagers.DataContext).ManagerType == DeviceManagerType.CC128 ? Visibility.Hidden : Visibility.Visible;
+                    labelDeviceQueryInterval.Visibility = Visibility.Hidden;
+                    comboBoxDeviceQueryInterval.Visibility = Visibility.Hidden;
+                }
+                else if (DeviceManagerSettings.ManagerType == DeviceManagerType.Owl_Meter)
+                {
+                    labelDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                    textBoxDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                    rowAddressSerialNo.Height = GridLength.Auto;
+                    checkBoxHistoryAdjust.Visibility = System.Windows.Visibility.Visible;
+                    rowDeviceAdvanced_1.Height = GridLength.Auto;
+                    rowDeviceAdvanced_2.Height = GridLength.Auto;
+
+                    labelDeviceQueryInterval.Visibility = Visibility.Hidden;
+                    comboBoxDeviceQueryInterval.Visibility = Visibility.Hidden;
+                }
+                else if (DeviceManagerSettings.ManagerType == DeviceManagerType.SMA_WebBox)
+                {
+                    labelDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                    textBoxDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                    rowAddressSerialNo.Height = GridLength.Auto;
+                    checkBoxHistoryAdjust.Visibility = System.Windows.Visibility.Visible;
+                    rowDeviceAdvanced_1.Height = GridLength.Auto;
+                    rowDeviceAdvanced_2.Height = GridLength.Auto;
+
+                    labelDeviceQueryInterval.Visibility = Visibility.Hidden;
+                    comboBoxDeviceQueryInterval.Visibility = Visibility.Hidden;
+                }
+                else // Generic devices
+                {
+                    bool isInverter = DeviceManagerDeviceSettings.DeviceSettings.DeviceType == DeviceType.Inverter;
+                    labelDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                    textBoxDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                    rowAddressSerialNo.Height = GridLength.Auto;
+                    checkBoxHistoryAdjust.Visibility = isInverter ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    labelCalibrate.Visibility = isInverter ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    textBoxCalibrate.Visibility = isInverter ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    labelThreshold.Visibility = isInverter ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stackPanelThreshold.Visibility = isInverter ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    rowDeviceAdvanced_1.Height = GridLength.Auto;
+                    rowDeviceAdvanced_2.Height = GridLength.Auto;
+
+                    labelDeviceQueryInterval.Visibility = Visibility.Visible;
+                    comboBoxDeviceQueryInterval.Visibility = Visibility.Visible;
                 }
             }
         }

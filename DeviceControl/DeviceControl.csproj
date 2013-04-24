@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="DataRecorder.cs" />
+    <Compile Include="ActiveDevice_Generic.cs" />
     <Compile Include="CompositeAlgorithm_xml.cs" />
     <Compile Include="ConsolidationDevice.cs" />
     <Compile Include="Device.cs" />
@@ -108,7 +109,6 @@
     <Compile Include="EventManager.cs" />
     <Compile Include="EventStatus.cs" />
     <Compile Include="IEnergyEvents_Contract.cs" />
-    <Compile Include="Inverter.cs" />
     <Compile Include="InverterAlgorithm.cs" />
     <Compile Include="MeterDevice.cs" />
     <Compile Include="PeriodAnalyser.cs" />

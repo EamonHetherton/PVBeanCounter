@@ -13,7 +13,7 @@
 * GNU General Public License for more details.
 * 
 * You should have received a copy of the GNU General Public License
-* along with PV Scheduler.
+* along with PV Bean Counter.
 * If not, see <http://www.gnu.org/licenses/>.
 */
 
@@ -28,7 +28,7 @@ namespace PVSettings
 {
     public enum DeviceManagerType
     {
-        Modbus = 0,
+        ActiveDevice_Generic = 0,
         SMA_SunnyExplorer,
         SMA_WebBox,
         Owl_Meter,
@@ -379,7 +379,7 @@ namespace PVSettings
             else if (managerTypeName == "Consolidation")
                 return DeviceManagerType.Consolidation;
             else
-                return DeviceManagerType.Modbus;    
+                return DeviceManagerType.ActiveDevice_Generic;    
         }
 
         public static String GetManagerTypeName(DeviceManagerType managerType)

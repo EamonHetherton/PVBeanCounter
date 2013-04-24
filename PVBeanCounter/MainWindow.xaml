@@ -512,10 +512,10 @@
                                         <Label Grid.Row="1" Grid.Column="2" Content="DB Interval" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />
                                         <ComboBox Grid.Row="1" Grid.Column="3" Height="Auto" HorizontalAlignment="Left" Margin="0,3,10,3" 
                                                   Name="comboBoxDeviceDBInterval" VerticalAlignment="Center" Width="45" Text="{Binding Path=DBInterval, Converter={StaticResource NullableValueConverter}}" FontSize="9" VerticalContentAlignment="Center" />
-                                        <Label Grid.Row="2" Content="Calibrate" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />
-                                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=CalibrationFactor, Converter={StaticResource NullableValueConverter}}" VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="50" FontSize="9" MaxWidth="70" HorizontalAlignment="Left" />
-                                        <Label Grid.Row="2" Grid.Column="2" Content="Threshold" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />
-                                        <StackPanel Grid.Row="2" Grid.Column="3" Orientation="Horizontal">
+                                        <Label Name="labelCalibrate" Grid.Row="2" Content="Calibrate" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />
+                                        <TextBox Name="textBoxCalibrate" Grid.Row="2" Grid.Column="1" Text="{Binding Path=CalibrationFactor, Converter={StaticResource NullableValueConverter}}" VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="50" FontSize="9" MaxWidth="70" HorizontalAlignment="Left" />
+                                        <Label Name="labelThreshold" Grid.Row="2" Grid.Column="2" Content="Threshold" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />
+                                        <StackPanel Name="stackPanelThreshold" Grid.Row="2" Grid.Column="3" Orientation="Horizontal">
                                             <TextBox Text="{Binding Path=ZeroThreshold, Converter={StaticResource NullableValueConverter}}" VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="50" FontSize="9" MaxWidth="70" HorizontalAlignment="Left" />
                                             <Label Grid.Row="2" Grid.Column="2" Content="(zero watts)" HorizontalContentAlignment="Right" HorizontalAlignment="Left" FontSize="10.5" />
                                         </StackPanel>
