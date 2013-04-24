@@ -162,7 +162,7 @@ namespace PVService
             else if (dmSettings.ManagerType == DeviceManagerType.Consolidation)
                 deviceManager = new DeviceManager_EnergyConsolidation(ExecutionManager.GenThreadManager, dmSettings, this);
             else
-                deviceManager = new DeviceManager_ActiveController<Device.Inverter>(ExecutionManager.GenThreadManager, dmSettings, this);
+                deviceManager = new DeviceManager_Inverter(ExecutionManager.GenThreadManager, dmSettings, this);
 
             return deviceManager;
         }

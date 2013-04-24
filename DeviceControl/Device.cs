@@ -569,12 +569,12 @@ namespace Device
 
         public bool FaultDetected { get; protected set; }
 
-        public PhysicalDevice(DeviceControl.DeviceManagerBase deviceManager, DeviceManagerDeviceSettings deviceSettings, string manufacturer, string model, string serialNo)
+        public PhysicalDevice(DeviceControl.DeviceManagerBase deviceManager, DeviceManagerDeviceSettings deviceSettings, string manufacturer, string model)
                 : base(deviceManager, deviceSettings)
         {
             Manufacturer = manufacturer == "" ? deviceSettings.Manufacturer : manufacturer;
             Model = model == "" ? deviceSettings.Model : model;
-            SerialNo = serialNo == "" ? deviceSettings.SerialNo : serialNo;
+            SerialNo = deviceSettings.SerialNo;
             Address = deviceSettings.Address;
 
             EstEnergy = 0.0;
@@ -647,8 +647,8 @@ namespace Device
 
     public abstract class PassiveDevice : PhysicalDevice 
     {
-        public PassiveDevice(DeviceControl.DeviceManagerBase deviceManager, DeviceManagerDeviceSettings deviceSettings, string manufacturer, string model, string serialNo)
-                : base(deviceManager, deviceSettings, manufacturer, model, serialNo)
+        public PassiveDevice(DeviceControl.DeviceManagerBase deviceManager, DeviceManagerDeviceSettings deviceSettings, string manufacturer, string model)
+                : base(deviceManager, deviceSettings, manufacturer, model)
             {
             }
     }
@@ -657,9 +657,8 @@ namespace Device
     {
         protected DeviceAlgorithm DeviceAlgorithm = null;
 
-        public ActiveDevice(DeviceControl.DeviceManagerBase deviceManager, DeviceManagerDeviceSettings deviceSettings, DeviceAlgorithm deviceAlgorithm,
-            string manufacturer, string model, string serialNo)
-            : base(deviceManager, deviceSettings, manufacturer, model, serialNo)
+        public ActiveDevice(DeviceControl.DeviceManagerBase deviceManager, DeviceManagerDeviceSettings deviceSettings, DeviceAlgorithm deviceAlgorithm)
+            : base(deviceManager, deviceSettings, "", "")
         {
             DeviceAlgorithm = deviceAlgorithm;
         }

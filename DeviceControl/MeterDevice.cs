@@ -13,7 +13,7 @@ namespace Device
     {  
         public MeterDevice(DeviceControl.DeviceManagerBase deviceManager, DeviceManagerDeviceSettings deviceSettings,  
             string manufacturer, string model, string serialNo)
-            : base(deviceManager, deviceSettings, manufacturer, model, serialNo)
+            : base(deviceManager, deviceSettings, manufacturer, model)
         {
             //Feature = deviceSettings.Feature;
             DeviceIdentifier = deviceSettings.SerialNo;

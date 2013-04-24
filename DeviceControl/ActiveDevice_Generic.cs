@@ -30,14 +30,14 @@ using Algorithms;
 
 namespace Device
 {
-    public class Inverter : ActiveDevice
+    public class ActiveDevice_Generic : ActiveDevice
     {
         private InverterAlgorithm InverterAlgorithm { get { return (InverterAlgorithm)DeviceAlgorithm; } }
 
-        public Inverter(DeviceControl.DeviceManager_ActiveController<Device.Inverter> deviceManager, DeviceManagerDeviceSettings deviceSettings, PVSettings.DeviceType deviceType, string manufacturer, string model, string serialNo = "")
-            : base(deviceManager, deviceSettings, new InverterAlgorithm(deviceSettings, deviceManager.Protocol, deviceManager.ErrorLogger), manufacturer, model, serialNo)
+        public ActiveDevice_Generic(DeviceControl.DeviceManager_ActiveController<Device.ActiveDevice_Generic> deviceManager, DeviceManagerDeviceSettings deviceSettings)
+            : base(deviceManager, deviceSettings, new InverterAlgorithm(deviceSettings, deviceManager.Protocol, deviceManager.ErrorLogger))
         {
-            DeviceParams.DeviceType = deviceType;
+            DeviceParams.DeviceType = deviceSettings.DeviceType;
             DeviceParams.QueryInterval = deviceSettings.QueryIntervalInt;
             DeviceParams.RecordingInterval = deviceSettings.DBIntervalInt;
 
@@ -261,11 +261,11 @@ namespace Device
                 curTime = readingEnd.Value;
 
                 if (dbWrite)
-                {                    
-                    LastRecordTime = curTime;
+                {                                        
                     bool newInterval = IsNewdatabaseInterval(curTime);
                     foreach (FeatureSettings fs in DeviceSettings.FeatureList)
-                        ExtractFeatureReading(fs.FeatureType, fs.FeatureId, curTime, newInterval);                 
+                        ExtractFeatureReading(fs.FeatureType, fs.FeatureId, curTime, newInterval);
+                    LastRecordTime = curTime;
                 }
 
                 if (EmitEvents)

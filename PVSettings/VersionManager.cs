@@ -2669,10 +2669,10 @@ namespace PVSettings
             {
                 return
                     "CREATE VIEW devicedayoutput_v " +
-                    "AS SELECT f.Device_Id, CAST(FLOOR(CAST(r.ReadingEnd AS float)) AS DATETIME) OutputDay, SUM(r.EnergyDelta) OutputKwh " +
+                    "AS SELECT f.Device_Id, CAST(r.ReadingEnd AS DATE) OutputDay, SUM(r.EnergyDelta) OutputKwh " +
                     "from devicereading_energy r, devicefeature f " +
                     "where r.DeviceFeature_Id = f.Id " +
-                    "group by f.Device_Id, CAST(FLOOR(CAST(r.ReadingEnd AS float)) AS DATETIME) ";
+                    "group by f.Device_Id, CAST(r.ReadingEnd AS DATE) ";
             }
         }
     }

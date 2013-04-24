@@ -260,7 +260,7 @@ namespace DeviceControl
         }
     }
 
-    public class DeviceManager_ActiveController<TDevice> : CommunicationDeviceManager<TDevice> where TDevice : ActiveDevice
+    public abstract class DeviceManager_ActiveController<TDevice> : CommunicationDeviceManager<TDevice> where TDevice : ActiveDevice
     {
         protected SerialStream Stream { get; private set; }
         private bool ReaderStarted = false;
@@ -268,11 +268,6 @@ namespace DeviceControl
         public DeviceManager_ActiveController(GenThreadManager genThreadManager, DeviceManagerSettings mmSettings,
             IDeviceManagerManager imm) : base(genThreadManager, mmSettings, imm)
         {            
-        }
-
-        protected override TDevice NewDevice(DeviceManagerDeviceSettings dmDevice)
-        {
-            throw new NotImplementedException();
         }
 
         public override bool DoWork()
@@ -516,5 +511,26 @@ namespace DeviceControl
             base.Initialise();
             GenThreadManager.StartThread(DeviceReaderId);
         }
+    }
+
+    public class DeviceManager_Inverter : DeviceManager_ActiveController<ActiveDevice_Generic>
+    {
+        public DeviceManager_Inverter(GenThreadManager genThreadManager, DeviceManagerSettings mmSettings,
+            IDeviceManagerManager imm)
+            : base(genThreadManager, mmSettings, imm)
+        {
+        }
+
+        protected override ActiveDevice_Generic NewDevice(DeviceManagerDeviceSettings dmDevice)
+        {
+            if (dmDevice.DeviceType == DeviceType.Inverter)
+            {
+                ActiveDevice_Generic device = new ActiveDevice_Generic(this, dmDevice);
+                return device;
+            }
+            else
+                throw new NotImplementedException();
+        }
+
     }
 }

@@ -153,6 +153,7 @@
     </Content>
     <Content Include="Device_Samil.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Device_SMA_SunnyExplorer.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
