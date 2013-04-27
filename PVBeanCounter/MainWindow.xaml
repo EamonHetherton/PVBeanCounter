@@ -667,7 +667,15 @@
                                                     </Style>
                                                 </DataGridComboBoxColumn.ElementStyle>
                                             </DataGridComboBoxColumn>
-                                            <DataGridTextColumn Header="Event Name" Binding="{Binding EventName, UpdateSourceTrigger=LostFocus}" MinWidth="85" />
+                                            <DataGridTemplateColumn Header="Event Name"  MinWidth="85" >
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <ComboBox IsEditable="True" 
+                                                                  Text="{Binding EventName, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource NullableValueConverter}}" 
+                                                                  ItemsSource="{Binding EventNameList}"/>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
                                             <DataGridComboBoxColumn x:Name="eventTypeDeviceColumn" Header="Event Type" Width="Auto" MinWidth="100" 
                                                                     SelectedItemBinding="{Binding EventType, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource NullableValueConverter}}"
                                                                     CanUserResize="False" >

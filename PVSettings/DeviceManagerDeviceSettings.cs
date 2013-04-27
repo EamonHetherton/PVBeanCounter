@@ -47,6 +47,7 @@ namespace PVSettings
         public DeviceManagerDeviceSettings Device { get; private set; }
 
         private static List<EventType> _EventTypeList = null;
+        private static List<String> _EventNameList = null;
 
         public DeviceEventSettings(ApplicationSettings root, XmlElement element, DeviceManagerDeviceSettings device)
             : base(root, element)
@@ -55,21 +56,27 @@ namespace PVSettings
             Device = device;
             if (_EventTypeList == null)
             {
-                LoadEventTypeList();
+                LoadEventTypeNameLists();
                 DoPropertyChanged("EventTypeList");
             }
         }
 
-        public static void LoadEventTypeList()
+        public static void LoadEventTypeNameLists()
         {
             _EventTypeList = new List<EventType>();
 
             for(PVSettings.EventType i = 0; i < PVSettings.EventType._TypeCount; i++ )
                 _EventTypeList.Add(i);
-            
+
+            _EventNameList = new List<String>();
+            _EventNameList.Add("Inverter Yield");
+            _EventNameList.Add("Meter Yield");
+            _EventNameList.Add("Consumption");          
         }
 
         public List<EventType> EventTypeList { get { return _EventTypeList; } }
+
+        public List<String> EventNameList { get { return _EventNameList; } }
 
         public ObservableCollection<FeatureSettings> EventFeatures
         {

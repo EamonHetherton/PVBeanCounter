@@ -285,14 +285,6 @@ namespace DeviceControl
                         foreach (Device.EnergyEventStatus status in dev.EventStatusList)                        
                             count += status.EmitEvents.Count;
                             
-                        
-                    
-                
-
-                   
-
-                //foreach (EnergyEventSettings eEvent in ApplicationSettings.EnergyEventList)
-                //    if (eEvent.EmitEvent) count++;
                 eventTypes = new EnergyEventsEventInfo[count];
                 if (count > 0)
                 {
@@ -305,8 +297,8 @@ namespace DeviceControl
                                     eventTypes[count].Id.Name = eEvent.EventName;
                                     eventTypes[count].Type = eEvent.EventType.ToString();                                    
                                     eventTypes[count].Description = "";
-                                    eventTypes[count].FeedInYield = eEvent.EventType == EventType.Yield && eEvent.UseForFeedIn;
-                                    eventTypes[count].FeedInConsumption = eEvent.EventType == EventType.Consumption && eEvent.UseForFeedIn;
+                                    eventTypes[count].FeedInYield = eEvent.UseForFeedIn && eEvent.EventType == EventType.Yield;
+                                    eventTypes[count].FeedInConsumption = eEvent.UseForFeedIn && eEvent.EventType == EventType.Consumption;
                                     count++;
                                 }
 

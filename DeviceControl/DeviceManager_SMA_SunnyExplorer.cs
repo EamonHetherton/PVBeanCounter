@@ -854,7 +854,7 @@ namespace DeviceControl
 #if (DEBUG)
                                         isLive = j == end;
 #else
-                                isLive = j == end && reading.TimeStampe.Date >= DateTime.Now.AddMinutes(-15);    
+                                isLive = j == end && reading.TimeStampe.Date == DateTime.Today;    
 #endif
                                         stage = "ProcessOneLiveReading";
                                         if (isLive)

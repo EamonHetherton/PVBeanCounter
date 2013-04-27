@@ -174,7 +174,7 @@ namespace Subscriber
         private void CreateDefaultEvents()
         {
             EnergyEventsEventInfo info;
-            info.Type = "Feed-In";
+            info.Type = "FeedIn";  // was Feed-In
             info.Description = "Feed-In";
             info.Id.Name = "";
             info.FeedInYield = false;
@@ -676,6 +676,7 @@ namespace Subscriber
 
         public void Reconnect(bool useAlternate)
         {
+            UseAlternate = useAlternate;
             if (Subscribed && m_Proxy == null)
             {
                 try

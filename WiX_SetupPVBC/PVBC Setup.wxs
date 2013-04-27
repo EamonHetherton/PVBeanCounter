@@ -4,13 +4,13 @@
     # arguments for the WiX Toolset are stored here.
 
     candleArgs: 
-    lightArgs: "<projectname>.wixobj" -out "<projectname>.msi" <extensions> -sice:ICE27
+    lightArgs: "<projectname>.wixobj" -out "PV Bean Counter Installer.msi" <extensions> -sice:ICE27
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" >
     <Product Id="9799DC8E-506B-429E-83CE-0D0EB3C3961E" Name="PV Bean Counter" Language="1033" Version="2.0.0.3" Manufacturer="Mackay-Fisher" UpgradeCode="94B6A6FB-3567-4617-B52A-DAE65CF113EB">
         <Package Description="Test file in a Product" Comments="Simple test" InstallerVersion="200" Compressed="yes" />
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
-        <?define SolutionConfig = "Debug" ?>
+        <?define SolutionConfig = "Release" ?>
         <?define Platform = "x86" ?>
         <?if $(var.Platform) = "x86" ?>
         <?if $(var.SolutionConfig) = "Release" ?>
@@ -41,6 +41,7 @@
                             <File Id="DEVICE_SAMIL.XML" Name="Device_Samil.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Samil.xml" />
                             <File Id="DEVICE_SUNNYROO.XML" Name="Device_SunnyRoo.xml" Source="..\PVService\$(var.SourcePathFragment)Device_SunnyRoo.xml" />
                             <File Id="DEVICE_XANTREX.XML" Name="Device_Xantrex.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Xantrex.xml" />
+                            <File Id="DEVICE_CONSOLIDATION.XML" Name="Device_Consolidation.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Consolidation.xml" />
                             <File Id="DEVICEMANAGEMENT_V02.XML" Name="DeviceManagement_v02.xml" Source="..\PVService\$(var.SourcePathFragment)DeviceManagement_v02.xml" />
                             <File Id="DEVICECONTROL.DLL" Name="DeviceControl.dll" Source="..\PVService\$(var.SourcePathFragment)DeviceControl.dll" />
                             <File Id="DEVICESTREAM.DLL" Name="DeviceStream.dll" Source="..\PVService\$(var.SourcePathFragment)DeviceStream.dll" />
@@ -58,6 +59,8 @@
                             <File Id="SETTINGS_TEMPLATE_SE_SQLITE.XML" Name="settings_template_SE_SQLite.xml" Source="..\PVService\$(var.SourcePathFragment)settings_template_SE_SQLite.xml" />
                             <File Id="TIMECONTROL.DLL" Name="TimeControl.dll" Source="..\PVBeanCounter\$(var.SourcePathFragment)TimeControl.dll" />
                             <File Id="UTILITIES.DLL" Name="Utilities.dll" Source="..\PVService\$(var.SourcePathFragment)Utilities.dll" />
+                            <File Id="OUTPUTMANAGERS.DLL" Name="OutputManagers.dll" Source="..\OutputManagers\$(var.SourcePathFragment)OutputManagers.dll" />
+                            <File Id="SYSTEM.DATA.SQLITE.DLL" Name="System.Data.SQLite.dll" Source="..\..\external dlls\bin\Release\System.Data.SQLite.dll" />
                             <File Id="DEVICE_SMA_SUNNYEXPLORER.XML" Name="Device_SMA_SunnyExplorer.xml" Source="..\PVService\$(var.SourcePathFragment)Device_SMA_SunnyExplorer.xml" />
                             <File Id="PVMONITOR3.ICO" Name="PVMonitor3.ico" Source="..\PVMonitor\$(var.SourcePathFragment)PVMonitor3.ico" />
                             <?if $(var.SolutionConfig) = "Debug" ?>
@@ -73,10 +76,7 @@
                             <File Id="PVBeanCounterPDB" Name="PVBeanCounter.pdb" Source="..\PVBeanCounter\$(var.SourcePathFragment)PVBeanCounter.pdb" />
                             <File Id="PVSETTINGS.PDB" Name="PVSettings.pdb" Source="..\PVService\$(var.SourcePathFragment)PVSettings.pdb" />
                             <File Id="TIMECONTROL.PDB" Name="TimeControl.pdb" Source="..\PVBeanCounter\$(var.SourcePathFragment)TimeControl.pdb" />
-                            <File Id="UTILITIES.PDB" Name="Utilities.pdb" Source="..\PVService\$(var.SourcePathFragment)Utilities.pdb" />
-                            <File Id="SYSTEM.DATA.SQLITE.DLL" Name="System.Data.SQLite.dll" Source="..\..\external dlls\bin\Release\System.Data.SQLite.dll" />
-                            <File Id="DEVICE_CONSOLIDATION.XML" Name="Device_Consolidation.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Consolidation.xml" />
-                            <File Id="OUTPUTMANAGERS.DLL" Name="OutputManagers.dll" Source="..\OutputManagers\$(var.SourcePathFragment)OutputManagers.dll" />
+                            <File Id="UTILITIES.PDB" Name="Utilities.pdb" Source="..\PVService\$(var.SourcePathFragment)Utilities.pdb" />                                                        
                             <File Id="OUTPUTMANAGERS.PDB" Name="OutputManagers.pdb" Source="..\OutputManagers\$(var.SourcePathFragment)OutputManagers.pdb" />
                             <?endif ?>
                         </Component>
