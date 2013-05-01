@@ -89,9 +89,11 @@ namespace Device
                 stage = "Reading";
 
                 TimeSpan duration;
+                Double estEnergy = 0.0;
                 try
                 {
-                    duration = EstimateEnergy((double)liveReading.Watts, null, liveReading.Seconds);
+                    duration = TimeSpan.FromSeconds(liveReading.Seconds);
+                    estEnergy = (((double)liveReading.Watts) * duration.TotalHours) / 1000.0; // watts to KWH
                 }
                 catch (Exception e)
                 {
@@ -133,9 +135,8 @@ namespace Device
                 reading.Amps = null;
                 reading.Frequency = null;
                 reading.ErrorCode = null;
-                reading.EnergyDelta = EstEnergy; // EstEnergy is an accumulation from the contributing 6 sec power values
+                reading.EnergyDelta = estEnergy; 
 
-                EstEnergy = 0.0;
                 minPower = null;
                 maxPower = null;
 

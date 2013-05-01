@@ -188,6 +188,187 @@ namespace DeviceDataRecorders
 
             return newEnergyReading;
         }
+
+        /*
+        private void NormalisePeriod( bool useDeltaAtStart)
+        {
+            String stage = "start";
+
+            try
+            {
+                GlobalSettings.SystemServices.LogMessage("NormalisePeriod", "Period Start: " + Start + " - for Device Id: " + DeviceId, LogEntryType.Trace);
+
+                bool isFirst = true;
+
+                Double prevInvEnergy = 0.0;
+                Double currentInvEnergy = 0.0;
+                Double currentInvDelta = 0.0;
+
+                Double currentEnergyEstimate = 0.0;     // total of interval estimates for today
+                Double prevEnergyEstimate = 0.0;     // previous total of interval estimates for today
+                Double currentEstimateDelta = 0.0;
+
+                Double energyRecorded = 0.0;
+                Double prevEnergyRecorded = 0.0;
+
+                Int32? power = null;
+                Int32 minPower = 0;
+                Int32 maxPower = 0;
+
+                Double? temperature = null;
+                DateTime prevIntervalTime = DateTime.Today;
+                DateTime currentIntervalTime = DateTime.Today;
+
+                bool useEnergyTotal = true; // = this.DeviceDetailPeriods.Device.DeviceSettings.HasStartOfDayEnergyDefect;
+
+                stage = "enter loop";
+                foreach(EnergyReading reading in this.ReadingsGeneric.ReadingList)
+                {
+                    stage = "loop 1";
+                    DateTime thisTime = reading.ReadingEnd;
+
+                    //DateTime thisIntervalTime = thisTime.Date + TimeSpan.FromMinutes(((((int)thisTime.TimeOfDay.TotalMinutes) + 4) / 5) * 5);
+
+                    Double thisInvEnergy = 0.0;
+
+                    bool todayNull = !reading.EnergyToday.HasValue;
+                    Double estEnergy; //= dr.IsDBNull("EstEnergy") ? 0.0 : dr.GetDouble("EstEnergy");
+                    estEnergy = reading.TotalReadingDelta;
+
+                    useEnergyTotal &= !reading.EnergyToday.HasValue;  
+
+                    if (useEnergyTotal)
+                    {
+                        if (!reading.EnergyTotal.HasValue)
+                            GlobalSettings.SystemServices.LogMessage("NormalisePeriod", "useEnergyTotal specified but not available - Time: " + thisTime, LogEntryType.ErrorMessage);
+                        else
+                        {
+                            thisInvEnergy = reading.EnergyTotal.Value;
+                            useDeltaAtStart = true;     // no start of day value available - must use deltas only
+                        }
+                    }
+                    else 
+                        thisInvEnergy = reading.EnergyToday.Value;
+
+                    if (isFirst && useDeltaAtStart)
+                    {
+                        // first energy reading contains energy from previous days - must use deltas only from this point on
+                        // CMS inverters with the start of day defect on this day and other inverters without EToday values start this way
+                        isFirst = false;
+                        prevInvEnergy = thisInvEnergy;
+                        currentInvEnergy = thisInvEnergy;
+                        prevEnergyEstimate = thisInvEnergy;
+                        currentEnergyEstimate = thisInvEnergy;
+                        currentIntervalTime = thisIntervalTime;
+                        prevIntervalTime = currentIntervalTime - TimeSpan.FromSeconds(IntervalSeconds);
+                    }
+                    else
+                    {
+                        if (isFirst)
+                        {
+                            currentIntervalTime = thisIntervalTime;
+                            prevIntervalTime = currentIntervalTime - TimeSpan.FromSeconds(IntervalSeconds);
+                            isFirst = false;
+                        }
+
+                        if (currentInvEnergy < prevInvEnergy)
+                        {
+                            // Cannot report negative energy - try to preserve previous delta as part of next delta
+                            if (useDeltaAtStart)
+                            {
+                                if (GlobalSettings.SystemServices.LogTrace)
+                                    GlobalSettings.SystemServices.LogMessage("NormalisePeriod", "Energy Today has reduced - was: " + prevInvEnergy.ToString() +
+                                    " - now: " + currentInvEnergy.ToString() + " - Time: " + currentIntervalTime, LogEntryType.Trace);
+                            }
+                            else
+                                GlobalSettings.SystemServices.LogMessage("NormalisePeriod", "Energy Today has reduced - was: " + prevInvEnergy.ToString() +
+                                    " - now: " + currentInvEnergy.ToString() + " - Time: " + currentIntervalTime, LogEntryType.ErrorMessage);
+
+                            prevInvEnergy = currentInvEnergy - currentInvDelta;
+                            currentEnergyEstimate = currentInvEnergy; // estimates are synced with inv values at energy reduction
+                            prevEnergyEstimate = currentInvEnergy - currentEstimateDelta;
+                            useDeltaAtStart = false; // activate estimate range checks and report energy reductions after the first on a day
+                        }
+                        else
+                        {
+                            currentInvDelta = currentInvEnergy - prevInvEnergy;
+                            currentEstimateDelta = currentEnergyEstimate - prevEnergyEstimate;
+                            // if a PVBC restart occurs energy estimate will be reset to 0 - retain previous estimate
+                            // this is important with inverters using low resolution energy reporting
+                            // missing estimates can cause a step shaped energy curve and peaked average power curve
+                            if (currentEstimateDelta < 0.0)
+                                currentEstimateDelta = estEnergy; // restart will cause at least one energy estimate value to be discarded - substitute the current estimate
+                        }
+
+                        if (thisIntervalTime != currentIntervalTime)
+                        {
+                            if (currentEnergyEstimate < currentInvEnergy)
+                                currentEnergyEstimate = currentInvEnergy; // estimate lags - catchup
+                            else if (currentEnergyEstimate > (currentInvEnergy + device.EstMargin))
+                                currentEnergyEstimate = (currentInvEnergy + device.EstMargin);
+
+                            currentEstimateDelta = currentEnergyEstimate - prevEnergyEstimate;
+                            // if a PVBC restart occurs energy estimate will be reset to 0 - retain previous estimate
+                            // this is important with inverters using low resolution energy reporting
+                            // missing estimates can cause a step shaped energy curve and peaked average power curve
+                            if (currentEstimateDelta < 0.0)
+                                currentEstimateDelta = estEnergy; // restart will cause at least one energy estimate value to be discarded - substitute the current estimate
+
+                            prevEnergyRecorded = energyRecorded;
+                            energyRecorded += currentEstimateDelta;
+
+                            UpdateOneOutputItem(readingSet, currentIntervalTime, prevIntervalTime,
+                                currentEstimateDelta, power, minPower, maxPower, temperature);
+
+                            prevInvEnergy = currentInvEnergy;
+                            prevEnergyEstimate = currentEnergyEstimate;
+                            prevIntervalTime = currentIntervalTime;
+                            currentIntervalTime = thisIntervalTime;
+                            currentInvEnergy = thisInvEnergy;
+
+                            minPower = 0;
+                            maxPower = 0;
+                        }
+
+                        currentInvEnergy = thisInvEnergy;
+                        currentEnergyEstimate += estEnergy;
+                    }
+
+                    if (dr.IsDBNull("PowerAC"))
+                        power = null;
+                    else
+                        power = dr.GetInt32("PowerAC");
+
+                    if (power != null)
+                    {
+                        if (power.Value < minPower || minPower == 0)
+                            minPower = power.Value;
+                        if (power.Value > maxPower)
+                            maxPower = power.Value;
+                    }
+
+                    if (dr.IsDBNull("Temperature"))
+                        temperature = null;
+                    else
+                        temperature = dr.GetDouble("Temperature");
+                }
+
+                // write out last if it has an energy value
+                if (currentEnergyEstimate > prevEnergyEstimate)
+                    UpdateOneOutputItem(readingSet, currentIntervalTime, prevIntervalTime,
+                        currentEnergyEstimate - prevEnergyEstimate, power, minPower, maxPower, temperature);
+
+                //GlobalSettings.SystemServices.LogMessage("UpdateOneOutputHistory", "Day: " + day + " - count: " + readingSet.Readings.Count, LogEntryType.Trace);
+
+                //if (readingSet.Readings.Count > 0)
+                //    HistoryUpdater.UpdateReadingSet(readingSet, con, false);
+            }
+            catch (Exception e)
+            {
+                GlobalSettings.SystemServices.LogMessage("NormalisePeriod", "Stage: " + stage + " - Exception: " + e.Message, LogEntryType.ErrorMessage);
+            }
+        }
+        */
     }
 
     public class DeviceDetailPeriod_EnergyConsolidation : DeviceDetailPeriod_Consolidation<EnergyReading, EnergyReading>, IComparable<DeviceDetailPeriod_EnergyConsolidation>

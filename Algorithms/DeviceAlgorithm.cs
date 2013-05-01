@@ -109,7 +109,7 @@ namespace Algorithms
         public void SetAddress(decimal value) { Address = (UInt64)value; }
         public decimal GetAddress() { return (decimal)Address; }
 
-        public bool HasStartOfDayEnergyDefect { get; protected set; }
+        //public bool HasStartOfDayEnergyDefect { get; protected set; }
 
         public AlgorithmParams Params;
 

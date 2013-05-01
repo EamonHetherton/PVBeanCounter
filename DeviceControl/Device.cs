@@ -557,16 +557,6 @@ namespace Device
 
         public UInt64 Address { get; protected set; }
 
-        public bool HasStartOfDayEnergyDefect { get; set; }
-        public Double CrazyDayStartMinutes { get; set; }
-        public bool StartEnergyResolved { get; set; }    // Used with HasPhoenixtecStartOfDayEnergyDefect
-        public bool EnergyDropFound { get; set; }   // Used with HasPhoenixtecStartOfDayEnergyDefect
-        public bool UseEnergyTotal { get; set; }
-
-        public Double EstEnergy { get; set; }        // Current interval energy estimate based upon spot power readings - reset when cmsdata record is written
-        public Double EstMargin { get; set; }
-        protected DateTime? LastEstTime = null;
-
         public bool FaultDetected { get; protected set; }
 
         public PhysicalDevice(DeviceControl.DeviceManagerBase deviceManager, DeviceManagerDeviceSettings deviceSettings, string manufacturer, string model)
@@ -577,71 +567,25 @@ namespace Device
             SerialNo = deviceSettings.SerialNo;
             Address = deviceSettings.Address;
 
-            EstEnergy = 0.0;
-            EstMargin = 0.01;
-
             DatabaseInterval = deviceSettings.DBIntervalInt;
             DeviceInterval = deviceSettings.QueryIntervalInt;
             QueryInterval = TimeSpan.FromSeconds(deviceSettings.QueryIntervalInt);
 
-            StartEnergyResolved = false;
-            EnergyDropFound = false;
-            UseEnergyTotal = true;
-
-            CrazyDayStartMinutes = 90.0;
-            HasStartOfDayEnergyDefect = false;
             FaultDetected = false;
 
             if (DeviceSettings == null) // legacy device
             {
-                HasStartOfDayEnergyDefect = false;
                 QueryInterval = TimeSpan.FromSeconds(6.0);
                 DatabaseInterval = 60;
                 DefaultSerialNo = "";
             }
             else
             {
-                HasStartOfDayEnergyDefect = DeviceSettings.HasStartOfDayEnergyDefect;
                 QueryInterval = TimeSpan.FromSeconds(DeviceManagerDeviceSettings.QueryIntervalInt);
                 DatabaseInterval = DeviceManagerDeviceSettings.DBIntervalInt;
                 Address = DeviceManagerDeviceSettings.Address;
                 DefaultSerialNo = DeviceManagerDeviceSettings.SerialNo;
             }            
-        }
-
-        public override void ResetStartOfDay()
-        {
-            base.ResetStartOfDay();
-            StartEnergyResolved = false;
-            EnergyDropFound = false;
-            UseEnergyTotal = true;
-        }
-
-
-        // curTime is supplied if duration is to be calculated on the fly (live readings)
-        // curTime is null if duration is from a history record - standardDuration contains the correct duration
-        protected TimeSpan EstimateEnergy(Double powerWatts, DateTime? curTime, float standardDuration)
-        {
-            TimeSpan duration;
-            if (curTime.HasValue)
-            {
-                if (LastEstTime.HasValue)
-                    duration = (curTime.Value - LastEstTime.Value);
-                else
-                    duration = TimeSpan.FromSeconds(standardDuration);
-                LastEstTime = curTime;
-            }
-            else
-                duration = TimeSpan.FromSeconds(standardDuration);
-            
-            Double newEnergy = (powerWatts * duration.TotalHours) / 1000.0; // watts to KWH
-            EstEnergy += newEnergy;
-            
-            if (GlobalSettings.SystemServices.LogTrace)
-                GlobalSettings.SystemServices.LogMessage("Device", "EstimateEnergy - Time: " + curTime + " - Power: " + powerWatts +
-                    " - Duration: " + duration.TotalSeconds + " - Energy: " + newEnergy, LogEntryType.Trace);
-
-            return duration;
         }
     }
 

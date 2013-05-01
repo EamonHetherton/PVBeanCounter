@@ -730,7 +730,8 @@ namespace DeviceDataRecorders
             if (Start == null)
                 GlobalSettings.LogMessage("DeviceDetailPeriod_EnergyMeter.BindSelectIdentity", "*******Start is null", LogEntryType.ErrorMessage);
 
-            cmd.AddParameterWithValue("@DeviceFeature_Id", DeviceDetailPeriods.DeviceFeatureId);
+            int tmpInt = (int)DeviceDetailPeriods.DeviceFeatureId;
+            cmd.AddParameterWithValue("@DeviceFeature_Id", tmpInt); // SQLServer won't accept uint in this binding
             cmd.AddParameterWithValue("@PeriodStart", Start - PeriodOverlapLimit);
             cmd.AddParameterWithValue("@NextPeriodStart", Start.AddDays(1.0) + PeriodOverlapLimit);
         }

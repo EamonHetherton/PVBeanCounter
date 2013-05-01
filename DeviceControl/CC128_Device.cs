@@ -64,6 +64,8 @@ namespace Device
     {
         public FeatureSettings Feature_EnergyAC { get; protected set; }
 
+        private Double EstEnergy = 0.0;
+
         public CC128_Device(DeviceControl.DeviceManager_CC128 deviceManager, DeviceManagerDeviceSettings deviceSettings)
             : base(deviceManager, deviceSettings, "CurrentCost", "CC128", "")
         {
@@ -203,6 +205,28 @@ namespace Device
             }
 
             return res;
+        }
+
+        // curTime is supplied if duration is to be calculated on the fly (live readings)
+        // curTime is null if duration is from a history record - standardDuration contains the correct duration
+        private DateTime? LastEstTime = null;
+        private TimeSpan EstimateEnergy(Double powerWatts, DateTime curTime, float standardDuration)
+        {
+            TimeSpan duration;
+            if (LastEstTime.HasValue)
+                duration = (curTime - LastEstTime.Value);
+            else
+                duration = TimeSpan.FromSeconds(standardDuration);
+            LastEstTime = curTime;
+
+            Double newEnergy = (powerWatts * duration.TotalHours) / 1000.0; // watts to KWH
+            EstEnergy += newEnergy;
+
+            if (GlobalSettings.SystemServices.LogTrace)
+                GlobalSettings.SystemServices.LogMessage("EstimateEnergy", "Time: " + curTime + " - Power: " + powerWatts +
+                    " - Duration: " + duration.TotalSeconds + " - Energy: " + newEnergy, LogEntryType.Trace);
+
+            return duration;
         }
 
         public override bool ProcessOneHistoryReading(CC128_HistoryRecord histReading)
