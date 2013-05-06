@@ -30,14 +30,16 @@ using Algorithms;
 
 namespace Device
 {
-    public struct EstimateEnergy
+    public class EstimateEnergy
     {
         private Double _EstimateEnergySumOfDeltas;
         private Double _ActualEnergySumOfDeltas;
         private Double _LastActualEnergy;
         private Double _LastEnergyDelta_Power;
         DateTime? LastEstTime;
+        DateTime? FirstReadingTime;
         bool EnergyDropFound;
+        bool EnergyDropResolved;
 
         bool HasStartOfDayDefect;
         TimeSpan QueryInterval;
@@ -51,62 +53,145 @@ namespace Device
 
         public EstimateEnergy(Device.DeviceBase device)
         {
-            _Device = device;
-            _EstimateEnergySumOfDeltas = 0.0;
-            _ActualEnergySumOfDeltas = 0.0;
-            _LastEnergyDelta_Power = 0.0;
-            _LastActualEnergy = 0.0;
-            EnergyMargin = 0.005;
-            CrazyDayStartMinutes = 90;
+            _Device = device;            
+            EnergyMargin = 0.010;
+            CrazyDayStartMinutes = _Device.DeviceSettings.CrazyDayStartMinutes;
             HasStartOfDayDefect = _Device.DeviceSettings.HasStartOfDayEnergyDefect;
             QueryInterval = TimeSpan.FromSeconds(_Device.DeviceManagerDeviceSettings.QueryIntervalInt);
-            LastEstTime = null;
-            EnergyDropFound = false;
-            FirstActualFound = false;
-
+            Initialise();
             StartupStatusChecked = false;
         }
 
-        private void CheckStartupStatus(DateTime curTime)
+        private void Initialise()
         {
-            // retrieve period collection for the primary feature
-            DeviceDetailPeriods_EnergyMeter days =
-                (DeviceDetailPeriods_EnergyMeter)_Device.FindOrCreateFeaturePeriods(_Device.DeviceSettings.FeatureList[0].FeatureType, 
-                _Device.DeviceSettings.FeatureList[0].FeatureId);
-            // locate the required day period list
-            DeviceDetailPeriod_EnergyMeter day = days.FindOrCreate(curTime);
+            _EstimateEnergySumOfDeltas = 0.0;
+            _ActualEnergySumOfDeltas = 0.0;
+            _LastActualEnergy = 0.0;
+            _LastEnergyDelta_Power = 0.0;
+
+            FirstReadingTime = null;
+            LastEstTime = null;
+            EnergyDropFound = false;
+            EnergyDropResolved = false;
+            FirstActualFound = false;
         }
 
-        public TimeSpan EstimateFromPower(Double powerWatts, DateTime curTime, Double? actualEnergy = null, Double? actualEnergyPrecision = null)
+        private DeviceDetailPeriod_EnergyMeter GetDayPeriod(DateTime curTime)
         {
-            if (!StartupStatusChecked)
+            // remember similar changes required in EstimateFromPower
+            // retrieve period collection for the primary feature
+            DeviceDetailPeriods_EnergyMeter days =
+                (DeviceDetailPeriods_EnergyMeter)_Device.FindOrCreateFeaturePeriods(_Device.DeviceSettings.FeatureList[0].FeatureType,
+                _Device.DeviceSettings.FeatureList[0].FeatureId);
+            // locate the required day period list
+            return days.FindOrCreate(curTime);
+        }
+
+        private void AdjustStartTimeEnergy(DateTime curTime, double adjustment)
+        {
+            if (adjustment <= 0.0)
+                return;
+            DeviceDetailPeriod_EnergyMeter day = GetDayPeriod(curTime);
+            List<EnergyReading> readings = day.GetReadings();
+            foreach(EnergyReading reading in readings)
+                if (reading.EnergyToday > 0.0)
+                {
+                    reading.EnergyDelta += adjustment;
+                    break;
+                }
+        }
+
+        private void CheckStartupStatus(DateTime curTime, Double energyTodayPrecision, Double energyTotalPrecision, bool useEnergyTotal)
+        {
+            DeviceDetailPeriod_EnergyMeter day = GetDayPeriod(curTime);
+
+            Initialise();
+            StartupStatusChecked = true; // set this early to avoid recursion from the following
+
+            foreach (EnergyReading reading in day.GetReadings())
             {
-                CheckStartupStatus(curTime);
+                _EstimateEnergySumOfDeltas += reading.EnergyDelta;
+                LastEstTime = reading.ReadingEnd;
+                if (!FirstReadingTime.HasValue)
+                    FirstReadingTime = LastEstTime;
+
+                Double? actualEnergy = (useEnergyTotal ? reading.EnergyTotal : reading.EnergyToday);
+                if (actualEnergy.HasValue)
+                {                    
+                    // if !HasStartOfDayDefect we want the initial energy to jump straight to the full energy value - _LastEnergyDelta_Power will initially be zero
+                    // after first reading all can use actual deltas
+                    // at first reading delta would add in all of the first energy reading -
+                    // This cannot happen if defect is present
+                    // This cannot happen if using EnergyTotal
+                    bool useActualDelta = FirstActualFound || !(HasStartOfDayDefect || useEnergyTotal);
+                    if (useActualDelta)
+                    {
+                        if (actualEnergy >= _LastActualEnergy)
+                            _ActualEnergySumOfDeltas += (actualEnergy.Value - _LastActualEnergy);
+                        else
+                        {
+                            EnergyDropFound = true;
+                            _ActualEnergySumOfDeltas += reading.EnergyDelta; // last power estimate is best substitute for the missing actual delta
+                        }
+                    }
+                    else
+                    {
+                        _ActualEnergySumOfDeltas += reading.EnergyDelta; // last power estimate is best substitute for the missing actual delta
+                        FirstActualFound = true;
+                    }
+
+                    _LastActualEnergy = actualEnergy.Value;
+
+                    if (useEnergyTotal)
+                        EnergyMargin = energyTotalPrecision;
+                    else
+                        EnergyMargin = energyTodayPrecision;
+
+                    // Ensure energy estimate based on power remains within the margin of the last reported actual energy sum of deltas
+                    if (_EstimateEnergySumOfDeltas > (_ActualEnergySumOfDeltas + EnergyMargin))
+                        _EstimateEnergySumOfDeltas = (_ActualEnergySumOfDeltas + EnergyMargin);
+                    else if (_EstimateEnergySumOfDeltas < (_ActualEnergySumOfDeltas - EnergyMargin))
+                        _EstimateEnergySumOfDeltas = _ActualEnergySumOfDeltas;
+                }
+            }            
+        }
+
+        public TimeSpan EstimateFromPower(Double powerWatts, DateTime curTime, Double? actualEnergy,
+            Double energyTodayPrecision, Double energyTotalPrecision, bool useEnergyTotal)
+        {
+            // remember similar changes required in CheckStartupStatus
+            if (!StartupStatusChecked )
+            {
+                CheckStartupStatus(curTime, energyTodayPrecision, energyTotalPrecision, useEnergyTotal);
                 StartupStatusChecked = true;
             }
-
-            TimeSpan duration;
             
+            TimeSpan duration;
+
             if (LastEstTime.HasValue)
                 duration = (curTime - LastEstTime.Value);
             else
                 duration = QueryInterval;
             LastEstTime = curTime;
-            
+            if (!FirstReadingTime.HasValue)
+                FirstReadingTime = LastEstTime;
+
             _LastEnergyDelta_Power = (powerWatts * duration.TotalHours) / 1000.0; // watts to KWH
             _EstimateEnergySumOfDeltas += _LastEnergyDelta_Power;
 
             if (GlobalSettings.SystemServices.LogTrace)
                 GlobalSettings.SystemServices.LogMessage("EstimateEnergy", "EstimateFromPower - Time: " + curTime + " - Power: " + powerWatts +
-                    " - Duration: " + duration.TotalSeconds + " - Energy Delta: " + _LastEnergyDelta_Power, LogEntryType.Trace);
-
-            if (actualEnergyPrecision.HasValue)
-                EnergyMargin = actualEnergyPrecision.Value / 2.0; // +/- half the precision value
+                    " - Duration: " + duration.TotalSeconds + " - Energy Delta: " + _LastEnergyDelta_Power, LogEntryType.Trace);           
 
             if (actualEnergy.HasValue)
             {
-                // if HasStartOfDayDefect initial 
-                if (!HasStartOfDayDefect || FirstActualFound)
+                // if !HasStartOfDayDefect we want the initial energy to jump straight to the full energy value - _LastEnergyDelta_Power will initially be zero
+                // after first reading all can use actual deltas
+                // at first reading delta would add in all of the first energy reading -
+                // This cannot happen if defect is present
+                // This cannot happen if using EnergyTotal
+                bool useActualDelta = FirstActualFound || !(HasStartOfDayDefect || useEnergyTotal);
+                if (useActualDelta)
                 {
                     if (actualEnergy >= _LastActualEnergy)
                         _ActualEnergySumOfDeltas += (actualEnergy.Value - _LastActualEnergy);
@@ -115,29 +200,37 @@ namespace Device
                         EnergyDropFound = true;
                         _ActualEnergySumOfDeltas += _LastEnergyDelta_Power; // last power estimate is best substitute for the missing actual delta
                     }
+                    if (HasStartOfDayDefect && !EnergyDropResolved && !EnergyDropFound && (curTime - FirstReadingTime.Value).TotalMinutes > CrazyDayStartMinutes)
+                    {
+                        EnergyDropResolved = true;
+                        AdjustStartTimeEnergy(curTime, actualEnergy.Value - _ActualEnergySumOfDeltas);
+                    }
                 }
                 else
+                {
+                    _ActualEnergySumOfDeltas += _LastEnergyDelta_Power; // last power estimate is best substitute for the missing actual delta
                     FirstActualFound = true;
+                }
 
                 _LastActualEnergy = actualEnergy.Value;
+                
+                if (useEnergyTotal)
+                    EnergyMargin = energyTotalPrecision;
+                else
+                    EnergyMargin = energyTodayPrecision;
 
                 // Ensure energy estimate based on power remains within the margin of the last reported actual energy sum of deltas
                 if (_EstimateEnergySumOfDeltas > (_ActualEnergySumOfDeltas + EnergyMargin))
                     _EstimateEnergySumOfDeltas = (_ActualEnergySumOfDeltas + EnergyMargin);
                 else if (_EstimateEnergySumOfDeltas < (_ActualEnergySumOfDeltas - EnergyMargin))
-                    _EstimateEnergySumOfDeltas = _ActualEnergySumOfDeltas;
+                    _EstimateEnergySumOfDeltas = _ActualEnergySumOfDeltas;                
             }
 
             return duration;
         }
 
         public Double EstimateEnergySumOfDeltas { get { return _EstimateEnergySumOfDeltas; } }
-
-        public Double ActualEnergySumOfDeltas { get { return _ActualEnergySumOfDeltas; } }
-
         public Double LastEnergyDelta_Power { get { return _LastEnergyDelta_Power; } }
-
-        public Double LastActualEnergy { get { return _LastActualEnergy; } }
     }
 
     public class ActiveDevice_Generic : ActiveDevice
@@ -148,7 +241,6 @@ namespace Device
         
         private bool UseEnergyTotal;                // Use EnergyTotal unless EnergyToday is available
         private bool UseEnergyTotalSet;
-        //private bool DayIsEmpty;
 
         private EstimateEnergy EstEnergy;           // sum of energy deltas based upon spot power readings and checked with actuals
         
@@ -161,7 +253,6 @@ namespace Device
 
             UseEnergyTotal = true;
             UseEnergyTotalSet = false;
-            //DayIsEmpty = true;
 
             HasStartOfDayEnergyDefect = DeviceSettings.HasStartOfDayEnergyDefect;
             EstEnergy = new Device.EstimateEnergy(this);
@@ -174,7 +265,6 @@ namespace Device
             base.ResetStartOfDay();
             UseEnergyTotal = true;
             EstEnergy = new Device.EstimateEnergy(this);
-            //DayIsEmpty = true;
         }
 
         protected override DeviceDetailPeriodsBase CreateNewPeriods(FeatureSettings featureSettings)
@@ -217,38 +307,45 @@ namespace Device
             ClearAttributes();
         }
 
-        private void ExtractFeatureReading(FeatureType featureType, uint featureId, DateTime curTime, bool newInterval)
-        {
-                                
-            DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(featureType, featureId);
+        private EnergyReading SetupNewReading(FeatureType featureType, uint featureId, DateTime curTime, DeviceDetailPeriods_EnergyMeter days)
+        {            
             EnergyReading reading = new EnergyReading();
 
             if (LastRecordTime.HasValue)
                 reading.Initialise(days, curTime, LastRecordTime.Value, false);
             else
                 reading.Initialise(days, curTime, TimeSpan.FromSeconds(DeviceInterval), false);
-                    
-            reading.Mode = (Int16?)InverterAlgorithm.Status;
-            reading.Temperature = (double?)InverterAlgorithm.Temperature;
-            reading.ErrorCode = (uint?)InverterAlgorithm.ErrorCode;
 
-            if (InverterAlgorithm.ErrorCodeHigh.HasValue)
-                if (reading.ErrorCode.HasValue)
-                    reading.ErrorCode += (UInt32)(InverterAlgorithm.ErrorCodeHigh.Value * 65536);
-                else
-                    reading.ErrorCode = (UInt32)(InverterAlgorithm.ErrorCodeHigh.Value * 65536);
+            return reading;
+        }
 
+        private void ExtractFeatureReading(FeatureType featureType, uint featureId, DateTime curTime, bool newInterval)
+        {
+            DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(featureType, featureId);
+            EnergyReading reading = null;                    
+            
             if (featureType == FeatureType.YieldAC || featureType == FeatureType.EnergyAC || featureType == FeatureType.ConsumptionAC)
             {
                 if (featureId == 0)
                 {
-                    
+                    reading = SetupNewReading(featureType, featureId, curTime, days);
+
+                    reading.Mode = (Int16?)InverterAlgorithm.Status;
+                    reading.Temperature = (double?)InverterAlgorithm.Temperature;
+                    reading.ErrorCode = (uint?)InverterAlgorithm.ErrorCode;
+
+                    if (InverterAlgorithm.ErrorCodeHigh.HasValue)
+                        if (reading.ErrorCode.HasValue)
+                            reading.ErrorCode += (UInt32)(InverterAlgorithm.ErrorCodeHigh.Value * 65536);
+                        else
+                            reading.ErrorCode = (UInt32)(InverterAlgorithm.ErrorCodeHigh.Value * 65536);
+
                     reading.EnergyToday = (double?)InverterAlgorithm.EnergyTodayAC;
                     reading.EnergyTotal = (double?)InverterAlgorithm.EnergyTotalAC;
                     if (reading.EnergyTotal.HasValue && InverterAlgorithm.EnergyTotalACHigh.HasValue)
                         reading.EnergyTotal += (Double)(InverterAlgorithm.EnergyTotalACHigh.Value * 65536);
 
-                    reading.EnergyDelta = EstEnergy.EstimateEnergySumOfDeltas;
+                    reading.EnergyDelta = EstEnergy.LastEnergyDelta_Power;
 
                     reading.Power = (int?)InverterAlgorithm.PowerAC1;
                     reading.Volts = (float?)InverterAlgorithm.VoltsAC1;
@@ -272,17 +369,30 @@ namespace Device
                 {
                     if (featureId == 1)
                     {
+                        if (!InverterAlgorithm.PowerAC2.HasValue
+                        && !InverterAlgorithm.VoltsAC2.HasValue
+                        && !InverterAlgorithm.CurrentAC2.HasValue)
+                            return;     // do not record optional empty record
+                        reading = SetupNewReading(featureType, featureId, curTime, days);
                         reading.Power = (int?)InverterAlgorithm.PowerAC2;
                         reading.Volts = (float?)InverterAlgorithm.VoltsAC2;
                         reading.Amps = (float?)InverterAlgorithm.CurrentAC2;
-                        reading.Frequency = (float?)InverterAlgorithm.Frequency;
                     }
                     else if (featureId == 2)
                     {
+                        if (!InverterAlgorithm.PowerAC3.HasValue
+                        && !InverterAlgorithm.VoltsAC3.HasValue
+                        && !InverterAlgorithm.CurrentAC3.HasValue)
+                            return;     // do not record optional empty record
+                        reading = SetupNewReading(featureType, featureId, curTime, days);
                         reading.Power = (int?)InverterAlgorithm.PowerAC3;
                         reading.Volts = (float?)InverterAlgorithm.VoltsAC3;
                         reading.Amps = (float?)InverterAlgorithm.CurrentAC3;
-                        reading.Frequency = (float?)InverterAlgorithm.Frequency;
+                    }
+                    else
+                    {
+                        LogMessage("ExtractFeatureReading - FeatureType: " + featureType + " - FeatureId: " + featureId + " - Feature not supported", LogEntryType.Information);
+                        return;
                     }
                     if (GlobalSettings.SystemServices.LogTrace)
                         LogMessage("ExtractFeatureReading - FeatureType: " + featureType + " - FeatureId: " + featureId
@@ -299,13 +409,35 @@ namespace Device
             {
                 if (featureId == 0)
                 {
+                    if (!InverterAlgorithm.VoltsPV1.HasValue 
+                    && !InverterAlgorithm.CurrentPV1.HasValue)
+                        return;     // do not record optional empty record
+                    reading = SetupNewReading(featureType, featureId, curTime, days);
                     reading.Volts = (float?)InverterAlgorithm.VoltsPV1;
                     reading.Amps = (float?)InverterAlgorithm.CurrentPV1;
                 }
                 else if (featureId == 1)
                 {
+                    if (!InverterAlgorithm.VoltsPV2.HasValue
+                    && !InverterAlgorithm.CurrentPV2.HasValue)
+                        return;     // do not record optional empty record
+                    reading = SetupNewReading(featureType, featureId, curTime, days);
                     reading.Volts = (float?)InverterAlgorithm.VoltsPV2;
                     reading.Amps = (float?)InverterAlgorithm.CurrentPV2;
+                }
+                else if (featureId == 2)
+                {
+                    if (!InverterAlgorithm.VoltsPV3.HasValue
+                    && !InverterAlgorithm.CurrentPV3.HasValue)
+                        return;     // do not record optional empty record
+                    reading = SetupNewReading(featureType, featureId, curTime, days);
+                    reading.Volts = (float?)InverterAlgorithm.VoltsPV3;
+                    reading.Amps = (float?)InverterAlgorithm.CurrentPV3;
+                }
+                else 
+                {
+                    LogMessage("ExtractFeatureReading - FeatureType: " + featureType + " - FeatureId: " + featureId + " - Feature not supported", LogEntryType.Information);
+                    return;
                 }
                 if (GlobalSettings.SystemServices.LogTrace)
                     LogMessage("ExtractFeatureReading - FeatureType: " + featureType + " - FeatureId: " + featureId
@@ -369,10 +501,17 @@ namespace Device
 
                 stage = "Reading";
 
-                DateTime curTime = DateTime.Now;
-                bool dbWrite = (LastRecordTime == null
-                    || DeviceBase.IntervalCompare(DatabaseInterval, LastRecordTime.Value, curTime) != 0);
-                res = InverterAlgorithm.ExtractReading(dbWrite, ref alarmFound, ref errorFound);
+                //DateTime curTime = DateTime.Now;
+
+                GenericConnector.DBDateTimeGeneric readingEnd = new GenericConnector.DBDateTimeGeneric();
+                readingEnd.Value = DateTime.Now; // reproduce reading date precision adjustment
+                DateTime curTime = readingEnd.Value;
+
+                bool newInterval = IsNewdatabaseInterval(curTime);
+
+                //bool dbWrite = (LastRecordTime == null
+                //    || DeviceBase.IntervalCompare(DatabaseInterval, LastRecordTime.Value, curTime) != 0);
+                res = InverterAlgorithm.ExtractReading(newInterval, ref alarmFound, ref errorFound);
                 if (!res)
                     return false;
 
@@ -391,7 +530,8 @@ namespace Device
                     }
 
                     duration = EstEnergy.EstimateFromPower((double)InverterAlgorithm.PowerAC1.Value, curTime,
-                        (double)(UseEnergyTotal ? InverterAlgorithm.EnergyTotalAC.Value : InverterAlgorithm.EnergyTodayAC.Value));
+                        (double)(UseEnergyTotal ? InverterAlgorithm.EnergyTotalAC.Value : InverterAlgorithm.EnergyTodayAC.Value),
+                        InverterAlgorithm.EnergyTodayEnergyMargin, InverterAlgorithm.EnergyTotalEnergyMargin, UseEnergyTotal);
                 }
                 catch (Exception e)
                 {
@@ -403,13 +543,8 @@ namespace Device
                     + (InverterAlgorithm.PowerAC2.HasValue ? (int)InverterAlgorithm.PowerAC2.Value : 0)
                     + (InverterAlgorithm.PowerAC3.HasValue ? (int)InverterAlgorithm.PowerAC3.Value : 0));
 
-                GenericConnector.DBDateTimeGeneric readingEnd = new GenericConnector.DBDateTimeGeneric();
-                readingEnd.Value = curTime; // reproduce reading date precision adjustment
-                curTime = readingEnd.Value;
-
-                if (dbWrite)
+                //if (dbWrite)
                 {                                        
-                    bool newInterval = IsNewdatabaseInterval(curTime);
                     foreach (FeatureSettings fs in DeviceSettings.FeatureList)
                         ExtractFeatureReading(fs.FeatureType, fs.FeatureId, curTime, newInterval);
                     LastRecordTime = curTime;
@@ -437,6 +572,14 @@ namespace Device
             }
 
             return res;
+        }
+
+        public override void SplitReadingSub(ReadingBase oldReading, DateTime splitTime, ReadingBase newReading1, ReadingBase newReading2)
+        {
+            if (((EnergyReading)newReading1).EnergyToday.HasValue && ((EnergyReading)newReading2).EnergyDelta >= InverterAlgorithm.EnergyTodayEnergyMargin)
+                ((EnergyReading)newReading1).EnergyToday -= ((EnergyReading)newReading2).EnergyDelta;
+            if (((EnergyReading)newReading1).EnergyTotal.HasValue && ((EnergyReading)newReading2).EnergyDelta >= InverterAlgorithm.EnergyTotalEnergyMargin)
+                ((EnergyReading)newReading1).EnergyTotal -= ((EnergyReading)newReading2).EnergyDelta;
         }
     }
 }

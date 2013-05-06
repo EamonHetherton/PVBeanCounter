@@ -191,6 +191,8 @@ namespace Device
         {
         }
 
+        public abstract void SplitReadingSub(ReadingBase oldReading, DateTime splitTime, ReadingBase newReading1, ReadingBase newReading2);
+        
         public struct FeaturePeriods
         {
             public FeatureType Type;

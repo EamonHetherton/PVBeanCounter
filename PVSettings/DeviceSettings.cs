@@ -379,6 +379,17 @@ namespace PVSettings
             }
         }
 
+        public int CrazyDayStartMinutes
+        {
+            get
+            {
+                String val = GetValue("crazydaystartminutes");
+                if (val == "")
+                    return 90;
+                return Int32.Parse(val);
+            }
+        }
+
 
 
     }

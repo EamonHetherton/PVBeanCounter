@@ -200,7 +200,7 @@ namespace DeviceDataRecorders
         public abstract void CalcFromPreviousGeneric(ReadingBase prevReading);
         public abstract bool IsSameReadingGeneric(ReadingBase other);
         public abstract bool IsSameReadingValuesGeneric(ReadingBase other);
-        public abstract bool IsGapFillReading();
+        public abstract bool IsHistoryReading();
         public abstract ReadingBase CloneGeneric(DateTime outputTime, TimeSpan duration);
         public abstract void GapAdjustAdjacent(ReadingBase adjacentReading, bool adjacentIsBeforeThis);
         public abstract void AccumulateReading(ReadingBase reading, bool useTemperature, bool accumulateDuration = false, Double operationFactor = 1.0);

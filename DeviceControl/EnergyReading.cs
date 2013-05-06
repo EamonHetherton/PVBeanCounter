@@ -297,19 +297,23 @@ namespace DeviceDataRecorders
             }
         }
         
+        private Double? EnergyDeltaInternal = null;
+
         /*
-        private bool EnergyDeltaCalculatedInternal = true;
-        public bool EnergyDeltaCalculated
+        private Double? EnergyDeltaInternal
         {
-            get { return EnergyDeltaCalculatedInternal; }
+            get { return _EnergyDeltaInternal; }
             set
             {
-                EnergyDeltaCalculatedInternal = value;
-                if (!AttributeRestoreMode) UpdatePending = true;
+                _EnergyDeltaInternal = value;
+                if (FeatureType == PVSettings.FeatureType.YieldDC && value.HasValue)
+                {
+                    int i;
+                    i = 0;
+                }
             }
         }
         */
-        private Double? EnergyDeltaInternal = null;
 
         public Double? EnergyDeltaNullable
         {
@@ -399,6 +403,9 @@ namespace DeviceDataRecorders
             }
         }
 
+        private bool _IsHistoryReading = false;
+        public override bool IsHistoryReading() { return _IsHistoryReading; }
+
         private Double? HistEnergyDeltaInternal = null;
         public Double? HistEnergyDelta
         {
@@ -409,6 +416,7 @@ namespace DeviceDataRecorders
             set
             {
                 HistEnergyDeltaInternal = (value.HasValue ? (Double?)Math.Round(value.Value, EnergyPrecision) : null);
+                if (value.HasValue) _IsHistoryReading = true;
                 if (!AttributeRestoreMode)
                 {
                     if (UseInternalCalibration)
@@ -525,12 +533,6 @@ namespace DeviceDataRecorders
             UpdatePending = true;
         }
 
-        public override bool IsGapFillReading()
-        {
-            // Reading created from history to fill large gaps
-            return (EnergyDeltaInternal == null);
-        }
-
         protected override void CalcFromPrevious(EnergyReading prevReading)
         {
             // Following test not required - handled at source
@@ -637,6 +639,9 @@ namespace DeviceDataRecorders
             if (reading.Mode.HasValue)
                 Mode = reading.Mode.Value;
 
+            if (reading.Frequency.HasValue)
+                Frequency = reading.Frequency;
+
             if (useTemperature && reading.Temperature.HasValue)
                 Temperature = reading.Temperature.Value;
 
@@ -645,7 +650,11 @@ namespace DeviceDataRecorders
             if (reading.EnergyTotal.HasValue)
                 EnergyTotal = reading.EnergyTotal.Value;
             
-            EnergyDelta += reading.EnergyDelta * operationFactor;
+            if (reading.EnergyDeltaInternal.HasValue)
+                if (EnergyDeltaInternal.HasValue)
+                    EnergyDeltaInternal += reading.EnergyDeltaInternal.Value * operationFactor;
+                else
+                    EnergyDeltaInternal = reading.EnergyDeltaInternal.Value * operationFactor;
                 
             if (reading.CalibrationDeltaInternal.HasValue)
                 if (CalibrationDeltaInternal.HasValue)

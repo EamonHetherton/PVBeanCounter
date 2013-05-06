@@ -9,6 +9,7 @@
     <endian16bit value="Big" />
     <endian32bit value="Big" />
     <hasstartofdayenergydefect value="true" />
+    <crazydaystartminutes value="90" />
 
     <features>
       <feature type="YieldAC" />

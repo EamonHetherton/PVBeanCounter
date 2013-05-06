@@ -405,7 +405,7 @@ namespace DeviceDataRecorders
                 {
                     reading = Readings.Values[i];
 
-                    if (!sliceGapFillReadings && reading.IsGapFillReading())
+                    if (!sliceGapFillReadings && reading.IsHistoryReading())
                     {
                         // do not split GapFillReadings (from history) - they are expected to span multiple intervals and conform with required alignment
                         i++;
@@ -473,7 +473,7 @@ namespace DeviceDataRecorders
                     int readingInterval = DDP.GetIntervalNo(reading.ReadingEnd);  // end time interval of current reading
                     int readingStartInterval = DDP.GetIntervalNo(reading.ReadingStart, false);
 
-                    if (readingInterval != readingStartInterval || reading.IsGapFillReading())
+                    if (readingInterval != readingStartInterval || reading.IsHistoryReading())
                     {
                         // reading crosses interval boundary - do not consolidate - probably history record
                         // GapFillReading should not be merged with regular readings - needs to retain the history signature for future history adjustments

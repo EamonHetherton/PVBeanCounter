@@ -38,6 +38,9 @@ namespace Device
         public decimal? VoltsPV2 { get; private set; }
         public decimal? CurrentPV2 { get; private set; }
         public decimal? PowerPV2 { get; private set; }
+        public decimal? VoltsPV3 { get; private set; }
+        public decimal? CurrentPV3 { get; private set; }
+        public decimal? PowerPV3 { get; private set; }
         public decimal? Frequency { get; private set; }
         public decimal? VoltsAC1 { get; private set; }
         public decimal? CurrentAC1 { get; private set; }
@@ -67,6 +70,9 @@ namespace Device
         public void SetVoltsPV2(decimal value) { VoltsPV2 = value; }
         public void SetCurrentPV2(decimal value) { CurrentPV2 = value; }
         public void SetPowerPV2(decimal value) { PowerPV2 = value; }
+        public void SetVoltsPV3(decimal value) { VoltsPV2 = value; }
+        public void SetCurrentPV3(decimal value) { CurrentPV2 = value; }
+        public void SetPowerPV3(decimal value) { PowerPV2 = value; }
         public void SetFrequency(decimal value) { Frequency = value; }
         public void SetVoltsAC1(decimal value) { VoltsAC1 = value; }
         public void SetCurrentAC1(decimal value) { CurrentAC1 = value; }
@@ -96,6 +102,8 @@ namespace Device
         // End Bytes Variables
 
         public Double EnergyMargin { get; private set; }
+        public Double EnergyTotalEnergyMargin { get; private set; }
+        public Double EnergyTodayEnergyMargin { get; private set; }
 
         public InverterAlgorithm(DeviceManagerDeviceSettings deviceSettings, Protocol protocol, ErrorLogger errorLogger)
             :base(deviceSettings, protocol, errorLogger)
@@ -132,6 +140,12 @@ namespace Device
             var = new VariableEntry_Numeric("CurrentPV2", SetCurrentPV2);
             VariableEntries.Add(var);
             var = new VariableEntry_Numeric("PowerPV2", SetPowerPV2);
+            VariableEntries.Add(var);
+            var = new VariableEntry_Numeric("VoltsPV3", SetVoltsPV3);
+            VariableEntries.Add(var);
+            var = new VariableEntry_Numeric("CurrentPV3", SetCurrentPV3);
+            VariableEntries.Add(var);
+            var = new VariableEntry_Numeric("PowerPV3", SetPowerPV3);
             VariableEntries.Add(var);
             var = new VariableEntry_Numeric("Frequency", SetFrequency);
             VariableEntries.Add(var);
@@ -192,6 +206,9 @@ namespace Device
             VoltsPV2 = null;
             CurrentPV2 = null;
             PowerPV2 = null;
+            VoltsPV3 = null;
+            CurrentPV3 = null;
+            PowerPV3 = null;
             Frequency = null;
             VoltsAC1 = null;
             CurrentAC1 = null;
@@ -217,14 +234,17 @@ namespace Device
             // Energy Margin limits the Energy Estimate deviation from inverter value
             // Inverter identity is sometimes used to dynamically alter details such as Scale / ScaleFactor (refer JFY inverters)
             Register eToday = FindRegister("", "", "EnergyTodayAC");
+            Register eTotal = FindRegister("", "", "EnergyTotalAC");
             if (eToday != null)
                 EnergyMargin = (Double)((RegisterNumber)eToday).ScaleFactor;
             else
-            {
-                Register eTotal = FindRegister("", "", "EnergyTotalAC");
+            {                
                 if (eTotal != null)
                     EnergyMargin = (Double)((RegisterNumber)eTotal).ScaleFactor;
             }
+
+            EnergyTodayEnergyMargin = eToday == null ? EnergyMargin : (Double)((RegisterNumber)eToday).ScaleFactor;
+            EnergyTotalEnergyMargin = eTotal == null ? EnergyMargin : (Double)((RegisterNumber)eTotal).ScaleFactor;
         }
 
         public bool ExtractIdentity()

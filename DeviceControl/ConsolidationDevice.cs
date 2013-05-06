@@ -207,6 +207,15 @@ namespace Device
             return new DeviceDetailPeriods_EnergyConsolidation(this, featureSettings, PeriodType, TimeSpan.FromTicks(0));
         }
 
+        public override void SplitReadingSub(ReadingBase oldReading, DateTime splitTime, ReadingBase newReading1, ReadingBase newReading2)
+        {
+            newReading1.IsConsolidationReading = true;
+            newReading2.IsConsolidationReading = true;
+            if (((EnergyReading)newReading1).EnergyToday.HasValue)
+                ((EnergyReading)newReading1).EnergyToday -= ((EnergyReading)newReading2).EnergyDelta;
+            if (((EnergyReading)newReading1).EnergyTotal.HasValue)
+                ((EnergyReading)newReading1).EnergyTotal -= ((EnergyReading)newReading2).EnergyDelta;
+        }
     }
 
 }

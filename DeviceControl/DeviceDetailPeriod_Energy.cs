@@ -163,6 +163,7 @@ namespace DeviceDataRecorders
             }
         }
 
+        /*
         protected override void SplitReadingSub(EnergyReading oldReading, DateTime splitTime, EnergyReading newReading1, EnergyReading newReading2)
         {
             if (newReading1.EnergyToday.HasValue)
@@ -170,6 +171,7 @@ namespace DeviceDataRecorders
             if (newReading1.EnergyTotal.HasValue)
                 newReading1.EnergyTotal -= newReading2.EnergyDelta;
         }
+        */
 
         protected override EnergyReading NewReading(DateTime outputTime, TimeSpan duration, EnergyReading pattern = null)
         {
@@ -406,15 +408,6 @@ namespace DeviceDataRecorders
             return newEnergyReading;
         }
 
-        protected override void SplitReadingSub(EnergyReading oldReading, DateTime splitTime, EnergyReading newReading1, EnergyReading newReading2)
-        {            
-            newReading1.IsConsolidationReading = true;            
-            newReading2.IsConsolidationReading = true;
-            if (newReading1.EnergyToday.HasValue)
-                newReading1.EnergyToday -= newReading2.EnergyDelta;
-            if (newReading1.EnergyTotal.HasValue)
-                newReading1.EnergyTotal -= newReading2.EnergyDelta;
-        }
     }
 
 }

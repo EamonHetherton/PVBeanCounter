@@ -186,5 +186,13 @@ namespace Device
             // used for readings older than the latest
             return ProcessOneReading(histReading, false);
         }
+
+        public override void SplitReadingSub(ReadingBase oldReading, DateTime splitTime, ReadingBase newReading1, ReadingBase newReading2)
+        {
+            if (((EnergyReading)newReading1).EnergyToday.HasValue)
+                ((EnergyReading)newReading1).EnergyToday -= ((EnergyReading)newReading2).EnergyDelta;
+            if (((EnergyReading)newReading1).EnergyTotal.HasValue)
+                ((EnergyReading)newReading1).EnergyTotal -= ((EnergyReading)newReading2).EnergyDelta;
+        }
     }
 }

@@ -475,12 +475,10 @@ namespace DeviceDataRecorders
             ReadingBase reading1;
             ReadingBase reading2;
             SplitReadingCore((ReadingBase)oldReading, splitTime, out reading1, out reading2);
-            SplitReadingSub((TDeviceReading)oldReading, splitTime, (TDeviceReading)reading1, (TDeviceReading)reading2);
+            DeviceDetailPeriods.Device.SplitReadingSub(oldReading, splitTime, reading1, reading2);
             newReading1 = reading1;
             newReading2 = reading2;
         }
-
-        protected abstract void SplitReadingSub(TDeviceReading oldReading, DateTime splitTime, TDeviceReading newReading1, TDeviceReading newReading2);
 
         public void ClearReadings()
         {            
@@ -531,7 +529,7 @@ namespace DeviceDataRecorders
                 if (thisReading.ReadingStart >= endTime)
                     break;
 
-                if (accumulateDuration && reading.IsGapFillReading()) // no accumulation of gap fill readings when accumulateDuration
+                if (accumulateDuration && reading.IsHistoryReading()) // no accumulation of gap fill readings when accumulateDuration
                     continue;
 
                 if ((consolidatedEndTime - newReading.ReadingEnd).TotalSeconds > DatabaseIntervalSeconds)
@@ -584,7 +582,7 @@ namespace DeviceDataRecorders
                     continue;
                 }
 
-                if (reading.IsGapFillReading())
+                if (reading.IsHistoryReading())
                     // this reading was created in a previous Gap Fill operation and needs a history value based on duration
                     reading.HistoryAdjust_Average(actualTotal, histRecord); 
 

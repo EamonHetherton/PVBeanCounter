@@ -269,5 +269,8 @@ namespace Device
             }            
         }
 
+        public override void SplitReadingSub(ReadingBase oldReading, DateTime splitTime, ReadingBase newReading1, ReadingBase newReading2)
+        {
+        }
     }
 }
