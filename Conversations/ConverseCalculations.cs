@@ -144,4 +144,26 @@ namespace Conversations
             return arr;
         }
     }
+
+    public class GrowattConverseCalculations : IConverseCheckSum16
+    {
+        public UInt16 GetCheckSum16(List<byte[]> message)
+        {
+            UInt16 checkSum = 0;
+            ushort pos = 0;
+
+            foreach (byte[] bytes in message)
+            {
+                ushort i;
+                for (i = 0; i < bytes.Length; i++)
+                {
+                    // LogMessage("GW GetChecksum16: i: " + i + " - length: " + bytes.Length + " - checksum: " + checkSum, LogEntryType.MeterTrace);
+                    checkSum += (ushort)(((ushort)bytes[i]) ^ pos);
+                    // LogMessage("GW GetChecksum16: pos: " + pos + " - byte: " + ((ushort)bytes[i]) + " - checksum: " + checkSum, LogEntryType.MeterTrace);
+                    pos++;
+                }
+            }
+            return checkSum;
+        }
+    }
 }

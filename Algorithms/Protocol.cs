@@ -42,12 +42,14 @@ namespace Algorithms
             {
                 if (ProtocolSettings.CheckSum == "ModbusCheckSum16" || ProtocolSettings.CheckSum == "ModbusCRC16")
                     Calculations = new Conversations.ModbusConverseCalculations();
+                else if (ProtocolSettings.CheckSum == "GrowattCheckSum16")
+                    Calculations = new Conversations.GrowattConverseCalculations();
                 else if (ProtocolSettings.CheckSum == "CRC16")
                     Calculations = new Conversations.CRC16ConverseCalculations();
                 else if (ProtocolSettings.CheckSum == "CheckSum8")
                     Calculations = new Conversations.FroniusConverseCalculations();
                 else
-                    new Conversations.ConverseCalculations();
+                    Calculations = new Conversations.ConverseCalculations();
             }
             else
                 Calculations = converseCheckSum;

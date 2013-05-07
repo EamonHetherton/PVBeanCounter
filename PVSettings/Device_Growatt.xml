@@ -2,6 +2,251 @@
 <devices>
   <device>
     <devicetype value="Inverter" />
+    <description value="Growatt - Single Phase (Non-Modbus - untested)" />
+    <specification value="Growatt - Single Phase (S.1.8)" />
+    <version value="01" />
+    <protocol value="Growatt" />
+    <endian16bit value="Big" />
+    <endian32bit value="Big" />
+
+    <features>
+      <feature id="0" type="YieldAC"/>
+      <feature id="0" type="YieldDC"/>
+      <feature id="1" type="YieldDC"/>
+    </features>
+
+    <block>
+      <name value="GetSerialNo" />
+      <type value="Identity" />
+      <conversation value="SendReceive" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="Address" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+          <registervalue value="0x32 53" />
+          <binding value="Request" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="string" />
+          <size value="10" />
+          <content value="SerialNo" />
+        </register>
+      </message>
+    </block>
+    
+    <block>
+      <name value="GetInfo" />
+      <type value="Identity" />
+      <conversation value="SendReceive" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="Address" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+          <registervalue value="0x32 43" />
+          <binding value="Request" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="byte" />
+          <content value="PhaseInd" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <size value="4" />
+          <content value="VARating" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+          <content value="NPV" />
+        </register>
+        <register>
+          <type value="string" />
+          <size value="2" />
+          <content value="Model" />
+          <extractor value="GrowattModel" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <size value="5" />
+          <content value="Firmware" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <size value="17" />
+          <content value="Manufacturer" />
+        </register>
+      </message>
+    </block>
+
+    <block>
+      <name value="GetInstantReadings" />
+      <type value="Reading" />
+      <conversation value="SendReceive" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="Address" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+          <registervalue value="0x32 41" />
+          <binding value="Request" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="byte" />
+          <size value="1" />
+          <content value="Status" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <scale value="10" />
+          <content value="VoltsPV1" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <scale value="10" />
+          <content value="VoltsPV2" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <scale value="10" />
+          <content value="PowerPV1" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <scale value="10" />
+          <content value="VoltsAC1" />        
+        </register>
+        <register>
+          <type value="uint16" />
+          <scale value="10" />
+          <content value="CurrentAC1" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <scale value="100" />
+          <content value="Frequency" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <scale value="10" />
+          <content value="PowerAC1" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <size value="14" />
+          <content value="ErrorRegisters" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <size value="2" />
+          <content value="ErrorCode" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <scale value="1" />
+          <content value="Temperature" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <scale value="1" />
+          <content value="ATest" />
+        </register>
+        
+      </message>
+    </block>
+
+    <block>
+      <name value="GetTotalReadings" />
+      <type value="Reading" />
+      <ondbwriteonly value="true" />
+      <conversation value="SendReceive" />
+
+      <message>
+        <name value="Send" />
+        <register>
+          <type value="byte" />
+          <content value="Address" />
+          <binding value="Address" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <size value="2" />
+          <registervalue value="0x32 42" />
+          <binding value="Request" />
+        </register>
+      </message>
+
+      <message>
+        <name value="ReceiveData" />
+        <register>
+          <type value="uint16" />
+          <scale value="10" />
+          <content value="EnergyTodayPV" />
+        </register>
+        <register>
+          <type value="uint32" />
+          <scale value="10" />
+          <content value="EnergyTotalPV" />
+        </register>
+        <register>
+          <type value="uint16" />
+          <scale value="10" />
+          <content value="EnergyTodayAC" />
+        </register>
+        <register>
+          <type value="uint32" />
+          <scale value="10" />
+          <content value="EnergyTotalAC" />
+        </register>
+        <register>
+          <type value="uint32" />
+          <scale value="10" />
+          <content value="TimeTotal" />
+        </register>
+        <register>
+          <type value="bytes" />
+          <size value="4" />
+          <content value="Ignore1" />
+        </register>
+
+      </message>
+    </block>
+
+  </device>
+  
+  <device>
+    <devicetype value="Inverter" />
     <description value="Growatt Inverter (Modbus) - Single Phase" />
     <specification value="Growatt" />
     <version value="01" />

@@ -54,6 +54,56 @@
       </message>
     </conversation>
   </protocol>
+
+  <protocol>
+    <name value="Growatt" />
+    <type value="QueryResponse" />
+    <checksum value="GrowattCheckSum16" />
+    <endian value="Big" />
+    <addresslow value="1" />
+    <addresshigh value="255" />
+
+    <serialportsettings>
+      <baudrate value="9600" />
+      <databits value="8" />
+      <stopbits value="one" />
+      <parity value="none" />
+      <handshake value="none" />
+    </serialportsettings>
+
+    <conversation>
+      <name value="SendReceive" />
+      <message>
+        <name value="SendMain" />
+        <type value ="Send" />
+        <element value="0x3F" />
+        <element value="0x23" />
+        <element type="BYTE[1]" name="Address" />        
+        <element type="BYTE[2]" name="Request" />
+        <element value="0x00" />
+        <element type="BYTE[2]" name="CheckSum16" />
+      </message>
+      <message>
+        <name value="ReceiveHeader" />
+        <type value ="Read" />
+        <element value="0x23" />
+        <element value="0x3F" />
+        <element type="BYTE[1]" name="Address" />
+        <element type="BYTE[2]" name="Request" />
+      </message>
+      <message>
+        <name value="ReceiveDataSize" />
+        <type value ="Extract" />
+        <element type="BYTE[1]" name="%PayloadSize_1" />
+      </message>
+      <message>
+        <name value="ReceiveData" />
+        <type value ="Extract" />
+        <element type="BYTE[%PayloadSize_1]" name="%Payload_1" />
+        <element type="BYTE[2]" name="CheckSum16" />
+      </message>
+    </conversation>
+  </protocol>
   
   <protocol>
     <name value="Modbus" />

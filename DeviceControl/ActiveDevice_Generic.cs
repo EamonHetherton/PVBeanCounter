@@ -582,5 +582,14 @@ namespace Device
                 ((EnergyReading)newReading1).EnergyTotal -= ((EnergyReading)newReading2).EnergyDelta;
         }
     }
+
+    public class ActiveDevice_Growatt : ActiveDevice_Generic
+    {
+        public ActiveDevice_Growatt(DeviceControl.DeviceManager_ActiveController<Device.ActiveDevice_Generic> deviceManager, DeviceManagerDeviceSettings deviceSettings)
+            : base(deviceManager, deviceSettings)
+        {
+
+        }
+    }
 }
 
