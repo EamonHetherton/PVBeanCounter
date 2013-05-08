@@ -603,7 +603,7 @@ namespace DeviceDataRecorders
             return newRec;
         }
 
-        public override void AccumulateReading(ReadingBase readingGeneric, bool useTemperature, bool accumulateDuration = false, Double operationFactor = 1.0)
+        public override void AccumulateReading(ReadingBase readingGeneric, bool useTemperature, bool updatePower, bool accumulateDuration = false, Double operationFactor = 1.0)
         {
             EnergyReading reading = (EnergyReading)readingGeneric;
             if (accumulateDuration)
@@ -611,23 +611,29 @@ namespace DeviceDataRecorders
             if (reading.Amps.HasValue)
                 Amps = reading.Amps.Value;
 
-            if (reading.Power.HasValue)
-                Power = reading.Power.Value;
-
-            if (reading.MinPower.HasValue)
+            if (updatePower)
             {
-                if (MinPower.HasValue)
-                    MinPower = Math.Min(MinPower.Value, reading.MinPower.Value);
-                else
-                    MinPower = reading.MinPower;
-            }
+                if (reading.Power.HasValue)
+                    if (Power.HasValue)
+                        Power += reading.Power.Value;
+                    else
+                        Power = reading.Power.Value;
 
-            if (reading.MaxPower.HasValue)
-            {
-                if (MaxPower.HasValue)
-                    MaxPower = Math.Max(MaxPower.Value, reading.MaxPower.Value);
-                else
-                    MaxPower = reading.MaxPower;
+                if (reading.MinPower.HasValue)
+                {
+                    if (MinPower.HasValue)
+                        MinPower = Math.Min(MinPower.Value, reading.MinPower.Value);
+                    else
+                        MinPower = reading.MinPower;
+                }
+
+                if (reading.MaxPower.HasValue)
+                {
+                    if (MaxPower.HasValue)
+                        MaxPower = Math.Max(MaxPower.Value, reading.MaxPower.Value);
+                    else
+                        MaxPower = reading.MaxPower;
+                }
             }
 
             if (reading.Volts.HasValue)

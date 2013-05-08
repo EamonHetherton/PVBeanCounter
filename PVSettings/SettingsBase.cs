@@ -42,6 +42,12 @@ namespace PVSettings
             if (SystemServices != null)
                 SystemServices.LogMessage(component, message, logEntryType);
         }
+
+        public static void LogError()
+        {
+            //if (SystemServices != null)
+                
+        }
     }
 
     public delegate void SettingsNotification();

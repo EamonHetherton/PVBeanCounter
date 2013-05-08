@@ -12,12 +12,11 @@
     <endian32bit value="Big" />
 
     <features>
-      <feature type="YieldAC" />
-      <feature type="PowerAC" phase="0"/>
-      <feature type="PowerAC" phase="1"/>
-      <feature type="PowerAC" phase="2"/>
-      <feature type="PowerPV" string="0"/>
-      <feature type="PowerPV" string="1"/>
+      <feature id="0" type="YieldAC"/>
+      <feature id="1" type="YieldAC"/>
+      <feature id="2" type="YieldAC"/>
+      <feature id="0" type="YieldDC" />
+      <feature id="1" type="YieldDC" />
     </features>
     
     <block>
@@ -181,12 +180,11 @@
     <endian32bit value="Big" />
 
     <features>
-      <feature type="YieldAC" />
-      <feature type="PowerAC" phase="0"/>
-      <feature type="PowerAC" phase="1"/>
-      <feature type="PowerAC" phase="2"/>
-      <feature type="PowerPV" string="0"/>
-      <feature type="PowerPV" string="1"/>
+      <feature id="0" type="YieldAC" description="Yield AC - Phase 1" />
+      <feature id="1" type="YieldAC" description="Yield AC - Phase 2" />
+      <feature id="2" type="YieldAC" description="Yield AC - Phase 3" />
+      <feature id="0" type="YieldDC" description="Yield String 1" />
+      <feature id="1" type="YieldDC" description="Yield String 2" />
     </features>
 
     <block>

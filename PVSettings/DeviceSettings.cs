@@ -390,7 +390,13 @@ namespace PVSettings
             }
         }
 
-
+        public bool UseHistory
+        {
+            get
+            {
+                return GetValue("crazydaystartminutes") == "true";
+            }
+        }
 
     }
 }

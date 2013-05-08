@@ -45,6 +45,7 @@ namespace Device
         public decimal? VoltsAC1 { get; private set; }
         public decimal? CurrentAC1 { get; private set; }
         public decimal? PowerAC1 { get; private set; }
+        public decimal? PowerAC1High { get; private set; }
         public decimal? VoltsAC2 { get; private set; }
         public decimal? CurrentAC2 { get; private set; }
         public decimal? PowerAC2 { get; private set; }
@@ -77,6 +78,7 @@ namespace Device
         public void SetVoltsAC1(decimal value) { VoltsAC1 = value; }
         public void SetCurrentAC1(decimal value) { CurrentAC1 = value; }
         public void SetPowerAC1(decimal value) { PowerAC1 = value; }
+        public void SetPowerAC1High(decimal value) { PowerAC1High = value; }
         public void SetVoltsAC2(decimal value) { VoltsAC2 = value; }
         public void SetCurrentAC2(decimal value) { CurrentAC2 = value; }
         public void SetPowerAC2(decimal value) { PowerAC2 = value; }
@@ -96,9 +98,10 @@ namespace Device
 
         public byte[] AlarmRegisters { get; private set; }
         public byte[] ErrorRegisters { get; private set; }
+        public bool HaveErrorRegisters { get; private set; }
 
         public void SetAlarmRegisters(byte[] value) { AlarmRegisters = value; }
-        public void SetErrorRegisters(byte[] value) { ErrorRegisters = value; }
+        public void SetErrorRegisters(byte[] value) { ErrorRegisters = value; HaveErrorRegisters = true;  }
         // End Bytes Variables
 
         public Double EnergyMargin { get; private set; }
@@ -109,6 +112,7 @@ namespace Device
             :base(deviceSettings, protocol, errorLogger)
         {
             EnergyMargin = 0.01;
+            HaveErrorRegisters = false;
         }
 
         protected override void LoadVariables()
@@ -154,6 +158,8 @@ namespace Device
             var = new VariableEntry_Numeric("CurrentAC1", SetCurrentAC1);
             VariableEntries.Add(var);
             var = new VariableEntry_Numeric("PowerAC1", SetPowerAC1);
+            VariableEntries.Add(var);
+            var = new VariableEntry_Numeric("PowerAC1High", SetPowerAC1High);
             VariableEntries.Add(var);
             var = new VariableEntry_Numeric("VoltsAC2", SetVoltsAC2);
             VariableEntries.Add(var);
@@ -213,6 +219,7 @@ namespace Device
             VoltsAC1 = null;
             CurrentAC1 = null;
             PowerAC1 = null;
+            PowerAC1High = null;
             VoltsAC2 = null;
             CurrentAC2 = null;
             PowerAC2 = null;
@@ -227,6 +234,7 @@ namespace Device
 
             AlarmRegisters = new byte[2];
             ErrorRegisters = new byte[2];
+            HaveErrorRegisters = false;
         }
 
         private void LoadEnergyMargin()

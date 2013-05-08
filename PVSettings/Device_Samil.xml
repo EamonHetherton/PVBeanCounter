@@ -11,11 +11,10 @@
     <hasstartofdayenergydefect value="false" />
 
     <features>
-      <feature type="YieldAC" />
-      
-      <feature type="PowerPV" string="0"/>
-      <feature type="PowerPV" string="1"/>
-      <feature type="PowerPV" string="2"/>
+      <feature id="0" type="YieldAC" description="Yield AC" />
+      <feature id="0" type="YieldDC" description="Yield String 1" />
+      <feature id="1" type="YieldDC" description="Yield String 2" />
+      <feature id="2" type="YieldDC" description="Yield String 3" />
     </features>
 
     <block>

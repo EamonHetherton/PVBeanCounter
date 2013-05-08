@@ -650,6 +650,8 @@ namespace PVSettings
                         "`SiteId` varchar(10) NOT NULL, " +
                         "`OutputDay` date NOT NULL, " +
                         "`OutputTime` mediumint(9) NOT NULL, " +
+                        "`Energy` double NULL, " +
+                        "`Power` double NULL, " +
                         "`Loaded` tinyint(1) NOT NULL DEFAULT '0', " +
                         "`ImportEnergy` double NULL, " +
                         "`ImportPower` double NULL, " +
@@ -2515,6 +2517,8 @@ namespace PVSettings
                         "SiteId [varchar](10) NOT NULL, " +
                         "OutputDay [date] NOT NULL, " +
                         "OutputTime [int] NOT NULL, " +
+                        "Energy [float] NULL, " +
+                        "Power [float] NULL, " +
                         "Loaded int NOT NULL DEFAULT 0, " +
                         "ImportEnergy [float] NULL, " +
                         "ImportPower [float] NULL, " +

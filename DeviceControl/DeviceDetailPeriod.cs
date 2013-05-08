@@ -251,21 +251,21 @@ namespace DeviceDataRecorders
             return overlap.TotalSeconds / duration.TotalSeconds;
         }
 
-        public void GetIntervalInfo(DateTime dateTime, out DateTime PeriodStart, out uint Interval, out bool IsIntervalStart)
+        public void GetIntervalInfo(DateTime dateTime, out DateTime PeriodStart, out int Interval)
         {
             DateTime periodStart = GetPeriodStart(dateTime, false);
             TimeSpan offset = dateTime - periodStart;
-            uint interval = (uint)(((uint)offset.TotalSeconds) / DatabaseIntervalSeconds);
-            IsIntervalStart = (TimeSpan.FromSeconds(interval * DatabaseIntervalSeconds) == offset);
+            int interval = (int)(((int)offset.TotalSeconds) / DatabaseIntervalSeconds);
+            //IsIntervalStart = (TimeSpan.FromSeconds(interval * DatabaseIntervalSeconds) == offset);
             Interval = interval;
             PeriodStart = periodStart;
         }
 
-        public static void GetIntervalInfo(PeriodType periodType, TimeSpan periodOffset, int intervalSeconds, DateTime dateTime, out DateTime PeriodStart, out uint Interval, out bool IsIntervalStart)
+        public static void GetIntervalInfo(PeriodType periodType, TimeSpan periodOffset, int intervalSeconds, DateTime dateTime, out DateTime PeriodStart, out int Interval, out bool IsIntervalStart)
         {
             DateTime periodStart = GetPeriodStart(periodType, periodOffset, dateTime, false);
             TimeSpan offset = dateTime - periodStart;
-            uint interval = (uint)(((uint)offset.TotalSeconds) / intervalSeconds);
+            int interval = (int)(((int)offset.TotalSeconds) / intervalSeconds);
             IsIntervalStart = (TimeSpan.FromSeconds(interval * intervalSeconds) == offset);
             Interval = interval;
             PeriodStart = periodStart;
@@ -734,7 +734,7 @@ namespace DeviceDataRecorders
             cmd.AddParameterWithValue("@NextPeriodStart", Start.AddDays(1.0) + PeriodOverlapLimit);
         }
 
-        public void ConsolidateReading(TDeviceReading reading, bool useTemperature, ConsolidateDeviceSettings.OperationType operation = ConsolidateDeviceSettings.OperationType.Add)
+        public void ConsolidateReading(TDeviceReading reading, bool useTemperature, int nextInterval, ConsolidateDeviceSettings.OperationType operation = ConsolidateDeviceSettings.OperationType.Add)
         {
             // discard readings that are not relevant to this consolidation period
             if (reading.ReadingEnd <= Start)
@@ -769,14 +769,14 @@ namespace DeviceDataRecorders
                 }
             }
 
-            uint interval;
-            bool isIntervalStart;
+            int interval;
+            //bool isIntervalStart;
             DateTime start;
             DateTime currentStart = reading.ReadingStart;
 
             do // if source reading spans multiple consolidation readings - divide at consolidation interval boundaries
             {
-                GetIntervalInfo(currentStart, out start, out interval, out isIntervalStart);
+                GetIntervalInfo(currentStart, out start, out interval);
                 if (start != Start)
                     throw new Exception("ConsolidateReading - consolidation mismatch - Calc start: " + start + " - Required start: " + Start);
                 DateTime intervalEnd = start + TimeSpan.FromSeconds((interval + 1) * DatabaseIntervalSeconds);
@@ -793,7 +793,7 @@ namespace DeviceDataRecorders
                     toReading = (TDeviceReading)ReadingsGeneric.ReadingList[index];
 
                 if (currentStart == reading.ReadingStart && intervalEnd >= reading.ReadingEnd)  // no division required - reading fits in one consolidation interval
-                    toReading.AccumulateReading(reading, useTemperature, false, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
+                    toReading.AccumulateReading(reading, useTemperature, false, nextInterval != interval, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
                 else
                 {
                     TimeSpan duration;
@@ -802,7 +802,7 @@ namespace DeviceDataRecorders
                     else
                         duration = intervalEnd - currentStart; // beginning or middle of spanned reading
                     TDeviceReading intervalReading = reading.Clone(intervalEnd, duration); // get time adjusted reading
-                    toReading.AccumulateReading(intervalReading, useTemperature, false, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
+                    toReading.AccumulateReading(intervalReading, useTemperature, false, nextInterval != interval, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
                 }
 
                 currentStart = intervalEnd; // prepare for next interval iteration
@@ -853,11 +853,22 @@ namespace DeviceDataRecorders
                         foreach (PeriodBase p in pEnum)
                         {
                             // locate a period with a specific start date
-                            // Note - if it does not exist and empty one will be created
+                            // Note - if it does not exist an empty one will be created
                             DeviceDetailPeriod<TDeviceReading, TDeviceHistory> period = (DeviceDetailPeriod<TDeviceReading, TDeviceHistory>)periods.FindOrCreate(p.Start);
                             // step through the readings in one period and consolidate into this period
+                            int nextInterval = -1;
+                            DateTime start;
+                            TDeviceReading prevReading = null;
                             foreach (TDeviceReading r in period.GetReadings())
-                                ConsolidateReading(r, devLink.UseTemperature, devLink.Operation);
+                            {
+                                GetIntervalInfo(r.ReadingStart, out start, out nextInterval);
+                                if (prevReading != null)
+                                    ConsolidateReading(prevReading, devLink.UseTemperature, nextInterval, devLink.Operation);
+                                
+                                prevReading = r;                                
+                            }
+                            if (prevReading != null)
+                                ConsolidateReading(prevReading, devLink.UseTemperature, nextInterval, devLink.Operation);
                         }
                         devLink.SourceUpdated = false;
                     }

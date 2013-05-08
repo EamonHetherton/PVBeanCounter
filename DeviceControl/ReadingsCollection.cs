@@ -457,17 +457,18 @@ namespace DeviceDataRecorders
             int i = 0;  // position in Readings
             
             ReadingBase reading;
+            ReadingBase prevReading = null;
+            int prevReadingInterval = -1;
             
             int currentInterval = -1;
 
             ReadingBase accumReading = null;
             bool replaceReadings = false;
             bool suppressAccum = false; // set to true when GapFillReading occurs in the interval - no accum allowed
-
-            while (i < Readings.Count)
+            try
             {
-                try
-                {
+                while (i < Readings.Count)
+                {              
                     reading = Readings.Values[i];
 
                     int readingInterval = DDP.GetIntervalNo(reading.ReadingEnd);  // end time interval of current reading
@@ -510,16 +511,23 @@ namespace DeviceDataRecorders
                         replaceReadings = true;
                         currentInterval = readingInterval;
                     }
+                    i++;
 
                     if (!suppressAccum)
-                        accumReading.AccumulateReading(reading, true);
-                    i++;
+                    {
+                        if (prevReading != null)
+                            accumReading.AccumulateReading(prevReading, true, readingInterval != prevReadingInterval);
+                        prevReading = reading;
+                        prevReadingInterval = readingInterval;
+                    }
                 }
-                catch (Exception e)
-                {
-                    GlobalSettings.LogMessage("ReadingsCollection.ConsolidateIntervals", "Exception: " + e.Message);
-                    throw e;
-                }
+                if (prevReading != null)
+                    accumReading.AccumulateReading(prevReading, true, true);
+            }
+            catch (Exception e)
+            {
+                GlobalSettings.LogMessage("ReadingsCollection.ConsolidateIntervals", "Exception: " + e.Message);
+                throw e;
             }
             if (replaceReadings)
             {

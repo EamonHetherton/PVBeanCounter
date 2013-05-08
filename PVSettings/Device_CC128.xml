@@ -8,6 +8,7 @@
     <status value="Test Only" />
     <protocol value="CC128" />
     <devicetype value="EnergyMeter" />
+    <usehistory value="true" />
 
     <features>
       <feature id="0" type="EnergyAC" description="Energy AC" />
@@ -33,6 +34,7 @@
     <status value="Test Only" />
     <protocol value="CC128" />
     <devicetype value="EnergyMeter" />
+    <usehistory value="false" />
 
     <features>
       <feature id="0" type="EnergyAC" description="Energy AC - Phase 0" />

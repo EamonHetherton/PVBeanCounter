@@ -10,7 +10,7 @@
     <endian32bit value="Big" />
 
     <features>
-      <feature id="0" type="YieldAC"/>
+      <feature id="0" type="YieldAC" description="Yield AC"/>
     </features>
 
     <block>

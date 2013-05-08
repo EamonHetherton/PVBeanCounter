@@ -12,10 +12,10 @@
     <crazydaystartminutes value="90" />
 
     <features>
-      <feature id="0" type="YieldAC"/>
-      <feature id="0" type="YieldDC" />
-      <feature id="1" type="YieldDC" />
-      <feature id="2" type="YieldDC" />
+      <feature id="0" type="YieldAC" description="Yield AC"/>
+      <feature id="0" type="YieldDC" description="Yield String 1" />
+      <feature id="1" type="YieldDC" description="Yield String 2"/>
+      <feature id="2" type="YieldDC" description="Yield String 3"/>
     </features>
 
     <block>

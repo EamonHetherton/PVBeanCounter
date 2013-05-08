@@ -487,7 +487,9 @@ namespace DeviceControl
                     {
                         try
                         {
-                            ProcessOneHistoryRecord(DeviceList[index], ReadingInfo.HistoryRecords[index][0]);
+                            TDevice device = DeviceList[index];
+                            if (device.DeviceSettings.UseHistory)
+                                ProcessOneHistoryRecord(device, ReadingInfo.HistoryRecords[index][0]);
                         }
                         catch (Exception e)
                         {

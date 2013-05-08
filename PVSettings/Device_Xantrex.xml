@@ -13,9 +13,8 @@
     <endian32bit value="Big" />
 
     <features>
-      <feature type="YieldAC" />
-      <feature type="PowerAC"/>
-      <feature type="PowerPV" string="0"/>
+      <feature id="0" type="YieldAC" description="Yield AC" />
+      <feature id="0" type="YieldDC" description="Yield DC" />
     </features>
 
     <typeoptions>

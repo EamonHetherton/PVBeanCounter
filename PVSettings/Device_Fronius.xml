@@ -9,8 +9,8 @@
     <endian16bit value="Big" />
 
     <features>
-      <feature id="0" type="YieldAC" />
-      <feature id="0" type="YieldDC" />
+      <feature id="0" type="YieldAC" description="Yield AC" />
+      <feature id="0" type="YieldDC" description="Yield DC" />
     </features>
     
     <block>

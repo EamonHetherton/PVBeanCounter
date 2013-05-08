@@ -348,6 +348,14 @@ namespace Device
                     reading.EnergyDelta = EstEnergy.LastEnergyDelta_Power;
 
                     reading.Power = (int?)InverterAlgorithm.PowerAC1;
+                    if (InverterAlgorithm.PowerAC1High.HasValue)
+                        if (InverterAlgorithm.PowerAC1.HasValue)
+                            reading.Power = (Int32?)(InverterAlgorithm.PowerAC1.Value + InverterAlgorithm.PowerAC1High.Value * 65536);
+                        else
+                            reading.Power = null;
+                    else
+                        reading.Power = (Int32?)InverterAlgorithm.PowerAC1;
+                   
                     reading.Volts = (float?)InverterAlgorithm.VoltsAC1;
                     reading.Amps = (float?)InverterAlgorithm.CurrentAC1;
                     reading.Frequency = (float?)InverterAlgorithm.Frequency;                   
@@ -557,6 +565,9 @@ namespace Device
                     status.SetEventReading(curTime, 0.0, curPower, (int)duration.TotalSeconds, true);
                     DeviceManager.ManagerManager.EnergyEvents.ScanForEvents();
                 }
+
+                if (InverterAlgorithm.ErrorCode.HasValue && InverterAlgorithm.ErrorCode != 0 && InverterAlgorithm.HaveErrorRegisters)
+                    DeviceManager.ErrorLogger.LogError(InverterAlgorithm.Address.ToString(), curTime, InverterAlgorithm.ErrorCode.ToString(), 2, InverterAlgorithm.ErrorRegisters);
 
                 stage = "errors";
                 if (alarmFound)
