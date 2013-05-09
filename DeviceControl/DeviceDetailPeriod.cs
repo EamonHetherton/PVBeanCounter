@@ -736,6 +736,7 @@ namespace DeviceDataRecorders
 
         public void ConsolidateReading(TDeviceReading reading, bool useTemperature, int nextInterval, ConsolidateDeviceSettings.OperationType operation = ConsolidateDeviceSettings.OperationType.Add)
         {
+            GlobalSettings.LogMessage("ConsolidateReading", "TRACE Start: " + reading.ReadingStart + " - End: " + reading.ReadingEnd, LogEntryType.Trace);
             // discard readings that are not relevant to this consolidation period
             if (reading.ReadingEnd <= Start)
                 return;
@@ -745,6 +746,7 @@ namespace DeviceDataRecorders
             // trim readings that span the start of period boundary
             if (reading.ReadingStart < Start)
             {
+                GlobalSettings.LogMessage("ConsolidateReading", "TRACE Start Trim", LogEntryType.Trace);
                 if ((Start - reading.ReadingStart) > PeriodOverlapLimit)
                     throw new Exception("ConsolidateReading - Period overlap exceeds limit - ReadingStart: " + reading.ReadingStart + " - Period Start: " + Start);
                 if (DeviceParams.EnforceRecordingInterval)
@@ -753,11 +755,13 @@ namespace DeviceDataRecorders
                     ReadingBase keepReading;
                     SplitReading((ReadingBase)reading, Start, out discardReading, out keepReading);
                     reading = (TDeviceReading)keepReading;
+                    GlobalSettings.LogMessage("ConsolidateReading", "TRACE keep Start: " + reading.ReadingStart + " - End: " + reading.ReadingEnd, LogEntryType.Trace);
                 }
             }
             // trim readings that span the end of period boundary
             if (reading.ReadingEnd > End)
             {
+                GlobalSettings.LogMessage("ConsolidateReading", "TRACE End Trim", LogEntryType.Trace);
                 if ((reading.ReadingEnd - End) > PeriodOverlapLimit)
                     throw new Exception("ConsolidateReading - Period overlap exceeds limit - ReadingEnd: " + reading.ReadingStart + " - Period End: " + Start);
                 if (DeviceParams.EnforceRecordingInterval)
@@ -766,6 +770,7 @@ namespace DeviceDataRecorders
                     ReadingBase keepReading;
                     SplitReading(reading, End, out keepReading, out discardReading);
                     reading = (TDeviceReading)keepReading;
+                    GlobalSettings.LogMessage("ConsolidateReading", "TRACE keep Start: " + reading.ReadingStart + " - End: " + reading.ReadingEnd, LogEntryType.Trace);
                 }
             }
 
@@ -774,26 +779,36 @@ namespace DeviceDataRecorders
             DateTime start;
             DateTime currentStart = reading.ReadingStart;
 
+            GlobalSettings.LogMessage("ConsolidateReading", "TRACE Enter consolidation loop - currentStart: " + currentStart, LogEntryType.Trace);
             do // if source reading spans multiple consolidation readings - divide at consolidation interval boundaries
             {
                 GetIntervalInfo(currentStart, out start, out interval);
+                GlobalSettings.LogMessage("ConsolidateReading", "TRACE GetIntervalInfo returns - start: " + start + " - interval: " + interval, LogEntryType.Trace);
                 if (start != Start)
                     throw new Exception("ConsolidateReading - consolidation mismatch - Calc start: " + start + " - Required start: " + Start);
                 DateTime intervalEnd = start + TimeSpan.FromSeconds((interval + 1) * DatabaseIntervalSeconds);
 
                 int index = ReadingsGeneric.IndexOfKey(intervalEnd);
+                GlobalSettings.LogMessage("ConsolidateReading", "TRACE IndexOfKey intervalEnd: " + intervalEnd + " - Returns index: " + index, LogEntryType.Trace);
                 TDeviceReading toReading;
                 if (index < 0)
                 {
                     toReading = NewReading(intervalEnd, TimeSpan.FromSeconds(DatabaseIntervalSeconds), null);
+                    GlobalSettings.LogMessage("ConsolidateReading", "TRACE index < 0 Adding Start: " + toReading.ReadingStart + " - End: " + toReading.ReadingEnd, LogEntryType.Trace);
                     ReadingsGeneric.AddReading(toReading);
                     toReading.RegisterPeriodInvolvement(this);
                 }
                 else
+                {
                     toReading = (TDeviceReading)ReadingsGeneric.ReadingList[index];
+                    GlobalSettings.LogMessage("ConsolidateReading", "TRACE reading Start: " + toReading.ReadingStart + " - End: " + toReading.ReadingEnd, LogEntryType.Trace);
+                }
 
                 if (currentStart == reading.ReadingStart && intervalEnd >= reading.ReadingEnd)  // no division required - reading fits in one consolidation interval
+                {
+                    GlobalSettings.LogMessage("ConsolidateReading", "TRACE AccumulateReading no split" , LogEntryType.Trace);
                     toReading.AccumulateReading(reading, useTemperature, false, nextInterval != interval, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
+                }
                 else
                 {
                     TimeSpan duration;
@@ -802,12 +817,16 @@ namespace DeviceDataRecorders
                     else
                         duration = intervalEnd - currentStart; // beginning or middle of spanned reading
                     TDeviceReading intervalReading = reading.Clone(intervalEnd, duration); // get time adjusted reading
+                    GlobalSettings.LogMessage("ConsolidateReading", "TRACE AccumulateReading with split Start: " 
+                        + intervalReading.ReadingStart + " - End: " + intervalReading.ReadingEnd, LogEntryType.Trace);
                     toReading.AccumulateReading(intervalReading, useTemperature, false, nextInterval != interval, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
                 }
 
                 currentStart = intervalEnd; // prepare for next interval iteration
+                GlobalSettings.LogMessage("ConsolidateReading", "TRACE end one loop - currentStart: " + currentStart, LogEntryType.Trace);
             }
             while (currentStart < reading.ReadingEnd);
+            GlobalSettings.LogMessage("ConsolidateReading", "TRACE Exit consolidation loop", LogEntryType.Trace);
         }
     }
 
@@ -838,39 +857,58 @@ namespace DeviceDataRecorders
         {
             try
             {
+                GlobalSettings.LogMessage("LoadPeriodFromConsolidations", "TRACE ClearReadings", LogEntryType.Trace);
                 ClearReadings();
                 // for each device feature that consolidates to this device (owner of this period)
+                GlobalSettings.LogMessage("LoadPeriodFromConsolidations", "TRACE Enter devLink source devices loop", LogEntryType.Trace);
                 foreach (Device.DeviceLink devLink in ((Device.ConsolidationDevice)DeviceDetailPeriods.Device).SourceDevices)
                 {
+                    GlobalSettings.LogMessage("LoadPeriodFromConsolidations", "TRACE FeatureType: " + FeatureType.ToString() + " - FeatureId: " + FeatureId, LogEntryType.Trace);
                     // to link must match this consolidation - consolidate the matching from link
                     if (FeatureType == devLink.ToFeatureType && FeatureId == devLink.ToFeatureId)
                     {
+                        GlobalSettings.LogMessage("LoadPeriodFromConsolidations", "TRACE devLink Matched From FeatureType: " + devLink.FromFeatureType.ToString() 
+                            + " - FeatureId: " + devLink.FromFeatureId, LogEntryType.Trace);
                         if (!devLink.FromDevice.DeviceId.HasValue)
                             devLink.FromDevice.GetDeviceId(null);
+                        GlobalSettings.LogMessage("LoadPeriodFromConsolidations", "TRACE Find Feature Periods", LogEntryType.Trace);
                         DeviceDetailPeriodsBase periods = devLink.FromDevice.FindOrCreateFeaturePeriods(devLink.FromFeatureType, devLink.FromFeatureId);
                         // step through all periods in the period container
+                        GlobalSettings.LogMessage("LoadPeriodFromConsolidations", "TRACE GetPeriodEnumerator - Start: " + Start + " - End: " + End, LogEntryType.Trace);
                         PeriodEnumerator pEnum = periods.GetPeriodEnumerator(Start, End);
+                        GlobalSettings.LogMessage("LoadPeriodFromConsolidations", "TRACE Enter period loop", LogEntryType.Trace);
                         foreach (PeriodBase p in pEnum)
                         {
+                            GlobalSettings.LogMessage("LoadPeriodFromConsolidations", "TRACE Period - Start: " + p.Start + " - End: " + p.End, LogEntryType.Trace);
                             // locate a period with a specific start date
                             // Note - if it does not exist an empty one will be created
+                            GlobalSettings.LogMessage("LoadPeriodFromConsolidations", "TRACE FindOrCreatePeriod", LogEntryType.Trace);
                             DeviceDetailPeriod<TDeviceReading, TDeviceHistory> period = (DeviceDetailPeriod<TDeviceReading, TDeviceHistory>)periods.FindOrCreate(p.Start);
                             // step through the readings in one period and consolidate into this period
                             int nextInterval = -1;
                             DateTime start;
                             TDeviceReading prevReading = null;
+                            GlobalSettings.LogMessage("LoadPeriodFromConsolidations", "TRACE GetReadings", LogEntryType.Trace);
                             foreach (TDeviceReading r in period.GetReadings())
                             {
+                                GlobalSettings.LogMessage("LoadPeriodFromConsolidations", "TRACE Reading - Start: " + r.ReadingStart + " - End: " + r.ReadingEnd, LogEntryType.Trace);
                                 GetIntervalInfo(r.ReadingStart, out start, out nextInterval);
+                                GlobalSettings.LogMessage("LoadPeriodFromConsolidations", "TRACE GetIntervalInfo returned - start: " 
+                                    + start + " - nextInterval: " + nextInterval + " - prevReading is " + ((prevReading == null) ? "null" : "not null"), LogEntryType.Trace);
                                 if (prevReading != null)
                                     ConsolidateReading(prevReading, devLink.UseTemperature, nextInterval, devLink.Operation);
                                 
                                 prevReading = r;                                
                             }
+                            GlobalSettings.LogMessage("LoadPeriodFromConsolidations", "TRACE GetReadings loop exits", LogEntryType.Trace);
                             if (prevReading != null)
+                            {
+                                GlobalSettings.LogMessage("LoadPeriodFromConsolidations", "TRACE Final ConsolidateReading", LogEntryType.Trace);
                                 ConsolidateReading(prevReading, devLink.UseTemperature, nextInterval, devLink.Operation);
+                            }
                         }
                         devLink.SourceUpdated = false;
+                        GlobalSettings.LogMessage("LoadPeriodFromConsolidations", "TRACE Period loop exits", LogEntryType.Trace);
                     }
                 }
             }

@@ -36,10 +36,13 @@ namespace DeviceDataRecorders
 
         private DeviceDetailPeriodBase DDP;
 
+        public System.Threading.Mutex RecordsMutex;
+
         public ReadingsCollection(DeviceDetailPeriodBase deviceDetailPeriod)
         {
             DDP = deviceDetailPeriod;
             ClearReadings();
+            RecordsMutex = new System.Threading.Mutex();
         }
 
         public IList<ReadingBase> ReadingList { get { return Readings.Values; } }
@@ -120,8 +123,19 @@ namespace DeviceDataRecorders
 
         public void RemoveReadingAt(int i)
         {
-            Readings.Values[i].DeregisterPeriodInvolvement(DDP);
-            Readings.RemoveAt(i);
+            bool haveMutex = false;
+            try
+            {
+                RecordsMutex.WaitOne();
+                haveMutex = true;
+                Readings.Values[i].DeregisterPeriodInvolvement(DDP);
+                Readings.RemoveAt(i);
+            }
+            finally
+            {
+                if (haveMutex)
+                    RecordsMutex.ReleaseMutex();
+            }
         }
 
         private ReadingBase FillSmallGap(ReadingBase reading, DateTime outputTime)
@@ -157,9 +171,13 @@ namespace DeviceDataRecorders
 
             bool readingsAdded = false;
             String stage = "initial";
+            bool haveMutex = false;
 
             try
-            {
+            {                
+                RecordsMutex.WaitOne();
+                haveMutex = true;
+
                 while (i < Readings.Count)
                 {
                     reading = Readings.Values[i];
@@ -235,6 +253,11 @@ namespace DeviceDataRecorders
             catch (Exception e)
             {
                 throw new Exception("FillSmallGaps - Stage: " + stage + " - Exception: " + e.Message, e);
+            }
+            finally
+            {
+                if (haveMutex)
+                    RecordsMutex.ReleaseMutex();
             }
 
             return remainingGaps;
@@ -345,51 +368,75 @@ namespace DeviceDataRecorders
 
         public void AddReading(ReadingBase reading, AddReadingMode mode = AddReadingMode.Insert)
         {
-            if (!CheckReadingPeriodCompatibility(reading))
-                throw new Exception("AddReading - Reading invalid for this period - ReadingStart: "
-                            + reading.ReadingStart + " - ReadingEnd: " + reading.ReadingEnd 
-                            + " - Period Start: " + DDP.Start + " - PeriodEnd: " + DDP.End);
-
-            List<ReadingBase> impactedReadings = FindReadingsInRange(reading.ReadingStart, reading.ReadingEnd);
-            if (impactedReadings.Count == 0)
-                Readings.Add(reading.ReadingEnd, reading);
-            else if (mode == AddReadingMode.Insert) // insertion not allowed to colide with existing
-                throw new Exception("AddReading - Insert Mode collision - ReadingStart: "
-                            + reading.ReadingStart + " - ReadingEnd: " + reading.ReadingEnd 
-                            + " - First impact start: " + impactedReadings[0].ReadingStart + " - First impact end: " + impactedReadings[0].ReadingEnd);
-            else if (mode == AddReadingMode.InsertReplace)
+            bool haveMutex = false;
+            try
             {
-                if (impactedReadings.Count == 1 && impactedReadings[0].ReadingEnd == reading.ReadingEnd && impactedReadings[0].ReadingStart == reading.ReadingStart)
-                {
-                    // use update rather than delete and insert if record already in database
-                    ReadingBase oldReading = impactedReadings[0];
-                    if (reading.IsSameReadingValuesGeneric(oldReading))
-                    {
-                        oldReading.AddReadingMatch = reading.AddReadingMatch;
-                        return;
-                    }
-                    reading.InDatabase = oldReading.InDatabase;
-                    Readings.Remove(oldReading.ReadingEnd);
-                }
-                else
-                {
-                    DeleteReadings(impactedReadings, reading.ReadingStart, reading.ReadingEnd); // delete any under footprint
-                    reading.InDatabase = false;
-                }
-                Readings.Add(reading.ReadingEnd, reading); // add new or replacement
-            }
-            else if (mode == AddReadingMode.FillGaps)
-                FillGaps(impactedReadings, reading);
+                RecordsMutex.WaitOne();
+                haveMutex = true;
 
-            CheckReadingsIntegrity();
+                if (!CheckReadingPeriodCompatibility(reading))
+                    throw new Exception("AddReading - Reading invalid for this period - ReadingStart: "
+                                + reading.ReadingStart + " - ReadingEnd: " + reading.ReadingEnd
+                                + " - Period Start: " + DDP.Start + " - PeriodEnd: " + DDP.End);
+
+                List<ReadingBase> impactedReadings = FindReadingsInRange(reading.ReadingStart, reading.ReadingEnd);
+                if (impactedReadings.Count == 0)
+                    Readings.Add(reading.ReadingEnd, reading);
+                else if (mode == AddReadingMode.Insert) // insertion not allowed to colide with existing
+                    throw new Exception("AddReading - Insert Mode collision - ReadingStart: "
+                                + reading.ReadingStart + " - ReadingEnd: " + reading.ReadingEnd
+                                + " - First impact start: " + impactedReadings[0].ReadingStart + " - First impact end: " + impactedReadings[0].ReadingEnd);
+                else if (mode == AddReadingMode.InsertReplace)
+                {
+                    if (impactedReadings.Count == 1 && impactedReadings[0].ReadingEnd == reading.ReadingEnd && impactedReadings[0].ReadingStart == reading.ReadingStart)
+                    {
+                        // use update rather than delete and insert if record already in database
+                        ReadingBase oldReading = impactedReadings[0];
+                        if (reading.IsSameReadingValuesGeneric(oldReading))
+                        {
+                            oldReading.AddReadingMatch = reading.AddReadingMatch;
+                            RecordsMutex.ReleaseMutex();
+                            return;
+                        }
+                        reading.InDatabase = oldReading.InDatabase;
+                        Readings.Remove(oldReading.ReadingEnd);
+                    }
+                    else
+                    {
+                        DeleteReadings(impactedReadings, reading.ReadingStart, reading.ReadingEnd); // delete any under footprint
+                        reading.InDatabase = false;
+                    }
+                    Readings.Add(reading.ReadingEnd, reading); // add new or replacement
+                }
+                else if (mode == AddReadingMode.FillGaps)
+                    FillGaps(impactedReadings, reading);
+
+                CheckReadingsIntegrity();
+            }
+            finally
+            {
+                if (haveMutex)
+                    RecordsMutex.ReleaseMutex();
+            }
         }
 
         public void ClearReadings()
         {
-            if (Readings != null)
-                foreach (ReadingBase reading in Readings.Values)
-                    reading.DeregisterPeriodInvolvement(DDP);
-            Readings = new SortedList<DateTime, ReadingBase>();
+            bool haveMutex = false;
+            try
+            {
+                RecordsMutex.WaitOne();
+                haveMutex = true;
+                if (Readings != null)
+                    foreach (ReadingBase reading in Readings.Values)
+                        reading.DeregisterPeriodInvolvement(DDP);
+                Readings = new SortedList<DateTime, ReadingBase>();
+            }
+            finally
+            {
+                if (haveMutex)
+                    RecordsMutex.ReleaseMutex();
+            }
         }
 
 
@@ -465,8 +512,13 @@ namespace DeviceDataRecorders
             ReadingBase accumReading = null;
             bool replaceReadings = false;
             bool suppressAccum = false; // set to true when GapFillReading occurs in the interval - no accum allowed
+
+            bool haveMutex = false;
             try
             {
+                RecordsMutex.WaitOne();
+                haveMutex = true;
+
                 while (i < Readings.Count)
                 {              
                     reading = Readings.Values[i];
@@ -497,7 +549,10 @@ namespace DeviceDataRecorders
                         }
 
                         if (reading.ReadingStart >= consolidateTo)
+                        {
+                            RecordsMutex.ReleaseMutex();
                             return;
+                        }
 
                         // end time is end of interval on first reading in interval - no accum required
                         if (DDP.GetDateTime(readingInterval) == reading.ReadingEnd)
@@ -523,17 +578,23 @@ namespace DeviceDataRecorders
                 }
                 if (prevReading != null)
                     accumReading.AccumulateReading(prevReading, true, true);
+
+                if (replaceReadings)
+                {
+                    // finalise last consolidated interval
+                    AddReading(accumReading, AddReadingMode.InsertReplace);
+                    replaceReadings = false;
+                }
             }
             catch (Exception e)
             {
                 GlobalSettings.LogMessage("ReadingsCollection.ConsolidateIntervals", "Exception: " + e.Message);
                 throw e;
             }
-            if (replaceReadings)
+            finally
             {
-                // finalise last consolidated interval
-                AddReading(accumReading, AddReadingMode.InsertReplace);
-                replaceReadings = false;
+                if (haveMutex)
+                    RecordsMutex.ReleaseMutex();
             }
         }
     }
