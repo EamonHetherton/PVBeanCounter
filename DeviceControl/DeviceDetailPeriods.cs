@@ -32,6 +32,8 @@ namespace DeviceDataRecorders
     {
         public const double DiscardInterval = 3600.0;
 
+        public System.Threading.Mutex PeriodsMutex;
+
         public PeriodType PeriodType { get; private set; }
         public TimeSpan PeriodStartOffset { get; private set; }
         public FeatureType FeatureType { get; private set; }
@@ -46,6 +48,7 @@ namespace DeviceDataRecorders
 
         public DeviceDetailPeriodsBase(Device.DeviceBase device, FeatureSettings featureSettings, PeriodType periodType, TimeSpan periodStartOffset)
         {
+            PeriodsMutex = new System.Threading.Mutex();
             Device = device;
             DeviceSettings = Device.DeviceManagerDeviceSettings;
             PeriodType = periodType;
@@ -166,30 +169,52 @@ namespace DeviceDataRecorders
 
         public DeviceDetailPeriodBase FindOrCreate(DateTime periodStart)
         {
-            DeviceDetailPeriodBase periodReadings = Find(periodStart);
-
-            if (periodReadings == null)
+            bool haveMutex = false;
+            try
             {
-                periodReadings = NewPeriodReadingsGeneric(periodStart);
-                Add(periodReadings);
-            }
-            else
-                periodReadings.UpdateReadings();
+                PeriodsMutex.WaitOne();
+                haveMutex = true;
+                DeviceDetailPeriodBase periodReadings = Find(periodStart);
 
-            return periodReadings;
+                if (periodReadings == null)
+                {
+                    periodReadings = NewPeriodReadingsGeneric(periodStart);
+                    Add(periodReadings);
+                }
+                else
+                    periodReadings.UpdateReadings();
+
+                return periodReadings;
+            }
+            finally
+            {
+                if (haveMutex)
+                    PeriodsMutex.ReleaseMutex();
+            }
         }
 
-        public void Add(DeviceDetailPeriodBase newRec)
+        private void Add(DeviceDetailPeriodBase newRec)
         {
             Periods.Add(newRec);
         }
 
         public bool Remove(DeviceDetailPeriodBase oldRec)
         {
-            return Periods.Remove(oldRec);
+            bool haveMutex = false;
+            try
+            {
+                PeriodsMutex.WaitOne();
+                haveMutex = true;
+                return Periods.Remove(oldRec);
+            }
+            finally
+            {
+                if (haveMutex)
+                    PeriodsMutex.ReleaseMutex();
+            }
         }
 
-        public DeviceDetailPeriodBase Find(DateTime periodStart)
+        private DeviceDetailPeriodBase Find(DateTime periodStart)
         {
             foreach (DeviceDetailPeriodBase item in Periods)
             {
@@ -207,10 +232,15 @@ namespace DeviceDataRecorders
         public void DiscardOldPeriods()
         {
             GenConnection con = null;
+            bool havePeriodsMutex = false;
+            bool haveDBMutex = false;
 
             try
             {
+                PeriodsMutex.WaitOne();
+                havePeriodsMutex = true;
                 GlobalSettings.SystemServices.GetDatabaseMutex();
+                haveDBMutex = true;
                 con = GlobalSettings.TheDB.NewConnection();
                 for (int i = 0; i < Periods.Count; )
                 {
@@ -235,18 +265,26 @@ namespace DeviceDataRecorders
                     con.Close();
                     con.Dispose();
                 }
-                GlobalSettings.SystemServices.ReleaseDatabaseMutex();
+                if (haveDBMutex)
+                    GlobalSettings.SystemServices.ReleaseDatabaseMutex();
+                if (havePeriodsMutex)
+                    PeriodsMutex.ReleaseMutex();
             }
         }
 
         public void UpdateDatabase(GenConnection con, DateTime? activeReadingTime, bool purgeUnMatched, DateTime? consolidateTo)
         {
-            GlobalSettings.SystemServices.GetDatabaseMutex();
+            bool haveDBMutex = false;            
             bool conIsLocal = false;
+            bool havePeriodsMutex = false;
 
             //GlobalSettings.LogMessage("DeviceDetailPeriodsBase", "UpdateDatabase - Starting", LogEntryType.Trace);
             try
             {
+                PeriodsMutex.WaitOne();
+                havePeriodsMutex = true;
+                GlobalSettings.SystemServices.GetDatabaseMutex();
+                haveDBMutex = true;
                 if (con == null)
                 {
                     con = GlobalSettings.TheDB.NewConnection();
@@ -275,7 +313,10 @@ namespace DeviceDataRecorders
                     con.Close();
                     con.Dispose();
                 }
-                GlobalSettings.SystemServices.ReleaseDatabaseMutex();
+                if (haveDBMutex)
+                    GlobalSettings.SystemServices.ReleaseDatabaseMutex();
+                if (havePeriodsMutex)
+                    PeriodsMutex.ReleaseMutex();
             }
         }
 

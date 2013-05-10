@@ -123,7 +123,22 @@ namespace GenericConnector
 
         public override DateTime GetDateTime(int ordinal)
         {
-            return DbDataReader.GetDateTime(ordinal);
+            Type t = DbDataReader.GetFieldType(ordinal);
+
+            if (t == typeof(DateTimeOffset))
+                return DbDataReader.GetFieldValue<DateTimeOffset>(ordinal).DateTime;
+            else
+                return DbDataReader.GetDateTime(ordinal);
+        }
+
+        public DateTimeOffset GetDateTimeOffset(int ordinal)
+        {
+            Type t = DbDataReader.GetFieldType(ordinal);
+
+            if (t == typeof(DateTimeOffset))
+                return DbDataReader.GetFieldValue<DateTimeOffset>(ordinal);
+            else
+                return DbDataReader.GetDateTime(ordinal);
         }
 
         public DateTime GetDateTime(string name)

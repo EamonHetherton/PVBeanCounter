@@ -40,9 +40,9 @@ namespace DeviceDataRecorders
 
         public ReadingsCollection(DeviceDetailPeriodBase deviceDetailPeriod)
         {
-            DDP = deviceDetailPeriod;
-            ClearReadings();
+            DDP = deviceDetailPeriod;            
             RecordsMutex = new System.Threading.Mutex();
+            ClearReadings();
         }
 
         public IList<ReadingBase> ReadingList { get { return Readings.Values; } }
@@ -395,7 +395,6 @@ namespace DeviceDataRecorders
                         if (reading.IsSameReadingValuesGeneric(oldReading))
                         {
                             oldReading.AddReadingMatch = reading.AddReadingMatch;
-                            RecordsMutex.ReleaseMutex();
                             return;
                         }
                         reading.InDatabase = oldReading.InDatabase;
@@ -549,10 +548,7 @@ namespace DeviceDataRecorders
                         }
 
                         if (reading.ReadingStart >= consolidateTo)
-                        {
-                            RecordsMutex.ReleaseMutex();
                             return;
-                        }
 
                         // end time is end of interval on first reading in interval - no accum required
                         if (DDP.GetDateTime(readingInterval) == reading.ReadingEnd)

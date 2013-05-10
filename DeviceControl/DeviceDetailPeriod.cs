@@ -450,14 +450,24 @@ namespace DeviceDataRecorders
 
         // returns the types readings - they are sorted at time of return
         public List<TDeviceReading> GetReadings()
-        {           
-            List<TDeviceReading> readings = new List<TDeviceReading>();
-            foreach (ReadingBase r in ReadingsGeneric.ReadingList)
+        {
+            bool haveMutex = false;
+            try
             {
-                readings.Add((TDeviceReading)r);
+                List<TDeviceReading> readings = new List<TDeviceReading>();
+                ReadingsGeneric.RecordsMutex.WaitOne();
+                haveMutex = true;
+                foreach (ReadingBase r in ReadingsGeneric.ReadingList)
+                {
+                    readings.Add((TDeviceReading)r);
+                }
+                return readings;
             }
-            
-            return readings;
+            finally
+            {
+                if (haveMutex)
+                    ReadingsGeneric.RecordsMutex.ReleaseMutex();
+            }
         }
 
         protected void SplitReadingCore(ReadingBase oldReading, DateTime splitTime, out ReadingBase newReading1, out ReadingBase newReading2)
