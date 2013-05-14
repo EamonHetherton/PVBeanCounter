@@ -17,6 +17,9 @@
 * If not, see <http://www.gnu.org/licenses/>.
 */
 
+// define DEBUG_READINGS to activate low level checks on Readings additions
+#define DEBUG_READINGS
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +35,110 @@ namespace DeviceDataRecorders
     public class ReadingsCollection
     {
         // the readings below are sorted on ReadingEnd
+
+#if (DEBUG_READINGS)
+        // debug wrapper - used to help locate deviant additions to the list
+        private struct SortedReadingBaseList
+        {
+            private SortedList<DateTime, ReadingBase> Readings;
+            private DeviceDetailPeriodBase DDP;
+            public SortedReadingBaseList(DeviceDetailPeriodBase ddp)
+            {
+                Readings = new SortedList<DateTime, ReadingBase>();
+                DDP = ddp;
+            }
+
+            private void LogId(DateTime key, ReadingBase reading)
+            {
+                GlobalSettings.LogMessage("DebugCheckIntegrity", "TRACE - Add Key: "
+                        + key + " - ReadingStart: " + reading.ReadingStart + " - ReadingEnd: " + reading.ReadingEnd + " - Count: " + Readings.Values.Count
+                        + " - Device: " + DDP.DeviceDetailPeriods.Device.DeviceManagerDeviceSettings.Name
+                        + " - DDPs Feature Type: " + DDP.DeviceDetailPeriods.FeatureType + " - DDPs Featute Id: " + DDP.DeviceDetailPeriods.FeatureId
+                        + " - DDP Feature Type: " + DDP.FeatureType + " - DDP Featute Id: " + DDP.FeatureId, LogEntryType.Trace);
+            }
+
+            public void Add(DateTime key, ReadingBase reading)
+            {
+                Readings.Add(key, reading);
+                string res = DebugCheckIntegrity();
+                if (res != "")
+                {
+                    GlobalSettings.LogMessage("DebugCheckIntegrity", "TRACE - Error adding key: " + res, LogEntryType.Trace);
+                    LogId(key, reading);
+                }
+                else if (key > DDP.End)
+                {
+                    GlobalSettings.LogMessage("DebugCheckIntegrity", "TRACE - Error adding end day key: " + res, LogEntryType.Trace);
+                    LogId(key, reading);
+                }
+                else if (key == key.Date)
+                {
+                    GlobalSettings.LogMessage("DebugCheckIntegrity", "TRACE - Adding end day key: " + res, LogEntryType.Trace);
+                    LogId(key, reading);
+                }
+            }
+
+            public void Remove(DateTime key)
+            {
+                Readings.Remove(key);
+            }
+
+            public IList<ReadingBase> Values { get { return Readings.Values; } }
+            public int Count { get { return Readings.Count; } }
+
+            public int IndexOfKey(DateTime key)
+            { return Readings.IndexOfKey(key); }
+
+            public void RemoveAt(int i)
+            { Readings.RemoveAt(i); }
+
+            public void Clear()
+            { Readings.Clear(); }
+
+            public String DebugCheckIntegrity()
+            {
+                ReadingBase prevReading = null;
+                for (int i = 0; i < Readings.Count; i++)
+                {
+                    ReadingBase reading = Readings.Values[i];
+
+                    if (reading.ReadingStart < DDP.Start)
+                    {
+                        if (reading.ReadingEnd > DDP.Start)
+                            return "ReadingStart belongs in previous period; ReadingEnd overlaps - This ReadingStart: "
+                                + reading.ReadingStart + " - This ReadingEnd: " + reading.ReadingEnd + " - This period start: " + DDP.Start;
+                        else
+                            return "ReadingStart belongs in previous period; no ReadingEnd overlap - This ReadingStart: "
+                                + reading.ReadingStart + " - This ReadingEnd: " + reading.ReadingEnd + " - This period start: " + DDP.Start;
+                    }
+
+                    if (reading.ReadingEnd > DDP.End)
+                        return "ReadingEnd belongs in next period - This ReadingEnd: "
+                                + reading.ReadingEnd + " - This period end: " + DDP.End;
+
+                    if (reading.ReadingEnd <= reading.ReadingStart)
+                        return "ReadingEnd <= ReadingStart - This ReadingEnd: "
+                                + reading.ReadingEnd + " - This ReadingStart: " + reading.ReadingStart;
+
+                    if (prevReading != null)
+                    {
+                        if (reading.ReadingEnd <= prevReading.ReadingEnd)
+                            return "ReadingEnd overlaps previous - This ReadingEnd: "
+                                + reading.ReadingEnd + " - Previous ReadingEnd: " + prevReading.ReadingEnd;
+                        if (reading.ReadingStart < prevReading.ReadingEnd)
+                            return "ReadingStart overlaps previous - This ReadingStart: "
+                                + reading.ReadingStart + " - This ReadingEnd: " + reading.ReadingEnd + " - Previous ReadingEnd: " + prevReading.ReadingEnd;
+                    }
+                    prevReading = reading;
+                }
+                return "";
+            }
+        }
+
+        private SortedReadingBaseList Readings;
+#else
         private SortedList<DateTime, ReadingBase> Readings;
+#endif
 
         private DeviceDetailPeriodBase DDP;
 
@@ -42,6 +148,11 @@ namespace DeviceDataRecorders
         {
             DDP = deviceDetailPeriod;            
             RecordsMutex = new System.Threading.Mutex();
+#if (DEBUG_READINGS)
+            Readings = new SortedReadingBaseList(DDP);
+#else
+            Readings = new SortedList<DateTime, ReadingBase>();
+#endif
             ClearReadings();
         }
 
@@ -426,10 +537,10 @@ namespace DeviceDataRecorders
             {
                 RecordsMutex.WaitOne();
                 haveMutex = true;
-                if (Readings != null)
+
                     foreach (ReadingBase reading in Readings.Values)
                         reading.DeregisterPeriodInvolvement(DDP);
-                Readings = new SortedList<DateTime, ReadingBase>();
+                Readings.Clear();
             }
             finally
             {

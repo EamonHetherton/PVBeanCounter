@@ -159,12 +159,14 @@ namespace PVSettings
             {
                 string val = value == null ? "" : value.Trim();
                 bool updateName = (Name == SystemId);
-                    
+                string oldId = SystemId;   
                 SetValue("systemid", val, "SystemId");
+                ApplicationSettings.PVOutputSystemIdChanged(oldId, val);
                 DeleteElement("siteid"); // legacy value no longer required
 
                 if (updateName)
                     Name = "";
+                OnPropertyChanged(new PropertyChangedEventArgs("PvOutputSystemList"));
             }
         }
 

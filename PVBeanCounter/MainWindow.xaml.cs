@@ -865,6 +865,11 @@ namespace PVBeanCounter
             dataGridDeviceList.SelectedItem = curDev;
         }
 
+        private void comboBoxPVOutputSystem_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
+             
+        }
+
         private void comboBoxConsolidationType_SourceUpdated(object sender, DataTransferEventArgs e)
         {
             SetDeviceVisibility();

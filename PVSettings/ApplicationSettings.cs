@@ -295,6 +295,19 @@ namespace PVSettings
             }
         }
 
+        public void PVOutputSystemIdChanged(String oldSystemId, String newSystemId)
+        {
+            foreach (DeviceManagerSettings dms in _DeviceManagerList)
+            {
+                foreach (DeviceManagerDeviceSettings ds in dms.DeviceList)
+                {
+                    if (ds.PVOutputSystem == oldSystemId)
+                        ds.PVOutputSystem = newSystemId;
+                }
+            }
+            
+        }
+
         private void LoadPVOutputSites()
         {
             _PvOutputSystemList = new ObservableCollection<PvOutputSiteSettings>();

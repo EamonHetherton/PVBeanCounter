@@ -472,11 +472,14 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="Consolidation Type" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="0,3" />
-                                    <ComboBox Name="comboBoxConsolidationType" ItemsSource="{Binding AllConsolidationTypes}" Grid.Column="1" SelectedValue="{Binding Path=ConsolidationType, NotifyOnSourceUpdated=True ,Mode=TwoWay, Converter={StaticResource NullableValueConverter}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5,0,5" SourceUpdated="comboBoxConsolidationType_SourceUpdated" />
+                                    <ComboBox Name="comboBoxConsolidationType" ItemsSource="{Binding AllConsolidationTypes}" Grid.Column="1" SelectedValue="{Binding Path=ConsolidationType, NotifyOnSourceUpdated=True ,Mode=TwoWay, Converter={StaticResource NullableValueConverter}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5,0,5" 
+                                              SourceUpdated="comboBoxConsolidationType_SourceUpdated" />
                                 </Grid>
                             </Grid>
                             <Label Grid.Row="3" Grid.Column="0" Name="labelPVOutputSystem" Content="System" HorizontalAlignment="Right" />
-                            <ComboBox Name="comboBoxPVOutputSystem" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,5,0,5" ItemsSource="{Binding PVOutputSystemList}" SelectedValue="{Binding Path=PVOutputSystem}" SelectedValuePath="SystemId" DisplayMemberPath="Description" ToolTip="Select the PVOutput System ID that consumes readings from this device" />
+                            <ComboBox Name="comboBoxPVOutputSystem" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,5,0,5" ItemsSource="{Binding PVOutputSystemList}" SelectedValue="{Binding Path=PVOutputSystem, NotifyOnSourceUpdated=True, Mode=TwoWay}" SelectedValuePath="SystemId" DisplayMemberPath="Description" 
+                                      TargetUpdated="comboBoxPVOutputSystem_SourceUpdated"
+                                      ToolTip="Select the PVOutput System ID that consumes readings from this device" />
                             
                             <Label Name="labelDeviceAddress" Content="Address" Grid.Row="4" HorizontalContentAlignment="Right" HorizontalAlignment="Right"/>
                             <TextBox Name="textBoxDeviceAddress" Text="{Binding Path=Address, Converter={StaticResource NullableValueConverter}}" Grid.Row="4" Grid.Column="1" 

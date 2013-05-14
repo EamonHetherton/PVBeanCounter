@@ -817,7 +817,8 @@ namespace DeviceDataRecorders
                 if (currentStart == reading.ReadingStart && intervalEnd >= reading.ReadingEnd)  // no division required - reading fits in one consolidation interval
                 {
                     GlobalSettings.LogMessage("ConsolidateReading", "TRACE AccumulateReading no split" , LogEntryType.Trace);
-                    toReading.AccumulateReading(reading, useTemperature, false, nextInterval != interval, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
+                    // note - AccumulateDuration must be false for multi device consolidations - it is only used for single device reading merge
+                    toReading.AccumulateReading(reading, useTemperature, false, false, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
                 }
                 else
                 {
@@ -829,7 +830,8 @@ namespace DeviceDataRecorders
                     TDeviceReading intervalReading = reading.Clone(intervalEnd, duration); // get time adjusted reading
                     GlobalSettings.LogMessage("ConsolidateReading", "TRACE AccumulateReading with split Start: " 
                         + intervalReading.ReadingStart + " - End: " + intervalReading.ReadingEnd, LogEntryType.Trace);
-                    toReading.AccumulateReading(intervalReading, useTemperature, false, nextInterval != interval, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
+                    // note - AccumulateDuration must be false for multi device consolidations - it is only used for single device reading merge
+                    toReading.AccumulateReading(intervalReading, useTemperature, false, false, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
                 }
 
                 currentStart = intervalEnd; // prepare for next interval iteration
