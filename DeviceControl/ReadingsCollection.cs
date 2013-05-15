@@ -18,7 +18,7 @@
 */
 
 // define DEBUG_READINGS to activate low level checks on Readings additions
-#define DEBUG_READINGS
+// #define DEBUG_READINGS
 
 using System;
 using System.Collections.Generic;

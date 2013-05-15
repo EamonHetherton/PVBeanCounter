@@ -481,38 +481,49 @@ namespace OutputManagers
             GenConnection con = null;
             GenDataReader drCheck = null;
 
-            int timeVal = (int)readingTime.TimeOfDay.TotalSeconds;
+            int timeVal = 0;
+            DateTime date = DateTime.MinValue;
             try
-            {                
+            {
+                date = readingTime.Date;
+                timeVal = (int)readingTime.TimeOfDay.TotalSeconds;
+                if (timeVal == 0)
+                {
+                    date = date.AddDays(-1.0);
+                    timeVal = 24 * 3600; // 24:00 - This is required by PVOutput for the end of day reading
+                }
                 con = GlobalSettings.TheDB.NewConnection();
                 cmdCheck = new GenCommand(CmdCheckStr, con);
                 cmdCheck.AddParameterWithValue("@SiteId", SystemId);
                 cmdCheck.AddParameterWithValue("@OutputDay", readingTime.Date);
                 cmdCheck.AddParameterWithValue("@OutputTime", timeVal);
 
-                //LogMessage("check params ok", LogEntryType.Information);
-
                 drCheck = (GenDataReader)cmdCheck.ExecuteReader();
                 bool update = false;
                 bool insert = false;
 
                 if (drCheck.Read())
-                {
+                {               
                     if (drCheck.IsDBNull(0) 
                         || (((long)Math.Round(drCheck.GetDouble(0))) != energy) 
                         || (((long)Math.Round(drCheck.GetDouble(1))) != power))
                     {
                         if (!drCheck.IsDBNull(0))
-                            LogMessage("RecordYield", "Energy: " + (long)Math.Round(drCheck.GetDouble(0)) + " - " + energy +
-                                " - Power: " + (long)Math.Round(drCheck.GetDouble(1)) + " - " + power, LogEntryType.Trace);
+                            LogMessage("RecordYield", "Update - Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Energy: " + (long)Math.Round(drCheck.GetDouble(0)) + " - " + energy +
+                                " - Percent: " + ((energy - drCheck.GetDouble(0)) / energy).ToString("P", CultureInfo.InvariantCulture) +
+                                " - Power: " + (long)Math.Round(drCheck.GetDouble(1)) + " - " + power, LogEntryType.MeterTrace);
                         else
-                            LogMessage("RecordYield", "Energy: null - " + energy, LogEntryType.Trace);
+                            LogMessage("RecordYield", "Update - Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Energy: null - " + (int)(energy),
+                                LogEntryType.MeterTrace);
 
                         update = true;
                     }
                 }
                 else if (intervalHasEnergy) // only add new records if energy > 0
+                {
+                    LogMessage("RecordYield", "Record not found - Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Energy: " + energy + " - Power: " + power, LogEntryType.MeterTrace);
                     insert = true;
+                }
 
                 drCheck.Close();
                 drCheck.Dispose();
@@ -522,13 +533,13 @@ namespace OutputManagers
                 con = null;
 
                 if (insert)
-                    InsertPVOutputLog(readingTime.Date, timeVal, energy, power, temperature);
+                    InsertPVOutputLog(date, timeVal, energy, power, temperature);
                 else if (update)
-                    UpdatePVOutputLog(readingTime.Date, timeVal, energy, power, temperature);
+                    UpdatePVOutputLog(date, timeVal, energy, power, temperature);
             }
             catch (Exception e)
             {
-                LogMessage("RecordYield", "Time: " + readingTime + " - timeVal: " + timeVal + " - Exception: " + e.Message, LogEntryType.ErrorMessage);
+                LogMessage("RecordYield", "Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Exception: " + e.Message, LogEntryType.ErrorMessage);
             }
             finally
             {
@@ -593,8 +604,7 @@ namespace OutputManagers
                             power = reading.Power.HasValue ? reading.Power.Value : reading.AveragePower; 
                         
                         energy += (long)(reading.TotalReadingDelta * 1000.0);
-                        // PVOutput treats 12:00AM as the start of the day - use period start time rather than end time so that 12:00AM appears as 11:50PM or 11:55PM
-                        RecordYield(reading.ReadingEnd.AddMinutes(-PVInterval), energy, power, reading.EnergyDelta > 0.0, reading.Temperature);
+                        RecordYield(reading.ReadingEnd, energy, power, reading.EnergyDelta > 0.0, reading.Temperature);
                     }
                 }
 
@@ -615,53 +625,56 @@ namespace OutputManagers
             // Check for an existing record in the pvoutputlog table. 
             // If it exists update it if the consumption energy or power values have changed.
             // If it does not exist, add the record if the consumption energy is not zero
-            
-
-            // LogMessage("RecordConsumption - " + readingTime + " - Energy: " + energy + " - Power: " + power, LogEntryType.Trace);
-
             GenCommand cmdCheck = null;
             GenConnection con = null;
             GenDataReader drCheck = null;
 
-            int timeVal = (int)readingTime.TimeOfDay.TotalSeconds;
+            int timeVal = 0;
+            DateTime date = DateTime.MinValue;
             try
-            {                
+            {
+                date = readingTime.Date;
+                timeVal = (int)readingTime.TimeOfDay.TotalSeconds;
+                if (timeVal == 0)
+                {
+                    date = date.AddDays(-1.0);
+                    timeVal = 24 * 3600; // 24:00 - This is required by PVOutput for the end of day reading
+                }             
                 con = GlobalSettings.TheDB.NewConnection();
                 cmdCheck = new GenCommand(CmdCheckStr, con);
                 cmdCheck.AddParameterWithValue("@SiteId", SystemId);
-                cmdCheck.AddParameterWithValue("@OutputDay", readingTime.Date);
+                cmdCheck.AddParameterWithValue("@OutputDay", date);
                 cmdCheck.AddParameterWithValue("@OutputTime", timeVal);
 
                 drCheck = (GenDataReader)cmdCheck.ExecuteReader();
 
                 if (drCheck.Read())
                 {
-                    LogMessage("RecordConsumption", "Record found - Time: " + readingTime + " - timeVal: " + timeVal + " - Energy: " + energy + " - Power: " + power, LogEntryType.MeterTrace);
                     if (drCheck.IsDBNull(2)
                         || ((long)Math.Round(drCheck.GetDouble(2)) != energy)
                         || ((long)Math.Round(drCheck.GetDouble(3)) != power))
                     {
                         if (!drCheck.IsDBNull(2))
-                            LogMessage("RecordConsumption", "Update - Time: " + readingTime + " - Energy: " + (long)Math.Round(drCheck.GetDouble(2)) + " - " + energy +
+                            LogMessage("RecordConsumption", "Update - Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Energy: " + (long)Math.Round(drCheck.GetDouble(2)) + " - " + energy +
                                 " - Percent: " + ((energy - drCheck.GetDouble(2)) / energy).ToString("P", CultureInfo.InvariantCulture) +
                                 " - Power: " + (long)Math.Round(drCheck.GetDouble(3)) + " - " + power, LogEntryType.MeterTrace);
                         else
-                            LogMessage("RecordConsumption", "Update - Time: " + readingTime + " - Energy: null - " + (int)(energy),
+                            LogMessage("RecordConsumption", "Update - Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Energy: null - " + (int)(energy),
                                 LogEntryType.MeterTrace);
 
-                        UpdatePVOutputLogConsumption(readingTime.Date, timeVal, energy, power, temperature);
+                        UpdatePVOutputLogConsumption(date, timeVal, energy, power, temperature);
                     }
                 }
                 else
                 {
-                    LogMessage("RecordConsumption", "Record not found - Time: " + readingTime + " - timeVal: " + timeVal + " - Energy: " + energy + " - Power: " + power, LogEntryType.MeterTrace);
+                    LogMessage("RecordConsumption", "Record not found - Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Energy: " + energy + " - Power: " + power, LogEntryType.MeterTrace);
                     if (energy > 0.0) // only add new records if energy > 0
-                        InsertPVOutputLogConsumption(readingTime.Date, timeVal, energy, power, temperature);
+                        InsertPVOutputLogConsumption(date, timeVal, energy, power, temperature);
                 }
             }
             catch (Exception e)
             {
-                LogMessage("RecordConsumption", "Time: " + readingTime + " - Exception: " + e.Message, LogEntryType.ErrorMessage);
+                LogMessage("RecordConsumption", "Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Exception: " + e.Message, LogEntryType.ErrorMessage);
             }
             finally
             {
@@ -720,8 +733,7 @@ namespace OutputManagers
                             power = reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;
 
                         energy += (long)(reading.TotalReadingDelta * 1000.0);
-                        // PVOutput treats 12:00AM as the start of the day - use period start time rather than end time so that 12:00AM appears as 11:50PM or 11:55PM
-                        RecordConsumption(reading.ReadingEnd.AddMinutes(-PVInterval), energy, power, reading.Temperature);
+                        RecordConsumption(reading.ReadingEnd, energy, power, reading.Temperature);
                     }
                 }
 

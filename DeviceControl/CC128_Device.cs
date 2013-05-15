@@ -240,19 +240,34 @@ namespace Device
                 EnergyReading hist;
                 if (histReading.Time.TimeOfDay.TotalHours == 1.0) // 1:00am reading (duration 2 hours) crosses a period boundary
                 {
+                    stage = "Cross Period Boundary";
+                    if (GlobalSettings.SystemServices.LogTrace)
+                        GlobalSettings.SystemServices.LogMessage("ProcessOneHistoryReading", stage + " - Time: " + histReading.Time
+                            + " - Duration: " + histReading.Duration + " - Energy: " + histReading.Energy, LogEntryType.Trace);
                     histReading.Time = histReading.Time.Date; // end of previous day - midnight
                     histReading.Duration = histReading.Duration / 2; // halve duration and energy readings
                     histReading.Energy = histReading.Energy / 2.0;
                     if (histReading.Calculated.HasValue)
                         histReading.Calculated = histReading.Calculated.Value / 2.0;
 
+                    stage = "Previous Day";
+                    if (GlobalSettings.SystemServices.LogTrace)
+                        GlobalSettings.SystemServices.LogMessage("ProcessOneHistoryReading", stage + " - Time: " + histReading.Time
+                            + " - Duration: " + histReading.Duration + " - Energy: " + histReading.Energy, LogEntryType.Trace);
                     day = days.FindOrCreate(histReading.Time.AddDays(-1.0));  // midnight reading applies to previous day
                     hist = new EnergyReading(days, histReading.Time, TimeSpan.FromSeconds(histReading.Duration));
                     hist.EnergyDelta = histReading.Energy;
                     hist.Temperature = histReading.Temperature;
                     day.AdjustFromHistory(hist);
                     histReading.Time = histReading.Time.AddHours(1.0); // reset time to 1:00am
+                    stage = "Start Day";
                 }
+                else
+                    stage = "Normal";
+
+                if (GlobalSettings.SystemServices.LogTrace)
+                    GlobalSettings.SystemServices.LogMessage("ProcessOneHistoryReading", stage + " - Time: " + histReading.Time
+                        + " - Duration: " + histReading.Duration + " - Energy: " + histReading.Energy, LogEntryType.Trace);
                 
                 day = days.FindOrCreate(histReading.Time.Date); // get correct day
                 hist = new EnergyReading(days, histReading.Time, TimeSpan.FromSeconds(histReading.Duration));

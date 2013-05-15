@@ -394,7 +394,7 @@ namespace PVSettings
         {
             get
             {
-                return GetValue("crazydaystartminutes") == "true";
+                return GetValue("usehistory") == "true";
             }
         }
 

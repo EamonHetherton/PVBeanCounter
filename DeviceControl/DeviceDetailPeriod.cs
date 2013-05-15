@@ -593,8 +593,13 @@ namespace DeviceDataRecorders
                 }
 
                 if (reading.IsHistoryReading())
+                {
+                    if (GlobalSettings.SystemServices.LogTrace)
+                        GlobalSettings.SystemServices.LogMessage("FillLargeGaps", "IsHistoryReading - ReadingStart: " + reading.ReadingStart + " - ReadingEnd: " + reading.ReadingEnd
+                            + " - actualTotal: " + actualTotal + " - histRecord: " + histRecord.GetReadingLogDetails(), LogEntryType.Trace);
                     // this reading was created in a previous Gap Fill operation and needs a history value based on duration
-                    reading.HistoryAdjust_Average(actualTotal, histRecord); 
+                    reading.HistoryAdjust_Average(actualTotal, histRecord);
+                }
 
                 histGap -= reading.Duration;
 
@@ -604,7 +609,10 @@ namespace DeviceDataRecorders
                 {
                     TDeviceReading newRec = NewReading(reading.ReadingStart, gap, (nextReading != null) ? nextReading : ((prevReading != null) ? prevReading : default(TDeviceReading)));
                     newRec.HistoryAdjust_Average(actualTotal, histRecord);
-                    AddReading(newRec);                    
+                    AddReading(newRec);
+                    if (GlobalSettings.SystemServices.LogTrace)
+                        GlobalSettings.SystemServices.LogMessage("FillLargeGaps", "ResidualGap - ReadingStart: " + newRec.ReadingStart + " - ReadingEnd: " + newRec.ReadingEnd
+                            + " - actualTotal: " + actualTotal + " - histRecord: " + newRec.GetReadingLogDetails(), LogEntryType.Trace);
                     i++;                    
                 }
                 histGap -= gap;
@@ -623,6 +631,9 @@ namespace DeviceDataRecorders
                 TDeviceReading newRec = NewReading(endTime, histGap, prevReading == null ? default(TDeviceReading) : prevReading);
                 newRec.HistoryAdjust_Average(actualTotal, histRecord);
                 AddReading(newRec);
+                if (GlobalSettings.SystemServices.LogTrace)
+                    GlobalSettings.SystemServices.LogMessage("FillLargeGaps", "Final ResidualGap - ReadingStart: " + newRec.ReadingStart + " - ReadingEnd: " + newRec.ReadingEnd
+                        + " - actualTotal: " + actualTotal + " - histRecord: " + newRec.GetReadingLogDetails(), LogEntryType.Trace);
             }
         }
 
@@ -646,38 +657,45 @@ namespace DeviceDataRecorders
                     continue;
                 }
 
+                if (GlobalSettings.SystemServices.LogTrace)
+                    GlobalSettings.SystemServices.LogMessage("ProrataRemainingHistory", "ReadingStart: " + reading.ReadingStart + " - ReadingEnd: " + reading.ReadingEnd
+                        + " - actualTotal: " + actualTotal + " - histRecord: " + reading.GetReadingLogDetails(), LogEntryType.Trace);
                 reading.HistoryAdjust_Prorata(actualTotal, histRecord); ;
                 
                 i++;
             }
         }
 
-        public void AdjustFromHistory(TDeviceHistory histRecord)
+        public void AdjustFromHistory(TDeviceHistory histReading)
         {
             String stage = "initial";
             try
             {
-                DateTime startTime = histRecord.ReadingStart;
-                int endInterval = GetIntervalNo(histRecord.ReadingEnd);
-                int startInterval = GetIntervalNo(histRecord.ReadingStart, false);
+                DateTime startTime = histReading.ReadingStart;
+                int endInterval = GetIntervalNo(histReading.ReadingEnd);
+                int startInterval = GetIntervalNo(histReading.ReadingStart, false);
+
+                if (GlobalSettings.SystemServices.LogTrace)
+                    GlobalSettings.SystemServices.LogMessage("AdjustFromHistory", stage + " - End: " + histReading.ReadingEnd
+                        + " - Duration: " + histReading.Duration + " - startInterval: " + startInterval + " - endInterval: " + endInterval, LogEntryType.Trace);
 
                 stage = "validation";
-                if (histRecord.ReadingEnd <= Start || (histRecord.ReadingEnd - Start).TotalHours > 24.0)
-                    throw new Exception("DeviceDetailPeriod.AdjustFromHistory - End time is wrong day - endTime: " + histRecord.ReadingEnd + " - Day: " + Start);
+                if (histReading.ReadingEnd <= Start || (histReading.ReadingEnd - Start).TotalHours > 24.0)
+                    throw new Exception("DeviceDetailPeriod.AdjustFromHistory - End time is wrong day - endTime: " + histReading.ReadingEnd + " - Day: " + Start);
 
-                if (GetDateTime(endInterval) != histRecord.ReadingEnd)
-                    throw new Exception("DeviceDetailPeriod.AdjustFromHistory - End time does not align with interval boundary - endTime: " + histRecord.ReadingEnd + " - interval: " + DatabaseIntervalSeconds);
+                if (GetDateTime(endInterval) != histReading.ReadingEnd)
+                    throw new Exception("DeviceDetailPeriod.AdjustFromHistory - End time does not align with interval boundary - endTime: " + histReading.ReadingEnd + " - interval: " + DatabaseIntervalSeconds);
 
                 if (startTime < Start)
                     throw new Exception("DeviceDetailPeriod.AdjustFromHistory - startTime is wrong day - startTime: " + startTime + " - Day: " + Start);
 
                 if (GetDateTime(startInterval)
                     != startTime + TimeSpan.FromSeconds(DatabaseIntervalSeconds))
-                    throw new Exception("DeviceDetailPeriod.AdjustFromHistory - startTime does not align with interval boundary - endTime: " + histRecord.ReadingEnd + " - interval: " + DatabaseIntervalSeconds);
+                    throw new Exception("DeviceDetailPeriod.AdjustFromHistory - startTime does not align with interval boundary - endTime: " + histReading.ReadingEnd + " - interval: " + DatabaseIntervalSeconds);
 
                 stage = "ClearHistory";
                 // clear old history entries
-                ClearHistory(histRecord.ReadingStart, histRecord.ReadingEnd);
+                ClearHistory(histReading.ReadingStart, histReading.ReadingEnd);
                 if (DeviceParams.UseCalculateFromPrevious)
                 {
                     stage = "CalcFromPrevious";
@@ -686,32 +704,43 @@ namespace DeviceDataRecorders
 
                 stage = "FillSmallGaps";
                 // fill any gaps up to 30 secs with prorata adjacent values - creates actuals not calculated values
-                TimeSpan remainingGaps = ReadingsGeneric.FillSmallGaps(histRecord.ReadingStart, histRecord.ReadingEnd, true);
+                TimeSpan remainingGaps = ReadingsGeneric.FillSmallGaps(histReading.ReadingStart, histReading.ReadingEnd, true);
+
+                if (GlobalSettings.SystemServices.LogTrace)
+                    GlobalSettings.SystemServices.LogMessage("AdjustFromHistory", stage + " - End: " + histReading.ReadingEnd
+                        + " - Duration: " + histReading.Duration + " - remainingGaps(ticks): " + remainingGaps.Ticks , LogEntryType.Trace);
 
                 // obtain actual total - uses Consolidate
                 stage = "MergeReadings 1";                
-                TDeviceReading actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd, true);
+                TDeviceReading actualTotal = MergeReadings(GetDateTime(endInterval), histReading.ReadingStart, histReading.ReadingEnd, true);
                 if (GlobalSettings.SystemServices.LogTrace)
-                    GlobalSettings.SystemServices.LogMessage("DeviceDetailPeriod.AdjustFromHistory", "Merge 1 - actualTotal: " + actualTotal.GetReadingLogDetails() 
-                        + " - histRecord: " + histRecord.GetReadingLogDetails(), LogEntryType.Trace);
+                    GlobalSettings.SystemServices.LogMessage("AdjustFromHistory", stage + " - End: " + histReading.ReadingEnd
+                        + " - actualTotal: " + actualTotal + " - histRecord: " + histReading.GetReadingLogDetails(), LogEntryType.Trace);
                 // fill all remaining gaps with prorata history value
                 // FillLargeGaps also restores hist values to previous history readings cleared by ClearHistory
                 //if (remainingGaps > ReadingsGeneric.SmallGapUpperLimit)
                 {
                     stage = "FillLargeGaps";
-                    FillLargeGaps(actualTotal, histRecord, remainingGaps, startTime, startInterval, endInterval);
+                    FillLargeGaps(actualTotal, histReading, remainingGaps, startTime, startInterval, endInterval);
 
                     stage = "MergeReadings 2";
                     // recalculate actualTotal to capture large gap additions
-                    actualTotal = actualTotal = MergeReadings(GetDateTime(endInterval), histRecord.ReadingStart, histRecord.ReadingEnd, false); // include large gap additions
+                    actualTotal = actualTotal = MergeReadings(GetDateTime(endInterval), histReading.ReadingStart, histReading.ReadingEnd, false); // include large gap additions
                     if (GlobalSettings.SystemServices.LogTrace)
-                        GlobalSettings.SystemServices.LogMessage("DeviceDetailPeriod.AdjustFromHistory", "Merge 2 - actualTotal: " + actualTotal.GetReadingLogDetails()
-                            + " - histRecord: " + histRecord.GetReadingLogDetails(), LogEntryType.Trace);
+                        GlobalSettings.SystemServices.LogMessage("AdjustFromHistory", stage + " - End: " + histReading.ReadingEnd
+                            + " - actualTotal: " + actualTotal + " - histRecord: " + histReading.GetReadingLogDetails(), LogEntryType.Trace);
                 }
                 stage = "ProrataRemainingHistory";
                 // apportion outstanding history values by prorata adjustment 
-                if (actualTotal.Compare(histRecord) != 0)
-                    ProrataRemainingHistory(actualTotal, histRecord, startTime, startInterval, endInterval);
+                if (actualTotal.Compare(histReading) != 0)
+                {
+                    if (GlobalSettings.SystemServices.LogTrace)
+                        GlobalSettings.SystemServices.LogMessage("AdjustFromHistory", stage + " - End: " + histReading.ReadingEnd
+                            + " - actualTotal: " + actualTotal + " - startTime: " + startTime 
+                            + " - startInterval: " + startInterval + " - endInterval: " + endInterval, LogEntryType.Trace);
+
+                    ProrataRemainingHistory(actualTotal, histReading, startTime, startInterval, endInterval);
+                }
             }
             catch (Exception e)
             {
