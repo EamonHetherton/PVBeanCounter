@@ -592,14 +592,17 @@ namespace OutputManagers
                         if (reading.ReadingEnd > runLimit)
                             break;
 
-                        int timeVal = (int)(reading.ReadingEnd.AddMinutes(-PVInterval).TimeOfDay.TotalSeconds);
+
                         if (Settings.PowerMinMax)
+                        {
+                            int timeVal = (int)(reading.ReadingEnd.AddMinutes(-PVInterval).TimeOfDay.TotalSeconds);
                             // do not have instantaneous power - do have min and max power 
                             // alternale between min and max in each interval
                             if (((int)((int)(timeVal / Settings.DataIntervalSeconds) % 2)) == 0)
                                 power = reading.MaxPower.HasValue ? reading.MaxPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;
                             else
                                 power = reading.MinPower.HasValue ? reading.MinPower.Value : reading.Power.HasValue ? reading.Power.Value : reading.AveragePower;
+                        }
                         else
                             power = reading.Power.HasValue ? reading.Power.Value : reading.AveragePower; 
                         
@@ -952,7 +955,7 @@ namespace OutputManagers
                 {
                     DateTime date = dr.GetDateTime(1).Date;
 
-                    if (messageStatusCount == messageLimit 
+                    if (messageStatusCount == messageLimit
                         || (messageStatusCount > 0 && date != prevDate) // force new batch at date change - pvoutput day total update requirement
                         || (messageStatusCount >= availRequests && messageStatusCount > 0))
                     {
@@ -1009,9 +1012,14 @@ namespace OutputManagers
 
                     if (messageStatusCount > 0)
                         postData += ";";
-
-                    postData += dr.GetDateTime(1).ToString("yyyyMMdd") +
-                            "," + TimeSpan.FromSeconds(dr.GetInt32(2)).ToString(@"hh\:mm");
+                    {
+                        int time = dr.GetInt32(2);
+                        if (time > 0)
+                            postData += dr.GetDateTime(1).ToString("yyyyMMdd") +
+                                    "," + TimeSpan.FromSeconds(time).ToString(@"hh\:mm");
+                        else
+                            postData += dr.GetDateTime(1).ToString("yyyyMMdd") + ",24:00";  // ToString results in 00:00, PVOutput needs 24:00
+                    }
 
                     if (Settings.UploadYield)
                         if (dr.IsDBNull(3)) // is energy generated null
@@ -1412,13 +1420,6 @@ namespace OutputManagers
 
         private void SetContext()
         {
-            /*
-            if (MeterId < 0 )
-            {
-                MeterId = GetMeterID();
-            }
-            */
-
             if (GlobalSettings.TheDB.GenDBType == GenDBType.SQLite)
                 PVDateLimit = DateTime.Today.AddDays(-(PVLiveDays));
             else

@@ -61,6 +61,94 @@ namespace PVSettings
         SQLServer
     }
 
+    public struct GenericSetting<T> where T : IConvertible
+    {
+        private SettingsBase _settings;
+        private bool haveValue;
+        private T _Value;
+        private T _defaultValue;
+        private Type type;
+        private string _elementName;
+        private string _propertyName;
+
+        private T GetBoolean()
+        {
+            string val = _settings.GetValue(_elementName).ToLower();
+            if (val == "true")
+               return (T)Convert.ChangeType(true, type);
+            else if (val == "false")
+               return (T)Convert.ChangeType(false, type);
+            else
+                return _defaultValue;
+        }
+
+        private T GetString()
+        {
+            string val = _settings.GetValue(_elementName);
+            if (val == null || val == "")
+                return _defaultValue;
+            else
+                return (T)Convert.ChangeType(val, type);
+        }
+
+        public T Value
+        {
+            get
+            {
+                if (haveValue)
+                    return _Value;
+                else
+                {
+                    string val = _settings.GetValue(_elementName);
+                    if (type == typeof(string))
+                        _Value = GetString();
+                    else if (type == typeof(bool))
+                        _Value = GetBoolean();
+                    else
+                        throw new NotImplementedException("GenericSetting - Type: " + type.ToString() + " - Not available");
+
+                    haveValue = true;
+                    return _Value;
+                }
+            }
+            set
+            {
+                _Value = value;
+                haveValue = true;
+
+                if (value == null)
+                    _settings.SetValue(_elementName, "", _propertyName);
+                else if (type == typeof(bool))
+                    _settings.SetValue(_elementName, value.ToString().ToLower(), _propertyName);
+                else
+                    _settings.SetValue(_elementName, value.ToString(), _propertyName);
+            }
+        }
+
+        public GenericSetting(T defaultValue, SettingsBase settings, string propertyName)
+        {
+            type = typeof(T);
+            /*
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                isNullable = true;
+                //isNull = true;
+            }
+            else
+            {
+                isNullable = false;
+                //isNull = false;
+            }
+            */
+            haveValue = false;
+            _defaultValue = defaultValue;
+            _settings = settings;
+            _propertyName = propertyName;
+            _elementName = propertyName.ToLower();
+            _Value = defaultValue;
+        }
+    }
+
     public class SettingsBase : INotifyPropertyChanged
     {
         public static System.Threading.Mutex ApplicationSettingsMutex = new Mutex();
@@ -139,7 +227,7 @@ namespace PVSettings
             return false;
         }
 
-        protected String GetValue(String nodeName)
+        internal String GetValue(String nodeName)
         {
             ApplicationSettingsMutex.WaitOne();
             try
@@ -211,7 +299,7 @@ namespace PVSettings
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
-        protected void SetValue(String nodeName, String value, String propertyName, bool suppressChange = false)
+        internal void SetValue(String nodeName, String value, String propertyName, bool suppressChange = false)
         {
             ApplicationSettingsMutex.WaitOne();
             try

@@ -77,11 +77,33 @@ namespace PVSettings
             DeviceManagementSettings = new DeviceManagementSettings();
             
             SystemServices = null;
-            //DeviceInverterManagerSettings = null;
+
+            _InitialSave = new GenericSetting<bool>(true, this, "InitialSave");
+            _InitialCheck = new GenericSetting<bool>(true, this, "InitialCheck");
+            _ServiceAccountName = new GenericSetting<string>("Local Service", this, "ServiceAccountName");
+            _ServiceAccountPassword = new GenericSetting<string>("", this, "ServiceAccountPassword");
+            _ServiceAccountRequiresPassword = new GenericSetting<bool>(false, this, "ServiceAccountRequiresPassword");
+            _AutoStartPVBCService = new GenericSetting<bool>(true, this, "AutoStartPVBCService");
+            _Host = new GenericSetting<string>("", this, "Host");
+            _Database = new GenericSetting<string>("", this, "Database");
+            _DatabaseType = new GenericSetting<string>("", this, "DatabaseType");
+            _ProviderType = new GenericSetting<string>("", this, "ProviderType");
+            _ProviderName = new GenericSetting<string>("", this, "ProviderName");
+            _OleDbName = new GenericSetting<string>("", this, "OleDbName");
+            _ConnectionString = new GenericSetting<string>("", this, "ConnectionString");
+            _UserName = new GenericSetting<string>("", this, "UserName");
+            _Password = new GenericSetting<string>("", this, "Password");
+            _DefaultDirectory = new GenericSetting<string>("", this, "DefaultDirectory");
+            _InverterLogs = new GenericSetting<string>("", this, "InverterLogs");
+            _ServiceSuspendType = new GenericSetting<string>("", this, "ServiceSuspendType");
+            _EveningSuspendType = new GenericSetting<string>("", this, "EveningSuspendType");
+
             LoadSettingsSub();
             ServiceAccountPassword = "";
             ServiceDetailsChanged = false;
             LoadingEnergyEvents = false;
+
+
         }
 
         public override void SaveSettings()
@@ -329,12 +351,12 @@ namespace PVSettings
             {
                 XmlElement e = AddElement(sites, "site");
                 PvOutputSiteSettings site = new PvOutputSiteSettings(this, e);
-                site.APIKey = PVOutputAPIKey;
+                site.APIKey = "YourAPIKeyHere";
                 site.APIVersion = "";
-                site.SystemId = PVOutputSiteId;
+                site.SystemId = "YourSiteID";
                 site.LiveDays = 2;
                 site.AutoBackload = true;
-                site.DataInterval = PVOutputDataInterval;
+                site.DataInterval = "10";
                 site.Enable = EnablePVOutput;
 
                 _PvOutputSystemList.Add(site);
@@ -431,276 +453,176 @@ namespace PVSettings
             }
         }
 
+        private GenericSetting<bool> _InitialSave;
         public bool InitialSave
         {
-            get
-            {
-                String val = GetValue("initialsave");
-                return val != "false";
-            }
-
-            set
-            {
-                SetValue("initialsave", value ? "true" : "false", "InitialSave");
-            }
+            get { return _InitialSave.Value; }
+            set { _InitialSave.Value = value; }
         }
 
+        private GenericSetting<bool> _InitialCheck;
         public bool InitialCheck
         {
-            get
-            {
-                String val = GetValue("initialcheck");
-                return val != "false";
-            }
-
-            set
-            {
-                SetValue("initialcheck", value ? "true" : "false", "InitialCheck");
-            }
+            get { return _InitialCheck.Value; }
+            set { _InitialCheck.Value = value; }
         }
-
-        //public String KnownServiceAccountName { get; set; }
 
         public bool ServiceDetailsChanged { get; set; }
 
+        private GenericSetting<string> _ServiceAccountName;
         public String ServiceAccountName
         {
-            get
-            {
-                string val = GetValue("serviceaccountname");
-                if (val == "")
-                    return "Local Service";
-                else
-                    return val;
-            }
-
+            get { return _ServiceAccountName.Value; }
             set
             {
-                SetValue("serviceaccountname", value, "ServiceAccountName");
+                _ServiceAccountName.Value = value;
                 ServiceDetailsChanged = true;
             }
         }
 
+        private GenericSetting<string> _ServiceAccountPassword;
         public String ServiceAccountPassword
         {
             get
             {
                 if (ServiceAccountRequiresPassword)
-                    return GetValue("serviceaccountpassword");
+                    return _ServiceAccountPassword.Value;
                 else
                     return "";
             }
 
             set
             {
-                SetValue("serviceaccountpassword", value, "ServiceAccountPassword");
+                _ServiceAccountPassword.Value = value;
                 ServiceDetailsChanged = true;
             }
         }
 
+        private GenericSetting<bool> _ServiceAccountRequiresPassword;
         public bool ServiceAccountRequiresPassword
         {
             get
             {
-                String rffd = GetValue("serviceaccountrequirespassword");
-                if (rffd == "true")
-                    return true;
-                else
-                    return false;
+                return _ServiceAccountRequiresPassword.Value;
             }
 
             set
             {
-                if (value)
-                {
-                    SetValue("serviceaccountrequirespassword", "true", "ServiceAccountRequiresPassword");
-                }
-                else
-                {
-                    ServiceAccountPassword = "";
-                    SetValue("serviceaccountrequirespassword", "false", "ServiceAccountRequiresPassword");
-                }
-
+                _ServiceAccountRequiresPassword.Value = value;
                 ServiceDetailsChanged = true;
             }
         }
 
+        private GenericSetting<bool> _AutoStartPVBCService;
         public bool AutoStartPVBCService
         {
             get
             {
-                String rffd = GetValue("autostartpvbcservice");
-                if (rffd == "false")
-                    return false;
-                else
-                    return true;
+                return _AutoStartPVBCService.Value;
             }
 
             set
             {
-                if (value)
-                    SetValue("autostartpvbcservice", "true", "AutoStartPVBCService");
-                else
-                    SetValue("autostartpvbcservice", "false", "AutoStartPVBCService");
+                _AutoStartPVBCService.Value = value;
                 ServiceDetailsChanged = true;
             }
         }
 
+        private GenericSetting<string> _Host;
         public String Host
         {
-            get
-            {
-                return GetValue("host");
-            }
-
-            set
-            {
-                SetValue("host", value, "Host");
-            }
+            get { return _Host.Value; }
+            set { _Host.Value = value; }
         }
 
+        private GenericSetting<string> _Database;
         public String Database
         {
-            get
-            {
-                return GetValue("database");
-            }
-
-            set
-            {
-                SetValue("database", value, "Database");
-            }
+            get { return _Database.Value; }
+            set { _Database.Value = value; }
         }
 
+        private GenericSetting<string> _DatabaseType;
         public String DatabaseType
         {
-            get
-            {
-                return GetValue("databasetype");
-            }
-
-            set
-            {
-                SetValue("databasetype", value, "DatabaseType");
-            }
+            get { return _DatabaseType.Value; }
+            set { _DatabaseType.Value = value; }
         }
 
+        private GenericSetting<string> _ProviderType;
         public String ProviderType
         {
-            get
-            {
-                return GetValue("providertype");
-            }
-
-            set
-            {
-                SetValue("providertype", value, "ProviderType");
-            }
+            get { return _ProviderType.Value; }
+            set { _ProviderType.Value = value; }
         }
 
+        private GenericSetting<string> _ProviderName;
         public String ProviderName
         {
-            get
-            {
-                return GetValue("providername");
-            }
-
-            set
-            {
-                SetValue("providername", value, "ProviderName");
-            }
+            get { return _ProviderName.Value; }
+            set { _ProviderName.Value = value; }
         }
 
+        private GenericSetting<string> _OleDbName;
         public String OleDbName
         {
-            get
-            {
-                return GetValue("oledbname");
-            }
-
-            set
-            {
-                SetValue("oledbname", value, "OleDbName");
-            }
+            get { return _OleDbName.Value; }
+            set { _OleDbName.Value = value; }
         }
 
+        private GenericSetting<string> _ConnectionString;
         public String ConnectionString
         {
-            get
-            {
-                return GetValue("connectionstring");
-            }
-
-            set
-            {
-                SetValue("connectionstring", value, "ConnectionString");
-            }
+            get { return _ConnectionString.Value; }
+            set { _ConnectionString.Value = value; }
         }
 
+        private GenericSetting<string> _UserName;
         public String UserName
         {
-            get
-            {
-                return GetValue("username");
-            }
-
-            set
-            {
-                SetValue("username", value, "UserName");
-            }
+            get { return _UserName.Value; }
+            set { _UserName.Value = value; }
         }
 
+        private GenericSetting<string> _Password;
         public String Password
         {
-            get
-            {
-                return GetValue("password");
-            }
-
-            set
-            {
-                SetValue("password", value, "Password");
-            }
+            get { return _Password.Value; }
+            set { _Password.Value = value; }
         }
 
+        private GenericSetting<string> _DefaultDirectory;
         public String DefaultDirectory
         {
-            get
-            {
-                return GetValue("defaultdirectory");
-            }
-
-            set
-            {
+            get { return _DefaultDirectory.Value; }
+            set 
+            {                 
                 SettingsDirectory = value;
                 WriteWorkingDirectory = true;
-                SetValue("defaultdirectory", value, "DefaultDirectory");
+                _DefaultDirectory.Value = value;
             }
         }
 
+        private GenericSetting<string> _InverterLogs;
         public String InverterLogs
         {
-            get
-            {
-                return GetValue("inverterlogs");
-            }
-
-            set
+            get { return _InverterLogs.Value; }
+            set 
             {
                 try
                 {
                     if (value == "")
                     {
-                        SetValue("inverterlogs", value, "InverterLogs");
+                        _InverterLogs.Value = value;
                         return;
                     }
                     DirectoryInfo info = new DirectoryInfo(value);
                     if (info.Exists)
-                        SetValue("inverterlogs", value, "InverterLogs");
+                        _InverterLogs.Value = value;
                 }
                 catch (Exception)
                 {
-                }               
+                }          
             }
         }
 
@@ -715,66 +637,35 @@ namespace PVSettings
             }
         }
 
-        // deprecated
-        private String PVOutputSiteId
-        {
-            get
-            {
-                return GetValue("pvoutputsiteid");
-            }
-        }
-
-        // deprecated
-        private String PVOutputDataInterval
-        {
-            get
-            {
-                return GetValue("pvoutputdatainterval");
-            }
-        }
-
-        // deprecated
-        private String PVOutputAPIKey
-        {
-            get
-            {
-                return GetValue("pvoutputapikey");
-            }
-        }
-
+        private GenericSetting<string> _ServiceSuspendType;
         public String ServiceSuspendType
         {
-            get
-            {
-                return GetValue("servicesuspendtype");
-            }
-
-            set
+            get { return _ServiceSuspendType.Value; }
+            set 
             {
                 if (value != "sleep" && value != "hibernate" && value != "idle" && value != "")
-                    SetValue("servicesuspendtype", "sleep", "ServiceSuspendType");
+                    _ServiceSuspendType.Value = "sleep";
                 else
-                    SetValue("servicesuspendtype", value, "ServiceSuspendType");
+                    _ServiceSuspendType.Value = value; 
             }
         }
 
-
+        private GenericSetting<string> _EveningSuspendType;
         public String EveningSuspendType
         {
-            get
+            get 
             {
-                String tmp = GetValue("eveningsuspendtype");
+                String tmp = _EveningSuspendType.Value;
                 if (tmp == "")
-                    tmp = GetValue("servicesuspendtype");
+                    tmp = _ServiceSuspendType.Value;
                 return tmp;
             }
-
             set
             {
                 if (value != "sleep" && value != "hibernate" && value != "idle" && value != "")
-                    SetValue("eveningsuspendtype", "sleep", "EveningSuspendType");
+                    _EveningSuspendType.Value = "sleep";
                 else
-                    SetValue("eveningsuspendtype", value, "EveningSuspendType");
+                    _EveningSuspendType.Value = value;
             }
         }
 
