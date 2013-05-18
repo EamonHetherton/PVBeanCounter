@@ -554,7 +554,7 @@ namespace PVSettings
                 {
                     // global value moved to inverter manager specific settings
                     // retrieve old global value and delete the old node
-                    name = ApplicationSettings.OldSunnyExplorerPlantName.Trim();
+                    name = ApplicationSettings.SunnyExplorerPlantName.Trim();
                     if (name != "")
                         SetValue("sunnyexplorerplantname", name, "SunnyExplorerPlantName");
                     ApplicationSettings.DeleteValue("sunnyexplorerplantname");

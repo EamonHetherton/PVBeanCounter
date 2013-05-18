@@ -126,6 +126,7 @@ namespace PVSettings
                             fileSettings = new PVSettings.SettingsBase();
                             fileSettings.SetDocument(newDocument);
                             fileSettings.settings = (XmlElement)n;
+                            fileSettings.SetupBaseAfterDocument();
                         }
                         found = true;
                         break;

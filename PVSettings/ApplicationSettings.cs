@@ -97,13 +97,22 @@ namespace PVSettings
             _InverterLogs = new GenericSetting<string>("", this, "InverterLogs");
             _ServiceSuspendType = new GenericSetting<string>("", this, "ServiceSuspendType");
             _EveningSuspendType = new GenericSetting<string>("", this, "EveningSuspendType");
+            _ServiceStartTime = new GenericSetting<TimeSpan?>(this, "ServiceStartTime");
+            _ServiceStopTime = new GenericSetting<TimeSpan?>(this, "ServiceStopTime");
+            _WakeDelay = new GenericSetting<Int32>(0, this, "WakeDelay");
+            _IntervalStartTime = new GenericSetting<TimeSpan?>(this, "IntervalStartTime");
+            _IntervalStopTime = new GenericSetting<TimeSpan?>(this, "IntervalStopTime");
+            _InverterStartTime = new GenericSetting<TimeSpan?>(this, "InverterStartTime");
+            _InverterStopTime = new GenericSetting<TimeSpan?>(this, "InverterStopTime");
+            _ServiceWakeInterval = new GenericSetting<TimeSpan?>(this, "ServiceWakeInterval");
+            _ServiceSuspendInterval = new GenericSetting<TimeSpan?>(this, "ServiceSuspendInterval");
+            _SunnyExplorerPlantName = new GenericSetting<string>("", this, "SunnyExplorerPlantName");
+            _FirstFullDay = new GenericSetting<DateTime?>(this, "FirstFullDay", DateStrings);
 
             LoadSettingsSub();
             ServiceAccountPassword = "";
             ServiceDetailsChanged = false;
             LoadingEnergyEvents = false;
-
-
         }
 
         public override void SaveSettings()
@@ -669,211 +678,80 @@ namespace PVSettings
             }
         }
 
+        private GenericSetting<TimeSpan?> _ServiceStartTime;
         public TimeSpan? ServiceStartTime
         {
-            get
-            {
-                String ts = GetValue("servicestarttime");
-                if (ts == "")
-                    return null;
-                else
-                    return TimeSpan.Parse(ts);
-            }
-
-            set
-            {
-                if (value == null)
-                    SetValue("servicestarttime", "", "ServiceStartTime");
-                else
-                    SetValue("servicestarttime", value.ToString(), "ServiceStartTime");
-            }
+            get { return _ServiceStartTime.Value; }
+            set { _ServiceStartTime.Value = value; }
         }
 
+        private GenericSetting<TimeSpan?> _ServiceStopTime;
         public TimeSpan? ServiceStopTime
         {
-            get
-            {
-                String ts = GetValue("servicestoptime");
-                if (ts == "")
-                    return null;
-                else
-                    return TimeSpan.Parse(ts);
-            }
-
-            set
-            {
-                if (value == null)
-                    SetValue("servicestoptime", "", "ServiceStopTime");
-                else
-                    SetValue("servicestoptime", value.ToString(), "ServiceStopTime");
-            }
+            get { return _ServiceStopTime.Value; }
+            set { _ServiceStopTime.Value = value; }
         }
 
+        private GenericSetting<Int32> _WakeDelay;
         public int WakeDelay
         {
-            get
-            {
-                String ts = GetValue("wakedelay");
-                if (ts == "" || ts == null)
-                    return 0;
-                else
-                    return Convert.ToInt32(ts);
-            }
-
-            set
-            {
-                SetValue("wakedelay", value.ToString(), "WakeDelay");
-            }
+            get { return _WakeDelay.Value; }
+            set { _WakeDelay.Value = value; }
         }
 
+        private GenericSetting<TimeSpan?> _IntervalStartTime;
         public TimeSpan? IntervalStartTime
         {
-            get
-            {
-                String ts = GetValue("intervalstarttime");
-                if (ts == "")
-                    return null;
-                else
-                    return TimeSpan.Parse(ts);
-            }
-
-            set
-            {
-                if (value == null)
-                    SetValue("intervalstarttime", "", "IntervalStartTime");
-                else
-                    SetValue("intervalstarttime", value.ToString(), "IntervalStartTime");
-            }
+            get { return _IntervalStartTime.Value; }
+            set { _IntervalStartTime.Value = value; }
         }
 
+        private GenericSetting<TimeSpan?> _IntervalStopTime;
         public TimeSpan? IntervalStopTime
         {
-            get
-            {
-                String ts = GetValue("intervalstoptime");
-                if (ts == "")
-                    return null;
-                else
-                    return TimeSpan.Parse(ts);
-            }
-
-            set
-            {
-                if (value == null)
-                    SetValue("intervalstoptime", "", "IntervalStopTime");
-                else
-                    SetValue("intervalstoptime", value.ToString(), "IntervalStopTime");
-            }
+            get { return _IntervalStopTime.Value; }
+            set { _IntervalStopTime.Value = value; }
         }
 
+        private GenericSetting<TimeSpan?> _InverterStartTime;
         public TimeSpan? InverterStartTime
         {
-            get
-            {
-                String ts = GetValue("inverterstarttime");
-                if (ts == "")
-                    return null;
-                else
-                    return TimeSpan.Parse(ts);
-            }
-
-            set
-            {
-                if (value == null)
-                    SetValue("inverterstarttime", "", "InverterStartTime");
-                else
-                    SetValue("inverterstarttime", value.ToString(), "InverterStartTime");
-            }
+            get { return _InverterStartTime.Value; }
+            set { _InverterStartTime.Value = value; }
         }
 
+        private GenericSetting<TimeSpan?> _InverterStopTime;
         public TimeSpan? InverterStopTime
         {
-            get
-            {
-                String ts = GetValue("inverterstoptime");
-                if (ts == "")
-                    return null;
-                else
-                    return TimeSpan.Parse(ts);
-            }
-
-            set
-            {
-                if (value == null)
-                    SetValue("inverterstoptime", "", "InverterStopTime");
-                else
-                    SetValue("inverterstoptime", value.ToString(), "InverterStopTime");
-            }
+            get { return _InverterStopTime.Value; }
+            set { _InverterStopTime.Value = value; }
         }
 
+        private GenericSetting<TimeSpan?> _ServiceWakeInterval;
         public TimeSpan? ServiceWakeInterval
         {
-            get
-            {
-                String ts = GetValue("servicewakeinterval");
-                if (ts == "")
-                    return null;
-                else
-                    return TimeSpan.Parse(ts);
-            }
-
-            set
-            {
-                if (value == null)
-                    SetValue("servicewakeinterval", "", "ServiceWakeInterval");
-                else
-                    SetValue("servicewakeinterval", value.ToString(), "ServiceWakeInterval");
-            }
+            get { return _ServiceWakeInterval.Value; }
+            set { _ServiceWakeInterval.Value = value; }
         }
 
+        private GenericSetting<TimeSpan?> _ServiceSuspendInterval;
         public TimeSpan? ServiceSuspendInterval
         {
-            get
-            {
-                String ts = GetValue("servicesuspendinterval");
-                if (ts == "")
-                    return null;
-                else
-                    return TimeSpan.Parse(ts);
-            }
-
-            set
-            {
-                if (value == null)
-                    SetValue("servicesuspendinterval", "", "ServiceSuspendInterval");
-                else
-                    SetValue("servicesuspendinterval", value.ToString(), "ServiceSuspendInterval");
-            }
+            get { return _ServiceSuspendInterval.Value; }
+            set { _ServiceSuspendInterval.Value = value; }
         }
 
-        public String OldSunnyExplorerPath
+        private GenericSetting<string> _SunnyExplorerPlantName;
+        public String SunnyExplorerPlantName
         {
-            get
-            {
-                return GetValue("sunnyexplorerpath");
-            }
+            get { return _SunnyExplorerPlantName.Value; }
         }
 
-        public String OldSunnyExplorerPlantName
-        {
-            get
-            {
-                String name = GetValue("sunnyexplorerplantname").Trim();
-                return name;
-            }
-        }
-
+        private GenericSetting<DateTime?> _FirstFullDay;
         public DateTime? FirstFullDay
         {
-            get
-            {
-                return StringToDate(GetValue("firstfullday"));
-            }
-
-            set
-            {
-                SetValue("firstfullday", DateToString(value), "FirstFullDay");
-            }
+            get { return _FirstFullDay.Value; }
+            set { _FirstFullDay.Value = value; }
         }
 
         public bool EnablePVOutput

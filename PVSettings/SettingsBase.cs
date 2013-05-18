@@ -61,34 +61,200 @@ namespace PVSettings
         SQLServer
     }
 
-    public struct GenericSetting<T> where T : IConvertible
+    public interface IGenericStrings
+    {
+        string ToString(object genericValue);
+        object FromString(string stringValue);
+    }
+
+    public class DateStrings : IGenericStrings
+    {
+        String DateFormat;
+        String LegacyDateFormat;
+
+        public DateStrings(String dateFormat, String legacyDateFormat)
+        {
+            DateFormat = dateFormat;
+            LegacyDateFormat = legacyDateFormat;
+        }
+
+        String IGenericStrings.ToString(object inDate)
+        {
+            if (inDate == null)
+                return "";
+            else
+                return ((DateTime?)inDate).Value.Date.ToString(DateFormat, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        object IGenericStrings.FromString(String inDateStr)
+        {
+            if (inDateStr == "")
+                return null;
+
+            DateTime? date = null;
+            try
+            {
+                date = DateTime.ParseExact(inDateStr, DateFormat, System.Globalization.CultureInfo.InvariantCulture);
+                return date;
+            }
+            catch (FormatException)
+            {
+            }
+
+            if (LegacyDateFormat != null)
+            {
+                try
+                {
+                    date = DateTime.ParseExact(inDateStr, LegacyDateFormat, System.Globalization.CultureInfo.InvariantCulture);
+                    return date;
+                }
+                catch (FormatException)
+                {
+                }
+
+                try
+                {
+                    date = DateTime.ParseExact(inDateStr, LegacyDateFormat, System.Globalization.CultureInfo.CurrentCulture);
+                    return date;
+                }
+                catch (FormatException)
+                {
+                }
+            }
+
+            try
+            {
+                date = DateTime.Parse(inDateStr, System.Globalization.CultureInfo.InvariantCulture);
+                return date;
+            }
+            catch (FormatException)
+            {
+            }
+
+            try
+            {
+                date = DateTime.Parse(inDateStr, System.Globalization.CultureInfo.CurrentCulture);
+                return date;
+            }
+            catch (FormatException)
+            {
+            }
+
+            return date;
+        }
+    }
+
+    public class DateTimeStrings : IGenericStrings
+    {
+        String DateTimeFormat;
+        String LegacyDateTimeFormat;
+
+        public DateTimeStrings(String dateTimeFormat, String legacyDateTimeFormat)
+        {
+            DateTimeFormat = dateTimeFormat;
+            LegacyDateTimeFormat = legacyDateTimeFormat;
+        }
+
+        String IGenericStrings.ToString(object inDateTime)
+        {
+            if (inDateTime == null)
+                return "";
+            else
+                return ((DateTime?)inDateTime).Value.ToString(DateTimeFormat, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        object IGenericStrings.FromString(String inDateStr)
+        {
+            if (inDateStr == "")
+                return null;
+
+            DateTime? date = null;
+            try
+            {
+                date = DateTime.ParseExact(inDateStr, DateTimeFormat, System.Globalization.CultureInfo.InvariantCulture);
+                return date;
+            }
+            catch (FormatException)
+            {
+            }
+
+            if (LegacyDateTimeFormat != null)
+            {
+                try
+                {
+                    date = DateTime.ParseExact(inDateStr, LegacyDateTimeFormat, System.Globalization.CultureInfo.InvariantCulture);
+                    return date;
+                }
+                catch (FormatException)
+                {
+                }
+
+                try
+                {
+                    date = DateTime.ParseExact(inDateStr, LegacyDateTimeFormat, System.Globalization.CultureInfo.CurrentCulture);
+                    return date;
+                }
+                catch (FormatException)
+                {
+                }
+            }
+
+            try
+            {
+                date = DateTime.Parse(inDateStr, System.Globalization.CultureInfo.InvariantCulture);
+                return date;
+            }
+            catch (FormatException)
+            {
+            }
+
+            try
+            {
+                date = DateTime.Parse(inDateStr, System.Globalization.CultureInfo.CurrentCulture);
+                return date;
+            }
+            catch (FormatException)
+            {
+            }
+
+            return date;
+        }
+    }
+    
+
+    public struct GenericSetting<T> 
     {
         private SettingsBase _settings;
         private bool haveValue;
         private T _Value;
         private T _defaultValue;
-        private Type type;
+        private Type coreType;
+        private Type outerType;
         private string _elementName;
         private string _propertyName;
+        private bool isDefault;
+        private bool isNullable;
+        //private bool isNull;
+        private IGenericStrings GenericStrings;
 
-        private T GetBoolean()
+        private bool GetBoolean(string val)
         {
-            string val = _settings.GetValue(_elementName).ToLower();
+            val = val.ToLower();
             if (val == "true")
-               return (T)Convert.ChangeType(true, type);
+            {
+                IsDefault = false;
+                return true;
+            }
             else if (val == "false")
-               return (T)Convert.ChangeType(false, type);
+            {
+                IsDefault = false;
+                return false;
+            }
             else
-                return _defaultValue;
-        }
-
-        private T GetString()
-        {
-            string val = _settings.GetValue(_elementName);
-            if (val == null || val == "")
-                return _defaultValue;
-            else
-                return (T)Convert.ChangeType(val, type);
+            {
+                IsDefault = true;
+                return (bool)Convert.ChangeType(_defaultValue, coreType);
+            }
         }
 
         public T Value
@@ -100,12 +266,39 @@ namespace PVSettings
                 else
                 {
                     string val = _settings.GetValue(_elementName);
-                    if (type == typeof(string))
-                        _Value = GetString();
-                    else if (type == typeof(bool))
-                        _Value = GetBoolean();
+                    if (val == "" || val == null)
+                    {
+                        isDefault = true;
+                        return _defaultValue;
+                    }
                     else
-                        throw new NotImplementedException("GenericSetting - Type: " + type.ToString() + " - Not available");
+                        isDefault = false;
+             
+                    if (coreType == typeof(string))
+                        _Value = (T)Convert.ChangeType(val, outerType);
+                    else if (coreType == typeof(bool))
+                        _Value = (T)Convert.ChangeType(GetBoolean(val), outerType);
+                    else if (coreType == typeof(Int32) || coreType == typeof(int))
+                        _Value = (T)Convert.ChangeType(val, outerType);
+                    else if (coreType == typeof(TimeSpan))
+                    {
+                        TimeSpan temp = TimeSpan.Parse(val);                   
+                        TypeConverter conv =TypeDescriptor.GetConverter(outerType);
+                        _Value = (T)conv.ConvertFrom(temp);                        
+                    }
+                    else if (coreType == typeof(DateTime))
+                    {
+                        DateTime? temp = (DateTime?)GenericStrings.FromString(val);
+                        if (!temp.HasValue)
+                            _Value = _defaultValue;
+                        else
+                        {
+                            TypeConverter conv = TypeDescriptor.GetConverter(outerType);
+                            _Value = (T)conv.ConvertFrom(temp);
+                        }
+                    }
+                    else
+                        throw new NotImplementedException("GenericSetting - Type: " + coreType.ToString() + " - Not available");
 
                     haveValue = true;
                     return _Value;
@@ -118,34 +311,97 @@ namespace PVSettings
 
                 if (value == null)
                     _settings.SetValue(_elementName, "", _propertyName);
-                else if (type == typeof(bool))
+                else if (coreType == typeof(bool))
                     _settings.SetValue(_elementName, value.ToString().ToLower(), _propertyName);
+                else if (coreType == typeof(DateTime))
+                {
+                    string temp;
+                    TypeConverter conv = TypeDescriptor.GetConverter(typeof(DateTime?));
+                    
+                    DateTime? date = (DateTime?)conv.ConvertFrom(value);  // conv needed if T is DateTime rather than DateTime?
+                    temp = GenericStrings.ToString(date);
+                    
+                    _settings.SetValue(_elementName, temp, _propertyName);
+                }
                 else
                     _settings.SetValue(_elementName, value.ToString(), _propertyName);
             }
         }
 
-        public GenericSetting(T defaultValue, SettingsBase settings, string propertyName)
+        public bool IsDefault { get { return isDefault; } private set { isDefault = value; } }
+
+        public GenericSetting(T defaultValue, SettingsBase settings, string propertyName, IGenericStrings genericStrings = null)
         {
-            type = typeof(T);
-            /*
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            outerType = typeof(T);
+            if (outerType.IsGenericType && outerType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 isNullable = true;
+                // drill down to natural type
+                coreType = outerType.GenericTypeArguments[0];
+                _defaultValue = default(T); // parameter defaultValue is ignored on nullables
                 //isNull = true;
             }
             else
             {
+                coreType = outerType;
                 isNullable = false;
                 //isNull = false;
+                _defaultValue = defaultValue;
             }
-            */
-            haveValue = false;
-            _defaultValue = defaultValue;
+
+            if (genericStrings == null)
+            {
+                if (coreType == typeof(DateTime))
+                    GenericStrings = settings.DateTimeStrings;
+                else
+                    GenericStrings = null;
+            }
+            else
+                GenericStrings = genericStrings;
+            
+            haveValue = false;            
             _settings = settings;
             _propertyName = propertyName;
             _elementName = propertyName.ToLower();
             _Value = defaultValue;
+            isDefault = true;
+        }
+
+        public GenericSetting(SettingsBase settings, string propertyName, IGenericStrings genericStrings = null) 
+        {
+            outerType = typeof(T);
+            if (outerType.IsGenericType && outerType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                isNullable = true;
+                // drill down to natural type
+                coreType = outerType.GenericTypeArguments[0];                
+                //isNull = true;
+            }
+            else
+            {
+                coreType = outerType;
+                isNullable = false;
+                //isNull = false;
+            }
+
+            if (genericStrings == null)
+            {
+                if (coreType == typeof(DateTime))
+                    GenericStrings = settings.DateTimeStrings;
+                else
+                    GenericStrings = null;
+            }
+            else
+                GenericStrings = genericStrings;
+
+            _defaultValue = default(T);
+            haveValue = false;
+           
+            _settings = settings;
+            _propertyName = propertyName;
+            _elementName = propertyName.ToLower();
+            _Value = _defaultValue;
+            isDefault = true;
         }
     }
 
@@ -162,6 +418,9 @@ namespace PVSettings
 
         protected const String NotDefined = "Not Defined";
 
+        public DateStrings DateStrings;
+        public DateTimeStrings DateTimeStrings;
+
         // Used to construct ApplicationsSettingsBase only 
         // All others must use - 
         // public SettingsBase(ApplicationSettingsBase rootSettings, XmlElement element)
@@ -176,6 +435,14 @@ namespace PVSettings
             RootSettings = rootSettings;
             document = element.OwnerDocument;
             settings = element;
+
+            SetupBaseAfterDocument();
+        }
+
+        public void SetupBaseAfterDocument()
+        {
+            DateStrings = new DateStrings(DateFormat, LegacyDateFormat);
+            DateTimeStrings = new DateTimeStrings(DateTimeFormat, LegacyDateTimeFormat);
         }
 
         public void SetDocument(XmlDocument newDocument)
@@ -420,6 +687,192 @@ namespace PVSettings
             macFishKey.Close();
             software.Close();
             return value;
+        }
+
+        public String DateFormat
+        {
+            get
+            {
+                return GetValue("dateformat");
+            }
+
+            set
+            {
+                SetValueInternal("dateformat", value);
+            }
+        }
+
+        public String DateTimeFormat
+        {
+            get
+            {
+                return GetValue("datetimeformat");
+            }
+
+            set
+            {
+                SetValueInternal("datetimeformat", value);
+            }
+        }
+
+        public String LegacyDateFormat
+        {
+            get
+            {
+                return GetValue("legacydateformat");
+            }
+
+            set
+            {
+                SetValueInternal("legacydateformat", value);
+            }
+        }
+
+        public String LegacyDateTimeFormat
+        {
+            get
+            {
+                return GetValue("legacydatetimeformat");
+            }
+
+            set
+            {
+                SetValueInternal("legacydatetimeformat", value);
+            }
+        }
+
+        public String DateToString(DateTime? inDate, String dateFormat = null)
+        {
+            if (inDate == null)
+                return "";
+            else if (dateFormat == null)
+                return inDate.Value.Date.ToString(DateFormat, System.Globalization.CultureInfo.InvariantCulture);
+            else
+                return inDate.Value.Date.ToString(dateFormat, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        public DateTime? StringToDate(String inDateStr)
+        {
+            if (inDateStr == "")
+                return null;
+
+            DateTime? date = null;
+            try
+            {
+                date = DateTime.ParseExact(inDateStr, DateFormat, System.Globalization.CultureInfo.InvariantCulture);
+                return date;
+            }
+            catch (FormatException)
+            {
+            }
+
+            if (LegacyDateFormat != null)
+            {
+                try
+                {
+                    date = DateTime.ParseExact(inDateStr, LegacyDateFormat, System.Globalization.CultureInfo.InvariantCulture);
+                    return date;
+                }
+                catch (FormatException)
+                {
+                }
+
+                try
+                {
+                    date = DateTime.ParseExact(inDateStr, LegacyDateFormat, System.Globalization.CultureInfo.CurrentCulture);
+                    return date;
+                }
+                catch (FormatException)
+                {
+                }
+            }
+
+            try
+            {
+                date = DateTime.Parse(inDateStr, System.Globalization.CultureInfo.InvariantCulture);
+                return date;
+            }
+            catch (FormatException)
+            {
+            }
+
+            try
+            {
+                date = DateTime.Parse(inDateStr, System.Globalization.CultureInfo.CurrentCulture);
+                return date;
+            }
+            catch (FormatException)
+            {
+            }
+
+            return date;
+        }
+
+        public String DateTimeToString(DateTime? inDateTime, String dateTimeFormat = null)
+        {
+            if (inDateTime == null)
+                return "";
+            else if (dateTimeFormat == null)
+                return inDateTime.Value.ToString(DateTimeFormat, System.Globalization.CultureInfo.InvariantCulture);
+            else
+                return inDateTime.Value.ToString(dateTimeFormat, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        public DateTime? StringToDateTime(String inDateStr)
+        {
+            if (inDateStr == "")
+                return null;
+
+            DateTime? date = null;
+            try
+            {
+                date = DateTime.ParseExact(inDateStr, DateTimeFormat, System.Globalization.CultureInfo.InvariantCulture);
+                return date;
+            }
+            catch (FormatException)
+            {
+            }
+
+            if (LegacyDateTimeFormat != null)
+            {
+                try
+                {
+                    date = DateTime.ParseExact(inDateStr, LegacyDateTimeFormat, System.Globalization.CultureInfo.InvariantCulture);
+                    return date;
+                }
+                catch (FormatException)
+                {
+                }
+
+                try
+                {
+                    date = DateTime.ParseExact(inDateStr, LegacyDateTimeFormat, System.Globalization.CultureInfo.CurrentCulture);
+                    return date;
+                }
+                catch (FormatException)
+                {
+                }
+            }
+
+            try
+            {
+                date = DateTime.Parse(inDateStr, System.Globalization.CultureInfo.InvariantCulture);
+                return date;
+            }
+            catch (FormatException)
+            {
+            }
+
+            try
+            {
+                date = DateTime.Parse(inDateStr, System.Globalization.CultureInfo.CurrentCulture);
+                return date;
+            }
+            catch (FormatException)
+            {
+            }
+
+            return date;
         }
     }
 }
