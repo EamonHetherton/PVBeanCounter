@@ -178,7 +178,7 @@ namespace Buffers
             BytesUsed = 0;
         }
 
-        private void LogMessage(String routine, String message, LogEntryType logEntryType = LogEntryType.MeterTrace)
+        private void LogMessage(String routine, String message, LogEntryType logEntryType = LogEntryType.DetailTrace)
         {
             SystemServices.LogMessage("ByteBuffer: " + routine, message, logEntryType);
         }

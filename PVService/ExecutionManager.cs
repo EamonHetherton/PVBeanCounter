@@ -83,7 +83,7 @@ namespace PVService
             GlobalSettings.SystemServices.LogInformation = GlobalSettings.ApplicationSettings.LogInformation;
             GlobalSettings.SystemServices.LogStatus = GlobalSettings.ApplicationSettings.LogStatus;
             GlobalSettings.SystemServices.LogTrace = GlobalSettings.ApplicationSettings.LogTrace;
-            GlobalSettings.SystemServices.LogMeterTrace = GlobalSettings.ApplicationSettings.LogMeterTrace;
+            GlobalSettings.SystemServices.LogDetailTrace = GlobalSettings.ApplicationSettings.LogDetailTrace;
             GlobalSettings.SystemServices.LogMessageContent = GlobalSettings.ApplicationSettings.LogMessageContent;
             GlobalSettings.SystemServices.LogDatabase = GlobalSettings.ApplicationSettings.LogDatabase;
             GlobalSettings.SystemServices.LogEvent = GlobalSettings.ApplicationSettings.LogEvent;
@@ -427,9 +427,10 @@ namespace PVService
             GlobalSettings.SystemServices.LogMessage("", "----------------------------------------------------------------------------------------------------------------------------------------", LogEntryType.Format);
 
             GlobalSettings.SystemServices.LogMessage("", "          Log Trace: " + (GlobalSettings.SystemServices.LogTrace ? "On" : "Off"), LogEntryType.Format);
-            GlobalSettings.SystemServices.LogMessage("", "    Log Meter Trace: " + (GlobalSettings.SystemServices.LogMeterTrace ? "On" : "Off"), LogEntryType.Format);
+            GlobalSettings.SystemServices.LogMessage("", " Log Detailed Trace: " + (GlobalSettings.SystemServices.LogDetailTrace ? "On" : "Off"), LogEntryType.Format);
             GlobalSettings.SystemServices.LogMessage("", "Log Message Content: " + (GlobalSettings.SystemServices.LogMessageContent ? "On" : "Off"), LogEntryType.Format);
             GlobalSettings.SystemServices.LogMessage("", "       Log Database: " + (GlobalSettings.SystemServices.LogDatabase ? "On" : "Off"), LogEntryType.Format);
+            GlobalSettings.SystemServices.LogMessage("", "         Log Events: " + (GlobalSettings.SystemServices.LogEvent ? "On" : "Off"), LogEntryType.Format);
 
             GlobalSettings.SystemServices.LogMessage("", "----------------------------------------------------------------------------------------------------------------------------------------", LogEntryType.Format);
         }

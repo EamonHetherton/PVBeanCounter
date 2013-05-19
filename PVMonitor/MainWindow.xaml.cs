@@ -113,7 +113,7 @@ namespace PVMonitor
             SystemServices.LogInformation = ApplicationSettings.LogInformation;
             SystemServices.LogStatus = ApplicationSettings.LogStatus;
             SystemServices.LogTrace = ApplicationSettings.LogTrace;
-            SystemServices.LogMeterTrace = ApplicationSettings.LogMeterTrace;
+            SystemServices.LogDetailTrace = ApplicationSettings.LogDetailTrace;
             SystemServices.LogMessageContent = ApplicationSettings.LogMessageContent;
             SystemServices.LogDatabase = ApplicationSettings.LogDatabase;
             SystemServices.LogEvent = ApplicationSettings.LogEvent;

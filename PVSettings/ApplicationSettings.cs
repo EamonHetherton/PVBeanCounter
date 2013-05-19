@@ -108,6 +108,21 @@ namespace PVSettings
             _ServiceSuspendInterval = new GenericSetting<TimeSpan?>(this, "ServiceSuspendInterval");
             _SunnyExplorerPlantName = new GenericSetting<string>("", this, "SunnyExplorerPlantName");
             _FirstFullDay = new GenericSetting<DateTime?>(this, "FirstFullDay", DateStrings);
+            _NewLogEachDay = new GenericSetting<bool>(true, this, "NewLogEachDay");
+            _LogRetainDays = new GenericSetting<int?>(this, "LogRetainDays");
+            _EnableIntervalSuspend = new GenericSetting<bool>(false, this, "EnableIntervalSuspend");
+            _EnableEveningSuspend = new GenericSetting<bool>(false, this, "EnableEveningSuspend");
+            _ManualSuspendAutoResume = new GenericSetting<bool>(false, this, "ManualSuspendAutoResume");
+            _EmitEvents = new GenericSetting<bool>(false, this, "EmitEvents");
+            _LogTrace = new GenericSetting<bool>(false, this, "LogTrace");
+            _LogDatabase = new GenericSetting<bool>(false, this, "LogDatabase");
+            _LogDetailTrace = new GenericSetting<bool>(false, this, "LogMeterTrace");
+            _LogMessageContent = new GenericSetting<bool>(false, this, "LogMessageContent");
+            _LogInformation = new GenericSetting<bool>(true, this, "LogInformation");
+            _LogStatus = new GenericSetting<bool>(true, this, "LogStatus");
+            _LogError = new GenericSetting<bool>(true, this, "LogError");
+            _LogFormat = new GenericSetting<bool>(true, this, "LogFormat");
+            _LogEvent = new GenericSetting<bool>(false, this, "LogEvent");
 
             LoadSettingsSub();
             ServiceAccountPassword = "";
@@ -765,400 +780,113 @@ namespace PVSettings
             }
         }
 
+        private GenericSetting<bool> _NewLogEachDay;
         public bool NewLogEachDay
         {
-            get
-            {
-                String rffd = GetValue("newlogeachday");
-
-                if (rffd == "false")
-                    return false;
-                else
-                    return true;
-            }
-
-            set
-            {
-                if (value)
-                    SetValue("newlogeachday", "true", "NewLogEachDay");
-                else
-                    SetValue("newlogeachday", "false", "NewLogEachDay");
+            get { return _NewLogEachDay.Value; }
+            set 
+            { 
+                _NewLogEachDay.Value = value;
                 OnPropertyChanged(new PropertyChangedEventArgs("LogFile"));
             }
         }
 
+        private GenericSetting<int?> _LogRetainDays;
         public int? LogRetainDays
         {
-            get
-            {
-                String rffd = GetValue("logretaindays");
-                if (rffd == "")
-                    return null;
-                return Convert.ToInt32(rffd);
-            }
-
-            set
-            {
-                if (value.HasValue)
-                    SetValue("logretaindays", value.Value.ToString(), "LogRetainDays");
-                else
-                    SetValue("logretaindays", "", "LogRetainDays");
-            }
+            get { return _LogRetainDays.Value; }
+            set { _LogRetainDays.Value = value; }
         }
 
+        private GenericSetting<bool> _EnableIntervalSuspend;
         public bool EnableIntervalSuspend
         {
-            get
-            {
-                String rffd = GetValue("enableintervalsuspend");
-                
-                // Setting changed from general suspend to interval suspend 
-                // - retrieve old setting if new setting not defined
-                if (rffd == "")
-                    rffd = GetValue("enablesuspend");
-
-                if (rffd == "true")
-                    return true;
-                else
-                    return false;
-            }
-
-            set
-            {
-                if (value)
-                    SetValue("enableintervalsuspend", "true", "EnableIntervalSuspend");
-                else
-                    // use explicit false value to differentiate new setting from old enablesuspend setting
-                    SetValue("enableintervalsuspend", "false", "EnableIntervalSuspend");
-            }
+            get { return _EnableIntervalSuspend.Value; }
+            set { _EnableIntervalSuspend.Value = value; }
         }
 
+        private GenericSetting<bool> _EnableEveningSuspend;
         public bool EnableEveningSuspend
         {
-            get
-            {
-                //default value when missing from settings is true - opposite to other bool settings
-                String rffd = GetValue("enableeveningsuspend");
-                if (rffd == "false")
-                    return false;
-                else
-                    return true;
-            }
-
-            set
-            {
-                if (!value)
-                    SetValue("enableeveningsuspend", "false", "EnableEveningSuspend");
-                else
-                    SetValue("enableeveningsuspend", "true", "EnableEveningSuspend");
-            }
+            get { return _EnableEveningSuspend.Value; }
+            set { _EnableEveningSuspend.Value = value; }
         }
 
+        private GenericSetting<bool> _ManualSuspendAutoResume;
         public bool ManualSuspendAutoResume
         {
-            get
-            {
-                String rffd = GetValue("manualsuspendautoresume");
-                if (rffd == "true")
-                    return true;
-                else
-                    return false;
-            }
-
-            set
-            {
-                if (value)
-                    SetValue("manualsuspendautoresume", "true", "ManualSuspendAutoResume");
-                else
-                    SetValue("manualsuspendautoresume", "false", "ManualSuspendAutoResume");
-            }
+            get { return _ManualSuspendAutoResume.Value; }
+            set { _ManualSuspendAutoResume.Value = value; }
         }
 
-        public int? ConsumptionMeterHistHoursOld
-        {
-            get
-            {
-                String rffd = GetValue("consumptionmeterhisthours");
-                if (rffd == "")
-                    return null;
-                else
-                    return Convert.ToInt32(rffd);
-            }
-
-            set
-            {
-                if (value == null)
-                    SetValue("consumptionmeterhisthours", "", "ConsumptionMeterHistHours");
-                else
-                    SetValue("consumptionmeterhisthours", value.ToString(), "ConsumptionMeterHistHours");
-            }
-        }
-
-        public bool UseCCTemperatureOld
-        {
-            get
-            {
-                String rffd = GetValue("usecctemperature");
-                if (rffd == "false")
-                    return false;
-                else
-                    return true;
-            }
-        }
-
-
-        public bool MeterHistoryTimeLineAdjust
-        {
-            get
-            {
-                String rffd = GetValue("meterhistorytimelineadjust");
-                if (rffd == "true")
-                    return true;
-                else
-                    return false;
-            }
-
-            set
-            {
-                if (value)
-                    SetValue("meterhistorytimelineadjust", "true", "MeterHistoryTimeLineAdjust");
-                else
-                    SetValue("meterhistorytimelineadjust", "false", "MeterHistoryTimeLineAdjust");
-            }
-        }
-
-        public int? MeterHistoryStartMinute
-        {
-            get
-            {
-                String rffd = GetValue("meterhistorystartminute");
-                if (rffd == "")
-                    return null;
-                else
-                    return Convert.ToInt32(rffd);
-            }
-
-            set
-            {
-                SetValue("meterhistorystartminute", value.ToString(), "MeterHistoryStartMinute");
-            }
-        }
-
-        public int? MeterHistoryEndMinute
-        {
-            get
-            {
-                String rffd = GetValue("meterhistoryendminute");
-                if (rffd == "")
-                    return null;
-                else
-                    return Convert.ToInt32(rffd);
-            }
-
-            set
-            {
-                SetValue("meterhistoryendminute", value.ToString(), "MeterHistoryEndMinute");
-            }
-        }
-
+        private GenericSetting<bool> _EmitEvents;
         public bool EmitEvents
         {
-            get
-            {
-                String rffd = GetValue("emitevents");
-                if (rffd == "true")
-                    return true;
-                else
-                    return false;
-            }
-
-            set
-            {
-                if (value)
-                    SetValue("emitevents", "true", "EmitEvents");
-                else
-                    SetValue("emitevents", "false", "EmitEvents");
-            }
+            get { return _EmitEvents.Value; }
+            set { _EmitEvents.Value = value; }
         }
 
+        private GenericSetting<bool> _LogTrace;
         public bool LogTrace
         {
-            get
-            {
-                String rffd = GetValue("logtrace");
-                if (rffd == "true")
-                    return true;
-                else
-                    return false;
-            }
-
-            set
-            {
-                if (value)
-                    SetValue("logtrace", "true", "LogTrace");
-                else
-                    SetValue("logtrace", "false", "LogTrace");
-            }
+            get { return _LogTrace.Value; }
+            set { _LogTrace.Value = value; }
         }
 
+        private GenericSetting<bool> _LogDatabase;
         public bool LogDatabase
         {
-            get
-            {
-                String rffd = GetValue("logdatabase");
-                if (rffd == "true")
-                    return true;
-                else
-                    return false;
-            }
-
-            set
-            {
-                if (value)
-                    SetValue("logdatabase", "true", "LogDatabase");
-                else
-                    SetValue("logdatabase", "false", "LogDatabase");
-            }
+            get { return _LogDatabase.Value; }
+            set { _LogDatabase.Value = value; }
         }
 
-        public bool LogMeterTrace
+        private GenericSetting<bool> _LogDetailTrace;
+        public bool LogDetailTrace
         {
-            get
-            {
-                String rffd = GetValue("logmetertrace");
-                if (rffd == "true")
-                    return true;
-                else
-                    return false;
-            }
-
-            set
-            {
-                if (value)
-                    SetValue("logmetertrace", "true", "LogMeterTrace");
-                else
-                    SetValue("logmetertrace", "false", "LogMeterTrace");
-            }
+            get { return _LogDetailTrace.Value; }
+            set { _LogDetailTrace.Value = value; }
         }
 
+        private GenericSetting<bool> _LogMessageContent;
         public bool LogMessageContent
         {
-            get
-            {
-                String rffd = GetValue("logmessagecontent");
-                if (rffd == "true")
-                    return true;
-                else
-                    return false;
-            }
-
-            set
-            {
-                if (value)
-                    SetValue("logmessagecontent", "true", "LogMessageContent");
-                else
-                    SetValue("logmessagecontent", "false", "LogMessageContent");
-            }
+            get { return _LogMessageContent.Value; }
+            set { _LogMessageContent.Value = value; }
         }
 
+        private GenericSetting<bool> _LogInformation;
         public bool LogInformation
         {
-            get
-            {
-                String rffd = GetValue("loginformation");
-                if (rffd == "false")
-                    return false;
-                else
-                    return true;
-            }
-
-            set
-            {
-                if (!value)
-                    SetValue("loginformation", "false", "LogInformation");
-                else
-                    SetValue("loginformation", "true", "LogInformation");
-            }
+            get { return _LogInformation.Value; }
+            set { _LogInformation.Value = value; }
         }
 
+        private GenericSetting<bool> _LogStatus;
         public bool LogStatus
         {
-            get
-            {
-                String rffd = GetValue("logstatus");
-                if (rffd == "false")
-                    return false;
-                else
-                    return true;
-            }
-
-            set
-            {
-                if (!value)
-                    SetValue("logstatus", "false", "LogStatus");
-                else
-                    SetValue("logstatus", "true", "LogStatus");
-            }
+            get { return _LogStatus.Value; }
+            set { _LogStatus.Value = value; }
         }
 
+        private GenericSetting<bool> _LogError;
         public bool LogError
         {
-            get
-            {
-                String rffd = GetValue("logerror");
-                if (rffd == "false")
-                    return false;
-                else
-                    return true;
-            }
-
-            set
-            {
-                if (!value)
-                    SetValue("logerror", "false", "LogError");
-                else 
-                    SetValue("logerror", "true", "LogError");
-            }
+            get { return _LogError.Value; }
+            set { _LogError.Value = value; }
         }
 
+        private GenericSetting<bool> _LogFormat;
         public bool LogFormat
         {
-            get
-            {
-                String rffd = GetValue("logformat");
-                if (rffd == "false")
-                    return false;
-                else
-                    return true;
-            }
-
-            set
-            {
-                if (!value)
-                    SetValue("logformat", "false", "LogFormat");
-                else
-                    SetValue("logformat", "true", "LogFormat");
-            }
+            get { return _LogFormat.Value; }
+            set { _LogFormat.Value = value; }
         }
 
+        private GenericSetting<bool> _LogEvent;
         public bool LogEvent
         {
-            get
-            {
-                String rffd = GetValue("logevent");
-                if (rffd == "true")
-                    return true;
-                else
-                    return false;
-            }
-
-            set
-            {
-                if (!value)
-                    SetValue("logevent", "false", "LogEvent");
-                else
-                    SetValue("logevent", "true", "LogEvent");
-            }
+            get { return _LogEvent.Value; }
+            set { _LogEvent.Value = value; }
         }
 
         public List<String> BaudRateList

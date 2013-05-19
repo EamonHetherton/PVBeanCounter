@@ -38,7 +38,7 @@ namespace MackayFisher.Utilities
         Information,
         Format,
         Trace,
-        MeterTrace,
+        DetailTrace,
         MeterMessage,
         Database,
         Event
@@ -67,7 +67,7 @@ namespace MackayFisher.Utilities
         bool LogInformation { get; }
         bool LogError { get; }
         bool LogTrace { get; }
-        bool LogMeterTrace { get; }
+        bool LogDetailTrace { get; }
         bool LogMessageContent { get; }
         bool LogDatabase { get; }
         bool LogEvent { get; }
@@ -101,7 +101,7 @@ namespace MackayFisher.Utilities
         bool logStatus = true;
         bool logInformation = true;
         bool logTrace = false;
-        bool logMeterTrace = false;
+        bool logDetailTrace = false;
         bool logMessageContent = false;
         bool logDatabase = false;
         bool logEvent = false;
@@ -198,15 +198,15 @@ namespace MackayFisher.Utilities
             }
         }
 
-        public bool LogMeterTrace
+        public bool LogDetailTrace
         {
             get
             {
-                return logMeterTrace;
+                return logDetailTrace;
             }
             set
             {
-                logMeterTrace = value;
+                logDetailTrace = value;
             }
         }
 
@@ -553,7 +553,7 @@ namespace MackayFisher.Utilities
                 return;
             if (logEntryType == LogEntryType.Trace && !LogTrace)
                 return;
-            if (logEntryType == LogEntryType.MeterTrace && !LogMeterTrace)
+            if (logEntryType == LogEntryType.DetailTrace && !LogDetailTrace)
                 return;
             if (logEntryType == LogEntryType.MeterMessage && !LogMessageContent)
                 return;

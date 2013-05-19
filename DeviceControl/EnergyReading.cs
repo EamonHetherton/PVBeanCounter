@@ -605,9 +605,10 @@ namespace DeviceDataRecorders
 
         public override void AccumulateReading(ReadingBase readingGeneric, bool useTemperature, bool updatePower, bool accumulateDuration = false, Double operationFactor = 1.0)
         {
-            GlobalSettings.LogMessage("AccumulateReading", "TRACE Enter consolidation loop - Start: " 
-                + readingGeneric.ReadingStart + " - End: " + readingGeneric.ReadingEnd + " - updatePower: " 
-                + updatePower.ToString() + " - accumulateDuration: " + accumulateDuration.ToString(), LogEntryType.Trace);
+            if (GlobalSettings.SystemServices.LogDetailTrace)
+                GlobalSettings.LogMessage("AccumulateReading", "TRACE Enter consolidation loop - Start: " 
+                    + readingGeneric.ReadingStart + " - End: " + readingGeneric.ReadingEnd + " - updatePower: " 
+                    + updatePower.ToString() + " - accumulateDuration: " + accumulateDuration.ToString(), LogEntryType.DetailTrace);
             EnergyReading reading = (EnergyReading)readingGeneric;
             if (accumulateDuration)
                 Duration += reading.DurationInternal;

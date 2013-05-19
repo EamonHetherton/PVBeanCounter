@@ -303,7 +303,7 @@ namespace DeviceControl
                                     ReadingInfo.RecordsAvailEvent.Set();
                                     ReadingInfo.RecordsMutex.ReleaseMutex();
 
-                                    if (GlobalSettings.SystemServices.LogMeterTrace)
+                                    if (GlobalSettings.SystemServices.LogDetailTrace)
                                         LogMessage("InsertHistoryMeterReading", "Adding old hour history to List: time: " + curRec.Time
                                             + " : Sensor: " + curRec.Sensor + " : Energy: " + curRec.Energy
                                             + " : ReadingNo: " + intervalNo);

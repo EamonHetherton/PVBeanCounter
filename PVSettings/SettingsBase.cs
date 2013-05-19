@@ -233,8 +233,6 @@ namespace PVSettings
         private string _elementName;
         private string _propertyName;
         private bool isDefault;
-        private bool isNullable;
-        //private bool isNull;
         private IGenericStrings GenericStrings;
 
         private bool GetBoolean(string val)
@@ -279,12 +277,16 @@ namespace PVSettings
                     else if (coreType == typeof(bool))
                         _Value = (T)Convert.ChangeType(GetBoolean(val), outerType);
                     else if (coreType == typeof(Int32) || coreType == typeof(int))
-                        _Value = (T)Convert.ChangeType(val, outerType);
+                    {
+                        Int32 temp = Int32.Parse(val);
+                        TypeConverter conv = TypeDescriptor.GetConverter(outerType);
+                        _Value = (T)conv.ConvertFrom(temp);
+                    }
                     else if (coreType == typeof(TimeSpan))
                     {
-                        TimeSpan temp = TimeSpan.Parse(val);                   
-                        TypeConverter conv =TypeDescriptor.GetConverter(outerType);
-                        _Value = (T)conv.ConvertFrom(temp);                        
+                        TimeSpan temp = TimeSpan.Parse(val);
+                        TypeConverter conv = TypeDescriptor.GetConverter(outerType);
+                        _Value = (T)conv.ConvertFrom(temp);
                     }
                     else if (coreType == typeof(DateTime))
                     {
@@ -335,17 +337,13 @@ namespace PVSettings
             outerType = typeof(T);
             if (outerType.IsGenericType && outerType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
-                isNullable = true;
                 // drill down to natural type
                 coreType = outerType.GenericTypeArguments[0];
                 _defaultValue = default(T); // parameter defaultValue is ignored on nullables
-                //isNull = true;
             }
             else
             {
                 coreType = outerType;
-                isNullable = false;
-                //isNull = false;
                 _defaultValue = defaultValue;
             }
 
@@ -371,18 +369,9 @@ namespace PVSettings
         {
             outerType = typeof(T);
             if (outerType.IsGenericType && outerType.GetGenericTypeDefinition() == typeof(Nullable<>))
-            {
-                isNullable = true;
-                // drill down to natural type
                 coreType = outerType.GenericTypeArguments[0];                
-                //isNull = true;
-            }
             else
-            {
                 coreType = outerType;
-                isNullable = false;
-                //isNull = false;
-            }
 
             if (genericStrings == null)
             {

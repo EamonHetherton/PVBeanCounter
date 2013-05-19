@@ -61,12 +61,12 @@ namespace Conversations
             if (calculations == null)
             {
                 Calculations = (IConverseCheckSum16)new ConverseCalculations();
-                LogMessage("Converse", "Using standard Calculations: " + Calculations.GetType().ToString(), LogEntryType.MeterTrace);
+                LogMessage("Converse", "Using standard Calculations: " + Calculations.GetType().ToString(), LogEntryType.DetailTrace);
             }
             else
             {
                 Calculations = calculations;
-                LogMessage("Converse", "Using custom Calculations: " + Calculations.GetType().ToString(), LogEntryType.MeterTrace);
+                LogMessage("Converse", "Using custom Calculations: " + Calculations.GetType().ToString(), LogEntryType.DetailTrace);
             }
             
             EndianConverter16Bit = new EndianConverter16Bit(EndianConverter.BigEndian16Bit);          
@@ -82,7 +82,7 @@ namespace Conversations
                 CheckSumEndianConverter16Bit = new EndianConverter16Bit(EndianConverter.BigEndian16Bit);
         }
 
-        public void LogMessage(String routine, String message, LogEntryType logEntryType = LogEntryType.MeterTrace)
+        public void LogMessage(String routine, String message, LogEntryType logEntryType = LogEntryType.DetailTrace)
         {
             UtilityLog.LogMessage("Converse: " + routine, message, logEntryType);
         }
@@ -151,7 +151,7 @@ namespace Conversations
         {
             Conversation conv = null;
 
-            if (UtilityLog.LogMeterTrace)
+            if (UtilityLog.LogDetailTrace)
                 LogMessage("DoConversation", "Name: " + conversationName + " - starting");
             try
             {

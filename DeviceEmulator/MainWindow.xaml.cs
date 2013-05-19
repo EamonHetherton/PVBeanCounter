@@ -203,7 +203,7 @@ namespace DeviceEmulator
             Services = new SystemServices();
             GenThreadManager = new GenThreadManagement.GenThreadManager(Services);
             Services.LogMessageContent = true;
-            Services.LogMeterTrace = true;
+            Services.LogDetailTrace = true;
             Services.LogTrace = true;
             Converse = null;
             liveElement = null;

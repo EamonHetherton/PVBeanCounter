@@ -87,7 +87,7 @@ namespace DeviceControl
             return (DeviceManager_Listener_Reader<CC128ManagerParams>)new DeviceManager_CC128_Reader(this, threadManager, DeviceManagerSettings, ReadingInfo, DeviceAlgorithm, ManagerParams);
         }
 
-        protected void LogMessage(String routine, String message, LogEntryType logEntryType = LogEntryType.MeterTrace)
+        protected void LogMessage(String routine, String message, LogEntryType logEntryType = LogEntryType.DetailTrace)
         {
             GlobalSettings.LogMessage(routine, message, logEntryType);
         }

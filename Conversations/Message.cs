@@ -499,7 +499,7 @@ namespace Conversations
 
             msgRecord.Conformant = msgRecord.MatchInfo.Matched;
 
-            if (Converse.UtilityLog.LogMeterTrace)
+            if (Converse.UtilityLog.LogDetailTrace)
                 if (msgRecord.Conformant.HasValue && msgRecord.Conformant.Value)
                     Converse.LogMessage("Message.Find", "Found: " + ByteBuffer.BytesToHex(expected, " ", expected.GetUpperBound(0) + 1));
                 else

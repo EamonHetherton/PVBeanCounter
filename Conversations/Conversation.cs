@@ -163,7 +163,7 @@ namespace Conversations
                 {
                     msg = Messages[i];
 
-                    if (UtilityLog.LogMeterTrace)
+                    if (UtilityLog.LogDetailTrace)
                         Converse.LogMessage("Conversation.Execute", "Message: " + i + " - Text: " + msg.MessageText);
 
                     MessageRecord msgRecord;
@@ -204,7 +204,7 @@ namespace Conversations
                 msg.LogActivity = false;
                 throw e;
             }
-            if (UtilityLog.LogMeterTrace)
+            if (UtilityLog.LogDetailTrace)
                 Converse.LogMessage("Conversation.Execute", "Name: " + Name + " - complete");
             return true;
         }

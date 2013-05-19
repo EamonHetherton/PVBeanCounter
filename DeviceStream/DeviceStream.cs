@@ -59,7 +59,7 @@ namespace DeviceStream
             GenThreadManager = null;
         }
 
-        protected void LogMessage(String routine, String message, LogEntryType logEntryType = LogEntryType.MeterTrace)
+        protected void LogMessage(String routine, String message, LogEntryType logEntryType = LogEntryType.DetailTrace)
         {
             SystemServices.LogMessage(StreamType + ": "+ routine, message, logEntryType);
         }

@@ -293,7 +293,7 @@ namespace OutputManagers
         private void InsertPVOutputLogConsumption(DateTime outputDay, Int32 outputTime, long energy, long power, Double? temperature)
         {
             if (GlobalSettings.SystemServices.LogTrace)
-                LogMessage("InsertPVOutputLogConsumption", "Inserting: " + outputDay + " " + outputTime + " " + energy, LogEntryType.MeterTrace);
+                LogMessage("InsertPVOutputLogConsumption", "Inserting: " + outputDay + " " + outputTime + " " + energy, LogEntryType.DetailTrace);
 
             GenCommand cmdInsConsume = null;
             GenConnection con = null;
@@ -339,7 +339,7 @@ namespace OutputManagers
         private void UpdatePVOutputLogConsumption(DateTime outputDay, Int32 outputTime, long energy, long power, Double? temperature)
         {
             if (GlobalSettings.SystemServices.LogTrace)
-                LogMessage("UpdatePVOutputLogConsumption", "Updating: " + outputDay + " " + outputTime + " " + energy, LogEntryType.MeterTrace);
+                LogMessage("UpdatePVOutputLogConsumption", "Updating: " + outputDay + " " + outputTime + " " + energy, LogEntryType.DetailTrace);
 
             GenCommand cmdUpdConsume = null;
             GenConnection con = null;
@@ -511,17 +511,17 @@ namespace OutputManagers
                         if (!drCheck.IsDBNull(0))
                             LogMessage("RecordYield", "Update - Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Energy: " + (long)Math.Round(drCheck.GetDouble(0)) + " - " + energy +
                                 " - Percent: " + ((energy - drCheck.GetDouble(0)) / energy).ToString("P", CultureInfo.InvariantCulture) +
-                                " - Power: " + (long)Math.Round(drCheck.GetDouble(1)) + " - " + power, LogEntryType.MeterTrace);
+                                " - Power: " + (long)Math.Round(drCheck.GetDouble(1)) + " - " + power, LogEntryType.DetailTrace);
                         else
                             LogMessage("RecordYield", "Update - Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Energy: null - " + (int)(energy),
-                                LogEntryType.MeterTrace);
+                                LogEntryType.DetailTrace);
 
                         update = true;
                     }
                 }
                 else if (intervalHasEnergy) // only add new records if energy > 0
                 {
-                    LogMessage("RecordYield", "Record not found - Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Energy: " + energy + " - Power: " + power, LogEntryType.MeterTrace);
+                    LogMessage("RecordYield", "Record not found - Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Energy: " + energy + " - Power: " + power, LogEntryType.DetailTrace);
                     insert = true;
                 }
 
@@ -660,17 +660,17 @@ namespace OutputManagers
                         if (!drCheck.IsDBNull(2))
                             LogMessage("RecordConsumption", "Update - Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Energy: " + (long)Math.Round(drCheck.GetDouble(2)) + " - " + energy +
                                 " - Percent: " + ((energy - drCheck.GetDouble(2)) / energy).ToString("P", CultureInfo.InvariantCulture) +
-                                " - Power: " + (long)Math.Round(drCheck.GetDouble(3)) + " - " + power, LogEntryType.MeterTrace);
+                                " - Power: " + (long)Math.Round(drCheck.GetDouble(3)) + " - " + power, LogEntryType.DetailTrace);
                         else
                             LogMessage("RecordConsumption", "Update - Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Energy: null - " + (int)(energy),
-                                LogEntryType.MeterTrace);
+                                LogEntryType.DetailTrace);
 
                         UpdatePVOutputLogConsumption(date, timeVal, energy, power, temperature);
                     }
                 }
                 else
                 {
-                    LogMessage("RecordConsumption", "Record not found - Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Energy: " + energy + " - Power: " + power, LogEntryType.MeterTrace);
+                    LogMessage("RecordConsumption", "Record not found - Time: " + readingTime + " - Date: " + date + " - timeVal: " + timeVal + " - Energy: " + energy + " - Power: " + power, LogEntryType.DetailTrace);
                     if (energy > 0.0) // only add new records if energy > 0
                         InsertPVOutputLogConsumption(date, timeVal, energy, power, temperature);
                 }
@@ -1010,15 +1010,24 @@ namespace OutputManagers
                         }
                     }
 
-                    if (messageStatusCount > 0)
-                        postData += ";";
+                    //if (messageStatusCount > 0)
+                    //    postData += ";";
                     {
                         int time = dr.GetInt32(2);
-                        if (time > 0)
+                        if (time < (24 * 3600))
+                        {
+                            if (messageStatusCount > 0)
+                                postData += ";";
                             postData += dr.GetDateTime(1).ToString("yyyyMMdd") +
                                     "," + TimeSpan.FromSeconds(time).ToString(@"hh\:mm");
+                        }
                         else
-                            postData += dr.GetDateTime(1).ToString("yyyyMMdd") + ",24:00";  // ToString results in 00:00, PVOutput needs 24:00
+                        {
+                            continue;  // skip 24:00 being rejected at PVOutout as invalid time
+                            //if (messageStatusCount > 0)
+                            //    postData += ";";
+                            //postData += dr.GetDateTime(1).ToString("yyyyMMdd") + ",24:00";  // ToString results in 00:00, PVOutput needs 24:00
+                        }
                     }
 
                     if (Settings.UploadYield)

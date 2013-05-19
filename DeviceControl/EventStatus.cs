@@ -178,10 +178,10 @@ namespace Device
                     return EventPower;
                 else
                 {
-                    if (GlobalSettings.ApplicationSettings.LogMeterTrace)
+                    if (GlobalSettings.ApplicationSettings.LogTrace)
                         GlobalSettings.LogMessage("EnergyNode.GetNodePower", "Power has expired - Name: " + Device.DeviceManagerDeviceSettings.Name +
                             " - Feature Type: " + FeatureType + " - Id: " + FeatureId +
-                            " - Expired: " + expires.Value, LogEntryType.MeterTrace);
+                            " - Expired: " + expires.Value, LogEntryType.Trace);
                     return 0;
                 }
             else

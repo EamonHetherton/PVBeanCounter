@@ -196,8 +196,8 @@ namespace PVBeanCounter
                 ApplicationSettings.LogDatabase = false;
             if (ApplicationSettings.LogEvent)
                 ApplicationSettings.LogEvent = false;
-            if (ApplicationSettings.LogMeterTrace)
-                ApplicationSettings.LogMeterTrace = false;
+            if (ApplicationSettings.LogDetailTrace)
+                ApplicationSettings.LogDetailTrace = false;
             if (ApplicationSettings.LogMessageContent)
                 ApplicationSettings.LogMessageContent = false;
             if (!ApplicationSettings.LogStatus)
