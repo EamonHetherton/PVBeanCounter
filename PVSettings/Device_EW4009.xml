@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<devices>
+  <device>
+    <devicetype value="EnergyMeter" />
+    <description value="Watts Clever EW4009" />
+    <specification value="EW4009" />
+    <version value="01" />
+    <status value="Test Only" />
+    <protocol value="EW4009" />
+    <endian16bit value="Little" />
+    <usehistory value="false" />
+
+    <features>
+      <feature id="0" type="EnergyAC" description="Energy AC" />
+    </features>
+
+    <block>
+      <name value="Message" />
+      <type value="Reading" />
+      <conversation value="GetLive" />
+      <register>
+        <type value="uint16" />
+        <content value="Power01" />
+        <binding value="Power01" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status01" />
+        <binding value="Status01" />
+      </register>
+      <register>
+        <type value="uint16" />
+        <content value="Power02" />
+        <binding value="Power02" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status02" />
+        <binding value="Status02" />
+      </register>
+      <register>
+        <type value="uint16" />
+        <content value="Power03" />
+        <binding value="Power03" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status03" />
+        <binding value="Status03" />
+      </register>
+      <register>
+        <type value="uint16" />
+        <content value="Power04" />
+        <binding value="Power04" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status04" />
+        <binding value="Status04" />
+      </register>
+      <register>
+        <type value="uint16" />
+        <content value="Power05" />
+        <binding value="Power05" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status05" />
+        <binding value="Status05" />
+      </register>
+      <register>
+        <type value="uint16" />
+        <content value="Power06" />
+        <binding value="Power06" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status06" />
+        <binding value="Status06" />
+      </register>
+      <register>
+        <type value="uint16" />
+        <content value="Power07" />
+        <binding value="Power07" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status07" />
+        <binding value="Status07" />
+      </register>
+      <register>
+        <type value="uint16" />
+        <content value="Power08" />
+        <binding value="Power08" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status08" />
+        <binding value="Status08" />
+      </register>
+      <register>
+        <type value="uint16" />
+        <content value="Power09" />
+        <binding value="Power09" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status09" />
+        <binding value="Status09" />
+      </register>
+      <register>
+        <type value="uint16" />
+        <content value="Power10" />
+        <binding value="Power10" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status10" />
+        <binding value="Status10" />
+      </register>
+      <register>
+        <type value="uint16" />
+        <content value="Power11" />
+        <binding value="Power11" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status11" />
+        <binding value="Status11" />
+      </register>
+      <register>
+        <type value="uint16" />
+        <content value="Power12" />
+        <binding value="Power12" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status12" />
+        <binding value="Status12" />
+      </register>
+      <register>
+        <type value="uint16" />
+        <content value="Power13" />
+        <binding value="Power13" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status13" />
+        <binding value="Status13" />
+      </register>
+      <register>
+        <type value="uint16" />
+        <content value="Power14" />
+        <binding value="Power14" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status14" />
+        <binding value="Status14" />
+      </register>
+      <register>
+        <type value="uint16" />
+        <content value="Power15" />
+        <binding value="Power15" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status15" />
+        <binding value="Status15" />
+      </register>
+      <register>
+        <type value="uint16" />
+        <content value="Power16" />
+        <binding value="Power16" />
+      </register>
+      <register>
+        <type value="string" />
+        <length value="1" />
+        <content value="Status16" />
+        <binding value="Status16" />
+      </register>
+    </block>
+  </device>
+
+</devices>
+
