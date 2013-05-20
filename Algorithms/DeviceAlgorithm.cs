@@ -30,41 +30,6 @@ using PVBCInterfaces;
 
 namespace Algorithms
 {
-    /*
-    public abstract class DeviceBase 
-    {
-        protected DeviceManagerDeviceSettings DeviceSettings;
-
-
-
-        //public abstract void SetDeviceInfo(DeviceInfo deviceInfo);
-
-        public DeviceBase(IDeviceManager deviceManager, DeviceManagerDeviceSettings deviceSettings)
-        {
-            LastRunTime = DateTime.MinValue;
-            FaultDetected = false;
-            DeviceManager = deviceManager;
-            DeviceSettings = deviceSettings;
-            HasStartOfDayEnergyDefect = DeviceSettings.DeviceSettings.HasStartOfDayEnergyDefect;
-            EmitEvents = GlobalSettings.ApplicationSettings.EmitEvents;
-
-            QueryInterval = TimeSpan.FromSeconds(DeviceSettings.QueryIntervalInt);
-            DatabaseInterval = DeviceSettings.DBIntervalInt;
-
-            Address = DeviceSettings.Address;
-            DefaultSerialNo = DeviceSettings.SerialNo;
-        }
-    }
-
-    public abstract class PassiveDevice : DeviceBase
-    {
-        public PassiveDevice(IDeviceManager deviceManager, DeviceManagerDeviceSettings deviceSettings)
-            : base(deviceManager, deviceSettings)
-        {
-        }
-    }
-    */
-
     public struct AlgorithmParams
     {
         public Protocol Protocol;

@@ -422,29 +422,15 @@ namespace DeviceControl
 
     public abstract class DeviceManager_Listener<TDevice, TLiveRec, THistRec, TManagerParams> : DeviceManager_PassiveController<TDevice, TLiveRec, THistRec, TManagerParams> where TDevice : PassiveDevice
     {
-        protected int DeviceReaderId;
 
-        protected CompositeAlgorithm_xml DeviceAlgorithm;
+
+        //protected CompositeAlgorithm_xml DeviceAlgorithm;
 
         public DeviceManager_Listener(GenThreadManager genThreadManager, DeviceManagerSettings mmSettings,
             IDeviceManagerManager imm)
             : base(genThreadManager, mmSettings, imm)
         {
-            //DeviceManagerDevice dmDevice = new DeviceManagerDevice(mmSettings);
 
-            AlgorithmParams aParams;
-            aParams.Protocol = Protocol;
-            aParams.EndianConverter16Bit = Protocol.EndianConverter16Bit;
-            aParams.EndianConverter32Bit = Protocol.EndianConverter32Bit;
-            mmSettings.CheckListenerDeviceId();
-            aParams.BlockList = mmSettings.ListenerDeviceSettings.BlockList;
-            aParams.AlgorithmList = mmSettings.ListenerDeviceSettings.AlgorithmList;
-            aParams.DeviceName = mmSettings.ListenerDeviceSettings.Description;
-            aParams.ErrorLogger = this.ErrorLogger;
-
-            DeviceAlgorithm = new CompositeAlgorithm_xml(aParams); 
-            DeviceManager_Listener_Reader<TManagerParams> DeviceReader = GetReader(genThreadManager);
-            DeviceReaderId = genThreadManager.AddThread(DeviceReader);
         }
 
         protected abstract void ProcessOneLiveRecord(TDevice device, TLiveRec liveRec);
@@ -511,7 +497,6 @@ namespace DeviceControl
         public override void Initialise()
         {
             base.Initialise();
-            GenThreadManager.StartThread(DeviceReaderId);
         }
     }
 

@@ -26,6 +26,7 @@ using PVSettings;
 using MackayFisher.Utilities;
 using GenThreadManagement;
 using PVBCInterfaces;
+using Algorithms;
 using Device;
 
 namespace DeviceControl
@@ -41,11 +42,21 @@ namespace DeviceControl
         private int DatabaseInterval;
 
         public DeviceManager_CC128_Reader(DeviceManager_CC128 deviceManager, GenThreadManager genThreadManager, 
-            DeviceManagerSettings settings, DeviceManager_CC128.DeviceReadingInfo readingInfo, CompositeAlgorithm_xml deviceAlgorithm, 
+            DeviceManagerSettings settings, DeviceManager_CC128.DeviceReadingInfo readingInfo, 
             CC128ManagerParams managerParams)
             : base(deviceManager, genThreadManager, settings, managerParams)
         {
-            DeviceAlgorithm = deviceAlgorithm;
+            AlgorithmParams aParams;
+            aParams.Protocol = deviceManager.Protocol;
+            aParams.EndianConverter16Bit = deviceManager.Protocol.EndianConverter16Bit;
+            aParams.EndianConverter32Bit = deviceManager.Protocol.EndianConverter32Bit;
+            settings.CheckListenerDeviceId();
+            aParams.BlockList = settings.ListenerDeviceSettings.BlockList;
+            aParams.AlgorithmList = settings.ListenerDeviceSettings.AlgorithmList;
+            aParams.DeviceName = settings.ListenerDeviceSettings.Description;
+            aParams.ErrorLogger = deviceManager.ErrorLogger;
+            DeviceAlgorithm = new CompositeAlgorithm_xml(aParams); 
+            
             DatabaseInterval = settings.DBIntervalInt;
 
             ReadingInfo = readingInfo;

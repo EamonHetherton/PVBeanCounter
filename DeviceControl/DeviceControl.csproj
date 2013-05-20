@@ -103,11 +103,13 @@
     <Compile Include="DeviceManager_Consolidation.cs" />
     <Compile Include="DeviceManager_Listener_Reader.cs" />
     <Compile Include="DeviceManager_SMA_SunnyExplorer.cs" />
+    <Compile Include="DeviveManager_EW4009.cs" />
     <Compile Include="EnergyEvents.cs" />
     <Compile Include="EnergyEventsProxy.cs" />
     <Compile Include="EnergyReading.cs" />
     <Compile Include="EventManager.cs" />
     <Compile Include="EventStatus.cs" />
+    <Compile Include="EW4009_Device.cs" />
     <Compile Include="IEnergyEvents_Contract.cs" />
     <Compile Include="InverterAlgorithm.cs" />
     <Compile Include="MeterDevice.cs" />

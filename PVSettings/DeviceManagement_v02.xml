@@ -654,6 +654,87 @@
   </protocol>
 
   <protocol>
+    <name value="EW4009" />
+    <type value="Listener" />
+
+    <serialportsettings>
+      <baudrate value="9600" />
+      <databits value="8" />
+      <stopbits value="one" />
+      <parity value="none" />
+      <handshake value="none" />
+    </serialportsettings>
+
+    <conversation>
+      <name value="GetLive" />
+      <message>
+        <name value="SendMain" />
+        <type value ="Send" />
+        <element value="0xAA 02 00 AD" />
+      </message>
+      <message>
+        <name value="ReceiveHeader" />
+        <type value ="Read" />
+        <element value="S01"/>
+      </message>
+      <message>
+        <name value="ReceiveData" />
+        <type value ="Extract" />
+        <element type="BYTE[2]" name="ID01" />
+        <element type="BYTE[2]" name="Power01" />
+        <element type="BYTE[1]" name="State01" />
+        <element type="BYTE[2]" name="ID02" />
+        <element type="BYTE[2]" name="Power02" />
+        <element type="BYTE[1]" name="State02" />
+        <element type="BYTE[2]" name="ID03" />
+        <element type="BYTE[2]" name="Power03" />
+        <element type="BYTE[1]" name="State03" />
+        <element type="BYTE[2]" name="ID04" />
+        <element type="BYTE[2]" name="Power04" />
+        <element type="BYTE[1]" name="State04" />
+        <element type="BYTE[2]" name="ID05" />
+        <element type="BYTE[2]" name="Power05" />
+        <element type="BYTE[1]" name="State05" />
+        <element type="BYTE[2]" name="ID06" />
+        <element type="BYTE[2]" name="Power06" />
+        <element type="BYTE[1]" name="State06" />
+        <element type="BYTE[2]" name="ID07" />
+        <element type="BYTE[2]" name="Power07" />
+        <element type="BYTE[1]" name="State07" />
+        <element type="BYTE[2]" name="ID08" />
+        <element type="BYTE[2]" name="Power08" />
+        <element type="BYTE[1]" name="State08" />
+        <element type="BYTE[2]" name="ID09" />
+        <element type="BYTE[2]" name="Power09" />
+        <element type="BYTE[1]" name="State09" />
+        <element type="BYTE[2]" name="ID10" />
+        <element type="BYTE[2]" name="Power10" />
+        <element type="BYTE[1]" name="State10" />
+        <element type="BYTE[2]" name="ID11" />
+        <element type="BYTE[2]" name="Power11" />
+        <element type="BYTE[1]" name="State11" />
+        <element type="BYTE[2]" name="ID12" />
+        <element type="BYTE[2]" name="Power12" />
+        <element type="BYTE[1]" name="State12" />
+        <element type="BYTE[2]" name="ID13" />
+        <element type="BYTE[2]" name="Power13" />
+        <element type="BYTE[1]" name="State13" />
+        <element type="BYTE[2]" name="ID14" />
+        <element type="BYTE[2]" name="Power14" />
+        <element type="BYTE[1]" name="State14" />
+        <element type="BYTE[2]" name="ID15" />
+        <element type="BYTE[2]" name="Power15" />
+        <element type="BYTE[1]" name="State15" />
+        <element type="BYTE[2]" name="ID16" />
+        <element type="BYTE[2]" name="Power16" />
+        <element type="BYTE[1]" name="State16" />
+        <element type="BYTE[1]" name="Parity" />
+      </message>
+    </conversation>
+
+  </protocol>
+
+  <protocol>
     <name value="Consolidation" />
     <type value="Consolidation" />
   </protocol>
