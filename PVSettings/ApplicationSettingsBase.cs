@@ -162,6 +162,8 @@ namespace PVSettings
             if (useLegacySettings)
                 RemoveLegacyElements();
 
+            GenericSettingBase.ClearCache();
+
             ApplicationSettingsMutex.ReleaseMutex();
 
             CallbacksSet = false;

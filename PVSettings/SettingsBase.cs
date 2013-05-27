@@ -219,13 +219,32 @@ namespace PVSettings
 
             return date;
         }
-    }
-    
+    }  
+  
+    public abstract class GenericSettingBase
+    {
+        private static List<GenericSettingBase> AllSettings = null;
+        protected bool haveValue { get; set; }
 
-    public struct GenericSetting<T> 
+        protected GenericSettingBase()
+        {
+            if (AllSettings == null)
+                AllSettings = new List<GenericSettingBase>();
+            AllSettings.Add(this);
+        }
+
+        public static void ClearCache()
+        {
+            if (AllSettings == null)
+                return;
+            foreach (GenericSettingBase s in AllSettings)
+                s.haveValue = false;
+        }
+    }
+
+    public class GenericSetting<T> : GenericSettingBase
     {
         private SettingsBase _settings;
-        private bool haveValue;
         private T _Value;
         private T _defaultValue;
         private Type coreType;

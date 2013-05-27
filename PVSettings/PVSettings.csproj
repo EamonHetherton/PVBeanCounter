@@ -172,6 +172,7 @@
     </Content>
     <Content Include="Device_WebBox.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Device_Xantrex.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
