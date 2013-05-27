@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:PVBeanCounter"  
         Title="PV Bean Counter - Configuration" Height="643" Width="991" IsManipulationEnabled="True" ResizeMode="CanResize" UseLayoutRounding="True" WindowStyle="ThreeDBorderWindow" Loaded="Window_Loaded" Background="#FFDEFEFF">
     <Window.Resources>
-        
+
         <Style TargetType="ToolTip">
             <Setter Property="ContentTemplate">
                 <Setter.Value>
@@ -17,118 +17,118 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <Style TargetType="TabItem">
             <Setter Property="Template" >
-                <Setter.Value>                    
-                        <ControlTemplate TargetType="{x:Type TabItem}">
-                            <Grid SnapsToDevicePixels="True">
-                                <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1,1,1,0" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
-                                    <ContentPresenter x:Name="Content" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" ContentStringFormat="{TemplateBinding HeaderStringFormat}" ContentSource="Header" HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}"/>
-                                </Border>
-                            </Grid>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" TargetName="Bd">
-                                        <Setter.Value>
-                                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                                                <GradientStop Color="#FFEAF6FD" Offset="0.15"/>
-                                                <GradientStop Color="#FFD9F0FC" Offset="0.5"/>
-                                                <GradientStop Color="#FFBEFAFD" Offset="0.5"/>
-                                                <GradientStop Color="#FF9BE0F0" Offset="1"/>
-                                            </LinearGradientBrush>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" TargetName="Bd">
-                                        <Setter.Value>
-                                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                                                <GradientStop Color="#FFD8F7FB" Offset="0"/>
-                                                <GradientStop Color="#FFF5F3F3" Offset="0.5"/>
-                                                <GradientStop Color="#FFE7FEFF" Offset="0.5"/>
-                                                <GradientStop Color="#FF9CB5DA" Offset="1"/>
-                                            </LinearGradientBrush>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                                <Trigger Property="IsSelected" Value="False" >
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid SnapsToDevicePixels="True">
+                            <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1,1,1,0" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter x:Name="Content" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" ContentStringFormat="{TemplateBinding HeaderStringFormat}" ContentSource="Header" HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background" TargetName="Bd">
-                                        <Setter.Value>
-                                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                                                <GradientStop Color="#FFC0E9EE" Offset="0"/>
-                                                <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
-                                                <GradientStop Color="#FFDEFEFF" Offset="0.5"/>
-                                                <GradientStop Color="#FF88A3CB" Offset="1"/>
-                                            </LinearGradientBrush>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
+                                    <Setter.Value>
+                                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                            <GradientStop Color="#FFEAF6FD" Offset="0.15"/>
+                                            <GradientStop Color="#FFD9F0FC" Offset="0.5"/>
+                                            <GradientStop Color="#FFBEFAFD" Offset="0.5"/>
+                                            <GradientStop Color="#FF9BE0F0" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" TargetName="Bd">
+                                    <Setter.Value>
+                                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                            <GradientStop Color="#FFD8F7FB" Offset="0"/>
+                                            <GradientStop Color="#FFF5F3F3" Offset="0.5"/>
+                                            <GradientStop Color="#FFE7FEFF" Offset="0.5"/>
+                                            <GradientStop Color="#FF9CB5DA" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False" >
+                                <Setter Property="Background" TargetName="Bd">
+                                    <Setter.Value>
+                                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                            <GradientStop Color="#FFC0E9EE" Offset="0"/>
+                                            <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                                            <GradientStop Color="#FFDEFEFF" Offset="0.5"/>
+                                            <GradientStop Color="#FF88A3CB" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
 
-                                <MultiTrigger>
-                                    <MultiTrigger.Conditions>
-                                        <Condition Property="IsSelected" Value="False"/>
-                                        <Condition Property="IsMouseOver" Value="True"/>
-                                    </MultiTrigger.Conditions>
-                                    <Setter Property="BorderBrush" TargetName="Bd" Value="#FF3C7FB1"/>
-                                </MultiTrigger>
-                                <Trigger Property="TabStripPlacement" Value="Bottom">
-                                    <Setter Property="BorderThickness" TargetName="Bd" Value="1,0,1,1"/>
-                                </Trigger>
-                                <Trigger Property="TabStripPlacement" Value="Left">
-                                    <Setter Property="BorderThickness" TargetName="Bd" Value="1,1,0,1"/>
-                                </Trigger>
-                                <Trigger Property="TabStripPlacement" Value="Right">
-                                    <Setter Property="BorderThickness" TargetName="Bd" Value="0,1,1,1"/>
-                                </Trigger>
-                                <MultiTrigger>
-                                    <MultiTrigger.Conditions>
-                                        <Condition Property="IsSelected" Value="True"/>
-                                        <Condition Property="TabStripPlacement" Value="Top"/>
-                                    </MultiTrigger.Conditions>
-                                    <Setter Property="Margin" Value="-2,-2,-2,-1"/>
-                                    <Setter Property="Margin" TargetName="Content" Value="0,0,0,1"/>
-                                </MultiTrigger>
-                                <MultiTrigger>
-                                    <MultiTrigger.Conditions>
-                                        <Condition Property="IsSelected" Value="True"/>
-                                        <Condition Property="TabStripPlacement" Value="Bottom"/>
-                                    </MultiTrigger.Conditions>
-                                    <Setter Property="Margin" Value="-2,-1,-2,-2"/>
-                                    <Setter Property="Margin" TargetName="Content" Value="0,1,0,0"/>
-                                </MultiTrigger>
-                                <MultiTrigger>
-                                    <MultiTrigger.Conditions>
-                                        <Condition Property="IsSelected" Value="True"/>
-                                        <Condition Property="TabStripPlacement" Value="Left"/>
-                                    </MultiTrigger.Conditions>
-                                    <Setter Property="Margin" Value="-2,-2,-1,-2"/>
-                                    <Setter Property="Margin" TargetName="Content" Value="0,0,1,0"/>
-                                </MultiTrigger>
-                                <MultiTrigger>
-                                    <MultiTrigger.Conditions>
-                                        <Condition Property="IsSelected" Value="True"/>
-                                        <Condition Property="TabStripPlacement" Value="Right"/>
-                                    </MultiTrigger.Conditions>
-                                    <Setter Property="Margin" Value="-1,-2,-2,-2"/>
-                                    <Setter Property="Margin" TargetName="Content" Value="1,0,0,0"/>
-                                </MultiTrigger>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Background" TargetName="Bd" Value="#FFF4F4F4"/>
-                                    <Setter Property="BorderBrush" TargetName="Bd" Value="#FFC9C7BA"/>
-                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                </Setter.Value>                
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="False"/>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="BorderBrush" TargetName="Bd" Value="#FF3C7FB1"/>
+                            </MultiTrigger>
+                            <Trigger Property="TabStripPlacement" Value="Bottom">
+                                <Setter Property="BorderThickness" TargetName="Bd" Value="1,0,1,1"/>
+                            </Trigger>
+                            <Trigger Property="TabStripPlacement" Value="Left">
+                                <Setter Property="BorderThickness" TargetName="Bd" Value="1,1,0,1"/>
+                            </Trigger>
+                            <Trigger Property="TabStripPlacement" Value="Right">
+                                <Setter Property="BorderThickness" TargetName="Bd" Value="0,1,1,1"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="True"/>
+                                    <Condition Property="TabStripPlacement" Value="Top"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Margin" Value="-2,-2,-2,-1"/>
+                                <Setter Property="Margin" TargetName="Content" Value="0,0,0,1"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="True"/>
+                                    <Condition Property="TabStripPlacement" Value="Bottom"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Margin" Value="-2,-1,-2,-2"/>
+                                <Setter Property="Margin" TargetName="Content" Value="0,1,0,0"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="True"/>
+                                    <Condition Property="TabStripPlacement" Value="Left"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Margin" Value="-2,-2,-1,-2"/>
+                                <Setter Property="Margin" TargetName="Content" Value="0,0,1,0"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="True"/>
+                                    <Condition Property="TabStripPlacement" Value="Right"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Margin" Value="-1,-2,-2,-2"/>
+                                <Setter Property="Margin" TargetName="Content" Value="1,0,0,0"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" TargetName="Bd" Value="#FFF4F4F4"/>
+                                <Setter Property="BorderBrush" TargetName="Bd" Value="#FFC9C7BA"/>
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
             </Setter>
-            
+
         </Style>
 
         <local:NullableValueConverter x:Key="NullableValueConverter" />
-  
+
     </Window.Resources>
-  
+
     <Grid Name="gridPVSettings" DataContext="{Binding}" Margin="2,2,2,2" Background="#00000000">
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -177,7 +177,7 @@
                     </Grid>
                     <Label Content="First Full Day" DataContext="{Binding}" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Name="label15" HorizontalAlignment="Right" Grid.Row="2" VerticalContentAlignment="Center" VerticalAlignment="Center" />
                     <DatePicker Name="datePicker1" SelectedDate="{Binding Path=FirstFullDay, Converter={StaticResource NullableValueConverter}}" ToolTip="Normally set to the day after installation. This prevents constant attempts to retrieve the the incomplete data set from the activation day. Default value for all Inverter Managers." Width="125" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" HorizontalContentAlignment="Stretch"  />
-                    
+
                     <CheckBox Content="Emit Events (use with PVMonitor)" Height="16" HorizontalAlignment="Left" IsChecked="{Binding Path=EmitEvents}" 
                               ToolTip="Check to emit events for use with PVMonitor" VerticalAlignment="Center" 
                               Grid.Column="1" Grid.Row="3" VerticalContentAlignment="Center" />
@@ -217,7 +217,7 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        
+
                         <Grid Grid.Row="0" Margin="10,10,0,0" Background="#FFFAFFCA">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -241,7 +241,7 @@
                                                 <Setter Property="HorizontalAlignment"  Value="Center" />
                                             </Style>
                                         </DataGridCheckBoxColumn.ElementStyle>
-                                    </DataGridCheckBoxColumn> 
+                                    </DataGridCheckBoxColumn>
                                 </DataGrid.Columns>
                             </DataGrid>
                             <Grid Margin="0,10,0,0" Grid.Row="2">
@@ -254,7 +254,7 @@
                             </Grid>
                         </Grid>
                     </Grid>
-                    
+
                     <Grid Margin="0,10" Column="1" >
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -272,7 +272,7 @@
                             <Grid Margin="0,0,10,5" Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />                                    
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -306,7 +306,7 @@
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            
+
                             <Expander Name="expanderDeviceMgrAdvanced" Grid.Row="2" Header="Advanced Settings" Margin="0,0,0,7" Expanded="expanderDeviceMgrAdvanced_Expanded" FontSize="11">
                                 <StackPanel >
                                     <Grid>
@@ -327,7 +327,7 @@
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />                                               
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition />
@@ -361,13 +361,13 @@
                                                 </Grid.RowDefinitions>
                                             </Grid>
                                         </Grid>
-                                        
+
                                         <Grid Grid.Row="1" >
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                            
+
                                             <Grid Name="gridListenerDevice" Margin="85,0,0,0">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition />
@@ -430,8 +430,9 @@
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
                                         <Label Grid.Column="0" Name="labelDeviceDB" Content="Device DB" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" Margin="25,0,0,0" />
-                                        <TextBox Grid.Row="0" Name="textBoxDeviceDB" Grid.Column="1"  Text="{Binding Path=DeviceDatabase, Converter={StaticResource NullableValueConverter}}" VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="200" HorizontalAlignment="Left" FontSize="9" />
-                                        <Button Grid.Row="0" Grid.Column="2" Content="..." Height="18" Name="butBrowseOwlDb" ToolTip="Browse for the Owl database file" Width="24" Click="butBrowseOwlDb_Click" FontSize="9" Margin="5,0,10,0" />
+                                        <TextBox Grid.Row="0" Name="textBoxDeviceDB" Grid.Column="1"  Text="{Binding Path=OwlDatabase, Converter={StaticResource NullableValueConverter}, NotifyOnSourceUpdated=True}" VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="155" HorizontalAlignment="Left" FontSize="9" SourceUpdated="textBoxDeviceDB_SourceUpdated" />
+                                        <Button Grid.Row="0" Grid.Column="2" Content="..." Height="13" Name="butBrowseOwlDb" ToolTip="Browse for the Owl database file" Width="24" Click="butBrowseOwlDb_Click" 
+                                                FontSize="9" Margin="5,0,10,0" VerticalContentAlignment="Center" VerticalAlignment="Center"  />
                                         <CheckBox Grid.Row="0" Grid.Column="3" Content="Reload" IsChecked="{Binding Path=ReloadDays, Converter={StaticResource NullableValueConverter}}" Height="16" Name="checkBoxOwlReload" Click="checkBoxOwlReload_Click" ToolTip="Check to force a reload of data from the Owl database starting at the specified date" />
                                         <DatePicker Grid.Row="0" Grid.Column="4" Height="24" SelectedDate="{Binding Path=ReloadDaysFromDate, Converter={StaticResource NullableValueConverter}}" Margin="10,0,10,0" Name="datePickerOwlReload" FontSize="9" ToolTip="The date at which an Owl meter data reload starts" HorizontalContentAlignment="Stretch"  />
                                     </Grid>
@@ -440,7 +441,8 @@
                         </Grid>
                         <Grid Name="gridDevice" Row="1"  Background="#FFDAFFBB" Margin="0,0,0,-8" >
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="14" />
+                                <ColumnDefinition Width="60"/>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition />
@@ -456,11 +458,11 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <Label Content="Device Configuration" Grid.ColumnSpan="2" Padding="8,4,0,4" FontSize="13" FontWeight="Bold"/>
-                            <Label Content="Name" Grid.Row="1" HorizontalAlignment="Right" HorizontalContentAlignment="Right" />
-                            <TextBox Text="{Binding Path=Name, Converter={StaticResource NullableValueConverter}}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" FontSize="11" VerticalAlignment="Center" VerticalContentAlignment="Center"  />
-                            <Label Content="Device Type" Grid.Row="2" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="0,3" />
-                            <Grid Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3">
+                            <Label Content="Device Configuration" Grid.ColumnSpan="3" Padding="8,4,0,4" FontSize="13" FontWeight="Bold"/>
+                            <Label Content="Name" Grid.Row="1" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Grid.Column="1" />
+                            <TextBox Text="{Binding Path=Name, Converter={StaticResource NullableValueConverter}}" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3" FontSize="11" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5"  />
+                            <Label Content="Device Type" Grid.Row="2" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="0,3" Grid.ColumnSpan="2" />
+                            <Grid Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="3">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="Auto" />
@@ -476,19 +478,22 @@
                                               SourceUpdated="comboBoxConsolidationType_SourceUpdated" />
                                 </Grid>
                             </Grid>
-                            <Label Grid.Row="3" Grid.Column="0" Name="labelPVOutputSystem" Content="System" HorizontalAlignment="Right" />
-                            <ComboBox Name="comboBoxPVOutputSystem" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,5,0,5" ItemsSource="{Binding PVOutputSystemList}" SelectedValue="{Binding Path=PVOutputSystem, NotifyOnSourceUpdated=True, Mode=TwoWay}" SelectedValuePath="SystemId" DisplayMemberPath="Description" 
+                            <Label Grid.Row="3" Grid.Column="1" Name="labelPVOutputSystem" Content="System" HorizontalAlignment="Right" />
+                            <ComboBox Name="comboBoxPVOutputSystem" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="3" Margin="0,5,0,5" ItemsSource="{Binding PVOutputSystemList}" SelectedValue="{Binding Path=PVOutputSystem, NotifyOnSourceUpdated=True, Mode=TwoWay}" SelectedValuePath="SystemId" DisplayMemberPath="Description" 
                                       TargetUpdated="comboBoxPVOutputSystem_SourceUpdated"
                                       ToolTip="Select the PVOutput System ID that consumes readings from this device" />
-                            
-                            <Label Name="labelDeviceAddress" Content="Address" Grid.Row="4" HorizontalContentAlignment="Right" HorizontalAlignment="Right"/>
-                            <TextBox Name="textBoxDeviceAddress" Text="{Binding Path=Address, Converter={StaticResource NullableValueConverter}}" Grid.Row="4" Grid.Column="1" 
-                                     VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="40" HorizontalAlignment="Left" FontSize="9" />
-                            <Label Name="labelSerialNo" Content="Serial No." Grid.Column="2" Grid.Row="4" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="20,0,0,0"/>
+
+                            <Label Name="labelDeviceAddress" Content="Address" Grid.Row="4" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Grid.Column="1"/>
+                            <TextBox Name="textBoxDeviceAddress" Text="{Binding Path=Address, Converter={StaticResource NullableValueConverter}}" Grid.Row="4" Grid.Column="2" 
+                                     VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="40" HorizontalAlignment="Left" FontSize="9" Margin="0,7,0,6" />
+                            <ComboBox Name="comboBoxOwlApplianceNo" Grid.Row="4" Grid.Column="2" SelectedValue="{Binding Path=Address, Converter={StaticResource NullableValueConverter}}" 
+                                      SelectedValuePath="ApplianceNo" DisplayMemberPath="Description" 
+                                      VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="70" HorizontalAlignment="Left" FontSize="9" Margin="0,5,0,4" />
+                            <Label Name="labelSerialNo" Content="Serial No." Grid.Column="3" Grid.Row="4" HorizontalContentAlignment="Right" HorizontalAlignment="Right"/>
                             <TextBox Name="textBoxSerialNo" Text="{Binding Path=SerialNo, Converter={StaticResource NullableValueConverter}}" 
-                                     Grid.Row="4" Grid.Column="3" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="9" />
-                            
-                            <Expander Name="expanderDeviceAdvanced" Header="Advanced Settings" Grid.Row="5" Grid.ColumnSpan="4" Expanded="expanderDeviceAdvanced_Expanded" FontSize="11">
+                                     Grid.Row="4" Grid.Column="4" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="9" Margin="0,7,0,6" />
+
+                            <Expander Name="expanderDeviceAdvanced" Header="Advanced Settings" Grid.Row="5" Grid.ColumnSpan="5" Expanded="expanderDeviceAdvanced_Expanded" FontSize="11">
                                 <StackPanel>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -508,8 +513,8 @@
                                         <TextBox Text="{Binding Path=Manufacturer, Converter={StaticResource NullableValueConverter}}" Grid.Column="1" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="9" />
                                         <Label Content="Model" Grid.Column="2" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="20,0,0,0" FontSize="10.5"/>
                                         <TextBox Text="{Binding Path=Model, Converter={StaticResource NullableValueConverter}}" Grid.Column="3" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="9"  />
-                                        
-                                        <Label Name="labelDeviceQueryInterval" Content="QueryInterval" Grid.Row="1" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />                                                                           
+
+                                        <Label Name="labelDeviceQueryInterval" Content="QueryInterval" Grid.Row="1" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />
                                         <ComboBox Grid.Row="1"  Grid.Column="1" Height="Auto" HorizontalAlignment="Left" Margin="0,3,10,3" Name="comboBoxDeviceQueryInterval" VerticalAlignment="Center" Width="45" Text="{Binding Path=QueryInterval, Converter={StaticResource NullableValueConverter}}" FontSize="9" VerticalContentAlignment="Center" />
 
                                         <Label Grid.Row="1" Grid.Column="2" Content="DB Interval" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />
@@ -530,7 +535,7 @@
 
                                 </StackPanel>
                             </Expander>
-                            <Grid Name="gridConsolidations" Grid.Row="6" Background="#FFDAFFBB" Grid.ColumnSpan="4"  Margin="0,0,0,0">
+                            <Grid Name="gridConsolidations" Grid.Row="6" Background="#FFDAFFBB" Grid.ColumnSpan="5"  Margin="0,0,0,0">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition />
@@ -551,7 +556,7 @@
                                                     <DataGridComboBoxColumn x:Name="consolidateToDeviceColumn" Header="Device" DisplayMemberPath="Name"  Width="Auto" MinWidth="100" SelectedItemBinding="{Binding ConsolidateToDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserResize="False" />
                                                     <DataGridComboBoxColumn x:Name="consolidateToFeatureColumn" Header="To Feature" DisplayMemberPath="Name" Width="Auto" MinWidth="75" SelectedItemBinding="{Binding ConsolidateToFeature, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource NullableValueConverter}}" CanUserResize="False">
                                                         <DataGridComboBoxColumn.EditingElementStyle>
-                                                            <Style TargetType="ComboBox">                                                   
+                                                            <Style TargetType="ComboBox">
                                                                 <Setter Property="ItemsSource" Value="{Binding Path=ConsolidateToFeatures}" />
                                                             </Style>
                                                         </DataGridComboBoxColumn.EditingElementStyle>
@@ -636,8 +641,8 @@
                                     </Grid>
                                 </Grid>
                             </Grid>
-                          
-                            <Expander Name="expanderDeviceEvents" Header="Events" Grid.Row="7" Grid.ColumnSpan="4"  FontSize="11" Expanded="expanderDeviceEvents_Expanded" Collapsed="expanderDeviceEvents_Collapsed">                            
+
+                            <Expander Name="expanderDeviceEvents" Header="Events" Grid.Row="7" Grid.ColumnSpan="5"  FontSize="11" Expanded="expanderDeviceEvents_Expanded" Collapsed="expanderDeviceEvents_Collapsed">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -694,7 +699,7 @@
                                                 </DataGridComboBoxColumn.ElementStyle>
                                             </DataGridComboBoxColumn>
                                             <DataGridCheckBoxColumn Header="Feed-In" Binding="{Binding UseForFeedIn, UpdateSourceTrigger=LostFocus}"  />
-                                            
+
                                         </DataGrid.Columns>
                                     </DataGrid>
                                     <Grid Margin="0,0,0,0" Grid.Row="1" Grid.Column="1">
@@ -707,7 +712,7 @@
                                     </Grid>
                                 </Grid>
                             </Expander>
-                            <CheckBox Name="checkBoxAutoEvents_Auto" Content="Auto Events" Grid.Row="7" Grid.Column="1" IsChecked="{Binding Path=AutoEvents}" Margin="0,6,0,0" FontSize="10.5" 
+                            <CheckBox Name="checkBoxAutoEvents_Auto" Content="Auto Events" Grid.Row="7" Grid.Column="2" IsChecked="{Binding Path=AutoEvents}" Margin="0,6,0,0" FontSize="10.5" 
                                       ToolTip="Check to configure all suitable features as triggers for device events" />
                         </Grid>
                     </Grid>
@@ -739,16 +744,16 @@
                                 </DataGridCheckBoxColumn>
                             </DataGrid.Columns>
 
-                        <DataGrid.Resources>
+                            <DataGrid.Resources>
                                 <Style TargetType="DataGridRow">
                                     <Style.Resources>
                                         <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Transparent"/>
                                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
                                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"/>
-                                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="Black"/>                                    
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="Black"/>
                                     </Style.Resources>
                                     <Style.Triggers>
-                                        
+
                                         <MultiDataTrigger >
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsSelected}" Value="True"/>
@@ -782,9 +787,9 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Resources>
-                            
-                            
-                            
+
+
+
                         </DataGrid>
                         <Grid Margin="0,10,0,0"  Grid.Row="2">
                             <Grid.ColumnDefinitions>
@@ -851,8 +856,8 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="130*" />
                                 </Grid.ColumnDefinitions>
-                            
-                            
+
+
                                 <Label Content="System Name" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,10,0,0" />
                                 <TextBox Text="{Binding Path=Name, Mode=TwoWay, Converter={StaticResource NullableValueConverter}}" ToolTip="Enter the 'Name' of the inverter" Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,10,0,0" />
 
@@ -894,7 +899,7 @@
                                           IsChecked="{Binding Path=AutoBackload, Converter={StaticResource NullableValueConverter}}" 
                                           ToolTip="Auto upload daily totals for missing days at pvoutput.org beyond live upload limit" 
                                           Grid.Column="1" Grid.Row="7" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,5" />
-                                
+
                                 <CheckBox Content="Power Alternates Min / Max" 
                                           IsChecked="{Binding Path=PowerMinMax, Converter={StaticResource NullableValueConverter}}" 
                                           ToolTip="Alternately display minimum and maximum interval power " 
@@ -930,7 +935,7 @@
                         <ComboBoxItem Content="hibernate" />
                         <ComboBoxItem Content="idle" />
                     </ComboBox>
-                    <cgs:TimeControl Name="timeControlServiceStart" Canvas.Left="155" Canvas.Top="45" Value="{Binding Path=ServiceStartTime, Mode=TwoWay, Converter={StaticResource NullableValueConverter}}" ToolTip="Start time - The computer will be suspended until this time" />                    
+                    <cgs:TimeControl Name="timeControlServiceStart" Canvas.Left="155" Canvas.Top="45" Value="{Binding Path=ServiceStartTime, Mode=TwoWay, Converter={StaticResource NullableValueConverter}}" ToolTip="Start time - The computer will be suspended until this time" />
                     <Label Canvas.Left="15" Canvas.Top="43" Content="Evening Suspend - Start" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Name="label16" />
                     <cgs:TimeControl Name="timeControlServiceStop" Canvas.Left="276" Canvas.Top="45" Value="{Binding Path=ServiceStopTime, Mode=TwoWay, Converter={StaticResource NullableValueConverter}}" ToolTip="Stop time - The computer will be suspended after this time" />
                     <Label Canvas.Left="233" Canvas.Top="43" Content="Stop" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Name="label17" Width="37" />
@@ -946,13 +951,13 @@
                         <ComboBoxItem Content="hibernate" />
                         <ComboBoxItem Content="idle" />
                     </ComboBox>
-                    
+
                     <Label Canvas.Left="15" Canvas.Top="69" Content="Suspend Type" Height="28" Name="label27" Width="134" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
                     <cgs:TimeControl Name="timeControlIntervalStart" Canvas.Left="529" Canvas.Top="45" Value="{Binding Path=IntervalStartTime, Mode=TwoWay, Converter={StaticResource NullableValueConverter}}" ToolTip="Interval Suspend / Resume will start after this time" />
                     <Label Canvas.Left="390" Canvas.Top="43" Content="Interval Suspend - Start" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Name="label29" />
                     <cgs:TimeControl Name="timeControlIntervalStop" Canvas.Left="648" Canvas.Top="45" Value="{Binding Path=IntervalStopTime, Mode=TwoWay, Converter={StaticResource NullableValueConverter}}" ToolTip="Interval Suspend / Resume will stop after this time. Interval Stop Time must be greater than Interval Start Time" />
                     <Label Canvas.Left="605" Canvas.Top="43" Content="Stop" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Name="label30" Width="37" />
-                    
+
                     <Border BorderBrush="Silver" BorderThickness="1" Canvas.Left="10" Canvas.Top="171" Height="108" Name="border3" Opacity="0.5" Width="371" />
                     <Border BorderBrush="Silver" BorderThickness="1" Canvas.Left="10" Canvas.Top="285" Height="37" Name="border3a" Opacity="0.5" Width="371" />
 
@@ -1054,7 +1059,7 @@
                         <CheckBox Grid.Column="2" Content="Information" Height="16" IsChecked="{Binding Path=LogInformation, Converter={StaticResource NullableValueConverter}}" Margin="10,5,5,5" Name="checkBox5" ToolTip="Log information entries" IsEnabled="False" />
                         <CheckBox Grid.Column="2" Grid.Row="1" Content="Status" DataContext="{Binding}" Height="16" IsChecked="{Binding Path=LogStatus, Converter={StaticResource NullableValueConverter}}" Margin="10,5,5,5" Name="checkBox6" ToolTip="Log status changes" IsEnabled="False" />
                     </Grid>
-                    
+
                     <Label Grid.Row="1" Content="Log File Name" DataContext="{Binding}" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Margin="5" Name="label9" />
                     <TextBox Grid.Column="1" Grid.Row="1" MinWidth="500" Height="23" Margin="5" Text="{Binding Path=LogFile, Mode=OneWay, Converter={StaticResource NullableValueConverter}}" IsReadOnly="True" />
                     <CheckBox Grid.Column="1" Grid.Row="2" Content="New Log File Each Day" Margin="5,5,15,5" IsChecked="{Binding Path=NewLogEachDay, Converter={StaticResource NullableValueConverter}}" ToolTip="Check to create a new log file every day" />
@@ -1111,12 +1116,12 @@
             </TabItem>
 
         </TabControl>
-        
+
         <StackPanel HorizontalAlignment="Left" Margin="70,4,10,4" Name="stackPanel1" VerticalAlignment="Top" Canvas.Top="35" Orientation="Horizontal" Grid.Row="1">
             <Label Content="Version" Name="label25" HorizontalContentAlignment="Right" IsEnabled="False" />
             <TextBox Height="23" Name="textBox9" MinWidth="60"  Text="{Binding Path=ApplicationVersion, Mode=OneTime}" IsEnabled="False" IsReadOnly="True" FontFamily="Courier New" IsTabStop="False" IsHitTestVisible="False" IsUndoEnabled="False" Padding="4" />
             <Label  Content="Service Status" Height="28" HorizontalContentAlignment="Right" IsEnabled="False" Name="label11" Margin="65,0,0,0" />
-            <TextBox Height="23" Name="txtServiceStatus" Width="140" IsEnabled="False"  />               
+            <TextBox Height="23" Name="txtServiceStatus" Width="140" IsEnabled="False"  />
             <Button Content="Start Service" Height="26" Name="butStartService" Width="97" Click="butStartService_Click" IsEnabled="False" ToolTip="Starts the windows service using the current saved parameters" Margin="70,0,0,0" />
             <Button Content="Stop Service" Height="26" Name="butStopService" Width="87" Click="butStopService_Click" IsEnabled="False" ToolTip="Stops the windows service" Margin="10,0,0,0" />
             <Button Content="Save Settings" Height="26" Name="butSavePVSettings" Width="91" Click="butSavePVSettings_Click" IsDefault="True" IsEnabled="False" ToolTip="Saves the parameter changes - The service must be restarted for changes to be effective" HorizontalAlignment="Stretch" Margin="50,0,0,0" />

@@ -34,10 +34,13 @@
                             <File Id="CONVERSATIONS.DLL" Name="Conversations.dll" Source="..\PVService\$(var.SourcePathFragment)Conversations.dll" />
                             <File Id="DEVICE_CC128.XML" Name="Device_CC128.xml" Source="..\PVService\$(var.SourcePathFragment)Device_CC128.xml" />
                             <File Id="DEVICE_CMS.XML" Name="Device_CMS.xml" Source="..\PVService\$(var.SourcePathFragment)Device_CMS.xml" />
+                            <File Id="DEVICE_EW4009.XML" Name="Device_EW4009.xml" Source="..\PVService\$(var.SourcePathFragment)Device_EW4009.xml" />
                             <File Id="DEVICE_FRONIUS.XML" Name="Device_Fronius.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Fronius.xml" />
                             <File Id="DEVICE_GROWATT.XML" Name="Device_Growatt.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Growatt.xml" />
                             <File Id="DEVICE_JFY.XML" Name="Device_JFY.xml" Source="..\PVService\$(var.SourcePathFragment)Device_JFY.xml" />
                             <File Id="DEVICE_KLNE.XML" Name="Device_KLNE.xml" Source="..\PVService\$(var.SourcePathFragment)Device_KLNE.xml" />
+                            <File Id="DEVICE_OWL.XML" Name="Device_OWL.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Owl.xml" />
+                            <File Id="DEVICE_WEBBOX.XML" Name="Device_WebBox.xml" Source="..\PVService\$(var.SourcePathFragment)Device_WebBox.xml" />
                             <File Id="DEVICE_SAMIL.XML" Name="Device_Samil.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Samil.xml" />
                             <File Id="DEVICE_SUNNYROO.XML" Name="Device_SunnyRoo.xml" Source="..\PVService\$(var.SourcePathFragment)Device_SunnyRoo.xml" />
                             <File Id="DEVICE_XANTREX.XML" Name="Device_Xantrex.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Xantrex.xml" />
@@ -60,7 +63,7 @@
                             <File Id="TIMECONTROL.DLL" Name="TimeControl.dll" Source="..\PVBeanCounter\$(var.SourcePathFragment)TimeControl.dll" />
                             <File Id="UTILITIES.DLL" Name="Utilities.dll" Source="..\PVService\$(var.SourcePathFragment)Utilities.dll" />
                             <File Id="OUTPUTMANAGERS.DLL" Name="OutputManagers.dll" Source="..\OutputManagers\$(var.SourcePathFragment)OutputManagers.dll" />
-                            <File Id="SYSTEM.DATA.SQLITE.DLL" Name="System.Data.SQLite.dll" Source="..\..\external dlls\bin\Release\System.Data.SQLite.dll" />
+                            <File Id="SYSTEM.DATA.SQLITE.DLL" Name="System.Data.SQLite.dll" Source="..\..\external dlls\$(var.SourcePathFragment)System.Data.SQLite.dll" />
                             <File Id="DEVICE_SMA_SUNNYEXPLORER.XML" Name="Device_SMA_SunnyExplorer.xml" Source="..\PVService\$(var.SourcePathFragment)Device_SMA_SunnyExplorer.xml" />
                             <File Id="PVMONITOR3.ICO" Name="PVMonitor3.ico" Source="..\PVMonitor\$(var.SourcePathFragment)PVMonitor3.ico" />
                             <?if $(var.SolutionConfig) = "Debug" ?>
@@ -133,16 +136,6 @@
                                 <File Id="SUNNYEXPLORERTEST_X86.BAT" Name="SunnyExplorerTest_x86.bat" Source="..\Empty Databases\SunnyExplorerTest_x86.bat" />
                             </Component>
                         </Directory>
-                        <Directory Id="X86" Name="x86">
-                            <Component Id="SQLITE.INTEROP.DLL.x86" DiskId="1" Guid="9FB515F4-AD4C-4678-AA78-451BC8382962">
-                                <File Id="SQLITE.INTEROP.DLL" Name="SQLite.Interop.dll" Source="..\..\external dlls\bin\Release\x86\SQLite.Interop.dll" />
-                            </Component>
-                        </Directory>
-                        <Directory Id="X64" Name="x64">
-                            <Component Id="SQLITE.INTEROP.DLL.x64" DiskId="1" Guid="B696C4B3-869A-4CF6-9226-792CBD6B0986">
-                                <File Id="SQLITE.INTEROP.DLL_1" Name="SQLite.Interop.dll" Source="..\..\external dlls\bin\Release\x64\SQLite.Interop.dll" />
-                            </Component>
-                        </Directory>
                     </Directory>
                 </Directory>
             </Directory>
@@ -168,8 +161,6 @@
             <ComponentRef Id="PVRECORDS_JET.MDB" />
             <ComponentRef Id="SUNNYEXPLORERTEST_X64.BAT" />
             <ComponentRef Id="SUNNYEXPLORERTEST_X86.BAT" />
-            <ComponentRef Id="SQLITE.INTEROP.DLL.x86" />
-            <ComponentRef Id="SQLITE.INTEROP.DLL.x64" />
         </Feature>
         <UI />
         <UIRef Id="WixUI_Minimal" />

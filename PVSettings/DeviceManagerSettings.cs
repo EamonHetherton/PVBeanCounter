@@ -33,6 +33,7 @@ namespace PVSettings
         SMA_WebBox,
         Owl_Meter,
         CC128,
+        EW4009,
         Consolidation
     }
 
@@ -257,7 +258,8 @@ namespace PVSettings
 
         public void CheckListenerDeviceId()
         {
-            if (ApplicationSettings.DeviceManagementSettings.GetProtocol(Protocol).Type != ProtocolSettings.ProtocolType.Listener)
+            ProtocolSettings.ProtocolType t = ApplicationSettings.DeviceManagementSettings.GetProtocol(Protocol).Type;
+            if (t != ProtocolSettings.ProtocolType.Listener && t!= PVSettings.ProtocolSettings.ProtocolType.ManagerQueryResponse)
             {
                 ListenerDeviceId = "";
                 DoPropertyChanged("ListenerDeviceId");
@@ -296,15 +298,6 @@ namespace PVSettings
                 DoPropertyChanged("ManagerTypeName");
                 DoPropertyChanged("SunnyExplorerPlantName");
                 DoPropertyChanged("SunnyExplorerPassword");
-            }
-        }
-
-        public String DeviceDatabase
-        {
-            get { return GetValue("devicedatabase"); }
-            set
-            {
-                SetValue("devicedatabase", value.Trim(), "DeviceDatabase");
             }
         }
 
@@ -376,6 +369,8 @@ namespace PVSettings
                 return DeviceManagerType.Owl_Meter;
             else if (managerTypeName == "CC128")
                 return DeviceManagerType.CC128;
+            else if (managerTypeName == "EW4009")
+                return DeviceManagerType.EW4009;
             else if (managerTypeName == "Consolidation")
                 return DeviceManagerType.Consolidation;
             else
@@ -541,6 +536,55 @@ namespace PVSettings
             }
         }
 
+        public String OwlDatabase
+        {
+            get
+            {
+                if (ManagerType != DeviceManagerType.Owl_Meter)
+                    return "";
+                String name = GetValue("owldatabase").Trim();
+                if (name == "")
+                    return "C:\\ProgramData\\2SE\\be.db";
+                else
+                    return name;
+            }
+            set
+            {
+                if (ManagerType == DeviceManagerType.Owl_Meter)
+                    SetValue("owldatabase", value.Trim(), "OwlDatabase");
+            }
+        }
+
+        public bool ReloadDays
+        {
+            get
+            {
+                string val = GetValue("reloaddays");
+                return val == "true";
+            }
+            set
+            {
+                SetValue("reloaddays", value ? "true" : "false", "ReloadDays");
+            }
+        }
+
+        public DateTime? ReloadDaysFromDate
+        {
+            get
+            {
+                String ffd = GetValue("reloaddaysfromdate");
+                if (ffd == "" && ReloadDays)
+                    return ApplicationSettings.FirstFullDay;
+                else
+                    return ApplicationSettings.StringToDate(ffd);
+            }
+
+            set
+            {
+                SetValue("reloaddaysfromdate", ApplicationSettings.DateToString(value), "ReloadDaysFromDate");
+            }
+        }
+
         public String SunnyExplorerPlantName
         {
             get
@@ -629,6 +673,23 @@ namespace PVSettings
             }
         }
 
+        public TimeSpan? IntervalOffset
+        {
+            get
+            {
+                String ffd = GetValue("intervaloffset");
+                if (ffd == "")
+                    return null;
+                else
+                    return ApplicationSettings.StringToTime(ffd);
+            }
+
+            set
+            {
+                SetValue("intervaloffset", ApplicationSettings.TimeToString(value), "IntervalOffset");
+            }
+        }
+
         public DateTime? FirstFullDay
         {
             get
@@ -686,6 +747,80 @@ namespace PVSettings
             set
             {
                 SetValue("resetfirstfulldayset", ApplicationSettings.DateTimeToString(value), "ResetFirstFullDaySet");
+            }
+        }
+
+        public bool WebBoxUsePush
+        {
+            get
+            {
+                return GetValue("webboxusepush") == "true";
+            }
+            set
+            {
+                SetValue("webboxusepush", value ? "true" : "false", "WebBoxUsePush");
+            }
+        }
+
+        public String WebBoxFtpUrl
+        {
+            get { return GetValue("webboxftpurl").Trim(); }
+            set { SetValue("webboxftpurl", value, "WebBoxFtpUrl"); }
+        }
+
+        public String WebBoxPushDirectory
+        {
+            get { return GetValue("webboxpushdirectory").Trim(); }
+            set { SetValue("webboxpushdirectory", value, "WebBoxPushDirectory"); }
+        }
+
+        public String WebBoxFtpBasePath
+        {
+            get { return GetValue("webboxftpbasepath").Trim(); }
+            set { SetValue("webboxftpbasepath", value, "WebBoxFtpBasePath"); }
+        }
+
+        public String WebBoxUserName
+        {
+            get { return GetValue("webboxusername").Trim(); }
+            set { SetValue("webboxusername", value, "WebBoxUserName"); }
+        }
+
+        public String WebBoxPassword
+        {
+            get { return GetValue("webboxpassword").Trim(); }
+            set { SetValue("webboxpassword", value, "WebBoxPassword"); }
+        }
+
+        public int WebBoxVersion
+        {
+            get 
+            {
+                string val = GetValue("webboxversion").Trim();
+                if (val == "")
+                    return 1;
+                else
+                    return Int32.Parse(val); 
+            }
+            set { SetValue("webboxversion", value.ToString(), "WebBoxVersion"); }
+        }
+
+        public Double? WebBoxFtpLimit
+        {
+            get
+            {
+                string val = GetValue("webboxftplimit").Trim();
+                if (val == "")
+                    return null;
+                else
+                    return Double.Parse(val);
+            }
+            set 
+            {
+                if (value.HasValue)
+                    SetValue("webboxftplimit", value.ToString(), "WebBoxFtpLimit");
+                else
+                    SetValue("webboxftplimit", "", "WebBoxFtpLimit");
             }
         }
 

@@ -29,47 +29,35 @@ using MackayFisher.Utilities;
 
 namespace Device
 {
-    public struct SMA_SE_Record
+    public struct Owl_Record
     {
         public DateTime TimeStampe;
         public int Seconds;
-        public int Watts;
-
-        public static int Compare(SMA_SE_Record x, SMA_SE_Record y)
-        {
-            
-
-            if (x.TimeStampe > y.TimeStampe)
-                return 1;
-            else if (x.TimeStampe < y.TimeStampe)
-                return -1;
-
-            return 0; // equal
-        }
+        public double EnergyKwh;
     }
 
-    public class SMA_SE_EnergyParams : DeviceParamsBase
+    public class Owl_EnergyParams : DeviceParamsBase
     {
-        public SMA_SE_EnergyParams()
+        public Owl_EnergyParams()
             : base()
         {
         }
     }
 
-    public class SMA_SE_Device : MeterDevice<SMA_SE_Record, SMA_SE_Record, SMA_SE_EnergyParams>
+    public class Owl_Device : MeterDevice<Owl_Record, Owl_Record, Owl_EnergyParams>
     {
-        private FeatureSettings Feature_YieldAC;
+        private FeatureSettings Feature_EnergyAC;
 
-        public SMA_SE_Device(DeviceControl.DeviceManager_SMA_SunnyExplorer deviceManager, DeviceManagerDeviceSettings deviceSettings, string model, string serialNo)
-            : base(deviceManager, deviceSettings, "SMA", model, serialNo)
+        public Owl_Device(DeviceControl.DeviceManager_Owl deviceManager, DeviceManagerDeviceSettings deviceSettings, string model, string serialNo)
+            : base(deviceManager, deviceSettings, "Owl", model, serialNo)
         {
             DeviceParams = new EnergyParams();
-            DeviceParams.DeviceType = PVSettings.DeviceType.EnergyMeter;            
+            DeviceParams.DeviceType = PVSettings.DeviceType.EnergyMeter;
             DeviceParams.QueryInterval = deviceSettings.QueryIntervalInt;
             DeviceParams.RecordingInterval = deviceSettings.DBIntervalInt;
 
             DeviceParams.CalibrationFactor = deviceSettings.CalibrationFactor;
-            Feature_YieldAC = DeviceSettings.GetFeatureSettings(FeatureType.YieldAC, deviceSettings.Feature);
+            Feature_EnergyAC = DeviceSettings.GetFeatureSettings(FeatureType.EnergyAC, deviceSettings.Feature);
         }
 
         protected override DeviceDetailPeriodsBase CreateNewPeriods(FeatureSettings featureSettings)
@@ -77,15 +65,15 @@ namespace Device
             return new DeviceDetailPeriods_EnergyMeter(this, featureSettings, PeriodType.Day, TimeSpan.FromTicks(0));
         }
 
-        public DeviceDataRecorders.DeviceDetailPeriods_EnergyMeter Days 
+        public DeviceDataRecorders.DeviceDetailPeriods_EnergyMeter Days
         {
             get
             {
-                return (DeviceDataRecorders.DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_YieldAC.FeatureType, Feature_YieldAC.FeatureId);
+                return (DeviceDataRecorders.DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_EnergyAC.FeatureType, Feature_EnergyAC.FeatureId);
             }
         }
 
-        private bool ProcessOneReading(SMA_SE_Record liveReading, bool isLive)
+        private bool ProcessOneReading(Owl_Record liveReading, bool isLive)
         {
             if (FaultDetected)
                 return false;
@@ -101,45 +89,46 @@ namespace Device
                 stage = "Reading";
 
                 TimeSpan duration;
-                Double estEnergy = 0.0;
+                int power = 0;
                 try
                 {
                     duration = TimeSpan.FromSeconds(liveReading.Seconds);
-                    estEnergy = (((double)liveReading.Watts) * duration.TotalHours) / 1000.0; // watts to KWH
+                    power = (int)(liveReading.EnergyKwh * 3600000.0 / liveReading.Seconds);
                 }
                 catch (Exception e)
                 {
-                    LogMessage("ProcessOneReading - Error calculating EstimateEnergy - probably no PowerAC retrieved - Exception: " + e.Message, LogEntryType.ErrorMessage);
+                    LogMessage("ProcessOneReading - Error calculating Power - Exception: " + e.Message, LogEntryType.ErrorMessage);
                     return false;
                 }
 
                 if (maxPower.HasValue)
                 {
-                    if (maxPower.Value < liveReading.Watts)
-                        maxPower = liveReading.Watts;
+                    if (maxPower.Value < power)
+                        maxPower = power;
                 }
                 else
-                    maxPower = liveReading.Watts;
+                    maxPower = power;
 
                 if (minPower.HasValue)
                 {
-                    if (minPower.Value > liveReading.Watts)
-                        minPower = liveReading.Watts;
+                    if (minPower.Value > power)
+                        minPower = power;
                 }
                 else
-                    minPower = liveReading.Watts;
-               
-                DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_YieldAC.FeatureType, Feature_YieldAC.FeatureId);
-                    
+                    minPower = power;
+
+                DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_EnergyAC.FeatureType, Feature_EnergyAC.FeatureId);
+
                 EnergyReading reading = new EnergyReading();
 
-                reading.Initialise(days, liveReading.TimeStampe, 
+                reading.Initialise(days, liveReading.TimeStampe,
                     TimeSpan.FromSeconds((double)DeviceInterval), false);  // SE is always 5 minute readings
                 LastRecordTime = liveReading.TimeStampe;
 
+                reading.EnergyCalibrationFactor = DeviceManagerDeviceSettings.CalibrationFactor;
                 reading.EnergyToday = null;
                 reading.EnergyTotal = null;
-                reading.Power = liveReading.Watts;
+                reading.Power = power;
                 reading.MinPower = minPower;
                 reading.MaxPower = maxPower;
                 reading.Mode = null;
@@ -147,7 +136,7 @@ namespace Device
                 reading.Amps = null;
                 reading.Frequency = null;
                 reading.ErrorCode = null;
-                reading.EnergyDelta = estEnergy; 
+                reading.EnergyDelta = liveReading.EnergyKwh;
 
                 minPower = null;
                 maxPower = null;
@@ -162,7 +151,7 @@ namespace Device
 
                 reading.AddReadingMatch = true;
                 days.AddRawReading(reading, true);
-                
+
                 List<OutputReadyNotification> notificationList = new List<OutputReadyNotification>();
                 BuildOutputReadyFeatureList(notificationList, FeatureType.YieldAC, 0, reading.ReadingEnd);
                 if (isLive)
@@ -172,7 +161,7 @@ namespace Device
                 {
                     stage = "energy";
                     EnergyEventStatus status = FindFeatureStatus(FeatureType.YieldAC, 0);
-                    status.SetEventReading(DateTime.Now, 0.0, liveReading.Watts, (int)duration.TotalSeconds, true);
+                    status.SetEventReading(DateTime.Now, 0.0, power, (int)duration.TotalSeconds, true);
                     DeviceManager.ManagerManager.EnergyEvents.ScanForEvents();
                 }
 
@@ -187,13 +176,13 @@ namespace Device
             return res;
         }
 
-        public override bool ProcessOneLiveReading(SMA_SE_Record liveReading)
+        public override bool ProcessOneLiveReading(Owl_Record liveReading)
         {
             // used for the latest reading
             return ProcessOneReading(liveReading, true);
         }
 
-        public override bool ProcessOneHistoryReading(SMA_SE_Record histReading)
+        public override bool ProcessOneHistoryReading(Owl_Record histReading)
         {
             // used for readings older than the latest
             return ProcessOneReading(histReading, false);

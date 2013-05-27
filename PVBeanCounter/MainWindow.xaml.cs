@@ -1,4 +1,22 @@
-﻿using System;
+﻿/*
+* Copyright (c) 2010 Dennis Mackay-Fisher
+*
+* This file is part of PV Bean Counter
+* 
+* PV Bean Counter is free software: you can redistribute it and/or 
+* modify it under the terms of the GNU General Public License version 3 or later 
+* as published by the Free Software Foundation.
+* 
+* PV Bean Counter is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with PV Bean Counter.
+* If not, see <http://www.gnu.org/licenses/>.
+*/
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -34,7 +52,7 @@ namespace PVBeanCounter
         SystemServices SystemServices;
         CheckEnvironment CheckEnvironment;
         DeviceDisplay DeviceUpdate;
-        //OwlDatabaseInfo OwlDatabaseInfo;
+        OwlDatabaseInfo OwlDatabaseInfo;
 
         bool saveRequired = false;
         bool checkRequired = false;
@@ -99,7 +117,7 @@ namespace PVBeanCounter
 
                 ApplicationSettings.SetSystemServices(SystemServices);
 
-                //OwlDatabaseInfo = null;
+                OwlDatabaseInfo = null;
 
                 gridPVSettings.DataContext = ApplicationSettings;
 
@@ -406,11 +424,11 @@ namespace PVBeanCounter
 
         private void butBrowseOwlDb_Click(object sender, RoutedEventArgs e)
         {
-            //OwlMeterManagerSettings ommSettings = (OwlMeterManagerSettings)canvasMeterDetail.DataContext;
+            DeviceManagerSettings ommSettings = (DeviceManagerSettings)gridDeviceManagers.DataContext;
             OpenFileDialog myDialog = new OpenFileDialog();
             myDialog.CheckFileExists = true;
             myDialog.Multiselect = false;
-            //myDialog.FileName = ommSettings.OwlDatabase;
+            myDialog.FileName = ommSettings.OwlDatabase;
             if (myDialog.FileName != "")
             {
                 try
@@ -430,7 +448,7 @@ namespace PVBeanCounter
 
             if (myDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                //ommSettings.OwlDatabase = myDialog.FileName;
+                ommSettings.OwlDatabase = myDialog.FileName;
             }
         }
 
@@ -481,25 +499,25 @@ namespace PVBeanCounter
             }
         }
 
-        private void textBoxOwlDb_SourceUpdated(object sender, DataTransferEventArgs e)
+        private void textBoxDeviceDB_SourceUpdated(object sender, DataTransferEventArgs e)
         {
             try
             {
-                //MeterManagerSettings mmSettings = (MeterManagerSettings)dataGridMeterManagers.SelectedItem;
-                //OwlDatabaseInfo = new OwlDatabaseInfo((OwlMeterManagerSettings)mmSettings, SystemServices);
-                //OwlDatabaseInfo.LoadApplianceList();
+                DeviceManagerSettings mmSettings = (DeviceManagerSettings)gridDeviceManagers.DataContext;
+                OwlDatabaseInfo = new OwlDatabaseInfo(mmSettings, SystemServices);
+                OwlDatabaseInfo.LoadApplianceList();
 
-                //if (OwlDatabaseInfo.OwlAppliances.Count < 1)
+                if (OwlDatabaseInfo.OwlAppliances.Count < 1)
                 {
                     int cnt = 0;
-                    //foreach (MeterApplianceSettings appl in mmSettings.ApplianceList)
+                    foreach (DeviceManagerDeviceSettings appl in mmSettings.DeviceList)
                     {
-                        //appl.ApplianceNo = cnt.ToString();
+                        appl.Address = (ulong)cnt;
                         cnt++;
                     }
                 }
 
-                //comboBoxOwlApplianceNo.ItemsSource = OwlDatabaseInfo.OwlAppliances;
+                comboBoxOwlApplianceNo.ItemsSource = OwlDatabaseInfo.OwlAppliances;
             }
             catch
             {
@@ -642,6 +660,7 @@ namespace PVBeanCounter
                 {
                     labelDeviceAddress.Visibility = System.Windows.Visibility.Hidden;
                     textBoxDeviceAddress.Visibility = System.Windows.Visibility.Hidden;
+                    comboBoxOwlApplianceNo.Visibility = System.Windows.Visibility.Hidden;
                     rowAddressSerialNo.Height = GridLength.Auto;
                     checkBoxHistoryAdjust.Visibility = System.Windows.Visibility.Collapsed;
                     rowDeviceAdvanced_1.Height = new GridLength(0.0);
@@ -651,6 +670,7 @@ namespace PVBeanCounter
                 {
                     labelDeviceAddress.Visibility = System.Windows.Visibility.Visible;
                     textBoxDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                    comboBoxOwlApplianceNo.Visibility = System.Windows.Visibility.Hidden;
                     rowAddressSerialNo.Height = GridLength.Auto;
                     checkBoxHistoryAdjust.Visibility = System.Windows.Visibility.Visible;
                     rowDeviceAdvanced_1.Height = GridLength.Auto;
@@ -662,7 +682,8 @@ namespace PVBeanCounter
                 else if (DeviceManagerSettings.ManagerType == DeviceManagerType.Owl_Meter)
                 {
                     labelDeviceAddress.Visibility = System.Windows.Visibility.Visible;
-                    textBoxDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                    textBoxDeviceAddress.Visibility = System.Windows.Visibility.Hidden;
+                    comboBoxOwlApplianceNo.Visibility = System.Windows.Visibility.Visible;
                     rowAddressSerialNo.Height = GridLength.Auto;
                     checkBoxHistoryAdjust.Visibility = System.Windows.Visibility.Visible;
                     rowDeviceAdvanced_1.Height = GridLength.Auto;
@@ -675,6 +696,7 @@ namespace PVBeanCounter
                 {
                     labelDeviceAddress.Visibility = System.Windows.Visibility.Visible;
                     textBoxDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                    comboBoxOwlApplianceNo.Visibility = System.Windows.Visibility.Hidden;
                     rowAddressSerialNo.Height = GridLength.Auto;
                     checkBoxHistoryAdjust.Visibility = System.Windows.Visibility.Visible;
                     rowDeviceAdvanced_1.Height = GridLength.Auto;
@@ -688,6 +710,7 @@ namespace PVBeanCounter
                     bool isInverter = DeviceManagerDeviceSettings.DeviceSettings.DeviceType == DeviceType.Inverter;
                     labelDeviceAddress.Visibility = System.Windows.Visibility.Visible;
                     textBoxDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                    comboBoxOwlApplianceNo.Visibility = System.Windows.Visibility.Hidden;
                     rowAddressSerialNo.Height = GridLength.Auto;
                     checkBoxHistoryAdjust.Visibility = isInverter ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
                     labelCalibrate.Visibility = isInverter ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
@@ -724,10 +747,10 @@ namespace PVBeanCounter
                 gridDeviceManagerTimings.Visibility = gridListenerDevice.Visibility;
                 gridExecutablePath.Visibility = p.Type == ProtocolSettings.ProtocolType.Executable ? Visibility.Visible : Visibility.Collapsed;
 
-                if (((ProtocolSettings)comboBoxProtocol.SelectedItem).Name == "Owl Database")
+                if (((ProtocolSettings)comboBoxProtocol.SelectedItem).Name == "Owl_Meter")
                 {
-                    checkBoxOwlReload.Visibility = System.Windows.Visibility.Visible;
-                    datePickerOwlReload.Visibility = System.Windows.Visibility.Visible;
+                    checkBoxOwlReload.Visibility = System.Windows.Visibility.Collapsed;
+                    datePickerOwlReload.Visibility = System.Windows.Visibility.Collapsed;
                 }
                 else
                 {
@@ -781,6 +804,16 @@ namespace PVBeanCounter
                     labelDeviceDB.Visibility = Visibility.Collapsed;
                     textBoxDeviceDB.Visibility = Visibility.Collapsed;
                     butBrowseOwlDb.Visibility = Visibility.Collapsed;
+                }
+                else if (((DeviceManagerSettings)gridDeviceManagers.DataContext).ManagerType == DeviceManagerType.Owl_Meter)
+                {
+                    gridSunnyExplorerAdvanced.Visibility = Visibility.Collapsed;
+                    labelDeviceDB.Visibility = Visibility.Visible;
+                    textBoxDeviceDB.Visibility = Visibility.Visible;
+                    butBrowseOwlDb.Visibility = Visibility.Visible;
+                    OwlDatabaseInfo = new OwlDatabaseInfo(((DeviceManagerSettings)gridDeviceManagers.DataContext), SystemServices);
+                    OwlDatabaseInfo.LoadApplianceList();
+                    comboBoxOwlApplianceNo.ItemsSource = OwlDatabaseInfo.OwlAppliances;
                 }
                 else
                 {

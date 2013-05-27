@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<devices>
+  <device>
+    <devicetype value="Owl" />
+    <description value="Owl energy Meter" />
+    <specification value="Owl" />
+    <version value="01" />
+    <status value="Test Only" />
+    <protocol value="Owl_Meter" />
+    <devicetype value="EnergyMeter" />
+
+    <features>
+      <feature id="0" type="EnergyAC" description="Energy AC" />
+    </features>
+
+  </device>
+
+</devices>

@@ -48,8 +48,20 @@ namespace DeviceControl
         }
     }
 
-    public class DeviceManager_SMA_SunnyExplorer : DeviceManager_PassiveController<SMA_SE_Device, SMA_SE_Record, SMA_SE_Record, SMA_SE_ManagerParams>
+    public class DeviceManager_SMA_SunnyExplorer : DeviceManagerTyped<SMA_SE_Device>
     {
+        public struct DeviceReadingInfo
+        {
+            public String[] SerialNumbers;
+            public String[] Models;
+            public String[] Manufacturers;
+            public UInt64[] Addresses;
+            public bool[] Enabled;
+            public List<SMA_SE_Record>[] LiveRecords;
+        }
+
+        protected DeviceReadingInfo ReadingInfo;
+
         private const int MaxSunnyExplorerRunTime = 3; // minutes
         private SMA_SE_ManagerParams ManagerParams;
         private bool ExtractHasRun = false;
@@ -66,11 +78,37 @@ namespace DeviceControl
             IDeviceManagerManager imm)
             : base(genThreadManager, mmSettings, imm)
         {
+            InitialiseDeviceInfo(DeviceList.Count);
+            ManagerParams = new SMA_SE_ManagerParams();
+            ManagerParams.RecordingInterval = DeviceManagerSettings.DBIntervalInt;
+
             Password = DeviceManagerSettings.SunnyExplorerPassword;
             FileNamePattern = DeviceManagerSettings.SunnyExplorerPlantName + "-????????.csv";
 
             foreach (DeviceBase dev in DeviceList)
                 DevicesEnabled |= dev.Enabled;
+        }
+
+        protected virtual void InitialiseDeviceInfo(int numDevices, bool ignoreConfiguredDevices = false)
+        {
+            ReadingInfo.LiveRecords = new List<SMA_SE_Record>[numDevices];
+            ReadingInfo.SerialNumbers = new String[numDevices];
+            ReadingInfo.Models = new String[numDevices];
+            ReadingInfo.Manufacturers = new String[numDevices];
+            ReadingInfo.Enabled = new bool[numDevices];
+
+            for (int i = 0; i < numDevices; i++)
+            {
+                ReadingInfo.LiveRecords[i] = new List<SMA_SE_Record>();
+                //ReadingInfo.HistoryRecords[i] = new List<SMA_SE_Record>();
+
+                // Some device managers create their own list of devices without the need for explicit config (eg SMA Sunny Explorer)
+                //if (!ignoreConfiguredDevices)
+                //{
+                //    ReadingInfo.Addresses[i] = DeviceList[i].Address;
+                //}
+                ReadingInfo.Enabled[i] = DeviceList[i].Enabled;
+            }
         }
 
         public override DateTime NextRunTime(DateTime? currentTime = null)
@@ -200,12 +238,6 @@ namespace DeviceControl
             }
             ExtractHasRun |= extractHasRun;
             return extractHasRun;
-        }
-
-        protected override void LoadParams()
-        {
-            ManagerParams = new SMA_SE_ManagerParams();
-            ManagerParams.RecordingInterval = DeviceManagerSettings.DBIntervalInt;
         }
 
         private bool ExtractCSV(String configFile, String password, String exportDirectory, DateTime fromDate, DateTime toDate)
@@ -937,167 +969,5 @@ namespace DeviceControl
             return item;
         }
 
-        protected List<DateTime> FindEmptyDays(bool resetFirstFullDay)
-        {
-            DateTime? startDate = NextFileDate;
-            List<DateTime> completeDays;
-
-            if (!resetFirstFullDay)
-                completeDays = FindDaysWithValues(startDate);
-            else
-                completeDays = new List<DateTime>();
-
-            try
-            {
-                // ensure we have a usable startDate                 
-                if (startDate == null)
-                    if (completeDays.Count > 0)
-                    {
-                        // limit history retrieval to configured device history limit
-                        startDate = completeDays[0];
-                        if (startDate == DateTime.Today.AddDays(1 - DeviceManagerSettings.MaxSMAHistoryDays))
-                            startDate = DateTime.Today.AddDays(1 - DeviceManagerSettings.MaxSMAHistoryDays);
-                    }
-                    else
-                        startDate = DateTime.Today;
-
-                int numDays = (1 + (DateTime.Today - startDate.Value).Days);
-                List<DateTime> incompleteDays = new List<DateTime>(numDays);
-
-                for (int i = 0; i < numDays; i++)
-                {
-                    DateTime day = startDate.Value.AddDays(i);
-                    if (!completeDays.Contains(day))
-                    {
-                        if (GlobalSettings.SystemServices.LogTrace)
-                            GlobalSettings.SystemServices.LogMessage("FindEmptyDays", "day: " + day, LogEntryType.Trace);
-                        incompleteDays.Add(day);
-                    }
-                }
-                return incompleteDays;
-            }
-            catch (Exception e)
-            {
-                throw new Exception("FindEmptyDays: error : " + e.Message, e);
-            }
-        }
-
-        public List<DateTime> FindDaysWithValues(DateTime? startDate)
-        {
-            // cannot detect complete days until device list is populated
-            if (DeviceList.Count == 0)
-                return new List<DateTime>();
-
-            GenConnection connection = null;
-            String cmdStr;
-            GenCommand cmd;
-            try
-            {
-                connection = GlobalSettings.TheDB.NewConnection();
-                if (GlobalSettings.SystemServices.LogTrace && startDate != null)
-                    GlobalSettings.SystemServices.LogMessage("FindDaysWithValues", "limit day: " + startDate, LogEntryType.Trace);
-
-                // hack for SQLite - I suspect it does a string compare that results in startDate being excluded from the list                 
-                // drop back 1 day for SQLite - the possibility of an extra day in this list does not damage the final result                 
-                // (in incomplete days that is)                 
-                if (connection.DBType == GenDBType.SQLite && startDate != null)
-                {
-                    startDate -= TimeSpan.FromDays(1);
-                    if (GlobalSettings.SystemServices.LogTrace && startDate != null)
-                        GlobalSettings.SystemServices.LogMessage("FindDaysWithValues", "SQLite adjusted limit day: " + startDate, LogEntryType.Trace);
-                }
-
-                string serials = "";
-
-                foreach (SMA_SE_Device device in DeviceList)
-                {
-                    if (serials == "")
-                        serials += device.SerialNo;
-                    else
-                        serials += ", " + device.SerialNo;
-                }
-
-                // This implementation treats a day as complete if any inverter under the inverter manager reports a full day                  
-                if (startDate == null)
-                    cmdStr =
-                        "select distinct oh.OutputDay " +
-                        "from devicedayoutput_v oh, device d " +
-                        "where oh.Device_Id = d.Id " +
-                        "and d.SerialNumber in ( @SerialNumbers ) " +
-                        "order by oh.OutputDay;";
-                else
-                    cmdStr =
-                        "select distinct oh.OutputDay " +
-                        "from devicedayoutput_v oh, device d " +
-                        "where oh.OutputDay >= @StartDate " +
-                        "and oh.Device_Id = d.Id " +
-                        "and d.SerialNumber in ( @SerialNumbers ) " +
-                        "order by oh.OutputDay;";
-
-                cmd = new GenCommand(cmdStr, connection);
-                if (startDate != null)
-                    cmd.AddParameterWithValue("@StartDate", startDate);
-                cmd.AddParameterWithValue("@SerialNumbers", serials);
-                GenDataReader dataReader = (GenDataReader)cmd.ExecuteReader();
-                List<DateTime> dateList = new List<DateTime>(7);
-                int cnt = 0;
-                bool yesterdayFound = false;
-                bool todayFound = false;
-                DateTime today = DateTime.Today;
-                DateTime yesterday = today.AddDays(-1);
-                while (dataReader.Read())
-                {
-                    DateTime day = dataReader.GetDateTime(0);
-                    yesterdayFound |= (day == yesterday);
-                    todayFound |= (day == today);
-                    if (day < yesterday)
-                    {
-                        if (GlobalSettings.SystemServices.LogTrace)
-                            GlobalSettings.SystemServices.LogMessage("FindDaysWithValues", "day: " + day, LogEntryType.Trace);
-                        dateList.Add(dataReader.GetDateTime(0));
-                        cnt++;
-                    }
-                }
-                if (todayFound && yesterdayFound)
-                    dateList.Add(yesterday);
-                dataReader.Close();
-                return dateList;
-            }
-            catch (Exception e)
-            {
-                throw new Exception("FindDaysWithValues: error executing query: " + e.Message, e);
-            }
-            finally
-            {
-                if (connection != null)
-                {
-                    connection.Close();
-                    connection.Dispose();
-                }
-            }
-        }
-
-        protected DateTime FindNewStartDate()
-        {
-            List<DateTime> dateList;
-
-            try
-            {
-                dateList = FindEmptyDays(false);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("FindNewStartDate: " + e.Message, e);
-            }
-
-            DateTime newStartDate;
-
-            if (dateList.Count > 0)
-                newStartDate = dateList[0];
-            else
-                newStartDate = DateTime.Today.Date;
-
-            return newStartDate;
-        }
     }
 }

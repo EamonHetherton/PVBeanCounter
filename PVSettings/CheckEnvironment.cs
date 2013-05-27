@@ -287,6 +287,7 @@ namespace PVSettings
                     result += NewLine + accessResult;
                 }
 
+                /*
                 stage = "Locate Empty Database Directory";
                 String patternDirName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Empty Databases");
                 DirectoryInfo patternDir;
@@ -310,14 +311,18 @@ namespace PVSettings
                     log = result + NewLine + "Exception locating directory: " + patternDirName + " - message: " + e.Message;
                     return false;
                 }
+                */
 
                 // No action on non-standard settings - only create empty database for Jet or SQLite installs where DB does not exist
                 if (Settings.StandardDBType != "Custom")
                     if (Settings.DatabaseType == "Jet" || Settings.DatabaseType == "SQLite")
                     {
+                        /*
+                        String destName = Path.Combine(defaultDirectoryName, Settings.Database);
+                        
                         stage = "Create Empty Database";
                         String srcName = Path.Combine(patternDirName, Settings.Database);
-                        String destName = Path.Combine(defaultDirectoryName, Settings.Database);
+                        
                         try
                         {
                             File.Copy(srcName, destName, false);
@@ -327,7 +332,7 @@ namespace PVSettings
                         {
                             result += NewLine + "Database not changed - already exists: " + destName;
                         }
-
+                        
                         stage = "Set Access to Database";
                         accessResult = SetFileAccess(destName);
 
@@ -338,11 +343,13 @@ namespace PVSettings
                             log = result + NewLine + accessResult;
                             return false;
                         }
+                        
 
                         if (Settings.StandardDBType == "Jet (2003)")
                             result += NewLine + "Ensure PV Bean Counter 32bit and Microsoft Access 2003 are installed";
                         else if (Settings.StandardDBType == "Jet (2007)")
                             result += NewLine + "Ensure Microsoft Access 2007 or later is installed";
+                        */
                     }
                     else
                         result += NewLine + "Your selected database type requires manual configuration: " + Settings.StandardDBType;

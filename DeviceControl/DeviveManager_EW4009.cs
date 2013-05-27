@@ -37,18 +37,8 @@ using Device;
 namespace DeviceControl
 {
 
-    public class DeviceManager_EW4009 : DeviceManager_PassiveController<EW4009_Device, CC128_LiveRecord, CC128_HistoryRecord, CC128ManagerParams>
+    public class DeviceManager_EW4009 : DeviceManager_PassiveController<EW4009_Device, EW4009_LiveRecord, EW4009_LiveRecord, CC128ManagerParams>
     {
-        // max allowed difference between CC Meter Time and computer time in Minutes
-        public const int MeterTimeSyncTolerance = 10;
-        // Time sync difference that triggers warnings
-        public const int MeterTimeSyncWarning = 5;
-        private DateTime? MeterTimeSyncWarningTime = null;
-        // Is current CC Meter Time in Sync with computer time
-        private bool MeterTimeInSync = false;
-
-        //private int DbInterval;
-        private DateTime? LastRecordTime = null;
         private CC128ManagerParams ManagerParams;
 
         private CompositeAlgorithm_EW4009 DeviceAlgorithm;
@@ -86,11 +76,6 @@ namespace DeviceControl
             ManagerParams.HistoryHours = DeviceManagerSettings.HistoryHours.Value;
         }
 
-        protected void LogMessage(String routine, String message, LogEntryType logEntryType = LogEntryType.DetailTrace)
-        {
-            GlobalSettings.LogMessage(routine, message, logEntryType);
-        }
-
         protected override EW4009_Device NewDevice(DeviceManagerDeviceSettings dmDevice)
         {
             return new EW4009_Device(this, dmDevice);
@@ -98,109 +83,45 @@ namespace DeviceControl
 
         public override bool DoWork()
         {
-            int index;
-
-            DateTime lastZero = DateTime.MinValue;
-
-            if (ReadingInfo.RecordsAvailEvent.WaitOne(10000))
+            bool alarmFound = false;
+            bool errorFound = false;
+            DateTime now = DateTime.Now;
+            bool complete = false;
+            try
             {
-                ReadingInfo.RecordsAvailEvent.Reset();
-
-                for (index = 0; index < DeviceList.Count; index++)
+                if (DeviceAlgorithm.ExtractReading(true, ref alarmFound, ref errorFound))
                 {
-                    while (ReadingInfo.LiveRecords[index].Count > 0)
-                    {
-                        try
+                    foreach (EW4009_Device dev in DeviceList)
+                        if (dev.Enabled && dev.NextRunTime <= NextRunTimeStamp)
                         {
-                            ProcessOneLiveRecord(DeviceList[index], ReadingInfo.LiveRecords[index][0]);
-                        }
-                        catch (Exception e)
-                        {
-                            LogMessage("DoWork.ProcessOneLiveRecord - Exception: " + e.Message, LogEntryType.ErrorMessage);
-                            // discard record causing error - attempt to continue
-                        }
-
-                        ReadingInfo.RecordsMutex.WaitOne();
-                        ReadingInfo.LiveRecords[index].RemoveAt(0);
-                        ReadingInfo.RecordsMutex.ReleaseMutex();
-                    }
-                }
-
-                for (index = 0; index < DeviceList.Count; index++)
-                {
-                    while (ReadingInfo.HistoryRecords[index].Count > 0)
-                    {
-                        try
-                        {
-                            EW4009_Device device = DeviceList[index];
-                            if (device.DeviceSettings.UseHistory)
-                                ProcessOneHistoryRecord(device, ReadingInfo.HistoryRecords[index][0]);
-                        }
-                        catch (Exception e)
-                        {
-                            LogMessage("DoWork.ProcessOneHistoryRecord - Exception: " + e.Message, LogEntryType.ErrorMessage);
-                            // discard record causing error - attempt to continue
+                            CompositeAlgorithm_EW4009.DeviceReading reading = DeviceAlgorithm.GetReading(dev.Address);
+                            if (reading.Status == "1")
+                            {
+                                EW4009_LiveRecord rec;
+                                rec.Watts = (int)reading.Power;
+                                rec.TimeStampe = now;
+                                dev.ProcessOneLiveReading(rec);
+                            }
+                            dev.LastRunTime = now;
                         }
 
-                        ReadingInfo.RecordsMutex.WaitOne();
-                        ReadingInfo.HistoryRecords[index].RemoveAt(0);
-                        ReadingInfo.RecordsMutex.ReleaseMutex();
-                    }
-
-                }
+                    complete = true;
+                }                
+            }
+            catch (Exception e)
+            {
+                GlobalSettings.LogMessage("DoWork", "Exception: " + e.Message);
+                return false;
+            }
+            finally
+            {
+                if (!complete) // prevent rapid looping due to old LastRunTime
+                    foreach (EW4009_Device dev in DeviceList)
+                        if (dev.Enabled && dev.NextRunTime <= NextRunTimeStamp)
+                            dev.LastRunTime = now;
             }
 
             return true;
-        }
-
-        protected void ProcessOneLiveRecord(MeterDevice<CC128_LiveRecord, CC128_HistoryRecord, CC128EnergyParams> device, CC128_LiveRecord liveRecord)
-        {
-            // DMF *******
-            // Remove the following when not using DEBUG
-            // Debug causes a rush of records less than a millisecond apart when execution is paused for multiple "intervals"
-#if DEBUG
-            liveRecord.TimeStampe = liveRecord.MeterTime;
-#endif
-            // DMF *******
-
-            bool curSyncStatus = MeterTimeInSync;
-            int timeError = Convert.ToInt32(Math.Abs((liveRecord.MeterTime - liveRecord.TimeStampe).TotalMinutes));
-            MeterTimeInSync = timeError <= MeterTimeSyncTolerance;
-
-            // Issue warnings every hour if above warning threshold but below max tolerance
-            if (MeterTimeInSync)
-                if (timeError >= MeterTimeSyncWarning)
-                {
-                    if (MeterTimeSyncWarningTime == null || (MeterTimeSyncWarningTime + TimeSpan.FromHours(1.0)) < DateTime.Now)
-                    {
-                        LogMessage("ProcessOneRecord", "Meter time variance at WARNING threshold: " + timeError +
-                        " minutes - History update is unreliable", LogEntryType.Information);
-                        MeterTimeSyncWarningTime = DateTime.Now;
-                    }
-                }
-                else
-                    MeterTimeSyncWarningTime = null;
-
-            // Log transitions across max tolerance threshold
-            if (MeterTimeInSync != curSyncStatus)
-                if (MeterTimeInSync)
-                    LogMessage("ProcessOneRecord", "Meter time variance within tolerance: " + timeError +
-                        " minutes - History adjust available", LogEntryType.Information);
-                else
-                    LogMessage("ProcessOneRecord", "Meter time variance exceeds tolerance: " + timeError +
-                        " minutes - History adjust disabled", LogEntryType.Information);
-
-            DateTime curTime = DateTime.Now;
-            bool dbWrite = (LastRecordTime == null
-                || DeviceBase.IntervalCompare(ManagerParams.RecordingInterval, LastRecordTime.Value, curTime) != 0);
-
-            device.ProcessOneLiveReading(liveRecord);
-        }
-
-        protected void ProcessOneHistoryRecord(MeterDevice<CC128_LiveRecord, CC128_HistoryRecord, CC128EnergyParams> device, CC128_HistoryRecord histRecord)
-        {
-            if (MeterTimeInSync && device.DeviceManagerDeviceSettings.UpdateHistory)
-                device.ProcessOneHistoryReading(histRecord);
         }
     }
 }

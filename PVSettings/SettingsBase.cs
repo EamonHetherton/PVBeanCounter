@@ -730,6 +730,35 @@ namespace PVSettings
             }
         }
 
+        public String TimeToString(TimeSpan? inTime)
+        {
+            if (inTime == null)
+                return "";
+            else
+                return inTime.Value.ToString();
+            
+        }
+
+        public TimeSpan? StringToTime(String inTimeStr)
+        {
+            if (inTimeStr == "")
+                return null;
+
+            TimeSpan? time = null;
+            try
+            {
+                time = TimeSpan.Parse(inTimeStr);
+                return time;
+            }
+            catch (FormatException e)
+            {
+                GlobalSettings.LogMessage("StringToTime", "value: " + inTimeStr + " - Exception: " + e.Message, LogEntryType.Information);
+            }
+
+            return null;
+        }
+
+
         public String DateToString(DateTime? inDate, String dateFormat = null)
         {
             if (inDate == null)

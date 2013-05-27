@@ -78,6 +78,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zip">
+      <HintPath>.\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
@@ -89,7 +92,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DataRecorder.cs" />
+    <Compile Include="DeviceManager_SMA_WebBox.cs" />
+    <Compile Include="SMA_WebBox_Device.cs" />
     <Compile Include="ActiveDevice_Generic.cs" />
     <Compile Include="CompositeAlgorithm_xml.cs" />
     <Compile Include="ConsolidationDevice.cs" />
@@ -102,6 +106,7 @@
     <Compile Include="DeviceManager_CC128_Reader.cs" />
     <Compile Include="DeviceManager_Consolidation.cs" />
     <Compile Include="DeviceManager_Listener_Reader.cs" />
+    <Compile Include="DeviceManager_Owl.cs" />
     <Compile Include="DeviceManager_SMA_SunnyExplorer.cs" />
     <Compile Include="DeviveManager_EW4009.cs" />
     <Compile Include="EnergyEvents.cs" />
@@ -113,6 +118,7 @@
     <Compile Include="IEnergyEvents_Contract.cs" />
     <Compile Include="InverterAlgorithm.cs" />
     <Compile Include="MeterDevice.cs" />
+    <Compile Include="Owl_Device.cs" />
     <Compile Include="PeriodAnalyser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CC128_Device.cs" />
@@ -145,10 +151,6 @@
     <ProjectReference Include="..\PVBCInterfaces\PVBCInterfaces.csproj">
       <Project>{24084674-6354-4FA9-93F7-D7B4EA65076A}</Project>
       <Name>PVBCInterfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PVInverterManagement\PVInverterManagement.csproj">
-      <Project>{64401473-B5F1-461A-B6E8-6B61899E2CB1}</Project>
-      <Name>PVInverterManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\PVSettings\PVSettings.csproj">
       <Project>{D7E2C08A-626E-4A23-9940-B1CFEF0C3551}</Project>

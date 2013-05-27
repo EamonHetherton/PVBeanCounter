@@ -29,8 +29,13 @@ using MackayFisher.Utilities;
 
 namespace Device
 {
+    public struct EW4009_LiveRecord
+    {
+        public DateTime TimeStampe;
+        public int Watts;
+    }
 
-    public class EW4009_Device : MeterDevice<CC128_LiveRecord, CC128_HistoryRecord, CC128EnergyParams>
+    public class EW4009_Device : MeterDevice<EW4009_LiveRecord, EW4009_LiveRecord, CC128EnergyParams>
     {
         public FeatureSettings Feature_EnergyAC { get; protected set; }
 
@@ -52,7 +57,7 @@ namespace Device
             return new DeviceDetailPeriods_EnergyMeter(this, featureSettings, PeriodType.Day, TimeSpan.FromTicks(0));
         }
 
-        public override bool ProcessOneLiveReading(CC128_LiveRecord liveReading)
+        public override bool ProcessOneLiveReading(EW4009_LiveRecord liveReading)
         {
             if (FaultDetected)
                 return false;
@@ -123,7 +128,7 @@ namespace Device
                 reading.Volts = null;
                 reading.Amps = null;
                 reading.Frequency = null;
-                reading.Temperature = (double)liveReading.Temperature;
+                reading.Temperature = null;
                 reading.ErrorCode = null;
                 reading.EnergyDelta = EstEnergy; // EstEnergy is an accumulation from the contributing 6 sec power values
                 //if (DeviceManagerDeviceSettings.CalibrationFactor != 1.0F)
@@ -134,15 +139,9 @@ namespace Device
                 maxPower = null;
 
                 if (GlobalSettings.SystemServices.LogTrace)
-                    LogMessage("ProcessOneLiveReading - Reading - Time: " + liveReading.TimeStampe + " - Duration: " + (int)reading.Duration.TotalSeconds + " - EnergyToday: " + reading.EnergyToday
-                        + " - EnergyTotal: " + reading.EnergyTotal
+                    LogMessage("ProcessOneLiveReading - Reading - Time: " + liveReading.TimeStampe + " - Duration: " + (int)reading.Duration.TotalSeconds 
                         + " - EstEnergy: " + EstEnergy
-                        + " - Power: " + reading.Power
-                        + " - Mode: " + reading.Mode
-                        + " - FreqAC: " + reading.Frequency
-                        + " - Volts: " + reading.Volts
-                        + " - Current: " + reading.Amps
-                        + " - Temperature: " + reading.Temperature
+                        + " - Power: " + reading.Power                        
                         , LogEntryType.Trace);
 
                 stage = "record";
@@ -160,7 +159,7 @@ namespace Device
 
                 if (EmitEvents)
                 {
-                    stage = "energy";
+                    stage = "events";
                     EnergyEventStatus status = FindFeatureStatus(FeatureType.EnergyAC, 0);
                     status.SetEventReading(curTime, 0.0, power, (int)duration.TotalSeconds, true);
                     DeviceManager.ManagerManager.EnergyEvents.ScanForEvents();
@@ -199,59 +198,9 @@ namespace Device
             return duration;
         }
 
-        public override bool ProcessOneHistoryReading(CC128_HistoryRecord histReading)
+        public override bool ProcessOneHistoryReading(EW4009_LiveRecord histReading)
         {
-            String stage = "Initial";
-            try
-            {
-                DeviceDetailPeriods_EnergyMeter days = (DeviceDetailPeriods_EnergyMeter)FindOrCreateFeaturePeriods(Feature_EnergyAC.FeatureType, Feature_EnergyAC.FeatureId);
-                DeviceDetailPeriod_EnergyMeter day;
-                // detect end of day history entry - applies to previous day
-                EnergyReading hist;
-                if (histReading.Time.TimeOfDay.TotalHours == 1.0) // 1:00am reading (duration 2 hours) crosses a period boundary
-                {
-                    stage = "Cross Period Boundary";
-                    if (GlobalSettings.SystemServices.LogTrace)
-                        GlobalSettings.SystemServices.LogMessage("ProcessOneHistoryReading", stage + " - Time: " + histReading.Time
-                            + " - Duration: " + histReading.Duration + " - Energy: " + histReading.Energy, LogEntryType.Trace);
-                    histReading.Time = histReading.Time.Date; // end of previous day - midnight
-                    histReading.Duration = histReading.Duration / 2; // halve duration and energy readings
-                    histReading.Energy = histReading.Energy / 2.0;
-                    if (histReading.Calculated.HasValue)
-                        histReading.Calculated = histReading.Calculated.Value / 2.0;
-
-                    stage = "Previous Day";
-                    if (GlobalSettings.SystemServices.LogTrace)
-                        GlobalSettings.SystemServices.LogMessage("ProcessOneHistoryReading", stage + " - Time: " + histReading.Time
-                            + " - Duration: " + histReading.Duration + " - Energy: " + histReading.Energy, LogEntryType.Trace);
-                    day = days.FindOrCreate(histReading.Time.AddDays(-1.0));  // midnight reading applies to previous day
-                    hist = new EnergyReading(days, histReading.Time, TimeSpan.FromSeconds(histReading.Duration));
-                    hist.EnergyDelta = histReading.Energy;
-                    hist.Temperature = histReading.Temperature;
-                    day.AdjustFromHistory(hist);
-                    histReading.Time = histReading.Time.AddHours(1.0); // reset time to 1:00am
-                    stage = "Start Day";
-                }
-                else
-                    stage = "Normal";
-
-                if (GlobalSettings.SystemServices.LogTrace)
-                    GlobalSettings.SystemServices.LogMessage("ProcessOneHistoryReading", stage + " - Time: " + histReading.Time
-                        + " - Duration: " + histReading.Duration + " - Energy: " + histReading.Energy, LogEntryType.Trace);
-
-                day = days.FindOrCreate(histReading.Time.Date); // get correct day
-                hist = new EnergyReading(days, histReading.Time, TimeSpan.FromSeconds(histReading.Duration));
-                hist.EnergyDelta = histReading.Energy;
-                hist.Temperature = histReading.Temperature;
-                day.AdjustFromHistory(hist);
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                LogMessage("ProcessOneHistoryReading - Stage: " + stage + " - Exception: " + e.Message, LogEntryType.ErrorMessage);
-                return false;
-            }
+            throw new NotImplementedException("EW4009_Device.ProcessOneHistoryReading - Not Implemented");
         }
 
         public override void SplitReadingSub(ReadingBase oldReading, DateTime splitTime, ReadingBase newReading1, ReadingBase newReading2)

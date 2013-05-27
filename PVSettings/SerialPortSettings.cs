@@ -97,14 +97,17 @@ namespace PVSettings
 
         public static System.IO.Ports.StopBits? ToStopBits(String stopBitsStr)
         {
-            if (stopBitsStr == "" || stopBitsStr == null)
+            if (stopBitsStr == null)
+                return null;
+            string temp = stopBitsStr.ToLower().Trim();
+            if (temp == "")
                 return null;
 
-            if (stopBitsStr == "None")
+            if (temp == "none")
                 return System.IO.Ports.StopBits.None;
-            if (stopBitsStr == "One")
+            if (temp == "one")
                 return System.IO.Ports.StopBits.One;
-            if (stopBitsStr == "OnePointFive")
+            if (temp == "onepointfive")
                 return System.IO.Ports.StopBits.OnePointFive;
 
             return System.IO.Ports.StopBits.Two;
@@ -167,6 +170,8 @@ namespace PVSettings
                 list.Add("4800");
                 list.Add("9600");
                 list.Add("57600");
+                list.Add("115200");
+                list.Add("230400");
 
                 return list;
             }

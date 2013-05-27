@@ -35,6 +35,7 @@ namespace PVSettings
             Phoenixtec,
             QueryResponse,
             Listener,
+            ManagerQueryResponse,
             Executable
         }
 
@@ -136,6 +137,8 @@ namespace PVSettings
                     return ProtocolType.QueryResponse;
                 else if (val == "Listener")
                     return ProtocolType.Listener;
+                else if (val == "ManagerQueryResponse")
+                    return ProtocolType.ManagerQueryResponse;
                 else if (val == "Executable")
                     return ProtocolType.Executable;
                 else

@@ -44,7 +44,7 @@ namespace DeviceControl
         public DeviceManager_CC128_Reader(DeviceManager_CC128 deviceManager, GenThreadManager genThreadManager, 
             DeviceManagerSettings settings, DeviceManager_CC128.DeviceReadingInfo readingInfo, 
             CC128ManagerParams managerParams)
-            : base(deviceManager, genThreadManager, settings, managerParams)
+            : base(deviceManager, genThreadManager, settings, managerParams, deviceManager.Stream)
         {
             AlgorithmParams aParams;
             aParams.Protocol = deviceManager.Protocol;

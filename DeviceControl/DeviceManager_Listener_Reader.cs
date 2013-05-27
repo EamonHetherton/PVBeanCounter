@@ -41,14 +41,14 @@ namespace DeviceControl
 
         protected DeviceManagerSettings Settings;
 
-        protected SerialStream Stream { get; private set; }
-        private bool ReaderStarted = false;
+        //protected SerialStream Stream { get; private set; }
+        //private bool ReaderStarted = false;
 
         protected DeviceManagerBase DeviceManager;
 
         protected TDeviceParams ManagerParams;
 
-        public DeviceManager_Listener_Reader(DeviceManagerBase deviceManager, GenThreadManager genThreadManager, DeviceManagerSettings settings, TDeviceParams deviceParams)
+        public DeviceManager_Listener_Reader(DeviceManagerBase deviceManager, GenThreadManager genThreadManager, DeviceManagerSettings settings, TDeviceParams deviceParams, SerialStream stream)
             : base(genThreadManager, GlobalSettings.SystemServices)
         {
             ManagerParams = deviceParams;
@@ -61,6 +61,8 @@ namespace DeviceControl
             TimeFormatInfo.TimeSeparator = ":";
 
             Settings = settings;
+
+            DeviceManager.Protocol.SetDeviceStream(stream);
         }
 
         protected void LogMessage(String routine, String message, LogEntryType logEntryType = LogEntryType.Trace)
@@ -107,6 +109,7 @@ namespace DeviceControl
                 return time1;
         }
 
+        /*
         public bool StartPortReader()
         {
             if (!ReaderStarted)
@@ -151,21 +154,7 @@ namespace DeviceControl
                     Stream = null;
                 }
         }
-
-        public override void Initialise()
-        {
-            base.Initialise();
-
-            StopPortReader();
-            StartPortReader();
-        }
-
-        public override void Finalise()
-        {
-            StopPortReader();
-            base.Finalise();
-            LogMessage("Finalise", "Port Reader Name = " + Settings.Name + " - manager stopping", LogEntryType.StatusChange);
-        }
+        */
 
     }
 }

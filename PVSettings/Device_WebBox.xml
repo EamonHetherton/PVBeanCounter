@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<devices>
+  <device>
+    <devicetype value="WebBox" />
+    <description value="SMA WebBox" />
+    <specification value="WebBox" />
+    <version value="01" />
+    <status value="Test Only" />
+    <protocol value="SMA_WebBox" />
+    <devicetype value="Inverter" />
+
+    <features>
+      <feature id="0" type="YieldAC" description="Yield AC" />
+    </features>
+
+  </device>
+
+</devices>

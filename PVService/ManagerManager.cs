@@ -159,6 +159,10 @@ namespace PVService
                 deviceManager = new DeviceManager_SMA_SunnyExplorer(ExecutionManager.GenThreadManager, dmSettings, this);
             else if (dmSettings.ManagerType == DeviceManagerType.CC128)
                 deviceManager = new DeviceManager_CC128(ExecutionManager.GenThreadManager, dmSettings, this);
+            else if (dmSettings.ManagerType == DeviceManagerType.Owl_Meter)
+                deviceManager = new DeviceManager_Owl(ExecutionManager.GenThreadManager, dmSettings, this);
+            else if (dmSettings.ManagerType == DeviceManagerType.EW4009)
+                deviceManager = new DeviceManager_EW4009(ExecutionManager.GenThreadManager, dmSettings, this);
             else if (dmSettings.ManagerType == DeviceManagerType.Consolidation)
                 deviceManager = new DeviceManager_EnergyConsolidation(ExecutionManager.GenThreadManager, dmSettings, this);
             else

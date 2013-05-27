@@ -10,7 +10,7 @@
     <devicetype value="Inverter" />
 
     <features>
-      <feature type="YieldAC" instance="0" description="Inverter Yield AC"/>
+      <feature id="0" type="YieldAC" description="Inverter Yield AC"/>
     </features>
 
   </device>

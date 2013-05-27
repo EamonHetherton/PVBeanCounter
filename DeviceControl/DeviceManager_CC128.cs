@@ -52,7 +52,6 @@ namespace DeviceControl
 
     public class DeviceManager_CC128 : DeviceManager_Listener<MeterDevice<CC128_LiveRecord, CC128_HistoryRecord, CC128EnergyParams>, CC128_LiveRecord, CC128_HistoryRecord, CC128ManagerParams>
     {
-        private int DeviceReaderId;
         // max allowed difference between CC Meter Time and computer time in Minutes
         public const int MeterTimeSyncTolerance = 10;
         // Time sync difference that triggers warnings
@@ -66,18 +65,17 @@ namespace DeviceControl
 
         private CC128ManagerParams ManagerParams;
 
-        public DeviceManager_CC128(GenThreadManager genThreadManager, DeviceManagerSettings mmSettings,
-            IDeviceManagerManager imm)
+        public DeviceManager_CC128(GenThreadManager genThreadManager, DeviceManagerSettings mmSettings, IDeviceManagerManager imm)
             : base(genThreadManager, mmSettings, imm)
         {
-            DeviceManager_Listener_Reader<CC128ManagerParams> DeviceReader = GetReader(genThreadManager);
-            DeviceReaderId = genThreadManager.AddThread(DeviceReader);
         }
 
         public override void Initialise()
         {
             base.Initialise();
-            GenThreadManager.StartThread(DeviceReaderId);
+            DeviceManager_Listener_Reader<CC128ManagerParams> DeviceReader = GetReader(GenThreadManager);
+            int deviceReaderId = GenThreadManager.AddThread(DeviceReader);
+            GenThreadManager.StartThread(deviceReaderId);
         }
 
         protected override void LoadParams()

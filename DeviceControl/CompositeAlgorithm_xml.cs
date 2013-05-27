@@ -182,23 +182,16 @@ namespace Device
 
         private DeviceReading[] Readings;
 
-        public DeviceReading GetReading(int address)
+        public DeviceReading GetReading(ulong address)
         {
-            if (address < 1)
+            if (address > 15)
                 return null;
-            if (address > 16)
-                return null;
-            return Readings[address - 1];
+            return Readings[address];
         }
 
         public CompositeAlgorithm_EW4009(AlgorithmParams algorithmParams)
             : base(algorithmParams)
         {
-            Readings = new DeviceReading[16];
-            for (int i = 0; i < 16; i++)
-            {
-                Readings[i] = new DeviceReading();
-            }
         }
 
         public CompositeAlgorithm_EW4009(DeviceManagerDeviceSettings deviceSettings, Protocol protocol, ErrorLogger errorLogger)
@@ -213,6 +206,12 @@ namespace Device
 
         protected override void LoadVariables()
         {
+            Readings = new DeviceReading[16];
+            for (int i = 0; i < 16; i++)
+            {
+                Readings[i] = new DeviceReading();
+            }
+
             VariableEntry var;
             /*
             var = new VariableEntry_Numeric("Power01", SetPower01);

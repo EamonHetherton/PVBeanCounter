@@ -6,6 +6,16 @@
   </protocol>
 
   <protocol>
+    <name value="Owl_Meter" />
+    <type value="Database" />
+  </protocol>
+
+  <protocol>
+    <name value="SMA_WebBox" />
+    <type value="FTP" />
+  </protocol>
+
+  <protocol>
     <name value="DeltaSolivia" />
     <type value="QueryResponse" />
     <endian value="Big" />
@@ -655,7 +665,7 @@
 
   <protocol>
     <name value="EW4009" />
-    <type value="Listener" />
+    <type value="ManagerQueryResponse" />
 
     <serialportsettings>
       <baudrate value="9600" />
