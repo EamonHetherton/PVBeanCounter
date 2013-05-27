@@ -988,65 +988,6 @@ namespace DeviceDataRecorders
             }
         }
 
-        /*
-        public void ConsolidateReading(TDeviceReading reading, ConsolidateDeviceSettings.OperationType operation = ConsolidateDeviceSettings.OperationType.Add)
-        {
-            // discard readings that are not relevant to this consolidation period
-            if (reading.ReadingEnd <= Start)
-                return;
-            if (reading.ReadingStart >= End)
-                return;
-           
-            // trim readings that span the start of period boundary
-            if (reading.ReadingStart < Start)
-            {
-                if ((Start - reading.ReadingStart) > PeriodOverlapLimit)
-                    throw new Exception("AddReading - Period overlap exceeds limit - ReadingStart: " + reading.ReadingStart + " - Period Start: " + Start);
-                if (DeviceParams.EnforceRecordingInterval)
-                {
-                    ReadingBase discardReading;
-                    ReadingBase keepReading;
-                    SplitReading((ReadingBase)reading, Start, out discardReading, out keepReading);
-                    reading = (TDeviceReading)keepReading;
-                }
-            }
-            // trim readings that span the end of period boundary
-            if (reading.ReadingEnd > End)
-            {
-                if ((reading.ReadingEnd - End) > PeriodOverlapLimit)
-                    throw new Exception("AddReading - Period overlap exceeds limit - ReadingEnd: " + reading.ReadingStart + " - Period End: " + Start);
-                if (DeviceParams.EnforceRecordingInterval)
-                {
-                    ReadingBase discardReading;
-                    ReadingBase keepReading;
-                    SplitReading(reading, End, out keepReading, out discardReading);
-                    reading = (TDeviceReading)keepReading;
-                }
-            }
-
-            uint interval;
-            bool isIntervalStart;
-            DateTime start;
-            GetIntervalInfo(reading.ReadingStart, out start, out interval, out isIntervalStart);
-            if (start != Start)
-                throw new Exception("DeviceDetailPeriod_Consolidation.ConsolidateReading - consolidation mismatch - Calc start: " + start + " - Required start: " + Start);
-            DateTime intervalEnd = start + TimeSpan.FromSeconds((interval + 1) * DatabaseIntervalSeconds);
-
-            int index = ReadingsGeneric.IndexOfKey(intervalEnd);
-            TDeviceReading toReading;
-            if (index < 0)
-            {
-                toReading = NewReading(intervalEnd, TimeSpan.FromSeconds(DatabaseIntervalSeconds), null);
-                ReadingsGeneric.AddReading(toReading);
-                toReading.RegisterPeriodInvolvement(this);
-            }
-            else
-                toReading = (TDeviceReading)ReadingsGeneric.ReadingList[index];
-
-            toReading.AccumulateReading(reading, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);                
-        }
-        */
-
         public bool SourceUpdated
         {
             get
