@@ -61,7 +61,7 @@ namespace DeviceControl
         private String WebBoxFtpUrl;
         private String WebBoxUserName;
         private String WebBoxPassword;
-        private Double WebBoxFtpLimit;
+        private Int32 WebBoxFtpLimit;
         private String WebBoxFtpBasePath;
         private String WebBoxDir;
         private String WebBoxPushDir;
@@ -84,7 +84,7 @@ namespace DeviceControl
         public override TimeSpan Interval { get { return TimeSpan.FromSeconds(900); } }
 
         // give webbox time to assemble data and provide some time tolerance
-        public override TimeSpan? StartHourOffset { get { return DeviceManagerSettings.IntervalOffset.HasValue ? DeviceManagerSettings.IntervalOffset.Value : TimeSpan.FromMinutes(2.0); } }
+        public override TimeSpan? StartHourOffset { get { return TimeSpan.FromMinutes(DeviceManagerSettings.IntervalOffset); } }
 
         private bool DevicesEnabled = false;
 
@@ -101,7 +101,7 @@ namespace DeviceControl
             WebBoxDir = Path.Combine(GlobalSettings.ApplicationSettings.DefaultDirectory, "WebBox_" + imSettings.InstanceNo.ToString());
             UseNewFormat = (imSettings.WebBoxVersion > 1);
             if (imSettings.WebBoxFtpLimit == null)
-                WebBoxFtpLimit = 600.0;
+                WebBoxFtpLimit = 800;
             else
                 WebBoxFtpLimit = imSettings.WebBoxFtpLimit.Value;
             LastDownloadTime = DateTime.Now - TimeSpan.FromMilliseconds(WebBoxFtpLimit);

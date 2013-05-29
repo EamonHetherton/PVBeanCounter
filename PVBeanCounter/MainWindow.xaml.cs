@@ -342,12 +342,12 @@ namespace PVBeanCounter
         {
             FolderBrowserDialog myDialog = new FolderBrowserDialog();
             myDialog.ShowNewFolderButton = true;
-            //myDialog.SelectedPath =  ((InverterManagerSettings)tabControlInverterManagers.DataContext).WebBoxPushDirectory;
+            myDialog.SelectedPath = ((DeviceManagerSettings)gridDeviceManagers.DataContext).WebBoxPushDirectory;
             String permResult = "";
 
             if (myDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                //((InverterManagerSettings)tabControlInverterManagers.DataContext).WebBoxPushDirectory = myDialog.SelectedPath;
+                ((DeviceManagerSettings)gridDeviceManagers.DataContext).WebBoxPushDirectory = myDialog.SelectedPath;
             }
 
             if (permResult != "")
@@ -800,13 +800,17 @@ namespace PVBeanCounter
                 //comboBoxListenerDevice.ItemsSource = ((DeviceManagerSettings)gridDeviceManagers.DataContext).DeviceListItems;
                 if (((DeviceManagerSettings)gridDeviceManagers.DataContext).ManagerType == DeviceManagerType.SMA_SunnyExplorer)
                 {
+                    gridFirstDay.Visibility = System.Windows.Visibility.Visible;
                     gridSunnyExplorerAdvanced.Visibility = Visibility.Visible;
                     labelDeviceDB.Visibility = Visibility.Collapsed;
                     textBoxDeviceDB.Visibility = Visibility.Collapsed;
                     butBrowseOwlDb.Visibility = Visibility.Collapsed;
+                    gridFTP.Visibility = System.Windows.Visibility.Collapsed;
+                    
                 }
                 else if (((DeviceManagerSettings)gridDeviceManagers.DataContext).ManagerType == DeviceManagerType.Owl_Meter)
                 {
+                    gridFirstDay.Visibility = System.Windows.Visibility.Collapsed;
                     gridSunnyExplorerAdvanced.Visibility = Visibility.Collapsed;
                     labelDeviceDB.Visibility = Visibility.Visible;
                     textBoxDeviceDB.Visibility = Visibility.Visible;
@@ -814,13 +818,26 @@ namespace PVBeanCounter
                     OwlDatabaseInfo = new OwlDatabaseInfo(((DeviceManagerSettings)gridDeviceManagers.DataContext), SystemServices);
                     OwlDatabaseInfo.LoadApplianceList();
                     comboBoxOwlApplianceNo.ItemsSource = OwlDatabaseInfo.OwlAppliances;
+                    gridFTP.Visibility = System.Windows.Visibility.Collapsed;
                 }
-                else
+                else if (((DeviceManagerSettings)gridDeviceManagers.DataContext).ManagerType == DeviceManagerType.SMA_WebBox)
                 {
+                    gridFirstDay.Visibility = System.Windows.Visibility.Visible;
                     gridSunnyExplorerAdvanced.Visibility = Visibility.Collapsed;
                     labelDeviceDB.Visibility = Visibility.Collapsed;
                     textBoxDeviceDB.Visibility = Visibility.Collapsed;
                     butBrowseOwlDb.Visibility = Visibility.Collapsed;
+                    gridFTP.Visibility = System.Windows.Visibility.Visible;
+                    AdjustForPushSetting();
+                }
+                else
+                {
+                    gridFirstDay.Visibility = System.Windows.Visibility.Collapsed;
+                    gridSunnyExplorerAdvanced.Visibility = Visibility.Collapsed;
+                    labelDeviceDB.Visibility = Visibility.Collapsed;
+                    textBoxDeviceDB.Visibility = Visibility.Collapsed;
+                    butBrowseOwlDb.Visibility = Visibility.Collapsed;
+                    gridFTP.Visibility = System.Windows.Visibility.Collapsed;
                 }
                 gridHistoryHours.Visibility =
                         ((DeviceManagerSettings)gridDeviceManagers.DataContext).ManagerType == DeviceManagerType.CC128 ? Visibility.Visible : Visibility.Collapsed;
@@ -967,6 +984,25 @@ namespace PVBeanCounter
                 PVSettings.LiveDaysInternal = val;
             
         }
+
+        private void AdjustForPushSetting()
+        {
+            if (((DeviceManagerSettings)gridDeviceManagers.DataContext).WebBoxUsePush)
+            {
+                gridFtpPush.Visibility = System.Windows.Visibility.Visible;
+                gridFtpPull.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            else
+            {
+                gridFtpPush.Visibility = System.Windows.Visibility.Collapsed;
+                gridFtpPull.Visibility = System.Windows.Visibility.Visible;
+            }
+        }
+
+        private void checkBoxUseFTPPush_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
+            AdjustForPushSetting();
+        }        
 
     }
 

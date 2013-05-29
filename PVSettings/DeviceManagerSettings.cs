@@ -673,23 +673,6 @@ namespace PVSettings
             }
         }
 
-        public TimeSpan? IntervalOffset
-        {
-            get
-            {
-                String ffd = GetValue("intervaloffset");
-                if (ffd == "")
-                    return null;
-                else
-                    return ApplicationSettings.StringToTime(ffd);
-            }
-
-            set
-            {
-                SetValue("intervaloffset", ApplicationSettings.TimeToString(value), "IntervalOffset");
-            }
-        }
-
         public DateTime? FirstFullDay
         {
             get
@@ -776,13 +759,26 @@ namespace PVSettings
 
         public String WebBoxFtpBasePath
         {
-            get { return GetValue("webboxftpbasepath").Trim(); }
-            set { SetValue("webboxftpbasepath", value, "WebBoxFtpBasePath"); }
+            get 
+            {
+                if (WebBoxVersion == 1)
+                    return "DATA";
+                else
+                    return "XML"; 
+            }
         }
 
         public String WebBoxUserName
         {
-            get { return GetValue("webboxusername").Trim(); }
+            get 
+            {
+                String val = GetValue("webboxusername").Trim();
+
+                if (val == "")
+                    return "user";
+
+                return val;
+            }
             set { SetValue("webboxusername", value, "WebBoxUserName"); }
         }
 
@@ -805,7 +801,7 @@ namespace PVSettings
             set { SetValue("webboxversion", value.ToString(), "WebBoxVersion"); }
         }
 
-        public Double? WebBoxFtpLimit
+        public Int32? WebBoxFtpLimit
         {
             get
             {
@@ -813,7 +809,7 @@ namespace PVSettings
                 if (val == "")
                     return null;
                 else
-                    return Double.Parse(val);
+                    return Int32.Parse(val);
             }
             set 
             {
@@ -821,6 +817,31 @@ namespace PVSettings
                     SetValue("webboxftplimit", value.ToString(), "WebBoxFtpLimit");
                 else
                     SetValue("webboxftplimit", "", "WebBoxFtpLimit");
+            }
+        }
+
+        public int IntervalOffset
+        {
+            get
+            {
+                if (ManagerType != DeviceManagerType.SMA_WebBox)
+                    return 0;
+
+                String val = GetValue("intervaloffset").Trim();
+
+                if (val == "")
+                    if (ManagerType != DeviceManagerType.SMA_WebBox)
+                        return 0;
+                    else
+                        return 2;
+
+                return Convert.ToInt32(val);
+            }
+
+            set
+            {
+                if (ManagerType != DeviceManagerType.SMA_WebBox)
+                    SetValue("intervaloffset", value.ToString(), "IntervalOffset");
             }
         }
 

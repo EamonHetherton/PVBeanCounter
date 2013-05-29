@@ -315,8 +315,23 @@
                                             <RowDefinition />
                                             <RowDefinition />
                                             <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
                                         </Grid.RowDefinitions>
-                                        <Grid>
+                                        <Grid Name="gridFirstDay">
+                                            <Grid Margin="85,0,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="110"/>
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Content="First Day" Padding="0,0,4,0" VerticalAlignment="Center" />
+                                                <DatePicker SelectedDate="{Binding Path=FirstFullDay, Converter={StaticResource NullableValueConverter}}" Grid.Column="1" Margin="0,4,0,4" Padding="0" FontSize="9" VerticalContentAlignment="Center"/>
+                                                <CheckBox IsChecked="{Binding Path=ResetFirstFullDay}" Grid.Column="2" Content="Reset First Day" VerticalAlignment="Center" Margin="10,0,0,0" />
+                                            </Grid>
+                                        </Grid>
+                                        <Grid Name="gridSerial" Grid.Row="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition />
@@ -362,7 +377,7 @@
                                             </Grid>
                                         </Grid>
 
-                                        <Grid Grid.Row="1" >
+                                        <Grid Grid.Row="2" >
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="Auto" />
@@ -394,7 +409,111 @@
                                                 <ComboBox Grid.Row="1" Grid.Column="1" Height="18" HorizontalAlignment="Left" Margin="0,0,0,0" Name="comboBoxDBInterval" VerticalAlignment="Top" Width="40" Text="{Binding Path=DBInterval, Converter={StaticResource NullableValueConverter}}" FontSize="9" />
                                             </Grid>
                                         </Grid>
-                                        <Grid Name="gridExecutablePath" Grid.Row="2">
+                                        <Grid Name="gridFTP" Grid.Row="3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="85" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />                                               
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            
+                                            <Grid Grid.Column="1" Margin="0" >
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Content="Version" HorizontalContentAlignment="Right" Margin="0,0,4,0" Padding="0" VerticalAlignment="Center"/>
+                                                <ComboBox Text="{Binding Path=WebBoxVersion, ValidatesOnDataErrors=True}" Height="18" FontSize="9" Grid.Column="1"
+                                                             Margin="0,0,0,0" Width="40" HorizontalAlignment="Left" ToolTip="WebBox firmware version" >
+                                                    <ComboBoxItem Content="1" />
+                                                    <ComboBoxItem Content="2" />
+                                                </ComboBox>
+                                                <Label Content="Start Delay" HorizontalContentAlignment="Right" Grid.Column="2" HorizontalAlignment="Right" />
+                                                <ComboBox Text="{Binding Path=IntervalOffset, ValidatesOnDataErrors=True}" Height="18" FontSize="9" Grid.Column="3"
+                                                             Margin="0,0,0,0" Width="40" HorizontalAlignment="Left" ToolTip="Interval start delay (minutes)" >
+                                                    <ComboBoxItem Content="1" />
+                                                    <ComboBoxItem Content="2" />
+                                                    <ComboBoxItem Content="3" />
+                                                    <ComboBoxItem Content="4" />
+                                                    <ComboBoxItem Content="5" />
+                                                    <ComboBoxItem Content="6" />
+                                                    <ComboBoxItem Content="7" />
+                                                    <ComboBoxItem Content="8" />
+                                                    <ComboBoxItem Content="9" />
+                                                    <ComboBoxItem Content="10" />
+                                                </ComboBox>
+                                            </Grid>
+                                            
+                                            <CheckBox Name="checkBoxUseFTPPush" IsChecked="{Binding Path=WebBoxUsePush, NotifyOnSourceUpdated=True}" Grid.Column="2"  
+                                                      Margin="20,6,0,0" Content="Use FTP Push" SourceUpdated="checkBoxUseFTPPush_SourceUpdated" ToolTip="Check to use FTP push"  />
+
+                                            <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"  />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <Label Content="Username" Padding="0,2,0,2"/>
+                                                <TextBox Text="{Binding Path=WebBoxUserName, Converter={StaticResource NullableValueConverter}}" FontSize="9"
+                                                         Margin="0,0,20,6" Width="100" Grid.Row="1" HorizontalAlignment="Left" ToolTip="WebBox FTP user name"/>
+                                                <Label Content="Password" Grid.Column="1" Padding="20,2,0,2"/>
+                                                <TextBox Text="{Binding Path=WebBoxPassword, Converter={StaticResource NullableValueConverter}}" FontSize="9" 
+                                                         Width="100" Margin="20,0,20,6" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" ToolTip="WebBox FTP password"/>
+                                            </Grid>
+
+                                            <Grid Name="gridFtpPull" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <Label Content="FTP URL" Padding="0,2,0,2"/>
+                                                <TextBox Text="{Binding Path=WebBoxFtpUrl, Converter={StaticResource NullableValueConverter}}" FontSize="9" 
+                                                         Margin="0,0,20,0" MinWidth="120" Grid.Row="1" ToolTip="WebBox FTP server address"/>
+                                                <Label Content="FTP Base Path" Grid.Column="1" Padding="20,2,0,2"/>
+                                                <TextBox Text="{Binding Path=WebBoxFtpBasePath, Mode=OneWay, Converter={StaticResource NullableValueConverter}}" FontSize="9"
+                                                         Margin="20,0,20,0" Grid.Column="1" Grid.Row="1" ToolTip="WebBox base path (at FTP server)" IsReadOnly="True" IsEnabled="False"/>
+                                                <Label Content="Rate Limit (milliseconds)" Padding="0,2,0,2" Grid.Row="2"/>
+                                                <TextBox Text="{Binding Path=WebBoxFtpLimit, ValidatesOnDataErrors=True, Converter={StaticResource NullableValueConverter}}" FontSize="9"
+                                                         Margin="0,0,20,6" Width="50" Grid.Row="3" HorizontalAlignment="Left" ToolTip="Time gap in milliseconds between FTP requests"/>
+                                            </Grid>
+                                            <Grid Name="gridFtpPush" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <Label Content="FTP Push Directory" Padding="0,2,0,2"/>
+                                                <TextBox Text="{Binding Path=WebBoxPushDirectory, Converter={StaticResource NullableValueConverter}}" FontSize="9"
+                                                         Margin="0,0,10,6" MinWidth="200" Grid.Row="1" ToolTip="Directory to which daya is pushed by the WebBox"/>
+                                                <Button Name="butPushDirectory" Click="butPushDirectory_Click" Grid.Column="1" Grid.Row="1" Padding="0" Margin="0"
+                                                       Height="14" Width="20" HorizontalAlignment="Left" Content="..." FontSize="9" VerticalAlignment="Top" />
+                                            </Grid>
+                                            
+                                        </Grid>
+                                        <Grid Grid.Row="4">
+
+                                        </Grid>
+                                        <Grid Name="gridExecutablePath" Grid.Row="5">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
@@ -404,7 +523,7 @@
                                             <TextBox Grid.Column="1" Height="18" Text="{Binding Path=ExecutablePath, Converter={StaticResource NullableValueConverter}}"  Margin="0,0,10,0" FontSize="10.5" />
                                             <Button Content="..." Name="butExecutable" Click="butExecutable_Click" Grid.Column="2" Padding="8,0" VerticalAlignment="Center" MinHeight="18" Margin="0,0,10,0" />
                                         </Grid>
-                                        <Grid Name="gridSunnyExplorerAdvanced" Grid.Row="3">
+                                        <Grid Name="gridSunnyExplorerAdvanced" Grid.Row="6">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
