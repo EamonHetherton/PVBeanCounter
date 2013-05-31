@@ -10,7 +10,7 @@
     <Product Id="9799DC8E-506B-429E-83CE-0D0EB3C3961E" Name="PV Bean Counter" Language="1033" Version="2.0.0.3" Manufacturer="Mackay-Fisher" UpgradeCode="94B6A6FB-3567-4617-B52A-DAE65CF113EB">
         <Package Description="Test file in a Product" Comments="Simple test" InstallerVersion="200" Compressed="yes" />
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
-        <?define SolutionConfig = "Debug" ?>
+        <?define SolutionConfig = "Release" ?>
         <?define Platform = "x86" ?>
         <?if $(var.Platform) = "x86" ?>
         <?if $(var.SolutionConfig) = "Release" ?>

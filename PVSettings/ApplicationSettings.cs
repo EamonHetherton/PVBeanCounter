@@ -310,8 +310,9 @@ namespace PVSettings
 
             XmlElement e = AddElement(managers, "devicemanager");
             DeviceManagerSettings manager = new DeviceManagerSettings(this, e);
-            XmlElement e2 = AddElement(e, "serialport");
-            manager.SerialPort = new SerialPortSettings(this, e2);
+            // This was producing extra serial port element
+            //XmlElement e2 = AddElement(e, "serialport");
+            //manager.SerialPort = new SerialPortSettings(this, e2);
             manager.Enabled = false;
 
             DeviceManagerList.Add(manager);

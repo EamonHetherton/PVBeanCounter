@@ -377,9 +377,9 @@ namespace Device
                 {
                     if (featureId == 1)
                     {
-                        if (!InverterAlgorithm.PowerAC2.HasValue
-                        && !InverterAlgorithm.VoltsAC2.HasValue
-                        && !InverterAlgorithm.CurrentAC2.HasValue)
+                        if ((!InverterAlgorithm.PowerAC2.HasValue || InverterAlgorithm.PowerAC2 == 0)
+                        && (!InverterAlgorithm.VoltsAC2.HasValue || InverterAlgorithm.VoltsAC2 == 0)
+                        && (!InverterAlgorithm.CurrentAC2.HasValue || InverterAlgorithm.CurrentAC2 == 0))
                             return;     // do not record optional empty record
                         reading = SetupNewReading(featureType, featureId, curTime, days);
                         reading.Power = (int?)InverterAlgorithm.PowerAC2;
@@ -388,9 +388,9 @@ namespace Device
                     }
                     else if (featureId == 2)
                     {
-                        if (!InverterAlgorithm.PowerAC3.HasValue
-                        && !InverterAlgorithm.VoltsAC3.HasValue
-                        && !InverterAlgorithm.CurrentAC3.HasValue)
+                        if ((!InverterAlgorithm.PowerAC3.HasValue || InverterAlgorithm.PowerAC3 == 0)
+                        && (!InverterAlgorithm.VoltsAC3.HasValue || InverterAlgorithm.VoltsAC3 == 0)
+                        && (!InverterAlgorithm.CurrentAC3.HasValue || InverterAlgorithm.CurrentAC3 == 0))
                             return;     // do not record optional empty record
                         reading = SetupNewReading(featureType, featureId, curTime, days);
                         reading.Power = (int?)InverterAlgorithm.PowerAC3;
@@ -417,8 +417,8 @@ namespace Device
             {
                 if (featureId == 0)
                 {
-                    if (!InverterAlgorithm.VoltsPV1.HasValue 
-                    && !InverterAlgorithm.CurrentPV1.HasValue)
+                    if ((!InverterAlgorithm.VoltsPV1.HasValue || InverterAlgorithm.VoltsPV1 == 0)
+                    && (!InverterAlgorithm.CurrentPV1.HasValue || InverterAlgorithm.CurrentPV1 == 0))
                         return;     // do not record optional empty record
                     reading = SetupNewReading(featureType, featureId, curTime, days);
                     reading.Volts = (float?)InverterAlgorithm.VoltsPV1;
@@ -426,8 +426,8 @@ namespace Device
                 }
                 else if (featureId == 1)
                 {
-                    if (!InverterAlgorithm.VoltsPV2.HasValue
-                    && !InverterAlgorithm.CurrentPV2.HasValue)
+                    if ((!InverterAlgorithm.VoltsPV2.HasValue || InverterAlgorithm.VoltsPV2 == 0)
+                    && (!InverterAlgorithm.CurrentPV2.HasValue || InverterAlgorithm.CurrentPV2 == 0))
                         return;     // do not record optional empty record
                     reading = SetupNewReading(featureType, featureId, curTime, days);
                     reading.Volts = (float?)InverterAlgorithm.VoltsPV2;
@@ -435,8 +435,8 @@ namespace Device
                 }
                 else if (featureId == 2)
                 {
-                    if (!InverterAlgorithm.VoltsPV3.HasValue
-                    && !InverterAlgorithm.CurrentPV3.HasValue)
+                    if ((!InverterAlgorithm.VoltsPV3.HasValue || InverterAlgorithm.VoltsPV3 == 0)
+                    && (!InverterAlgorithm.CurrentPV3.HasValue || InverterAlgorithm.CurrentPV3 == 0))
                         return;     // do not record optional empty record
                     reading = SetupNewReading(featureType, featureId, curTime, days);
                     reading.Volts = (float?)InverterAlgorithm.VoltsPV3;
