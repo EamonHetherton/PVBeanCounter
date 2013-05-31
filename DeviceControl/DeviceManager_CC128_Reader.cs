@@ -39,8 +39,6 @@ namespace DeviceControl
 
         private CompositeAlgorithm_xml DeviceAlgorithm;
         
-        private int DatabaseInterval;
-
         public DeviceManager_CC128_Reader(DeviceManager_CC128 deviceManager, GenThreadManager genThreadManager, 
             DeviceManagerSettings settings, DeviceManager_CC128.DeviceReadingInfo readingInfo, 
             CC128ManagerParams managerParams)
@@ -56,8 +54,6 @@ namespace DeviceControl
             aParams.DeviceName = settings.ListenerDeviceSettings.Description;
             aParams.ErrorLogger = deviceManager.ErrorLogger;
             DeviceAlgorithm = new CompositeAlgorithm_xml(aParams); 
-            
-            DatabaseInterval = settings.DBIntervalInt;
 
             ReadingInfo = readingInfo;
         }

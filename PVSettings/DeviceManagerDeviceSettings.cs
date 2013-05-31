@@ -1170,7 +1170,7 @@ namespace PVSettings
             {
                 String ffd = GetValue("firstfullday");
                 if (ffd == "")
-                    return ApplicationSettings.FirstFullDay;
+                    return DeviceManagerSettings.FirstFullDay;
                 else
                     return ApplicationSettings.StringToDate(ffd);
             }

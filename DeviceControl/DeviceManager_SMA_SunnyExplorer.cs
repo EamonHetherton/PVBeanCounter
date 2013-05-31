@@ -63,7 +63,6 @@ namespace DeviceControl
         protected DeviceReadingInfo ReadingInfo;
 
         private const int MaxSunnyExplorerRunTime = 3; // minutes
-        private SMA_SE_ManagerParams ManagerParams;
         private bool ExtractHasRun = false;
 
         private static StringBuilder Output = null;
@@ -79,8 +78,6 @@ namespace DeviceControl
             : base(genThreadManager, mmSettings, imm)
         {
             InitialiseDeviceInfo(DeviceList.Count);
-            ManagerParams = new SMA_SE_ManagerParams();
-            ManagerParams.RecordingInterval = DeviceManagerSettings.DBIntervalInt;
 
             Password = DeviceManagerSettings.SunnyExplorerPassword;
             FileNamePattern = DeviceManagerSettings.SunnyExplorerPlantName + "-????????.csv";
@@ -168,8 +165,7 @@ namespace DeviceControl
 
             try
             {
-                bool resetFirstFullDay = DeviceManagerSettings.ResetFirstFullDay && !ExtractHasRun;
-                dateList = FindEmptyDays(resetFirstFullDay);
+                dateList = FindEmptyDays(false, ExtractHasRun);
             }
             catch (System.Threading.ThreadInterruptedException e)
             {
@@ -851,7 +847,7 @@ namespace DeviceControl
                 if (res)
                 {
                     for (int i = 0; i < ReadingInfo.LiveRecords.Length; i++)
-                        if (ReadingInfo.Enabled[i])
+                        if (ReadingInfo.Enabled[i] )
                         {
                             stage = "CheckReadingSet";
                             CheckReadingSet(ReadingInfo.LiveRecords[i]);
@@ -868,10 +864,14 @@ namespace DeviceControl
                                 {
                                     stage = "Get Periods";
                                     
+                                    
+                                    date = ReadingInfo.LiveRecords[i][0].TimeStampe.Date;
+                                    if (DeviceList[i].FirstFullDay.HasValue && DeviceList[i].FirstFullDay > date)
+                                        continue;
+
                                     // The SE csv file contains a reading at midnight that is stored as the last reading of the previous day
                                     // Mark all possible readings already known - we want to detect readings that are no longer relevant so they can
                                     // be deleted in UpdateDatabase
-                                    date = ReadingInfo.LiveRecords[i][0].TimeStampe.Date;
                                     mainPeriod = (DeviceDataRecorders.DeviceDetailPeriod_EnergyMeter)device.FindOrCreateFeaturePeriod(FeatureType.YieldAC, 0, date);
                                     // mark all of target day except the last 5 min - this is supplied in file for following day
                                     mainPeriod.SetAddReadingMatch(false, date.AddMinutes(5.0), date.AddMinutes(60.0 * 24.0 - 5.0));

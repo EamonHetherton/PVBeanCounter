@@ -257,12 +257,12 @@ namespace DeviceControl
                 foreach (TDevice device in DeviceList)
                 {
                     if (serials == "")
-                        serials += device.SerialNo;
+                        serials = ("'" + device.SerialNo + "'");
                     else
-                        serials += ", " + device.SerialNo;
+                        serials += (", '" + device.SerialNo + "'");
                 }
 
-                // This implementation treats a day as complete if any inverter under the inverter manager reports a full day                  
+                // This implementation treats a day as complete if any device under the device manager reports a full day                  
                 if (startDate == null)
                     cmdStr =
                         "select distinct oh.OutputDay " +
@@ -328,7 +328,7 @@ namespace DeviceControl
 
             try
             {
-                dateList = FindEmptyDays(false);
+                dateList = FindEmptyDays(true, false);
             }
             catch (Exception e)
             {
@@ -345,9 +345,16 @@ namespace DeviceControl
             return newStartDate;
         }
 
-        protected List<DateTime> FindEmptyDays(bool resetFirstFullDay)
+        protected List<DateTime> FindEmptyDays(bool ignoreReset, bool extractHasRun)
         {
+            bool resetFirstFullDay = DeviceManagerSettings.ResetFirstFullDay && !ignoreReset && !extractHasRun;
             DateTime? startDate = NextFileDate;
+            if (!startDate.HasValue)
+            {
+                foreach (DeviceManagerDeviceSettings ds in DeviceManagerSettings.DeviceList)
+                    if (ds.FirstFullDay.HasValue && ds.FirstFullDay < startDate)
+                        startDate = ds.FirstFullDay;
+            }
             List<DateTime> completeDays;
 
             if (!resetFirstFullDay)
@@ -363,8 +370,8 @@ namespace DeviceControl
                     {
                         // limit history retrieval to configured device history limit
                         startDate = completeDays[0];
-                        if (startDate == DateTime.Today.AddDays(1 - DeviceManagerSettings.MaxSMAHistoryDays))
-                            startDate = DateTime.Today.AddDays(1 - DeviceManagerSettings.MaxSMAHistoryDays);
+                        if (startDate < DateTime.Today.AddDays(1 - DeviceManagerSettings.MaxHistoryDays))
+                            startDate = DateTime.Today.AddDays(1 - DeviceManagerSettings.MaxHistoryDays);
                     }
                     else
                         startDate = DateTime.Today;

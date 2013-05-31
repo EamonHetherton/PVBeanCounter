@@ -42,11 +42,11 @@ namespace DeviceControl
 
         public CC128ManagerParams()
         {
-            DeviceType = PVSettings.DeviceType.EnergyMeter;
-            QueryInterval = 6;
-            RecordingInterval = 60;
+            //DeviceType = PVSettings.DeviceType.EnergyMeter;
+            //QueryInterval = 6;
+            //RecordingInterval = 60;
             HistoryHours = 24;
-            EnforceRecordingInterval = true;
+            //EnforceRecordingInterval = true;
         }
     }
 
@@ -59,9 +59,6 @@ namespace DeviceControl
         private DateTime? MeterTimeSyncWarningTime = null;
         // Is current CC Meter Time in Sync with computer time
         private bool MeterTimeInSync = false;
-
-        //private int DbInterval;
-        private DateTime? LastRecordTime = null;
 
         private CC128ManagerParams ManagerParams;
 
@@ -81,9 +78,9 @@ namespace DeviceControl
         protected override void LoadParams()
         {
             ManagerParams = new CC128ManagerParams();
-            ManagerParams.DeviceType = PVSettings.DeviceType.EnergyMeter;
-            ManagerParams.RecordingInterval = DeviceManagerSettings.DBIntervalInt;
-            ManagerParams.QueryInterval = DeviceManagerSettings.MessageIntervalInt;
+            //ManagerParams.DeviceType = PVSettings.DeviceType.EnergyMeter;
+            //ManagerParams.RecordingInterval = DeviceManagerSettings.DBIntervalInt;
+            //ManagerParams.QueryInterval = DeviceManagerSettings.MessageIntervalInt;
             ManagerParams.HistoryHours = DeviceManagerSettings.HistoryHours.Value;
         }
 
@@ -138,10 +135,6 @@ namespace DeviceControl
                 else
                     LogMessage("ProcessOneRecord", "Meter time variance exceeds tolerance: " + timeError +
                         " minutes - History adjust disabled", LogEntryType.Information);
-
-            DateTime curTime = DateTime.Now;
-            bool dbWrite = (LastRecordTime == null
-                || DeviceBase.IntervalCompare(ManagerParams.RecordingInterval, LastRecordTime.Value, curTime) != 0);
 
             device.ProcessOneLiveReading(liveRecord);
         }

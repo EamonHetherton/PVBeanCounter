@@ -39,10 +39,7 @@ namespace DeviceControl
 
     public class DeviceManager_EW4009 : DeviceManager_PassiveController<EW4009_Device, EW4009_LiveRecord, EW4009_LiveRecord, CC128ManagerParams>
     {
-        private CC128ManagerParams ManagerParams;
-
         private CompositeAlgorithm_EW4009 DeviceAlgorithm;
-        private int DatabaseInterval;
 
         public DeviceManager_EW4009(GenThreadManager genThreadManager, DeviceManagerSettings mmSettings,
             IDeviceManagerManager imm)
@@ -58,8 +55,6 @@ namespace DeviceControl
             aParams.DeviceName = mmSettings.ListenerDeviceSettings.Description;
             aParams.ErrorLogger = ErrorLogger;
             DeviceAlgorithm = new CompositeAlgorithm_EW4009(aParams);
-
-            DatabaseInterval = mmSettings.DBIntervalInt;
         }
 
         public override void Initialise()
@@ -69,11 +64,6 @@ namespace DeviceControl
 
         protected override void LoadParams()
         {
-            ManagerParams = new CC128ManagerParams();
-            ManagerParams.DeviceType = PVSettings.DeviceType.EnergyMeter;
-            ManagerParams.RecordingInterval = DeviceManagerSettings.DBIntervalInt;
-            ManagerParams.QueryInterval = DeviceManagerSettings.MessageIntervalInt;
-            ManagerParams.HistoryHours = DeviceManagerSettings.HistoryHours.Value;
         }
 
         protected override EW4009_Device NewDevice(DeviceManagerDeviceSettings dmDevice)

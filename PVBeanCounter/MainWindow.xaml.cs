@@ -452,18 +452,6 @@ namespace PVBeanCounter
             }
         }
 
-        private void checkBoxOwlReload_Click(object sender, RoutedEventArgs e)
-        {
-            if (checkBoxOwlReload.IsChecked == null || !checkBoxOwlReload.IsChecked.Value)
-            {
-                datePickerOwlReload.IsEnabled = false;
-            }
-            else
-            {
-                datePickerOwlReload.IsEnabled = true;
-            }
-        }
-
         private void passwordBoxServiceAccount_PasswordChanged(object sender, RoutedEventArgs e)
         {
             ApplicationSettings.ServiceAccountPassword = passwordBoxServiceAccount.Password;
@@ -685,7 +673,7 @@ namespace PVBeanCounter
                     textBoxDeviceAddress.Visibility = System.Windows.Visibility.Hidden;
                     comboBoxOwlApplianceNo.Visibility = System.Windows.Visibility.Visible;
                     rowAddressSerialNo.Height = GridLength.Auto;
-                    checkBoxHistoryAdjust.Visibility = System.Windows.Visibility.Visible;
+                    checkBoxHistoryAdjust.Visibility = System.Windows.Visibility.Collapsed;
                     rowDeviceAdvanced_1.Height = GridLength.Auto;
                     rowDeviceAdvanced_2.Height = GridLength.Auto;
 
@@ -694,13 +682,13 @@ namespace PVBeanCounter
                 }
                 else if (DeviceManagerSettings.ManagerType == DeviceManagerType.SMA_WebBox)
                 {
-                    labelDeviceAddress.Visibility = System.Windows.Visibility.Visible;
-                    textBoxDeviceAddress.Visibility = System.Windows.Visibility.Visible;
+                    labelDeviceAddress.Visibility = System.Windows.Visibility.Hidden;
+                    textBoxDeviceAddress.Visibility = System.Windows.Visibility.Hidden;
                     comboBoxOwlApplianceNo.Visibility = System.Windows.Visibility.Hidden;
                     rowAddressSerialNo.Height = GridLength.Auto;
-                    checkBoxHistoryAdjust.Visibility = System.Windows.Visibility.Visible;
-                    rowDeviceAdvanced_1.Height = GridLength.Auto;
-                    rowDeviceAdvanced_2.Height = GridLength.Auto;
+                    checkBoxHistoryAdjust.Visibility = System.Windows.Visibility.Collapsed;
+                    rowDeviceAdvanced_1.Height = new GridLength(0.0);
+                    rowDeviceAdvanced_2.Height = new GridLength(0.0);
 
                     labelDeviceQueryInterval.Visibility = Visibility.Hidden;
                     comboBoxDeviceQueryInterval.Visibility = Visibility.Hidden;
@@ -712,7 +700,7 @@ namespace PVBeanCounter
                     textBoxDeviceAddress.Visibility = System.Windows.Visibility.Visible;
                     comboBoxOwlApplianceNo.Visibility = System.Windows.Visibility.Hidden;
                     rowAddressSerialNo.Height = GridLength.Auto;
-                    checkBoxHistoryAdjust.Visibility = isInverter ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    checkBoxHistoryAdjust.Visibility = System.Windows.Visibility.Collapsed;
                     labelCalibrate.Visibility = isInverter ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
                     textBoxCalibrate.Visibility = isInverter ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
                     labelThreshold.Visibility = isInverter ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
@@ -746,17 +734,6 @@ namespace PVBeanCounter
                 gridListenerDevice.Visibility = p.Type == ProtocolSettings.ProtocolType.Listener ? Visibility.Visible : Visibility.Collapsed;
                 gridDeviceManagerTimings.Visibility = gridListenerDevice.Visibility;
                 gridExecutablePath.Visibility = p.Type == ProtocolSettings.ProtocolType.Executable ? Visibility.Visible : Visibility.Collapsed;
-
-                if (((ProtocolSettings)comboBoxProtocol.SelectedItem).Name == "Owl_Meter")
-                {
-                    checkBoxOwlReload.Visibility = System.Windows.Visibility.Collapsed;
-                    datePickerOwlReload.Visibility = System.Windows.Visibility.Collapsed;
-                }
-                else
-                {
-                    checkBoxOwlReload.Visibility = System.Windows.Visibility.Collapsed;
-                    datePickerOwlReload.Visibility = System.Windows.Visibility.Collapsed;
-                }
 
                 if (((ProtocolSettings)comboBoxProtocol.SelectedItem).Name == "CC128")
                 {

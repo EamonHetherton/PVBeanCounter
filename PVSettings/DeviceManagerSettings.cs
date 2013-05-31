@@ -488,7 +488,7 @@ namespace PVSettings
             {
                 String val = GetValue("dbinterval");
                 if (val == "")
-                    if (ManagerType == DeviceManagerType.SMA_SunnyExplorer)
+                    if (ManagerType == DeviceManagerType.SMA_SunnyExplorer || ManagerType == DeviceManagerType.SMA_WebBox)
                         return 300;
                     else
                         return 60;
@@ -555,36 +555,6 @@ namespace PVSettings
             }
         }
 
-        public bool ReloadDays
-        {
-            get
-            {
-                string val = GetValue("reloaddays");
-                return val == "true";
-            }
-            set
-            {
-                SetValue("reloaddays", value ? "true" : "false", "ReloadDays");
-            }
-        }
-
-        public DateTime? ReloadDaysFromDate
-        {
-            get
-            {
-                String ffd = GetValue("reloaddaysfromdate");
-                if (ffd == "" && ReloadDays)
-                    return ApplicationSettings.FirstFullDay;
-                else
-                    return ApplicationSettings.StringToDate(ffd);
-            }
-
-            set
-            {
-                SetValue("reloaddaysfromdate", ApplicationSettings.DateToString(value), "ReloadDaysFromDate");
-            }
-        }
-
         public String SunnyExplorerPlantName
         {
             get
@@ -636,11 +606,15 @@ namespace PVSettings
             }
         }
 
-        public int MaxSMAHistoryDays
+        public int MaxHistoryDays
         {
             get
             {
-                String rffd = GetValue("maxsmahistorydays");
+                if (ManagerType != DeviceManagerType.SMA_SunnyExplorer 
+                && ManagerType != DeviceManagerType.SMA_WebBox
+                && ManagerType != DeviceManagerType.Owl_Meter)
+                    return 1;
+                String rffd = GetValue("maxhistorydays");
                 if (rffd == "")
                     return 64;
                 else
@@ -649,7 +623,7 @@ namespace PVSettings
 
             set
             {
-                SetValue("maxsmahistorydays", value.ToString(), "MaxSMAHistoryDays");
+                SetValue("maxhistorydays", value.ToString(), "MaxHistoryDays");
             }
         }
 

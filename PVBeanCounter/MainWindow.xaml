@@ -175,8 +175,10 @@
                         <TextBox Name="textBox1" Text="{Binding Path=DefaultDirectory, Converter={StaticResource NullableValueConverter}}" ToolTip="The directory name used to store files downloaded from the inverter and any other files required by the inverter manager software" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" />
                         <Button Content="..." Height="23" Name="butDefaultDirectory" Click="butDefaultDirectory_Click" Width="26" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="1" Grid.RowSpan="1" Grid.Row="0" />
                     </Grid>
-                    <Label Content="First Full Day" DataContext="{Binding}" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Name="label15" HorizontalAlignment="Right" Grid.Row="2" VerticalContentAlignment="Center" VerticalAlignment="Center" />
-                    <DatePicker Name="datePicker1" SelectedDate="{Binding Path=FirstFullDay, Converter={StaticResource NullableValueConverter}}" ToolTip="Normally set to the day after installation. This prevents constant attempts to retrieve the the incomplete data set from the activation day. Default value for all Inverter Managers." Width="125" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" HorizontalContentAlignment="Stretch"  />
+                    <Label Content="First Day" DataContext="{Binding}" Height="28" HorizontalContentAlignment="Right" IsEnabled="True" Name="label15" HorizontalAlignment="Right" Grid.Row="2" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+                    <DatePicker Name="datePicker1" SelectedDate="{Binding Path=FirstFullDay, Converter={StaticResource NullableValueConverter}}" 
+                                ToolTip="Normally set to the day of installation. Limits the dates that will be loaded from device history for devices that support date based history" 
+                                Width="125" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" HorizontalContentAlignment="Stretch"  />
 
                     <CheckBox Content="Emit Events (use with PVMonitor)" Height="16" HorizontalAlignment="Left" IsChecked="{Binding Path=EmitEvents}" 
                               ToolTip="Check to emit events for use with PVMonitor" VerticalAlignment="Center" 
@@ -323,19 +325,19 @@
                                             <Grid Margin="85,0,0,0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="110"/>
-                                                    <ColumnDefinition />
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="100"/>
                                                 </Grid.ColumnDefinitions>
-                                                <Label Content="First Day" Padding="0,0,4,0" VerticalAlignment="Center" />
-                                                <DatePicker SelectedDate="{Binding Path=FirstFullDay, Converter={StaticResource NullableValueConverter}}" Grid.Column="1" Margin="0,4,0,4" Padding="0" FontSize="9" VerticalContentAlignment="Center"/>
-                                                <CheckBox IsChecked="{Binding Path=ResetFirstFullDay}" Grid.Column="2" Content="Reset First Day" VerticalAlignment="Center" Margin="10,0,0,0" />
+                                                <Label Content="First Day" Padding="30,0,4,0" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Right" />
+                                                <DatePicker SelectedDate="{Binding Path=FirstFullDay, Converter={StaticResource NullableValueConverter}}" Grid.Column="2" Margin="0,4,0,4" Padding="0" FontSize="9" VerticalContentAlignment="Center"/>
+                                                <CheckBox IsChecked="{Binding Path=ResetFirstFullDay}" Grid.Column="0" Content="Reset First Day" VerticalAlignment="Center" Margin="0,0,0,0" />
                                             </Grid>
                                         </Grid>
                                         <Grid Name="gridSerial" Grid.Row="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition />
-                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
                                             <Grid Name="gridSerialDetail" Visibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="85,0,10,0">
                                                 <Grid.ColumnDefinitions>
@@ -535,7 +537,7 @@
                                             <Label Content="Plant Name" Margin="18,0,0,0" Grid.Column="0" HorizontalContentAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="10.5" />
                                             <TextBox Name="textBoxSunnyExplorerPlantName" Grid.Column="1" Text="{Binding Path=SunnyExplorerPlantName}" ToolTip="The &quot;Plant Name&quot; recorded in the &quot;SunnyExplorer.sx2&quot; file" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="10.5" Margin="0,4,4,4" />
                                             <Label Grid.Column="2" Content="Hist Days" Padding="8,0,5,0" VerticalAlignment="Center" FontSize="10.5" />
-                                            <TextBox Grid.Column="3" Height="18" MinWidth="70" HorizontalAlignment="Left" Text="{Binding Path=MaxSMAHistoryDays}" VerticalAlignment="Center" ToolTip="Enter the number of days history stored in the device" />
+                                            <TextBox Grid.Column="3" Height="18" MinWidth="70" HorizontalAlignment="Left" Text="{Binding Path=MaxHistoryDays}" VerticalAlignment="Center" ToolTip="Enter the number of days history stored in the device" />
                                             <Label Content="Password" Height="28" HorizontalContentAlignment="Right" Grid.Column="4" Padding="8,0,5,0" VerticalAlignment="Center" VerticalContentAlignment="Center" />
                                             <TextBox Name="textBoxSunnyExplorerPassword" Text="{Binding Path=SunnyExplorerPassword}" ToolTip="The inverter password (default is '0000')" Grid.Column="5" MinWidth="60" Margin="0,0,10,0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="10.5" />
                                         </Grid>
@@ -543,18 +545,18 @@
                                     <Grid Name="gridDeviceDatabase">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition  Width="Auto"/>
-                                            <ColumnDefinition />
-                                            <ColumnDefinition  Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition />
+                                            <ColumnDefinition  Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <Label Grid.Column="0" Name="labelDeviceDB" Content="Device DB" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" Margin="25,0,0,0" />
-                                        <TextBox Grid.Row="0" Name="textBoxDeviceDB" Grid.Column="1"  Text="{Binding Path=OwlDatabase, Converter={StaticResource NullableValueConverter}, NotifyOnSourceUpdated=True}" VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="155" HorizontalAlignment="Left" FontSize="9" SourceUpdated="textBoxDeviceDB_SourceUpdated" />
-                                        <Button Grid.Row="0" Grid.Column="2" Content="..." Height="13" Name="butBrowseOwlDb" ToolTip="Browse for the Owl database file" Width="24" Click="butBrowseOwlDb_Click" 
+                                        <TextBox Grid.Row="0" Name="textBoxDeviceDB" Grid.Column="1"  
+                                                 Text="{Binding Path=OwlDatabase, Converter={StaticResource NullableValueConverter}, NotifyOnSourceUpdated=True}" 
+                                                 VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="175" HorizontalAlignment="Left" FontSize="9" 
+                                                 SourceUpdated="textBoxDeviceDB_SourceUpdated" />
+                                        <Button Grid.Row="0" Grid.Column="2" Content="..." Height="13" Name="butBrowseOwlDb" ToolTip="Browse for the Owl database file" 
+                                                Width="24" Click="butBrowseOwlDb_Click" 
                                                 FontSize="9" Margin="5,0,10,0" VerticalContentAlignment="Center" VerticalAlignment="Center"  />
-                                        <CheckBox Grid.Row="0" Grid.Column="3" Content="Reload" IsChecked="{Binding Path=ReloadDays, Converter={StaticResource NullableValueConverter}}" Height="16" Name="checkBoxOwlReload" Click="checkBoxOwlReload_Click" ToolTip="Check to force a reload of data from the Owl database starting at the specified date" />
-                                        <DatePicker Grid.Row="0" Grid.Column="4" Height="24" SelectedDate="{Binding Path=ReloadDaysFromDate, Converter={StaticResource NullableValueConverter}}" Margin="10,0,10,0" Name="datePickerOwlReload" FontSize="9" ToolTip="The date at which an Owl meter data reload starts" HorizontalContentAlignment="Stretch"  />
-                                    </Grid>
+                                        </Grid>
                                 </StackPanel>
                             </Expander>
                         </Grid>
@@ -634,10 +636,10 @@
                                         <TextBox Text="{Binding Path=Model, Converter={StaticResource NullableValueConverter}}" Grid.Column="3" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="9"  />
 
                                         <Label Name="labelDeviceQueryInterval" Content="QueryInterval" Grid.Row="1" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />
-                                        <ComboBox Grid.Row="1"  Grid.Column="1" Height="Auto" HorizontalAlignment="Left" Margin="0,3,10,3" Name="comboBoxDeviceQueryInterval" VerticalAlignment="Center" Width="45" Text="{Binding Path=QueryInterval, Converter={StaticResource NullableValueConverter}}" FontSize="9" VerticalContentAlignment="Center" />
+                                        <ComboBox Grid.Row="1"  Grid.Column="1" Height="Auto" HorizontalAlignment="Left" Margin="0,3,10,3" Padding="2" Name="comboBoxDeviceQueryInterval" VerticalAlignment="Center" Width="45" Text="{Binding Path=QueryInterval, Converter={StaticResource NullableValueConverter}}" FontSize="9" VerticalContentAlignment="Center" />
 
                                         <Label Grid.Row="1" Grid.Column="2" Content="DB Interval" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />
-                                        <ComboBox Grid.Row="1" Grid.Column="3" Height="Auto" HorizontalAlignment="Left" Margin="0,3,10,3" 
+                                        <ComboBox Grid.Row="1" Grid.Column="3" Height="Auto" HorizontalAlignment="Left" Margin="0,3,10,3" Padding="2" 
                                                   Name="comboBoxDeviceDBInterval" VerticalAlignment="Center" Width="45" Text="{Binding Path=DBInterval, Converter={StaticResource NullableValueConverter}}" FontSize="9" VerticalContentAlignment="Center" />
                                         <Label Name="labelCalibrate" Grid.Row="2" Content="Calibrate" HorizontalContentAlignment="Right" HorizontalAlignment="Right" FontSize="10.5" />
                                         <TextBox Name="textBoxCalibrate" Grid.Row="2" Grid.Column="1" Text="{Binding Path=CalibrationFactor, Converter={StaticResource NullableValueConverter}}" VerticalContentAlignment="Center" VerticalAlignment="Center" MinWidth="50" FontSize="9" MaxWidth="70" HorizontalAlignment="Left" />

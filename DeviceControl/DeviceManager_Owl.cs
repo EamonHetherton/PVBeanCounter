@@ -175,8 +175,7 @@ namespace DeviceControl
             
             try
             {
-                bool resetFirstFullDay = DeviceManagerSettings.ResetFirstFullDay && !ExtractHasRun;
-                dateList = FindEmptyDays(resetFirstFullDay);
+                dateList = FindEmptyDays(false, ExtractHasRun);
             }
             catch (System.Threading.ThreadInterruptedException e)
             {
@@ -205,7 +204,7 @@ namespace DeviceControl
             foreach (DateTime date in dateList)
             {
                 for (int i = 0; i < DeviceList.Count; i++)
-                    if (DeviceList[i].Enabled)
+                    if (DeviceList[i].Enabled && (!DeviceList[i].FirstFullDay.HasValue || DeviceList[i].FirstFullDay <= date))
                         ReadFromOwl(DeviceList[i], date);
             }
             ExtractHasRun = true;
@@ -224,9 +223,6 @@ namespace DeviceControl
 
                 state = "before RunExtracts";
                 RunExtracts();
-
-                state = "before UpdateFromDirectory";
-                //res = UpdateFromDirectory(OutputDirectory, FileNamePattern, GlobalSettings.ApplicationSettings.BuildFileName(ArchiveDirectory));
 
                 state = "before FindNewStartDate";
                 DateTime? newNextFileDate = FindNewStartDate();

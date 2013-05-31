@@ -51,6 +51,8 @@ namespace DeviceControl
             public List<SMA_WebBox_Record> LiveRecords;
         }
 
+        private bool ExtractHasRun = false;
+
         protected List<DeviceReadingInfo> ReadingInfo;
 
         const String NewZipFilePattern = "????-??-??_??????.zip";
@@ -74,7 +76,8 @@ namespace DeviceControl
 
         private DateTime LastDownloadTime;
 
-        List<DateTime> UpdateDates;
+        private List<DateTime> UpdateDates;     // date list of dates retrieved from webbox
+        private List<DateTime> CandidateDates;  // dates needed to complete PVBC database
 
         //public override TimeSpan? StartHourOffset { get { return TimeSpan.FromMinutes(2.0); } }
 
@@ -107,6 +110,7 @@ namespace DeviceControl
             LastDownloadTime = DateTime.Now - TimeSpan.FromMilliseconds(WebBoxFtpLimit);
 
             UpdateDates = new List<DateTime>();
+            CandidateDates = new List<DateTime>();
 
             TodayFileListDate = DateTime.Today;
             TodayFileList = new List<String>();
@@ -125,6 +129,37 @@ namespace DeviceControl
                 if (dt == date)
                     return;
             UpdateDates.Add(date);
+        }
+
+        private bool DateIsCandidate(DateTime? date)
+        {
+            if (!date.HasValue)
+                return false;
+            DateTime d = date.Value.Date;
+            return CandidateDates.Contains(d);
+        }
+
+        private bool MonthIsCandidate(DateTime? date)
+        {
+            if (!date.HasValue)
+                return false;
+            DateTime d = date.Value.Date;
+            foreach (DateTime cd in CandidateDates)
+                if (cd.Year == d.Year && cd.Month == d.Month)
+                    return true;
+            return false;
+        }
+
+        private int MinCandidateYear
+        {
+            get
+            {
+                int year = DateTime.Now.Year;
+                foreach (DateTime date in CandidateDates)
+                    if (date.Year < year)
+                        year = date.Year;
+                return year;
+            }
         }
 
         private bool ListFilesOnServer(Uri serverUri, out List<String> directoryList)
@@ -841,10 +876,7 @@ namespace DeviceControl
                     GlobalSettings.LogMessage("DownloadPullFiles_YearOldFormat", "Reading date: '" + name + "' - Exception: " + e.Message, LogEntryType.ErrorMessage);
                 }
 
-                if (date == null)
-                    continue;
-
-                if (NextFileDate != null && NextFileDate.Value.Date > date.Value)
+                if (!DateIsCandidate(date))
                     continue;
 
                 if (date.Value > DateTime.Today)
@@ -896,10 +928,7 @@ namespace DeviceControl
                     GlobalSettings.LogMessage("DownloadPullFiles_MonthNewFormat", "Reading date: '" + name + "' - Exception: " + e.Message, LogEntryType.ErrorMessage);
                 }
 
-                if (date == null)
-                    continue;
-
-                if (NextFileDate != null && NextFileDate.Value.Date > date.Value)
+                if (!DateIsCandidate(date))
                     continue;
 
                 if (date.Value > DateTime.Today)
@@ -952,8 +981,9 @@ namespace DeviceControl
                 if (month == null)
                     continue;
 
-                if (NextFileDate != null && (NextFileDate.Value.Year > year
-                    || NextFileDate.Value.Year == year && NextFileDate.Value.Month > month.Value))
+                DateTime date = new DateTime(year, month.Value, 1);
+
+                if (!MonthIsCandidate(date))
                     continue;
 
                 if (!DownloadPullFiles_MonthNewFormat(uri, BuildUriPath(yearUriPath, name), Path.Combine(yearFilePath, name)))
@@ -1013,7 +1043,7 @@ namespace DeviceControl
                 if (year == null)
                     continue;
 
-                if (NextFileDate != null && NextFileDate.Value.Year > year.Value)
+                if (MinCandidateYear > year.Value)
                     continue;
                 if (UseNewFormat)
                 {
@@ -1048,12 +1078,8 @@ namespace DeviceControl
                     GlobalSettings.LogMessage("TransferPushFiles", "Reading file name time: '" + name + "' - Exception: " + e.Message, LogEntryType.ErrorMessage);
                 }
 
-                if (time == null)
+                if (!DateIsCandidate(time))
                     continue;
-
-                if (NextFileDate != null)
-                    if (NextFileDate.Value > time.Value)
-                        continue;
 
                 try
                 {
@@ -1174,6 +1200,19 @@ namespace DeviceControl
         {
             String state = "Initial";
             int res = 0;
+           
+            try
+            {
+                CandidateDates = FindEmptyDays(false, ExtractHasRun);
+            }
+            catch (System.Threading.ThreadInterruptedException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new PVException(PVExceptionType.UnexpectedError, "RunExtracts: " + e.Message, e);
+            }
 
             try
             {
@@ -1192,28 +1231,17 @@ namespace DeviceControl
 
                 res = BuildAndUpdateReadingSets();
 
-                /*
-                state = "Find next file date";
-                if (GlobalSettings.SystemServices.LogTrace)
-                    GlobalSettings.LogMessage("ExtractYield", state, LogEntryType.Trace);
-                DateTime? newNextFileDate = InverterDataRecorder.FindNewStartDate(InverterManagerID);
-
+                state = "before FindNewStartDate";
+                DateTime? newNextFileDate = FindNewStartDate();
                 if ((NextFileDate != newNextFileDate) && (newNextFileDate != null))
-                {
-                    state = "Updating next file date";
-                    if (GlobalSettings.SystemServices.LogTrace)
-                        GlobalSettings.LogMessage("ExtractYield", state, LogEntryType.Trace);
-                    state = "before UpdateNextFileDate";
-                    InverterDataRecorder.UpdateNextFileDate(InverterManagerID, newNextFileDate.Value);
                     NextFileDate = newNextFileDate;
-                }
-                */
             }
             catch (Exception e)
             {
                 GlobalSettings.LogMessage("ExtractYield", "Status: " + state + " - exception: " + e.Message, LogEntryType.ErrorMessage);
             }
 
+            ExtractHasRun = true;
             UpdateDates.Clear();
         }
 
@@ -1246,10 +1274,10 @@ namespace DeviceControl
                 state = "before RunExtracts";
                 RunExtracts();
 
-                state = "before FindNewStartDate";
-                DateTime? newNextFileDate = FindNewStartDate();
-                if ((NextFileDate != newNextFileDate) && (newNextFileDate != null))
-                    NextFileDate = newNextFileDate;
+                //state = "before FindNewStartDate";
+                //DateTime? newNextFileDate = FindNewStartDate();
+                //if ((NextFileDate != newNextFileDate) && (newNextFileDate != null))
+                //    NextFileDate = newNextFileDate;
             }
             catch (Exception e)
             {
