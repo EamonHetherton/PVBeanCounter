@@ -5,6 +5,7 @@
     <description value="Delta Solivia (untested)" />
     <specification value="DeltaSolivia Original" />
     <version value="01" />
+    <status value="Not Ready - Do Not Use" />
     <protocol value="DeltaSolivia" />
     <endian16bit value="Big" />
     <endian32bit value="Big" />

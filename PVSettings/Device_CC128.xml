@@ -5,7 +5,6 @@
     <description value="Current Cost EnviR" />
     <specification value="CC128" />
     <version value="01" />
-    <status value="Test Only" />
     <protocol value="CC128" />
     <devicetype value="EnergyMeter" />
     <usehistory value="true" />

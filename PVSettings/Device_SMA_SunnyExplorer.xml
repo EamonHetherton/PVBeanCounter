@@ -5,7 +5,6 @@
     <description value="SMA via Sunny Explorer" />
     <specification value="SMA_SE" />
     <version value="01" />
-    <status value="Test Only" />
     <protocol value="SMA_SunnyExplorer" />
     <devicetype value="Inverter" />
 

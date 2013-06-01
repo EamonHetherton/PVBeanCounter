@@ -159,8 +159,6 @@
                     <Label Content="Database Type" Height="28" HorizontalAlignment="Right" Name="label39" VerticalAlignment="Center" HorizontalContentAlignment="Right" />
                     <ComboBox Height="23" Name="comboBoxStandardDB" Text="{Binding Path=StandardDBType, Converter={StaticResource NullableValueConverter}}" Width="95" Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left">
                         <ComboBoxItem Content="Custom" />
-                        <ComboBoxItem Content="Jet (2003)" />
-                        <ComboBoxItem Content="Jet (2007)" />
                         <ComboBoxItem Content="MySQL" />
                         <ComboBoxItem Content="SQLite" />
                         <ComboBoxItem Content="SQL Server" />
@@ -227,7 +225,10 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Label Content="Device Managers" Margin="10,0,0,0" FontWeight="Bold" FontSize="13"/>
-                            <DataGrid Grid.Row="1" AutoGenerateColumns="False" MinWidth="210"  DataContext="{Binding}" HorizontalAlignment="Stretch" ItemsSource="{Binding DeviceManagerList}" Name="dataGridDeviceManagers" VerticalAlignment="Stretch" GridLinesVisibility="Horizontal" SelectedIndex="0" ToolTip="Select a Device Manager for detail display. Enable and disable individual Modbus Managers." SelectionChanged="dataGridDeviceManagers_SelectionChanged" Margin="10,0,10,0" Background="#FFFAFFCA">
+                            <DataGrid Grid.Row="1" AutoGenerateColumns="False" MinWidth="210"  DataContext="{Binding}" HorizontalAlignment="Stretch" 
+                                      ItemsSource="{Binding DeviceManagerList}" Name="dataGridDeviceManagers" VerticalAlignment="Stretch" 
+                                      GridLinesVisibility="Horizontal" SelectedIndex="0" ToolTip="Select a Device Manager for detail display. Enable and disable individual Modbus Managers." 
+                                      SelectionChanged="dataGridDeviceManagers_SelectionChanged" Margin="10,0,10,0" Background="#FFFAFFCA">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Description" MinWidth="140" IsReadOnly="True" Binding="{Binding Description}"/>
                                     <DataGridCheckBoxColumn Binding="{Binding Path=Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Enabled" >
@@ -845,7 +846,10 @@
                             <RowDefinition Height="43" />
                         </Grid.RowDefinitions>
                         <Label Content="All Devices" Margin="10,0,0,0" FontWeight="Bold" FontSize="13"/>
-                        <DataGrid Grid.Row="1" AutoGenerateColumns="False" MinWidth="210" HorizontalAlignment="Stretch" ItemsSource="{Binding AllDevicesList}" x:Name="dataGridDeviceList" VerticalAlignment="Stretch" GridLinesVisibility="Horizontal" ToolTip="Select a Device for detail display. Enable and disable individual Devices." Margin="10,0,10,0" Background="#FFDAFFBB" SelectionChanged="dataGridDeviceList_SelectionChanged" IsSynchronizedWithCurrentItem="True" GotFocus="dataGridDeviceList_GotFocus">
+                        <DataGrid Grid.Row="1" AutoGenerateColumns="False" MinWidth="210" HorizontalAlignment="Stretch" 
+                                  ItemsSource="{Binding AllDevicesList}" x:Name="dataGridDeviceList" VerticalAlignment="Stretch" GridLinesVisibility="Horizontal" 
+                                  ToolTip="Select a Device for detail display. Enable and disable individual Devices." Margin="10,0,10,0" Background="#FFDAFFBB" 
+                                  SelectionChanged="dataGridDeviceList_SelectionChanged" IsSynchronizedWithCurrentItem="True" GotFocus="dataGridDeviceList_GotFocus">
 
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" MinWidth="140" IsReadOnly="True" Binding="{Binding Name}"/>
@@ -917,7 +921,7 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Button Content="Add Device" Height="23" HorizontalAlignment="Left" Name="buttonAddDevice" VerticalAlignment="Top" ToolTip="Add a new Device to the selected Device Manager" Margin="10,0,2,0" Padding="2,1" Click="buttonAddDevice_Click" />
+                            <Button Content="Add Device" Height="23" HorizontalAlignment="Left" Name="buttonAddDevice" VerticalAlignment="Top" ToolTip="Add a new Device to the selected Device Manager" Margin="10,0,2,0" Padding="2,1" IsEnabled="false" Click="buttonAddDevice_Click" />
                             <Button Content="Delete Device" Height="23" HorizontalAlignment="Right" Name="buttonDeleteDevice" VerticalAlignment="Top" Grid.Column="1" ToolTip="Delete the selected Device" Margin="2,0,10,0" Padding="2,1" IsEnabled="False" Click="buttonDeleteDevice_Click" />
                         </Grid>
                     </Grid>
@@ -1114,7 +1118,6 @@
                     <TextBox Height="23" Name="txtHost" Width="174" Text="{Binding Path=Host, Converter={StaticResource NullableValueConverter}}" Canvas.Left="171" Canvas.Top="25" ToolTip="Database machine name or IP Address" />
                     <Label Content="Host" Height="28" IsEnabled="True" Name="label3" HorizontalContentAlignment="Right" Canvas.Left="131" Canvas.Top="23" />
                     <ComboBox Height="23" Name="cbxDatabaseType" Width="174" Text="{Binding Path=DatabaseType, Converter={StaticResource NullableValueConverter}}" IsEditable="True" Canvas.Left="171" Canvas.Top="54" ToolTip="Database Type">
-                        <ComboBoxItem Content="Jet" />
                         <ComboBoxItem Content="MySql" />
                         <ComboBoxItem Content="SQLite" />
                         <ComboBoxItem Content="SQL Server" />

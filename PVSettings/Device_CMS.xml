@@ -2,9 +2,10 @@
 <devices>
   <device>
     <devicetype value="Inverter" />
-    <description value="CMS Inverters (Non-Modbus - Untested)" />
+    <description value="CMS Inverters (Non-Modbus)" />
     <specification value="CMS Original" />
     <version value="01" />
+    <status value="Test Only" />
     <protocol value="Phoenixtec" />
     <endian16bit value="Big" />
     <endian32bit value="Big" />

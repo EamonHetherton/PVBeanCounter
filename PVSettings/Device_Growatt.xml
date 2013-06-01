@@ -2,9 +2,10 @@
 <devices>
   <device>
     <devicetype value="Inverter" />
-    <description value="Growatt - Single Phase (Non-Modbus - untested)" />
+    <description value="Growatt - Single Phase (Non-Modbus)" />
     <specification value="Growatt - Single Phase (S.1.8)" />
     <version value="01" />
+    <status value="Test Only" />
     <protocol value="Growatt" />
     <endian16bit value="Big" />
     <endian32bit value="Big" />
@@ -247,9 +248,10 @@
 
   <device>
     <devicetype value="Inverter" />
-    <description value="Growatt - Three Phase (Non-Modbus - untested)" />
+    <description value="Growatt - Three Phase (Non-Modbus)" />
     <specification value="Growatt - Three Phase (S.1.8)" />
     <version value="01" />
+    <status value="Test Only" />
     <protocol value="Growatt" />
     <endian16bit value="Big" />
     <endian32bit value="Big" />
@@ -500,6 +502,7 @@
     <description value="Growatt Inverter (Modbus) - Single Phase" />
     <specification value="Growatt" />
     <version value="01" />
+    <status value="Test Only" />
     <protocol value="Modbus" />
     <endian16bit value="Big" />
     <endian32bit value="Big" />
@@ -702,6 +705,7 @@
     <description value="Growatt Inverter (Modbus) - Three Phase" />
     <specification value="Growatt3Phase" />
     <version value="01" />
+    <status value="Test Only" />
     <protocol value="Modbus" />
     <endian16bit value="Big" />
     <endian32bit value="Big" />

@@ -1110,6 +1110,7 @@ namespace PVSettings
                         DeviceEventSettings e = AddEvent();
                         e.EventFeature = f;
                         e.EventType = EventType.Yield;
+                        e.EventName = "Inverter Yield";
                         e.UseForFeedIn = true;
                     }
                     else if (f.FeatureType == FeatureType.ConsumptionAC)
@@ -1117,6 +1118,7 @@ namespace PVSettings
                         DeviceEventSettings e = AddEvent();
                         e.EventFeature = f;
                         e.EventType = EventType.Consumption;
+                        e.EventName = "Consumption";
                         e.UseForFeedIn = true;
                     }
                 }

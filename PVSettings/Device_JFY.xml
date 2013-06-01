@@ -2,9 +2,10 @@
 <devices>
   <device>
     <devicetype value="Inverter" />
-    <description value="JFY Inverters (Non-Modbus - Untested)" />
+    <description value="JFY Inverters (Non-Modbus)" />
     <specification value="JFY Original" />
     <version value="01" />
+    <status value="Test Only" />
     <protocol value="JFY" />
     <endian16bit value="Big" />
     <endian32bit value="Big" />

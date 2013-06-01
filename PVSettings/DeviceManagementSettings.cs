@@ -155,8 +155,8 @@ namespace PVSettings
         {
             foreach (DeviceListItem device in DeviceList)
             {
-                foreach(String name in device.DeviceSettings.Names)
-                    if (name == description)
+                foreach(DeviceSettings.DeviceName name in device.DeviceSettings.Names)
+                    if (name.Name == description)
                         return device.DeviceSettings;
             }
             return GetDevice(description);
@@ -174,11 +174,11 @@ namespace PVSettings
                 else if (e.NodeType == XmlNodeType.Element && e.Name == "device")
                 {
                     DeviceSettings device = new DeviceSettings(this, (XmlElement)e);
-                    foreach (String name in device.Names)
+                    foreach (DeviceSettings.DeviceName name in device.Names)
                     {
                         DeviceListItem item = new DeviceListItem();
-                        item.Id = device.Id;
-                        item.Description = name;
+                        item.Id = name.Id;
+                        item.Description = name.Name;
                         item.DeviceSettings = device;
                         _DeviceList.Add(item);
                     }

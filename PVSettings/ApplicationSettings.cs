@@ -47,8 +47,8 @@ namespace PVSettings
 
         public static String[,] StandardDBMatrix = 
             { { "SQLite", "SQLite","Proprietary", "System.Data.SQLite", "", "pvhistory.s3db", "", "" }
-            , { "Jet (2007)", "Jet", "OleDb", "System.Data.OleDb", "Microsoft.ACE.OLEDB.12.0", "PVRecords_jet.accdb", "", "" }
-            , { "Jet (2003)", "Jet", "OleDb", "System.Data.OleDb", "Microsoft.Jet.OLEDB.4.0", "PVRecords_jet.mdb", "", "" }
+            //, { "Jet (2007)", "Jet", "OleDb", "System.Data.OleDb", "Microsoft.ACE.OLEDB.12.0", "PVRecords_jet.accdb", "", "" }
+            //, { "Jet (2003)", "Jet", "OleDb", "System.Data.OleDb", "Microsoft.Jet.OLEDB.4.0", "PVRecords_jet.mdb", "", "" }
             , { "SQL Server", "SQL Server", "Proprietary", "System.Data.SqlClient", "", "PVHistory", "", @"localhost\SQLEXPRESS" }
             , { "MySQL", "MySql", "Proprietary", "MySql.Data.MySQLClient", "", "pvhistory", "PVRecords", "localhost" } };
 
@@ -336,10 +336,11 @@ namespace PVSettings
                     {
                         managers.RemoveChild(child);
                         SettingChangedEventHandler("");
+                        RefreshAllDevices();
                         return;
                     }
                 }
-            }
+            }            
         }
 
         public void PVOutputSystemIdChanged(String oldSystemId, String newSystemId)

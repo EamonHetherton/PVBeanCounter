@@ -4,7 +4,7 @@
   <device>
     <devicetype value="Inverter" />
     <description value="SunnyRoo Inverters (Modbus)" />
-    <synonym value="Effekta Inverters (Modbus)" />
+    <synonym value="Effekta Inverters (Modbus)" id="Effekta" />
     <specification value="SunnyRoo" />
     <version value="01" />
     <status value="Test Only" />
@@ -164,9 +164,10 @@
   <device>
     <devicetype value="Inverter" />
     <description value="SunnyRoo Inverters (Non-Modbus)" />
-    <synonym value="Powercom Inverters (Non-Modbus)" />
+    <synonym value="Powercom Inverters (Non-Modbus)" id="Powercom (Non-Modbus)" />
     <specification value="SunnyRoo (Non-Modbus)" />
     <version value="01" />
+    <status value="Test Only" />
     <protocol value="Phoenixtec" />
     <endian16bit value="Big" />
     <endian32bit value="Big" />
@@ -821,8 +822,9 @@
   <device>
     <devicetype value="Inverter" />
     <description value="SunnyRoo Inverters Alt (Non-Modbus)" />
-    <synonym value="Powercom Inverters Alt (Non-Modbus)" />
+    <synonym value="Powercom Inverters Alt (Non-Modbus)" id="Powercom Alt (Non-Modbus)" />
     <specification value="SunnyRoo Alt (Non-Modbus)" />
+    <status value="Test Only" />
     <version value="01" />
     <protocol value="Phoenixtec" />
     <endian16bit value="Big" />

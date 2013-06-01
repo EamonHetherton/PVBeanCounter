@@ -372,7 +372,7 @@ namespace PVBeanCounter
             DeviceManagerSettings = (DeviceManagerSettings)dataGridDeviceManagers.SelectedItem;
             if (DeviceManagerSettings != gridDeviceManagers.DataContext)
                 SetDeviceContext(null);
-            gridDeviceManagers.DataContext = null;
+            //gridDeviceManagers.DataContext = null;
             //comboBoxListenerDevice.ItemsSource = mmSettings == null ? null : mmSettings.DeviceListItems;
             gridDeviceManagers.DataContext = DeviceManagerSettings;
             comboBoxProtocol_SelectionChanged();
@@ -387,6 +387,13 @@ namespace PVBeanCounter
                     checkBoxDevMgrEnabled.Visibility = System.Windows.Visibility.Collapsed;
                 else
                     checkBoxDevMgrEnabled.Visibility = System.Windows.Visibility.Visible;
+
+                buttonAddDevice.IsEnabled = true;
+                buttonDeleteDevice.IsEnabled = DeviceManagerSettings.DeviceList.Count > 0;
+                buttonDeleteDeviceMgr.IsEnabled = ApplicationSettings.DeviceManagerList.Count > 0;
+                comboBoxProtocol.IsEnabled = DeviceManagerSettings.DeviceList.Count == 0;
+                if (DeviceManagerSettings.DeviceList.Count > 0)
+                    dataGridDeviceList.SelectedItem = DeviceManagerSettings.DeviceList[0];
             }
         }
 
@@ -539,6 +546,8 @@ namespace PVBeanCounter
         {
             dataGridDeviceManagers.SelectedItem = ApplicationSettings.AddDeviceManager();
             buttonDeleteDeviceMgr.IsEnabled = true;
+            buttonDeleteDevice.IsEnabled = false;
+            buttonAddDevice.IsEnabled = true;
         }
 
         private void buttonDeleteModbusMgr_Click(object sender, RoutedEventArgs e)
@@ -547,6 +556,17 @@ namespace PVBeanCounter
             ApplicationSettings.DeleteDeviceManager(mmSettings);
             if (ApplicationSettings.DeviceManagerList.Count < 1)
                 buttonDeleteDeviceMgr.IsEnabled = false;
+            mmSettings = (DeviceManagerSettings)dataGridDeviceManagers.SelectedItem;
+            if (mmSettings == null)
+            {
+                buttonAddDevice.IsEnabled = false;
+                buttonDeleteDevice.IsEnabled = false;
+            }
+            else
+            {
+                buttonAddDevice.IsEnabled = true;
+                buttonDeleteDevice.IsEnabled = mmSettings.DeviceList.Count > 0;
+            }
         }
 
         private void buttonAddDevice_Click(object sender, RoutedEventArgs e)
@@ -558,6 +578,7 @@ namespace PVBeanCounter
 
             dataGridDeviceList.SelectedItem = mmSettings.DeviceList[mmSettings.DeviceList.Count - 1];
             buttonDeleteDevice.IsEnabled = true;
+            comboBoxProtocol.IsEnabled = DeviceManagerSettings.DeviceList.Count == 0;
         }
 
         private void buttonDeleteDevice_Click(object sender, RoutedEventArgs e)
@@ -567,6 +588,7 @@ namespace PVBeanCounter
                 return;
             mmSettings.DeleteDevice((DeviceManagerDeviceSettings)dataGridDeviceList.SelectedItem);
             buttonDeleteDevice.IsEnabled = mmSettings.DeviceList.Count > 0;
+            comboBoxProtocol.IsEnabled = DeviceManagerSettings.DeviceList.Count == 0;
         }
 
         private void SetDeviceContext(DeviceManagerDeviceSettings device)
@@ -582,10 +604,14 @@ namespace PVBeanCounter
             DeviceManagerDeviceSettings dSettings = (DeviceManagerDeviceSettings)dataGridDeviceList.SelectedItem;
             if (dSettings != null)
             {
+                gridDevice.Visibility = System.Windows.Visibility.Visible;
                 buttonDeleteDevice.IsEnabled = true;
                 if (!dSettings.DeviceManagerSettings.IsSelected)
                     dataGridDeviceManagers.SelectedItem = dSettings.DeviceManagerSettings;                                  
             }
+            else
+                gridDevice.Visibility = System.Windows.Visibility.Hidden;
+
             SetDeviceContext(null);
             if (dSettings != null)
             {
@@ -598,9 +624,14 @@ namespace PVBeanCounter
 
         private void SetDeviceVisibility()
         {
+
             DeviceManagerDeviceSettings = (DeviceManagerDeviceSettings)dataGridDeviceList.SelectedItem;
             if (DeviceManagerDeviceSettings == null)
+            {
+                gridDevice.Visibility = System.Windows.Visibility.Hidden;
                 return;
+            }
+            gridDevice.Visibility = System.Windows.Visibility.Visible;
 
             if (DeviceManagerDeviceSettings.ConsolidationType.HasValue)
             {
@@ -728,6 +759,20 @@ namespace PVBeanCounter
         {
             try
             {
+                if (gridDeviceManagers.DataContext == null)
+                {
+                    gridDeviceManagers.Visibility = System.Windows.Visibility.Hidden;
+                    gridDevice.Visibility = System.Windows.Visibility.Hidden;
+                }
+                else
+                {
+                    gridDeviceManagers.Visibility = System.Windows.Visibility.Visible;
+                    if (gridDevice.DataContext == null)
+                        gridDevice.Visibility = System.Windows.Visibility.Hidden;
+                    else
+                        gridDevice.Visibility = System.Windows.Visibility.Visible;
+                }
+
                 ProtocolSettings p = ApplicationSettings.DeviceManagementSettings.GetProtocol(((ProtocolSettings)comboBoxProtocol.SelectedItem).Name);
                 gridSerialBasic.Visibility = p.UsesSerialPort ? Visibility.Visible : Visibility.Collapsed;
                 gridSerialDetail.Visibility = gridSerialBasic.Visibility;
@@ -890,6 +935,7 @@ namespace PVBeanCounter
             DeviceManagerDeviceSettings curDev = (DeviceManagerDeviceSettings)dataGridDeviceList.SelectedItem;
             ApplicationSettings.RefreshAllDevices();
             dataGridDeviceList.SelectedItem = curDev;
+            SelectDevice();
         }
 
         private void comboBoxPVOutputSystem_SourceUpdated(object sender, DataTransferEventArgs e)

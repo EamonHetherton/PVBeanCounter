@@ -4,9 +4,10 @@
   <device>
     
     <devicetype value="Inverter" />
-    <description value="KLNE Inverters (Modbus - V8.11 V5.00 and V5.01 - Untested)" />
+    <description value="KLNE Inverters (Modbus - V8.11 V5.00 and V5.01)" />
     <specification value="KLNE" />
     <version value="00" />
+    <status value="Test Only" />
     <protocol value="KLNEModbus" />
     <endian16bit value="Big" />
     <endian32bit value="Big" />
@@ -175,6 +176,7 @@
     <description value="KLNE Inverters (Modbus - V8.12  V8.13 V8.14, V5.02 and V5.03)" />
     <specification value="KLNE" />
     <version value="01" />
+    <status value="Test Only" />
     <protocol value="Modbus" />
     <endian16bit value="Big" />
     <endian32bit value="Big" />
@@ -339,9 +341,10 @@
 
   <device>
     <devicetype value="Inverter" />
-    <description value="KLNE Inverters (Non-Modbus - Untested)" />
+    <description value="KLNE Inverters (Non-Modbus)" />
     <specification value="KLNE Original" />
     <version value="01" />
+    <status value="Test Only" />
     <protocol value="Phoenixtec" />
     <endian16bit value="Big" />
     <endian32bit value="Big" />

@@ -2,9 +2,10 @@
 <devices>
   <device>
     <devicetype value="Inverter" />
-    <description value="Samil Inverters (Non-Modbus - Untested)" />
+    <description value="Samil Inverters (Non-Modbus)" />
     <specification value="Samil Original" />
     <version value="01" />
+    <status value="Test Only" />
     <protocol value="Phoenixtec" />
     <endian16bit value="Big" />
     <endian32bit value="Big" />

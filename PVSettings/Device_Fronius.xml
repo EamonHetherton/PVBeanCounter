@@ -2,9 +2,10 @@
 <devices>
   <device>
     <devicetype value="Inverter" />
-    <description value="Fronius Inverters (Untested)" />
+    <description value="Fronius Inverters" />
     <specification value="Fronius Original" />
     <version value="01" />
+    <status value="Test Only" />
     <protocol value="Fronius" />
     <endian16bit value="Big" />
 

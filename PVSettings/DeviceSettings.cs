@@ -246,20 +246,40 @@ namespace PVSettings
             } 
         }
 
-        public List<String> Names
+        public struct DeviceName
+        {
+            public string Name;
+            public string Id;
+        }
+
+        public List<DeviceName> Names
         {
             get
             {
-                List<String> names = new List<String>();
-                names.Add(Description);
+                List<DeviceName> names = new List<DeviceName>();
+                DeviceName baseName;
+                baseName.Name = Description;
+                baseName.Id = Id;
+                names.Add(baseName);
                 
                 foreach (XmlNode e in settings.ChildNodes)
                 {
                     if (e.NodeType == XmlNodeType.Element && e.Name == "synonym")
                     {
-                        XmlAttribute attrib = (XmlAttribute)e.Attributes.GetNamedItem("value");
-                        if (attrib != null)
-                            names.Add(DeviceTypeName + ": " + attrib.Value);
+                        XmlAttribute valueAttrib = (XmlAttribute)e.Attributes.GetNamedItem("value");
+                        XmlAttribute idAttrib = (XmlAttribute)e.Attributes.GetNamedItem("id");
+                        if (valueAttrib != null && idAttrib != null)
+                        {
+                            DeviceName name;
+                            
+                            if (Status == "")
+                                name.Name = DeviceTypeName + ": " + valueAttrib.Value;
+                            else
+                                name.Name = DeviceTypeName + ": " + valueAttrib.Value +" - " + Status; 
+                            
+                            name.Id = idAttrib.Value;
+                            names.Add(name);
+                        }
                     }
                 }
                 return names;
