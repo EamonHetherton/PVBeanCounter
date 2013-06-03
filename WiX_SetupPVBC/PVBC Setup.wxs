@@ -34,6 +34,7 @@
                             <File Id="CONVERSATIONS.DLL" Name="Conversations.dll" Source="..\PVService\$(var.SourcePathFragment)Conversations.dll" />
                             <File Id="DEVICE_CC128.XML" Name="Device_CC128.xml" Source="..\PVService\$(var.SourcePathFragment)Device_CC128.xml" />
                             <File Id="DEVICE_CMS.XML" Name="Device_CMS.xml" Source="..\PVService\$(var.SourcePathFragment)Device_CMS.xml" />
+                            <File Id="DEVICE_DELTASOLIVIA.XML" Name="Device_DeltaSolivia.xml" Source="..\PVService\$(var.SourcePathFragment)Device_DeltaSolivia.xml" />
                             <File Id="DEVICE_EW4009.XML" Name="Device_EW4009.xml" Source="..\PVService\$(var.SourcePathFragment)Device_EW4009.xml" />
                             <File Id="DEVICE_FRONIUS.XML" Name="Device_Fronius.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Fronius.xml" />
                             <File Id="DEVICE_GROWATT.XML" Name="Device_Growatt.xml" Source="..\PVService\$(var.SourcePathFragment)Device_Growatt.xml" />

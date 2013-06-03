@@ -95,7 +95,6 @@
     <Compile Include="ConverseCalculations.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="EndianConverter.cs" />
-    <Compile Include="EW4009_Converse.cs" />
     <Compile Include="IConverseChecksum16.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

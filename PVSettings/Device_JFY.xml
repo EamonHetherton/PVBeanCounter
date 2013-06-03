@@ -1,14 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <devices>
-  <device>
+  <device name="JFY Original">
     <devicetype value="Inverter" />
     <description value="JFY Inverters (Non-Modbus)" />
-    <specification value="JFY Original" />
     <version value="01" />
     <status value="Test Only" />
     <protocol value="JFY" />
-    <endian16bit value="Big" />
-    <endian32bit value="Big" />
     <hasstartofdayenergydefect value="true" />
     <crazydaystartminutes value="90" />
 

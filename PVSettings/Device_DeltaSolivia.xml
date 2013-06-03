@@ -1,14 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <devices>
-  <device>
+  <device name="DeltaSolivia Original">
     <devicetype value="Inverter" />
-    <description value="Delta Solivia (untested)" />
-    <specification value="DeltaSolivia Original" />
+    <description value="Delta Solivia" />
     <version value="01" />
-    <status value="Not Ready - Do Not Use" />
+    <status value="Warning - Untested" />
     <protocol value="DeltaSolivia" />
-    <endian16bit value="Big" />
-    <endian32bit value="Big" />
 
     <features>
       <feature id="0" type="YieldAC" description="Yield AC"/>
@@ -20,7 +17,7 @@
       <conversation value="SendReceive" />
 
       <message>
-        <name value="Send" />
+        <name value="SendMain" />
         <register>
           <type value="byte" />
           <content value="Address" />
@@ -53,7 +50,7 @@
       <conversation value="SendReceive" />
 
       <message>
-        <name value="Send" />
+        <name value="SendMain" />
         <register>
           <type value="byte" />
           <content value="Address" />
@@ -88,7 +85,7 @@
       <conversation value="SendReceive" />
 
       <message>
-        <name value="Send" />
+        <name value="SendMain" />
         <register>
           <type value="byte" />
           <content value="Address" />
@@ -122,7 +119,7 @@
       <conversation value="SendReceive" />
 
       <message>
-        <name value="Send" />
+        <name value="SendMain" />
 
         <register>
           <type value="byte" />

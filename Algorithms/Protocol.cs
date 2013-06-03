@@ -40,7 +40,7 @@ namespace Algorithms
             Type = ProtocolSettings.Type;
             if (converseCheckSum == null)
             {
-                if (ProtocolSettings.CheckSum == "ModbusCheckSum16" || ProtocolSettings.CheckSum == "ModbusCRC16")
+                if (ProtocolSettings.CheckSum == "ModbusCheckSum16" || ProtocolSettings.CheckSum == "ModbusCRC16")                
                     Calculations = new Conversations.ModbusConverseCalculations();
                 else if (ProtocolSettings.CheckSum == "GrowattCheckSum16")
                     Calculations = new Conversations.GrowattConverseCalculations();
@@ -50,6 +50,8 @@ namespace Algorithms
                     Calculations = new Conversations.FroniusConverseCalculations();
                 else
                     Calculations = new Conversations.ConverseCalculations();
+
+                LogMessage("Protocol", "Using Calculations: " + Calculations.GetType().ToString(), LogEntryType.DetailTrace);
             }
             else
                 Calculations = converseCheckSum;

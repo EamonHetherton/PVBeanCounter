@@ -45,6 +45,16 @@ namespace PVSettings
 
         public bool UsesSerialPort { get { return SerialPort != null; } }
 
+        public String Name
+        {
+            get
+            {
+                String n = settings.GetAttribute("name");
+                //String val = GetValue("name");
+                return n;
+            }
+        }
+
         public String BaudRate 
         { 
             get { return (SerialPort == null) ? null : SerialPort.BaudRate.ToString(); } 
@@ -151,15 +161,6 @@ namespace PVSettings
             return Name;
         }
        
-        public String Name
-        {
-            get
-            {
-                String val = GetValue("name");
-                return val;
-            }
-        }
-
         public String AutoAddress
         {
             get

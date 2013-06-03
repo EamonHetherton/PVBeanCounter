@@ -111,9 +111,6 @@
     <Compile Include="VersionManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DeviceManagement.xml">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="ModbusDevice_SunSpecAlliance.xml" />
     <Content Include="DeviceManagement_v02.xml">
       <SubType>Designer</SubType>

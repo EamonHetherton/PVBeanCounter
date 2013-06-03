@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <devices>
-  <device>
+  <device name="EW4009">
     <devicetype value="EnergyMeter" />
     <description value="Watts Clever EW4009" />
-    <specification value="EW4009" />
     <version value="01" />
     <status value="Test Only" />
     <protocol value="EW4009" />

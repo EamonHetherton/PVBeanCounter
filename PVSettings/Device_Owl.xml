@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <devices>
-  <device>
+  <device name="Owl">
     <devicetype value="Owl" />
     <description value="Owl energy Meter" />
-    <specification value="Owl" />
     <version value="01" />
     <status value="Test Only" />
     <protocol value="Owl_Meter" />

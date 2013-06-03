@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <devices>
-  <device>
+  <device name="Samil Original">
     <devicetype value="Inverter" />
     <description value="Samil Inverters (Non-Modbus)" />
-    <specification value="Samil Original" />
     <version value="01" />
     <status value="Test Only" />
     <protocol value="Phoenixtec" />
-    <endian16bit value="Big" />
-    <endian32bit value="Big" />
     <hasstartofdayenergydefect value="false" />
 
     <features>

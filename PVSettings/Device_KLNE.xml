@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <devices>
- 
-  <device>
-    
+  <device name="KLNE">    
     <devicetype value="Inverter" />
     <description value="KLNE Inverters (Modbus - V8.11 V5.00 and V5.01)" />
-    <specification value="KLNE" />
     <version value="00" />
     <status value="Test Only" />
     <protocol value="KLNEModbus" />
-    <endian16bit value="Big" />
-    <endian32bit value="Big" />
 
     <features>
       <feature id="0" type="YieldAC"/>
@@ -170,16 +165,12 @@
     
   </device>
 
-  <device>
-
+  <device name="KLNE">
     <devicetype value="Inverter" />
     <description value="KLNE Inverters (Modbus - V8.12  V8.13 V8.14, V5.02 and V5.03)" />
-    <specification value="KLNE" />
     <version value="01" />
     <status value="Test Only" />
     <protocol value="Modbus" />
-    <endian16bit value="Big" />
-    <endian32bit value="Big" />
 
     <features>
       <feature id="0" type="YieldAC" description="Yield AC - Phase 1" />
@@ -339,15 +330,12 @@
 
   </device>
 
-  <device>
+  <device name="KLNE Original">
     <devicetype value="Inverter" />
     <description value="KLNE Inverters (Non-Modbus)" />
-    <specification value="KLNE Original" />
     <version value="01" />
     <status value="Test Only" />
     <protocol value="Phoenixtec" />
-    <endian16bit value="Big" />
-    <endian32bit value="Big" />
 
     <block>
       <name value="Initialise" />

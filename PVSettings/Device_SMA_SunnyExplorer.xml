@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <devices>
-  <device>
+  <device name="SMA_SE">
     <devicetype value="SMA_SunnyExplorer" />
     <description value="SMA via Sunny Explorer" />
-    <specification value="SMA_SE" />
     <version value="01" />
     <protocol value="SMA_SunnyExplorer" />
     <devicetype value="Inverter" />

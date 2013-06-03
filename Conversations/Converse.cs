@@ -61,7 +61,7 @@ namespace Conversations
             if (calculations == null)
             {
                 Calculations = (IConverseCheckSum16)new ConverseCalculations();
-                LogMessage("Converse", "Using standard Calculations: " + Calculations.GetType().ToString(), LogEntryType.DetailTrace);
+                // LogMessage("Converse", "Using standard Calculations: " + Calculations.GetType().ToString(), LogEntryType.DetailTrace);
             }
             else
             {

@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <devices>
-  <device>
+  <device name="Sunspec Alliance">
     <devicetype value="Inverter" />
-    <specification value="Sunspec Alliance" />
     <version value="C1.4_I1.0" />
     <endian value="Big" />
     <block>

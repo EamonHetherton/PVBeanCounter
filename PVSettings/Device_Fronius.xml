@@ -1,13 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <devices>
-  <device>
+  <device name="Fronius Original">
     <devicetype value="Inverter" />
     <description value="Fronius Inverters" />
-    <specification value="Fronius Original" />
     <version value="01" />
     <status value="Test Only" />
     <protocol value="Fronius" />
-    <endian16bit value="Big" />
 
     <features>
       <feature id="0" type="YieldAC" description="Yield AC" />

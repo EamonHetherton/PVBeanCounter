@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <devicemanagement>
-  <protocol>
-    <name value="SMA_SunnyExplorer" />
+  <protocol name="SMA_SunnyExplorer">
     <type value="Executable" />
   </protocol>
 
-  <protocol>
-    <name value="Owl_Meter" />
+  <protocol name="Owl_Meter">
     <type value="Database" />
   </protocol>
 
-  <protocol>
-    <name value="SMA_WebBox" />
+  <protocol name="SMA_WebBox">
     <type value="FTP" />
   </protocol>
 
-  <protocol>
-    <name value="DeltaSolivia" />
+  <protocol name="DeltaSolivia">
     <type value="QueryResponse" />
+    <checksum value="CRC16" />
     <endian value="Big" />
+    <checksumendian16bit value="Little" />
+    <endian16bit value="Big" />
+    <endian32bit value="Big" />
     <addresslow value="1" />
     <addresshigh value="255" />
 
@@ -65,8 +65,7 @@
     </conversation>
   </protocol>
 
-  <protocol>
-    <name value="Growatt" />
+  <protocol name="Growatt">
     <type value="QueryResponse" />
     <checksum value="GrowattCheckSum16" />
     <endian value="Big" />
@@ -115,8 +114,7 @@
     </conversation>
   </protocol>
   
-  <protocol>
-    <name value="Modbus" />
+  <protocol name="Modbus">
     <type value="Modbus" />
     <checksum value="ModbusCheckSum16" />
     <checksumendian16bit value="Little" />
@@ -180,8 +178,7 @@
     
   </protocol>
 
-  <protocol>
-    <name value="KLNEModbus" />
+  <protocol name="KLNEModbus">
     <type value="Modbus" />
     <checksum value="ModbusCheckSum16" />
     <checksumendian16bit value="Little" />
@@ -245,8 +242,7 @@
 
   </protocol>
 
-  <protocol>
-    <name value="Fronius" />
+  <protocol name="Fronius">
     <type value="QueryResponse" />
     <endian value="Big" />
     <checksum value="CheckSum8" />
@@ -295,8 +291,7 @@
 
   </protocol>
   
-  <protocol>
-    <name value="Phoenixtec" />
+  <protocol name="Phoenixtec">
     <type value="QueryResponse" />
     <endian value="Big" />
     <addresslow value="1" />
@@ -373,8 +368,7 @@
     
   </protocol>
 
-  <protocol>
-    <name value="JFY" />
+  <protocol name="JFY">
     <type value="QueryResponse" />
     <endian value="Big" />
     <addresslow value="1" />
@@ -445,8 +439,7 @@
 
   </protocol>
   
-  <protocol>
-    <name value="QueryResponse_Generic" />"
+  <protocol name="QueryResponse_Generic">
     <type value="QueryResponse" />
 
     <serialportsettings>
@@ -636,8 +629,7 @@
     
   </protocol>
 
-  <protocol>
-    <name value="CC128" />
+  <protocol name="CC128">
     <type value="Listener" />
 
     <serialportsettings>
@@ -663,9 +655,9 @@
     
   </protocol>
 
-  <protocol>
-    <name value="EW4009" />
+  <protocol name="EW4009">
     <type value="ManagerQueryResponse" />
+    <endian16bit value="Little" />
 
     <serialportsettings>
       <baudrate value="9600" />
@@ -744,8 +736,7 @@
 
   </protocol>
 
-  <protocol>
-    <name value="Consolidation" />
+  <protocol name="Consolidation">
     <type value="Consolidation" />
   </protocol>
   

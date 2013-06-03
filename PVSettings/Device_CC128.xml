@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <devices>
-  <device>
+  <device name="CC128">
     <devicetype value="EnergyMeter" />
     <description value="Current Cost EnviR" />
-    <specification value="CC128" />
     <version value="01" />
     <protocol value="CC128" />
     <devicetype value="EnergyMeter" />
@@ -25,10 +24,9 @@
     </block>
   </device>
 
-  <device>
+  <device name="CC128_3Phase">
     <devicetype value="EnergyMeter" />
     <description value="Current Cost EnviR - 3 Phase" />
-    <specification value="CC128_3Phase" />
     <version value="01" />
     <status value="Test Only" />
     <protocol value="CC128" />

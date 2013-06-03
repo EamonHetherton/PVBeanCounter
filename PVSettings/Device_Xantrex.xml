@@ -1,16 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <devices>
   
-  <device>
-    
+  <device name="Xantrex">    
     <devicetype value="Inverter" />
     <description value="Xantrex Inverters (Modbus - Untested)" />
-    <specification value="Xantrex" />
     <version value="01" />
     <status value="Test Only" />
     <protocol value="Modbus" />
-    <endian16bit value="Big" />
-    <endian32bit value="Big" />
 
     <features>
       <feature id="0" type="YieldAC" description="Yield AC" />
@@ -326,10 +322,9 @@
     </algorithm>   
   </device>
 
-  <device>
+  <device name="Xantrex ASCII">
     <devicetype value="Inverter" />
     <description value="Xantrex Inverters (ASCII - Untested)" />
-    <specification value="Xantrex ASCII" />
     <version value="01" />
     <status value="Test Only" />
     <protocol value="QueryResponse_Generic" />

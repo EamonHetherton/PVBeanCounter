@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <devices>
   
-  <device>
+  <device name="SunnyRoo">
     <devicetype value="Inverter" />
     <description value="SunnyRoo Inverters (Modbus)" />
     <synonym value="Effekta Inverters (Modbus)" id="Effekta" />
-    <specification value="SunnyRoo" />
     <version value="01" />
     <status value="Test Only" />
     <protocol value="Modbus" />
-    <endian16bit value="Big" />
-    <endian32bit value="Big" />
 
     <features>
       <feature id="0" type="YieldAC" description="Yield AC - Phase 1" />
@@ -161,16 +158,13 @@
     </block>
   </device>
 
-  <device>
+  <device name="SunnyRoo (Non-Modbus)">
     <devicetype value="Inverter" />
     <description value="SunnyRoo Inverters (Non-Modbus)" />
     <synonym value="Powercom Inverters (Non-Modbus)" id="Powercom (Non-Modbus)" />
-    <specification value="SunnyRoo (Non-Modbus)" />
     <version value="01" />
     <status value="Test Only" />
     <protocol value="Phoenixtec" />
-    <endian16bit value="Big" />
-    <endian32bit value="Big" />
 
     <features>
       <feature type="YieldAC" />
@@ -819,11 +813,10 @@
 
   </device>
 
-  <device>
+  <device name="SunnyRoo Alt (Non-Modbus)">
     <devicetype value="Inverter" />
     <description value="SunnyRoo Inverters Alt (Non-Modbus)" />
     <synonym value="Powercom Inverters Alt (Non-Modbus)" id="Powercom Alt (Non-Modbus)" />
-    <specification value="SunnyRoo Alt (Non-Modbus)" />
     <status value="Test Only" />
     <version value="01" />
     <protocol value="Phoenixtec" />
@@ -1382,6 +1375,7 @@
     </block>
 
   </device>
+  
 </devices>
 
 

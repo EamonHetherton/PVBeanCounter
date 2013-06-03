@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <devices>
-  <device>
+  <device name="ACEnergyOnePhase">
     <devicetype value="Consolidation" />
     <description value="AC Energy - Single Phase" />
-    <specification value="ACEnergyOnePhase" />
     <version value="01" />
     <protocol value="Consolidation" />
 
@@ -15,10 +14,9 @@
 
   </device>
   
-  <device>
+  <device name="ACEnergyThreePhase">
     <devicetype value="Consolidation" />
     <description value="AC Energy - Three Phase" />
-    <specification value="ACEnergyThreePhase" />
     <version value="01" />
     <protocol value="Consolidation" />
 

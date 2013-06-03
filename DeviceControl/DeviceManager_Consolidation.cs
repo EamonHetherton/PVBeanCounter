@@ -17,6 +17,8 @@ namespace DeviceControl
         {
         }
 
+        public override String ThreadName { get { return "DeviceMgr_Consolidations"; } }
+
         public override bool DoWork()
         {
             throw new NotSupportedException("Consolidation Device Managers do not run in a dedicated thread");

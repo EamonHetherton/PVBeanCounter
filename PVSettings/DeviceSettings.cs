@@ -225,7 +225,18 @@ namespace PVSettings
             return null;
         }
 
-        public String Id { get { return DeviceTypeName + ": " + Specification + " - " + Version; } }
+        public String Name
+        {
+            get
+            {
+                String val = settings.GetAttribute("name");
+                if (val == null || val == "") // legacy style
+                    val = GetValue("specification");
+                return val;
+            }
+        }
+
+        public String Id { get { return DeviceTypeName + ": " + Name + " - " + Version; } }
 
         public String Description 
         { 
@@ -235,9 +246,9 @@ namespace PVSettings
                 string status = Status;
                 if (val == "")
                     if (status == "")
-                        return DeviceTypeName + ": " + Specification + " - " + Version; 
+                        return DeviceTypeName + ": " + Name + " - " + Version; 
                     else
-                        return DeviceTypeName + ": " + Specification + " - " + Version + " - " + status; 
+                        return DeviceTypeName + ": " + Name + " - " + Version + " - " + status; 
                 else
                     if (status == "")
                         return DeviceTypeName + ": " + val;
@@ -350,15 +361,6 @@ namespace PVSettings
             }
         }
 
-        public String Specification
-        {
-            get
-            {
-                String val = GetValue("specification");
-                return val;
-            }
-        }
-
         public String Version
         {
             get
@@ -368,6 +370,7 @@ namespace PVSettings
             }
         }
 
+        /*
         public String Endian32Bit
         {
             get
@@ -389,6 +392,7 @@ namespace PVSettings
                 return val;
             }
         }
+        */
 
         public bool HasStartOfDayEnergyDefect
         {
