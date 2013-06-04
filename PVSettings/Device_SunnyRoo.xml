@@ -165,6 +165,7 @@
     <version value="01" />
     <status value="Test Only" />
     <protocol value="Phoenixtec" />
+    <groupname value="SunnyRoo (Phoenixtec)" />
 
     <features>
       <feature type="YieldAC" />
@@ -820,6 +821,7 @@
     <status value="Test Only" />
     <version value="01" />
     <protocol value="Phoenixtec" />
+    <groupname value="SunnyRoo Alt (Phoenixtec)" />
     <endian16bit value="Big" />
     <endian32bit value="Big" />
 

@@ -321,13 +321,16 @@ namespace PVSettings
             }
         }
 
-        public String Manager
-        {
-            get
+        public String DeviceGroup 
+        { 
+            get 
             {
-                String val = GetValue("manager");
-                return val;
-            }
+                String val = GetValue("groupname");
+                if (val == "")
+                    return Protocol;
+                else
+                    return val; 
+            } 
         }
 
         public bool? IsThreePhase

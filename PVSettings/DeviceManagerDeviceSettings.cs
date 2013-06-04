@@ -1225,7 +1225,7 @@ namespace PVSettings
             }
         }
 
-        public ObservableCollection<DeviceManagementSettings.DeviceListItem> DeviceListItems
+        public ObservableCollection<DeviceListItem> DeviceListItems
         {
             get
             {

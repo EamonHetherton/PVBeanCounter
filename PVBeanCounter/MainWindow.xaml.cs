@@ -170,7 +170,7 @@ namespace PVBeanCounter
 
         private void LoadModbusSettings()
         {
-            comboBoxProtocol.ItemsSource = ApplicationSettings.DeviceManagementSettings.ProtocolList;
+            comboBoxDeviceGroup.ItemsSource = ApplicationSettings.DeviceManagementSettings.DeviceGroupList;
             comboBoxMessageInterval.ItemsSource = ApplicationSettings.DeviceManagementSettings.IntervalList;
             comboBoxDBInterval.ItemsSource = ApplicationSettings.DeviceManagementSettings.IntervalList;
             comboBoxDeviceQueryInterval.ItemsSource = ApplicationSettings.DeviceManagementSettings.IntervalList;
@@ -375,7 +375,7 @@ namespace PVBeanCounter
             //gridDeviceManagers.DataContext = null;
             //comboBoxListenerDevice.ItemsSource = mmSettings == null ? null : mmSettings.DeviceListItems;
             gridDeviceManagers.DataContext = DeviceManagerSettings;
-            comboBoxProtocol_SelectionChanged();
+            comboBoxDeviceGroup_SelectionChanged();
             //gridDeviceManagerDeviceList.DataContext = mmSettings;
             buttonDeleteDeviceMgr.IsEnabled = DeviceManagerSettings != null;
             if (e.RemovedItems.Count > 0)
@@ -391,7 +391,7 @@ namespace PVBeanCounter
                 buttonAddDevice.IsEnabled = true;
                 buttonDeleteDevice.IsEnabled = DeviceManagerSettings.DeviceList.Count > 0;
                 buttonDeleteDeviceMgr.IsEnabled = ApplicationSettings.DeviceManagerList.Count > 0;
-                comboBoxProtocol.IsEnabled = DeviceManagerSettings.DeviceList.Count == 0;
+                comboBoxDeviceGroup.IsEnabled = DeviceManagerSettings.DeviceList.Count == 0;
                 if (DeviceManagerSettings.DeviceList.Count > 0)
                     dataGridDeviceList.SelectedItem = DeviceManagerSettings.DeviceList[0];
             }
@@ -578,7 +578,7 @@ namespace PVBeanCounter
 
             dataGridDeviceList.SelectedItem = mmSettings.DeviceList[mmSettings.DeviceList.Count - 1];
             buttonDeleteDevice.IsEnabled = true;
-            comboBoxProtocol.IsEnabled = DeviceManagerSettings.DeviceList.Count == 0;
+            comboBoxDeviceGroup.IsEnabled = DeviceManagerSettings.DeviceList.Count == 0;
         }
 
         private void buttonDeleteDevice_Click(object sender, RoutedEventArgs e)
@@ -588,7 +588,7 @@ namespace PVBeanCounter
                 return;
             mmSettings.DeleteDevice((DeviceManagerDeviceSettings)dataGridDeviceList.SelectedItem);
             buttonDeleteDevice.IsEnabled = mmSettings.DeviceList.Count > 0;
-            comboBoxProtocol.IsEnabled = DeviceManagerSettings.DeviceList.Count == 0;
+            comboBoxDeviceGroup.IsEnabled = DeviceManagerSettings.DeviceList.Count == 0;
         }
 
         private void SetDeviceContext(DeviceManagerDeviceSettings device)
@@ -755,7 +755,7 @@ namespace PVBeanCounter
             SelectDevice();
         }
 
-        private void comboBoxProtocol_SelectionChanged()
+        private void comboBoxDeviceGroup_SelectionChanged()
         {
             try
             {
@@ -773,14 +773,14 @@ namespace PVBeanCounter
                         gridDevice.Visibility = System.Windows.Visibility.Visible;
                 }
 
-                ProtocolSettings p = ApplicationSettings.DeviceManagementSettings.GetProtocol(((ProtocolSettings)comboBoxProtocol.SelectedItem).Name);
+                ProtocolSettings p = ApplicationSettings.DeviceManagementSettings.GetProtocol(((DeviceGroup)comboBoxDeviceGroup.SelectedItem).Protocol);
                 gridSerialBasic.Visibility = p.UsesSerialPort ? Visibility.Visible : Visibility.Collapsed;
                 gridSerialDetail.Visibility = gridSerialBasic.Visibility;
                 gridListenerDevice.Visibility = p.Type == ProtocolSettings.ProtocolType.Listener ? Visibility.Visible : Visibility.Collapsed;
                 gridDeviceManagerTimings.Visibility = gridListenerDevice.Visibility;
                 gridExecutablePath.Visibility = p.Type == ProtocolSettings.ProtocolType.Executable ? Visibility.Visible : Visibility.Collapsed;
 
-                if (((ProtocolSettings)comboBoxProtocol.SelectedItem).Name == "CC128")
+                if (p.Name == "CC128")
                 {
                     columnDeviceAdvancedTiming_Qry.Width = new GridLength(0.0);
                 }
@@ -809,9 +809,9 @@ namespace PVBeanCounter
             }
         }
 
-        private void comboBoxProtocol_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void comboBoxDeviceGroup_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            comboBoxProtocol_SelectionChanged();
+            comboBoxDeviceGroup_SelectionChanged();
         }
 
         private void AdjustAfterProtocolChange()
@@ -868,7 +868,7 @@ namespace PVBeanCounter
             }
         }
 
-        private void comboBoxProtocol_LostFocus(object sender, RoutedEventArgs e)
+        private void comboBoxDeviceGroup_LostFocus(object sender, RoutedEventArgs e)
         {
             AdjustAfterProtocolChange();
         }

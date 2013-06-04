@@ -29,19 +29,28 @@ using System.IO;
 
 namespace PVSettings
 {
+    public class DeviceListItem
+    {
+        public String Id { get; set; }
+        public String Description { get; set; }
+        public DeviceSettings DeviceSettings;
+    }
+
+    public class DeviceGroup
+    {
+        public String Name { get; set; }
+        public String Description { get; set; }
+        public String Protocol { get; set; }
+        public ObservableCollection<DeviceListItem> DeviceList { get; set; }
+    }
+
     public class DeviceManagementSettings : SettingsBase, INotifyPropertyChanged
     {
-        public class DeviceListItem
-        {
-            public String Id { get; set; }
-            public String Description { get; set; }
-            public DeviceSettings DeviceSettings;
-        }
-
         private String SettingsDirectory;
-        ObservableCollection<DeviceListItem> _DeviceList = null;
-        ObservableCollection<ProtocolSettings> _ProtocolList = null;
-        ObservableCollection<String> _IntervalList = null;
+        private ObservableCollection<DeviceListItem> _DeviceList = null;
+        private ObservableCollection<ProtocolSettings> _ProtocolList = null;
+        private ObservableCollection<DeviceGroup> _DeviceGroupList = null;
+        private ObservableCollection<String> _IntervalList = null;
 
         public DeviceManagementSettings()
         {
@@ -76,6 +85,7 @@ namespace PVSettings
         {
             _DeviceList = new ObservableCollection<DeviceListItem>();
             _ProtocolList = new ObservableCollection<ProtocolSettings>();
+            _DeviceGroupList = new ObservableCollection<DeviceGroup>();
             
             String mainName = Path.Combine(SettingsDirectory, "DeviceManagement_v02.xml");
 
@@ -139,6 +149,7 @@ namespace PVSettings
                 else
                     throw new Exception("LoadSettings - Cannot find element '" + targetNode + "'");
             }
+            LoadProtocolDevices();
         }
 
         public DeviceSettings GetDevice(String id)
@@ -181,9 +192,54 @@ namespace PVSettings
                         item.Description = name.Name;
                         item.DeviceSettings = device;
                         _DeviceList.Add(item);
+
+                        DeviceGroup deviceGroup = FindOrCreateDeviceGroup(item.DeviceSettings.DeviceGroup, item.DeviceSettings.Protocol);
+                        deviceGroup.DeviceList.Add(item);
                     }
                 }
             }
+        }
+
+        private void LoadProtocolDevices()
+        {
+            int top = DeviceGroupList.Count;
+            for (int i = 0; i < top; i++)
+            {
+                DeviceGroup g = DeviceGroupList[i];
+                foreach (DeviceListItem item in g.DeviceList)
+                {
+                    if (g.Protocol != g.Name) // detect groups that are not just inherited protocol names
+                    {
+                        DeviceGroup deviceGroup = FindOrCreateDeviceGroup(g.Protocol, g.Protocol);
+                        deviceGroup.Description = "Protocol: " + g.Protocol;
+                        deviceGroup.DeviceList.Add(item);
+                    }
+                }
+            }
+        }
+
+        private DeviceGroup FindOrCreateDeviceGroup(String groupName, String protocolName)
+        {
+            foreach (DeviceGroup g in _DeviceGroupList)
+                if (g.Name == groupName)
+                    return g;
+ 
+            DeviceGroup group = new DeviceGroup();
+            group.Name = groupName;
+            group.Protocol = protocolName;
+            group.Description = groupName;
+            group.DeviceList = new ObservableCollection<DeviceListItem>();
+            _DeviceGroupList.Add(group);
+            return group;
+        }
+
+        public DeviceGroup GetDeviceGroup(String groupName)
+        {
+            foreach (DeviceGroup g in _DeviceGroupList)
+                if (g.Name == groupName)
+                    return g;
+            
+            return null;
         }
 
         public ProtocolSettings GetProtocol(String protocolName)
@@ -194,10 +250,10 @@ namespace PVSettings
             return null;
         }
 
-        public ObservableCollection<DeviceListItem> GetDeviceList(string protocol)
+        public ObservableCollection<DeviceListItem> GetProtocolDeviceList(string protocol)
         {
             ObservableCollection<DeviceListItem> list = new ObservableCollection<DeviceListItem>();
-
+           
             foreach (DeviceListItem i in _DeviceList)
                 if (i.DeviceSettings.ProtocolSettings.Name == protocol || protocol == "")
                     list.Add(i);
@@ -205,7 +261,18 @@ namespace PVSettings
             return list;
         }
 
+        public ObservableCollection<DeviceListItem> GetGroupNameDeviceList(string groupName)
+        {
+            foreach (DeviceGroup g in _DeviceGroupList)
+                if (g.Name == groupName)
+                    return g.DeviceList;
+            
+            return null;
+        }
+
         public ObservableCollection<DeviceListItem> DeviceList { get { return _DeviceList; } }
+
+        public ObservableCollection<DeviceGroup> DeviceGroupList { get { return _DeviceGroupList; } }
 
         public ObservableCollection<ProtocolSettings> ProtocolList { get { return _ProtocolList; } }
 

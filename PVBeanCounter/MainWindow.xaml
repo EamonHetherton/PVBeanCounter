@@ -285,7 +285,11 @@
                                 <Label Content="Manager Name" HorizontalContentAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="11" Padding="0,5,5,5" />
                                 <TextBox Grid.Column="1" Text="{Binding Path=Name, Converter={StaticResource NullableValueConverter}}" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="11" />
                                 <Label Content="Manager Type" Grid.Row="1" HorizontalContentAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="11" Margin="5,0,2,0" />
-                                <ComboBox Grid.Row="1" Grid.Column="1" Height="23" HorizontalAlignment="Stretch" Margin="0,3,0,0" Name="comboBoxProtocol" VerticalAlignment="Top" SelectedValuePath="Name" Text="{Binding Path=Protocol, Converter={StaticResource NullableValueConverter}}" DisplayMemberPath="Name" SelectionChanged="comboBoxProtocol_SelectionChanged" ToolTip="Selects the device access method (protocol)" FontSize="11" LostFocus="comboBoxProtocol_LostFocus"  />
+                                <ComboBox Grid.Row="1" Grid.Column="1" Height="23" HorizontalAlignment="Stretch" Margin="0,3,0,0" Name="comboBoxDeviceGroup" 
+                                          SelectedValue="{Binding Path=DeviceGroupName, Converter={StaticResource NullableValueConverter}}" SelectedValuePath="Name"
+                                          VerticalAlignment="Top" DisplayMemberPath="Description" 
+                                          SelectionChanged="comboBoxDeviceGroup_SelectionChanged" ToolTip="Selects the device access method (protocol)" 
+                                          FontSize="11" LostFocus="comboBoxDeviceGroup_LostFocus"  />
                                 <Grid Grid.Row="2" Grid.Column="1">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>

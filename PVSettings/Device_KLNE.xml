@@ -336,6 +336,7 @@
     <version value="01" />
     <status value="Test Only" />
     <protocol value="Phoenixtec" />
+    <groupname value="KLNE (Phoenixtec)" />
 
     <block>
       <name value="Initialise" />

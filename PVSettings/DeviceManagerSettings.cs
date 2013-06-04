@@ -43,6 +43,8 @@ namespace PVSettings
         public PVSettings.SerialPortSettings SerialPort;
         private ProtocolSettings ProtocolSettings;
 
+        public DeviceGroup DeviceGroup;
+
         ObservableCollection<DeviceManagerDeviceSettings> deviceList = null;
 
         public bool IsRealDeviceManager { get { return ManagerType != DeviceManagerType.Consolidation; } }
@@ -54,8 +56,8 @@ namespace PVSettings
             {
                 if (_UsesSerialPort.HasValue)
                     return _UsesSerialPort.Value;
-                ProtocolSettings protocol = ApplicationSettings.DeviceManagementSettings.GetProtocol(Protocol);
-                _UsesSerialPort = protocol.UsesSerialPort;
+                //ProtocolSettings protocol = ApplicationSettings.DeviceManagementSettings.GetProtocol(Protocol);
+                _UsesSerialPort = ProtocolSettings.UsesSerialPort;
                 return _UsesSerialPort.Value;
             } 
         }
@@ -128,14 +130,14 @@ namespace PVSettings
         {
             ApplicationSettings = (ApplicationSettings)root;
             SerialPort = null;
-            ProtocolSettings = ApplicationSettings.DeviceManagementSettings.GetProtocol(Protocol);
+            DeviceGroup = ApplicationSettings.DeviceManagementSettings.GetDeviceGroup(DeviceGroupName);
+            ProtocolSettings = ApplicationSettings.DeviceManagementSettings.GetProtocol(DeviceGroup.Protocol);
 
             LoadDetails();
         }
 
         private void LoadSerialPort()
         {
-            ProtocolSettings = ApplicationSettings.DeviceManagementSettings.GetProtocol(Protocol);
             _UsesSerialPort = null; // forces refer back tp protocol for this info
             if (UsesSerialPort)
             {
@@ -211,11 +213,14 @@ namespace PVSettings
             }
         }
 
-        public ObservableCollection<DeviceManagementSettings.DeviceListItem> DeviceListItems
+        public ObservableCollection<DeviceListItem> DeviceListItems
         {
             get
             {
-                return ApplicationSettings.DeviceManagementSettings.GetDeviceList(Protocol);
+                if (DeviceGroup == null)
+                    return null;
+                else
+                    return DeviceGroup.DeviceList;
             }
         }
 
@@ -258,7 +263,7 @@ namespace PVSettings
 
         public void CheckListenerDeviceId()
         {
-            ProtocolSettings.ProtocolType t = ApplicationSettings.DeviceManagementSettings.GetProtocol(Protocol).Type;
+            ProtocolSettings.ProtocolType t = ProtocolSettings.Type;
             if (t != ProtocolSettings.ProtocolType.Listener && t!= PVSettings.ProtocolSettings.ProtocolType.ManagerQueryResponse)
             {
                 ListenerDeviceId = "";
@@ -266,7 +271,7 @@ namespace PVSettings
                 return;
             }
 
-            foreach (DeviceManagementSettings.DeviceListItem item in DeviceListItems)
+            foreach (DeviceListItem item in DeviceListItems)
             {
                 if (item.Id == ListenerDeviceId)
                     return;
@@ -278,16 +283,28 @@ namespace PVSettings
             }
         }
 
-        public String Protocol
+        public String DeviceGroupName
         {
             get
             {
-                string val = GetValue("protocol");
-                return val == "" ? "Modbus" : val;
+                string val = GetValue("devicegroupname");
+                if (val == "")
+                {
+                    val = GetValue("protocol");
+                    if (val == "")
+                        val = "Modbus";
+                    else
+                    {
+                        SetValue("devicegroupname", val, "DeviceGroupName", true);
+                        DeleteElement("protocol");
+                    }
+                }
+                return val;
             }
             set
             {
-                SetValue("protocol", value, "Protocol");
+                SetValue("devicegroupname", value, "DeviceGroupName");
+                DeviceGroup = ApplicationSettings.DeviceManagementSettings.GetDeviceGroup(value);
                 DoPropertyChanged("DeviceListItems");
                 foreach (DeviceManagerDeviceSettings device in DeviceList)
                     device.NotifySelectionChange();
