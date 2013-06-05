@@ -321,6 +321,7 @@ namespace PVSettings
             }
         }
 
+        /*
         public String DeviceGroup 
         { 
             get 
@@ -331,6 +332,53 @@ namespace PVSettings
                 else
                     return val; 
             } 
+        }
+        */
+
+        public struct GroupName
+        {
+            public string Name;
+            public string Id;
+        }
+
+        public List<GroupName> DeviceGroups
+        {
+            get
+            {
+                List<GroupName> names = new List<GroupName>();                
+                foreach (XmlNode e in settings.ChildNodes)
+                {
+                    if (e.NodeType == XmlNodeType.Element && e.Name == "groupname")
+                    {
+                        XmlAttribute valueAttrib = (XmlAttribute)e.Attributes.GetNamedItem("value");
+                        XmlAttribute idAttrib = (XmlAttribute)e.Attributes.GetNamedItem("id");
+                        
+                        if (valueAttrib != null)
+                        {
+                            GroupName name;
+                            name.Name = valueAttrib.Value;
+                            if (idAttrib != null)
+                                name.Id = idAttrib.Value;
+                            else
+                                name.Id = name.Name;
+                            names.Add(name);
+                        }
+                    }
+                }
+                List<GroupName> protocolGroups = ProtocolSettings.DeviceGroups;
+                foreach (GroupName g in protocolGroups)
+                {
+                    names.Add(g);
+                }
+                if (names.Count == 0)
+                {
+                    GroupName name;
+                    name.Name = Protocol;
+                    name.Id = name.Name;
+                    names.Add(name);
+                }
+                return names;
+            }
         }
 
         public bool? IsThreePhase
@@ -372,30 +420,6 @@ namespace PVSettings
                 return val;
             }
         }
-
-        /*
-        public String Endian32Bit
-        {
-            get
-            {
-                String val = GetValue("endian32bit");
-                if (val == "")
-                    return "Big";
-                return val;
-            }
-        }
-
-        public String Endian16Bit
-        {
-            get
-            {
-                String val = GetValue("endian16bit");
-                if (val == "")
-                    return "Big";
-                return val;
-            }
-        }
-        */
 
         public bool HasStartOfDayEnergyDefect
         {

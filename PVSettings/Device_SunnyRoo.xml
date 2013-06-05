@@ -3,8 +3,8 @@
   
   <device name="SunnyRoo">
     <devicetype value="Inverter" />
-    <description value="SunnyRoo Inverters (Modbus)" />
-    <synonym value="Effekta Inverters (Modbus)" id="Effekta" />
+    <description value="SunnyRoo Inverter (Modbus)" />
+    <synonym value="Effekta Inverter (Modbus)" id="Effekta" />
     <version value="01" />
     <status value="Test Only" />
     <protocol value="Modbus" />
@@ -166,6 +166,7 @@
     <status value="Test Only" />
     <protocol value="Phoenixtec" />
     <groupname value="SunnyRoo (Phoenixtec)" />
+    <groupname value="Powercom (Phoenixtec)" />
 
     <features>
       <feature type="YieldAC" />
@@ -822,6 +823,7 @@
     <version value="01" />
     <protocol value="Phoenixtec" />
     <groupname value="SunnyRoo Alt (Phoenixtec)" />
+    <groupname value="Powercom Alt (Phoenixtec)" />
     <endian16bit value="Big" />
     <endian32bit value="Big" />
 

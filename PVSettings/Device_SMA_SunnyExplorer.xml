@@ -5,6 +5,7 @@
     <description value="SMA via Sunny Explorer" />
     <version value="01" />
     <protocol value="SMA_SunnyExplorer" />
+    <groupname value="SMA Sunny Explorer" id="SMA_SunnyExplorer"/>
     <devicetype value="Inverter" />
 
     <features>

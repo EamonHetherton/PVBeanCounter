@@ -6,6 +6,7 @@
     <version value="00" />
     <status value="Test Only" />
     <protocol value="KLNEModbus" />
+    <groupname value="KLNE (KLNE Modbus)" id="KLNEModbus"/>
 
     <features>
       <feature id="0" type="YieldAC"/>
@@ -167,7 +168,7 @@
 
   <device name="KLNE">
     <devicetype value="Inverter" />
-    <description value="KLNE Inverters (Modbus - V8.12  V8.13 V8.14, V5.02 and V5.03)" />
+    <description value="KLNE Inverter (Modbus - V8.12  V8.13 V8.14, V5.02 and V5.03)" />
     <version value="01" />
     <status value="Test Only" />
     <protocol value="Modbus" />

@@ -130,7 +130,8 @@ namespace PVSettings
         {
             ApplicationSettings = (ApplicationSettings)root;
             SerialPort = null;
-            DeviceGroup = ApplicationSettings.DeviceManagementSettings.GetDeviceGroup(DeviceGroupName);
+            String deviceGroupName = DeviceGroupName;
+            DeviceGroup = ApplicationSettings.DeviceManagementSettings.GetDeviceGroup(deviceGroupName);           
             ProtocolSettings = ApplicationSettings.DeviceManagementSettings.GetProtocol(DeviceGroup.Protocol);
 
             LoadDetails();
@@ -299,6 +300,7 @@ namespace PVSettings
                         DeleteElement("protocol");
                     }
                 }
+
                 return val;
             }
             set

@@ -6,6 +6,7 @@
     <version value="01" />
     <status value="Test Only" />
     <protocol value="Growatt" />
+    <groupname value="Growatt (Non-Modbus)" id="Growatt"/>
 
     <features>
       <feature id="0" type="YieldAC" description="Yield AC" />
@@ -249,6 +250,7 @@
     <version value="01" />
     <status value="Test Only" />
     <protocol value="Growatt" />
+    <groupname value="Growatt (Non-Modbus)" id="Growatt"/>
 
     <features>
       <feature id="0" type="YieldAC"/>

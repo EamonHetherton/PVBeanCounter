@@ -41,6 +41,7 @@ namespace PVSettings
         public String Name { get; set; }
         public String Description { get; set; }
         public String Protocol { get; set; }
+        public bool IsProtocol;
         public ObservableCollection<DeviceListItem> DeviceList { get; set; }
     }
 
@@ -58,6 +59,8 @@ namespace PVSettings
 
             BuildIntervalList();
             LoadSettings();
+
+            //LoadProtocolDevices();
         }
 
         private void BuildIntervalList()
@@ -149,7 +152,13 @@ namespace PVSettings
                 else
                     throw new Exception("LoadSettings - Cannot find element '" + targetNode + "'");
             }
-            LoadProtocolDevices();
+
+            IEnumerable<DeviceGroup> sorted = DeviceGroupList.OrderBy(mms =>  (mms.Description));
+
+            ObservableCollection<DeviceGroup> deviceGroupList = new ObservableCollection<DeviceGroup>();
+            foreach (DeviceGroup g in sorted)
+                deviceGroupList.Add(g);
+            DeviceGroupList = deviceGroupList;
         }
 
         public DeviceSettings GetDevice(String id)
@@ -193,41 +202,45 @@ namespace PVSettings
                         item.DeviceSettings = device;
                         _DeviceList.Add(item);
 
-                        DeviceGroup deviceGroup = FindOrCreateDeviceGroup(item.DeviceSettings.DeviceGroup, item.DeviceSettings.Protocol);
-                        deviceGroup.DeviceList.Add(item);
+                        foreach (DeviceSettings.GroupName groupName in item.DeviceSettings.DeviceGroups)
+                        {
+                            string protocol = item.DeviceSettings.Protocol;
+                            DeviceGroup deviceGroup = FindOrCreateDeviceGroup(groupName.Id, groupName.Name, protocol);
+                            if (!deviceGroup.DeviceList.Contains(item))
+                                deviceGroup.DeviceList.Add(item);
+                            deviceGroup = FindOrCreateDeviceGroup(protocol, "Protocol: " + protocol, protocol, true);
+                            if (!deviceGroup.DeviceList.Contains(item))
+                                deviceGroup.DeviceList.Add(item);
+                        }
                     }
                 }
             }
         }
 
-        private void LoadProtocolDevices()
+        public void RemoveProtocolDeviceGroups()
         {
-            int top = DeviceGroupList.Count;
-            for (int i = 0; i < top; i++)
+            ObservableCollection<DeviceGroup> g = DeviceGroupList;
+            int i = 0;
+            while (i < g.Count)
             {
-                DeviceGroup g = DeviceGroupList[i];
-                foreach (DeviceListItem item in g.DeviceList)
-                {
-                    if (g.Protocol != g.Name) // detect groups that are not just inherited protocol names
-                    {
-                        DeviceGroup deviceGroup = FindOrCreateDeviceGroup(g.Protocol, g.Protocol);
-                        deviceGroup.Description = "Protocol: " + g.Protocol;
-                        deviceGroup.DeviceList.Add(item);
-                    }
-                }
+                if (DeviceGroupList[i].IsProtocol)
+                    DeviceGroupList.RemoveAt(i);
+                else
+                    i++;                
             }
         }
 
-        private DeviceGroup FindOrCreateDeviceGroup(String groupName, String protocolName)
+        public DeviceGroup FindOrCreateDeviceGroup(String groupId, String groupName, String protocolName, bool isProtocol = false)
         {
             foreach (DeviceGroup g in _DeviceGroupList)
-                if (g.Name == groupName)
+                if (g.Name == groupId)
                     return g;
  
             DeviceGroup group = new DeviceGroup();
-            group.Name = groupName;
+            group.Name = groupId;
             group.Protocol = protocolName;
             group.Description = groupName;
+            group.IsProtocol = isProtocol;
             group.DeviceList = new ObservableCollection<DeviceListItem>();
             _DeviceGroupList.Add(group);
             return group;
@@ -272,7 +285,7 @@ namespace PVSettings
 
         public ObservableCollection<DeviceListItem> DeviceList { get { return _DeviceList; } }
 
-        public ObservableCollection<DeviceGroup> DeviceGroupList { get { return _DeviceGroupList; } }
+        public ObservableCollection<DeviceGroup> DeviceGroupList { get { return _DeviceGroupList; } set { _DeviceGroupList = value; } }
 
         public ObservableCollection<ProtocolSettings> ProtocolList { get { return _ProtocolList; } }
 

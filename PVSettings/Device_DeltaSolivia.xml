@@ -6,6 +6,7 @@
     <version value="01" />
     <status value="Warning - Untested" />
     <protocol value="DeltaSolivia" />
+    <groupname value="Delta Solivia" id="DeltaSolivia"/>
 
     <features>
       <feature id="0" type="YieldAC" description="Yield AC"/>

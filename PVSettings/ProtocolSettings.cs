@@ -18,6 +18,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.ComponentModel;
@@ -52,6 +53,44 @@ namespace PVSettings
                 String n = settings.GetAttribute("name");
                 //String val = GetValue("name");
                 return n;
+            }
+        }
+
+        
+        public List<DeviceSettings.GroupName> DeviceGroups
+        {
+            get
+            {
+                List<DeviceSettings.GroupName> names = new List<DeviceSettings.GroupName>();
+                foreach (XmlNode e in settings.ChildNodes)
+                {
+                    if (e.NodeType == XmlNodeType.Element && e.Name == "groupname")
+                    {
+                        XmlAttribute valueAttrib = (XmlAttribute)e.Attributes.GetNamedItem("value");
+                        XmlAttribute idAttrib = (XmlAttribute)e.Attributes.GetNamedItem("id");
+
+                        if (valueAttrib != null)
+                        {
+                            DeviceSettings.GroupName name;
+                            name.Name = valueAttrib.Value;
+                            if (idAttrib != null)
+                                name.Id = idAttrib.Value;
+                            else
+                                name.Id = name.Name;
+                            names.Add(name);
+                        }
+                    }
+                }
+                /*
+                if (names.Count == 0)
+                {
+                    DeviceSettings.GroupName name;
+                    name.Name = Name;
+                    name.Id = name.Name;
+                    names.Add(name);
+                }
+                */
+                return names;
             }
         }
 

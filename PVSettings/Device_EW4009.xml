@@ -6,6 +6,7 @@
     <version value="01" />
     <status value="Test Only" />
     <protocol value="EW4009" />
+    <groupname value="Watts Clever Meters" id="EW4009"/>
     <endian16bit value="Little" />
     <usehistory value="false" />
 

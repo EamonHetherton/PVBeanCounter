@@ -328,6 +328,7 @@
     <version value="01" />
     <status value="Test Only" />
     <protocol value="QueryResponse_Generic" />
+    <groupname value="Xantrex Inverters"  id="Xantrex"/>
 
     <features>
       <feature type="YieldAC" />

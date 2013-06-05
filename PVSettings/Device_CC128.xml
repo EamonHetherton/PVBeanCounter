@@ -5,6 +5,7 @@
     <description value="Current Cost EnviR" />
     <version value="01" />
     <protocol value="CC128" />
+    <groupname value="Current Cost Meters" id="CC128" />
     <devicetype value="EnergyMeter" />
     <usehistory value="true" />
 
@@ -30,6 +31,7 @@
     <version value="01" />
     <status value="Test Only" />
     <protocol value="CC128" />
+    <groupname value="Current Cost Meters" id="CC128" />
     <devicetype value="EnergyMeter" />
     <usehistory value="false" />
 

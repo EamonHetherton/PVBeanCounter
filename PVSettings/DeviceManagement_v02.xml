@@ -6,6 +6,7 @@
 
   <protocol name="Owl_Meter">
     <type value="Database" />
+    <groupname value="Owl Meters" />
   </protocol>
 
   <protocol name="SMA_WebBox">
@@ -116,6 +117,12 @@
   
   <protocol name="Modbus">
     <type value="Modbus" />
+    <groupname value="Modbus" />
+    <groupname value="Effetka Inverters (Modbus)" />
+    <groupname value="Growatt Inverters (Modbus)" />
+    <groupname value="KLNE Inverters (Modbus)" />
+    <groupname value="SunnyRoo Inverters (Modbus)" />
+    <groupname value="Xantrex Inverters (Modbus)" />
     <checksum value="ModbusCheckSum16" />
     <checksumendian16bit value="Little" />
     <endian16bit value="Big" />
@@ -244,6 +251,7 @@
 
   <protocol name="Fronius">
     <type value="QueryResponse" />
+    <groupname value="Fronius Inverters" />
     <endian value="Big" />
     <checksum value="CheckSum8" />
 
@@ -370,6 +378,7 @@
 
   <protocol name="JFY">
     <type value="QueryResponse" />
+    <groupname value="JFY Inverters" />
     <endian value="Big" />
     <addresslow value="1" />
     <addresshigh value="255" />

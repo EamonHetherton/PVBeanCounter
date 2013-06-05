@@ -128,6 +128,17 @@ namespace PVSettings
             ServiceAccountPassword = "";
             ServiceDetailsChanged = false;
             LoadingEnergyEvents = false;
+
+            CheckProtocolDeviceGroups();
+        }
+
+        private void CheckProtocolDeviceGroups()
+        {
+            bool needed = false;
+            foreach (DeviceManagerSettings dm in DeviceManagerList)
+                needed |= (dm.DeviceGroup.IsProtocol);
+            if (!needed)
+                DeviceManagementSettings.RemoveProtocolDeviceGroups();
         }
 
         public override void SaveSettings()
