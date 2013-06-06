@@ -36,7 +36,7 @@ namespace PVSettings
         protected String TemplateFileName;
         protected String TemplateName;
         protected bool UsingTemplate; // true if settings were loaded from a template
-        protected bool WriteWorkingDirectory; // true if workinf dieectory must be written to registry
+        protected bool WriteWorkingDirectory; // true if working dieectory must be written to registry
         protected String ElementName;
         private const String Author = "Mackay-Fisher";
         private const String Application = "PV Bean Counter";

@@ -307,6 +307,7 @@ namespace PVSettings
             {
                 SetValue("devicegroupname", value, "DeviceGroupName");
                 DeviceGroup = ApplicationSettings.DeviceManagementSettings.GetDeviceGroup(value);
+                ProtocolSettings = ApplicationSettings.DeviceManagementSettings.GetProtocol(DeviceGroup.Protocol);
                 DoPropertyChanged("DeviceListItems");
                 foreach (DeviceManagerDeviceSettings device in DeviceList)
                     device.NotifySelectionChange();
@@ -632,7 +633,7 @@ namespace PVSettings
                 if (ManagerType != DeviceManagerType.SMA_SunnyExplorer 
                 && ManagerType != DeviceManagerType.SMA_WebBox
                 && ManagerType != DeviceManagerType.Owl_Meter)
-                    return 1;
+                    return 2;
                 String rffd = GetValue("maxhistorydays");
                 if (rffd == "")
                     return 64;

@@ -6,8 +6,8 @@
     candleArgs: 
     lightArgs: "<projectname>.wixobj" -out "PV Bean Counter Installer - v2.0.0.4.msi" <extensions> -sice:ICE27
 -->
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" >
-    <Product Id="9799DC8E-506B-429E-83CE-0D0EB3C3961E" Name="PV Bean Counter" Language="1033" Version="2.0.0.3" Manufacturer="Mackay-Fisher" UpgradeCode="94B6A6FB-3567-4617-B52A-DAE65CF113EB">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+    <Product Id="9799DC8E-506B-429E-83CE-0D0EB3C3961E" Name="PV Bean Counter" Language="1033" Version="2.0.0.4" Manufacturer="Mackay-Fisher" UpgradeCode="94B6A6FB-3567-4617-B52A-DAE65CF113EB">
         <Package Description="Test file in a Product" Comments="Simple test" InstallerVersion="200" Compressed="yes" />
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
         <?define SolutionConfig = "Release" ?>
@@ -80,7 +80,7 @@
                             <File Id="PVBeanCounterPDB" Name="PVBeanCounter.pdb" Source="..\PVBeanCounter\$(var.SourcePathFragment)PVBeanCounter.pdb" />
                             <File Id="PVSETTINGS.PDB" Name="PVSettings.pdb" Source="..\PVService\$(var.SourcePathFragment)PVSettings.pdb" />
                             <File Id="TIMECONTROL.PDB" Name="TimeControl.pdb" Source="..\PVBeanCounter\$(var.SourcePathFragment)TimeControl.pdb" />
-                            <File Id="UTILITIES.PDB" Name="Utilities.pdb" Source="..\PVService\$(var.SourcePathFragment)Utilities.pdb" />                                                        
+                            <File Id="UTILITIES.PDB" Name="Utilities.pdb" Source="..\PVService\$(var.SourcePathFragment)Utilities.pdb" />
                             <File Id="OUTPUTMANAGERS.PDB" Name="OutputManagers.pdb" Source="..\OutputManagers\$(var.SourcePathFragment)OutputManagers.pdb" />
                             <?endif ?>
                         </Component>
@@ -165,10 +165,8 @@
         </Feature>
         <UI />
         <UIRef Id="WixUI_Minimal" />
-	<PropertyRef Id="NETFRAMEWORK45"/>
-        <Condition Message="This application requires .NET Framework 4.5">
-		<![CDATA[Installed OR NETFRAMEWORK45]]>
-	</Condition>
+        <PropertyRef Id="NETFRAMEWORK45" />
+        <Condition Message="This application requires .NET Framework 4.5"><![CDATA[Installed OR NETFRAMEWORK45]]></Condition>
         <Icon Id="StartMenuIcon.exe" SourceFile="..\PVBeanCounter\$(var.SourcePathFragment)PVBeanCounter.exe" />
         <Icon Id="PVMonitor.ico" SourceFile="..\PVMonitor\PVMonitor3.ico" />
         <Property Id="ARPPRODUCTICON" Value="StartMenuIcon.exe" />

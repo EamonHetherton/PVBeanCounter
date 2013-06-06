@@ -166,7 +166,7 @@ namespace DeviceControl
             IDeviceManagerManager imm)
             : base(genThreadManager, mmSettings, imm)
         {
-            //SetUpProtocol();
+            SetUpProtocol();
             LoadDevices();
         }
 
@@ -192,10 +192,9 @@ namespace DeviceControl
             return nextTime > DateTime.Now ? nextTime : DateTime.Now;
         }
 
-        /*
         private void SetUpProtocol()
         {
-            String protocolName = DeviceManagerSettings.Protocol;
+            String protocolName = DeviceManagerSettings.DeviceGroup.Protocol;
             if (protocolName.Trim() == "")
             {
                 Protocol = null;
@@ -215,7 +214,6 @@ namespace DeviceControl
 
             Protocol = new Protocol(protocolSettings);
         }
-        */
 
         private void LoadDevices()
         {

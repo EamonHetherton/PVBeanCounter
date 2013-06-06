@@ -134,11 +134,12 @@ namespace PVSettings
 
         private void CheckProtocolDeviceGroups()
         {
-            bool needed = false;
+            List<DeviceGroup> usedGroups = new List<DeviceGroup>();
             foreach (DeviceManagerSettings dm in DeviceManagerList)
-                needed |= (dm.DeviceGroup.IsProtocol);
-            if (!needed)
-                DeviceManagementSettings.RemoveProtocolDeviceGroups();
+                if (dm.DeviceGroup.IsProtocol)
+                    usedGroups.Add(dm.DeviceGroup);
+
+            DeviceManagementSettings.RemoveProtocolDeviceGroups(usedGroups);
         }
 
         public override void SaveSettings()

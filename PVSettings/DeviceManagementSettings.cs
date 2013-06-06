@@ -217,20 +217,21 @@ namespace PVSettings
             }
         }
 
-        public void RemoveProtocolDeviceGroups()
+        public void RemoveProtocolDeviceGroups(List<DeviceGroup> usedProtocolGroups)
         {
             ObservableCollection<DeviceGroup> g = DeviceGroupList;
             int i = 0;
             while (i < g.Count)
             {
-                if (DeviceGroupList[i].IsProtocol)
+                DeviceGroup item = DeviceGroupList[i];
+                if (item.IsProtocol && !usedProtocolGroups.Contains(item))
                     DeviceGroupList.RemoveAt(i);
                 else
                     i++;                
             }
         }
 
-        public DeviceGroup FindOrCreateDeviceGroup(String groupId, String groupName, String protocolName, bool isProtocol = false)
+        private DeviceGroup FindOrCreateDeviceGroup(String groupId, String groupName, String protocolName, bool isProtocol = false)
         {
             foreach (DeviceGroup g in _DeviceGroupList)
                 if (g.Name == groupId)
