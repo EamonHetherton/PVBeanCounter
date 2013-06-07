@@ -309,6 +309,11 @@ namespace PVSettings
                 DeviceGroup = ApplicationSettings.DeviceManagementSettings.GetDeviceGroup(value);
                 ProtocolSettings = ApplicationSettings.DeviceManagementSettings.GetProtocol(DeviceGroup.Protocol);
                 DoPropertyChanged("DeviceListItems");
+                if (HasAutoName)
+                {
+                    SetAutoName();
+                    DoPropertyChanged("Name");
+                }
                 foreach (DeviceManagerDeviceSettings device in DeviceList)
                     device.NotifySelectionChange();
                 CheckListenerDeviceId();
@@ -321,19 +326,26 @@ namespace PVSettings
             }
         }
 
+        private bool HasAutoName = false;
+
+        private String SetAutoName()
+        {
+            String newName = MackayFisher.Utilities.UniqueNameResolver<DeviceManagerSettings>.ResolveUniqueName(
+                        DeviceGroupName, ApplicationSettings.DeviceManagerList.GetEnumerator(), this);
+            SetValue("name", newName, "Name", true);
+            HasAutoName = true;
+            DoPropertyChanged("Description");
+            return newName;
+        }
+
         public String Name
         {
             get
             {
                 String val = GetValue("name");
                 if (val == "")
-                {
-                    String newName = MackayFisher.Utilities.UniqueNameResolver<DeviceManagerSettings>.ResolveUniqueName(
-                        "My Device Manager", ApplicationSettings.DeviceManagerList.GetEnumerator(), this);
-                    SetValue("name", newName, "Name", true);
-                    return newName;
-                }
-                else
+                    return SetAutoName();
+                else                
                     return val;
             }
 
@@ -342,6 +354,7 @@ namespace PVSettings
                 SetValue("name", 
                     MackayFisher.Utilities.UniqueNameResolver<DeviceManagerSettings>.ResolveUniqueName( value, ApplicationSettings.DeviceManagerList.GetEnumerator(), this), 
                     "Name");
+                HasAutoName = (value == null || value == "" || value == DeviceGroupName);
                 DoPropertyChanged("Description");
             }
         }

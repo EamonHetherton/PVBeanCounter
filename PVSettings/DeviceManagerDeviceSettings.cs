@@ -782,19 +782,37 @@ namespace PVSettings
             get { return _DeviceManagerSettings; }
         }
 
+        private bool HasAutoName = false;
+
+        private String GetBaseName()
+        {
+            String baseName;
+            if (DeviceManagerSettings.DeviceGroup.DeviceList.Count > 0)
+                baseName = DeviceSettings.Name;
+            else
+                baseName = "My Device";
+            return baseName;
+        }
+
+        private String SetAutoName()
+        {
+            String baseName = GetBaseName();
+            
+            DeviceEnumerator devices = new DeviceEnumerator(ApplicationSettings.DeviceManagerList);
+            String newName = MackayFisher.Utilities.UniqueNameResolver<DeviceManagerDeviceSettings>.ResolveUniqueName(
+                baseName, devices, this);
+            SetValue("name", newName, "Name", true);
+            HasAutoName = true;
+            return newName;
+        }
+
         public String Name
         {
             get
             {
                 String val = GetValue("name");
                 if (val == "")
-                {
-                    DeviceEnumerator devices = new DeviceEnumerator(ApplicationSettings.DeviceManagerList);
-                    String newName = MackayFisher.Utilities.UniqueNameResolver<DeviceManagerDeviceSettings>.ResolveUniqueName(
-                        "My Device", devices, this);
-                    SetValue("name", newName, "Name", true);
-                    return newName;
-                }
+                    return SetAutoName();
                 else
                     return val;
             }
@@ -805,6 +823,7 @@ namespace PVSettings
                 SetValue("name",
                     MackayFisher.Utilities.UniqueNameResolver<DeviceManagerDeviceSettings>.ResolveUniqueName(value, devices, this),
                     "Name");
+                HasAutoName = (value == null || value == "" || value == GetBaseName());
                 // the following dorces the name change into the ConsolidateDeviceSettings entries by refreshing the device reference
                 foreach (ConsolidateDeviceSettings consol in ConsolidateFromDevices)
                     consol.RefreshDeviceReference();
@@ -885,8 +904,13 @@ namespace PVSettings
             
             set
             {
-                _DeviceSettings = null;  // clear cached reference to device type details
+                _DeviceSettings = null;  // clear cached reference to device type details                
                 SetValue("id", value, "Id");
+                if (HasAutoName)
+                {
+                    SetAutoName();
+                    DoPropertyChanged("Name");
+                }
             }             
         }
  

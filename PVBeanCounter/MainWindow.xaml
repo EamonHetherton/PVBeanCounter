@@ -541,10 +541,12 @@
                                             </Grid.ColumnDefinitions>
                                             <Label Content="Plant Name" Margin="18,0,0,0" Grid.Column="0" HorizontalContentAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="10.5" />
                                             <TextBox Name="textBoxSunnyExplorerPlantName" Grid.Column="1" Text="{Binding Path=SunnyExplorerPlantName}" ToolTip="The &quot;Plant Name&quot; recorded in the &quot;SunnyExplorer.sx2&quot; file" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="10.5" Margin="0,4,4,4" />
-                                            <Label Grid.Column="2" Content="Hist Days" Padding="8,0,5,0" VerticalAlignment="Center" FontSize="10.5" />
-                                            <TextBox Grid.Column="3" Height="18" MinWidth="70" HorizontalAlignment="Left" Text="{Binding Path=MaxHistoryDays}" VerticalAlignment="Center" ToolTip="Enter the number of days history stored in the device" />
-                                            <Label Content="Password" Height="28" HorizontalContentAlignment="Right" Grid.Column="4" Padding="8,0,5,0" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                                            <TextBox Name="textBoxSunnyExplorerPassword" Text="{Binding Path=SunnyExplorerPassword}" ToolTip="The inverter password (default is '0000')" Grid.Column="5" MinWidth="60" Margin="0,0,10,0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="10.5" />
+                                            <Label Grid.Column="2" Content="Hist Days" Padding="7,0,5,0" VerticalAlignment="Center" FontSize="10.5" />
+                                            <TextBox Grid.Column="3" Height="18" MinWidth="35" HorizontalAlignment="Left" Text="{Binding Path=MaxHistoryDays}" VerticalAlignment="Center" ToolTip="Enter the number of days history stored in the device" />
+                                            <Label Content="Password" Height="28" HorizontalContentAlignment="Right" Grid.Column="4" Padding="8,0,5,0" 
+                                                   VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                                            <TextBox Name="textBoxSunnyExplorerPassword" Text="{Binding Path=SunnyExplorerPassword}" ToolTip="The inverter password (default is '0000')" 
+                                                     Grid.Column="5" MinWidth="50" Margin="0,0,10,0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="10.5" />
                                         </Grid>
                                     </Grid>
                                     <Grid Name="gridDeviceDatabase">
