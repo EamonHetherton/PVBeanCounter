@@ -355,9 +355,8 @@ namespace PVService
                     }
 
                     timeLine = AddRepeatingPattern(timeLine, patterns, runningMinute, intervalStart.Value, intervalEnd.Value);
-                    /*
-                    if (((CCMeterManagerSettings)GlobalSettings.ApplicationSettings.MeterManagerList[0]).CCUsesHistoryUpdate
-                        && GlobalSettings.ApplicationSettings.MeterHistoryTimeLineAdjust)
+                    
+                    if (GlobalSettings.ApplicationSettings.MeterHistoryTimeLineAdjust)
                     {
                         TimeLineMinute dontCareMinute;
                         dontCareMinute.State = TimeLineState.Unspecified;
@@ -392,7 +391,6 @@ namespace PVService
 
                         timeLine = AddRepeatingPattern(timeLine, patterns, dontCareMinute, TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(MinutesInDay - 1));
                     }
-                     * */
                 }
             }
 

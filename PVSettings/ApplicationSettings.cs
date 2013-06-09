@@ -56,6 +56,7 @@ namespace PVSettings
         private ObservableCollection<PvOutputSiteSettings> _PvOutputSystemList;
         private ObservableCollection<DeviceManagerDeviceSettings> _AllDevicesList;
         private ObservableCollection<DeviceManagerDeviceSettings> _AllConsolidationDevicesList;
+        private ObservableCollection<String> _DatabaseVersions;
         
         protected SystemServices SystemServices;
 
@@ -87,6 +88,7 @@ namespace PVSettings
             _Host = new GenericSetting<string>("", this, "Host");
             _Database = new GenericSetting<string>("", this, "Database");
             _DatabaseType = new GenericSetting<string>("", this, "DatabaseType");
+            _DatabaseVersion = new GenericSetting<string>("", this, "DatabaseVersion");
             _ProviderType = new GenericSetting<string>("", this, "ProviderType");
             _ProviderName = new GenericSetting<string>("", this, "ProviderName");
             _OleDbName = new GenericSetting<string>("", this, "OleDbName");
@@ -104,6 +106,9 @@ namespace PVSettings
             _IntervalStopTime = new GenericSetting<TimeSpan?>(this, "IntervalStopTime");
             _InverterStartTime = new GenericSetting<TimeSpan?>(this, "InverterStartTime");
             _InverterStopTime = new GenericSetting<TimeSpan?>(this, "InverterStopTime");
+            _MeterHistoryTimeLineAdjust = new GenericSetting<bool>(false, this, "MeterHistoryTimeLineAdjust");
+            _MeterHistoryStartMinute = new GenericSetting<Int32?>(this, "MeterHistoryStartMinute");
+            _MeterHistoryEndMinute = new GenericSetting<Int32?>(this, "MeterHistoryEndMinute");
             _ServiceWakeInterval = new GenericSetting<TimeSpan?>(this, "ServiceWakeInterval");
             _ServiceSuspendInterval = new GenericSetting<TimeSpan?>(this, "ServiceSuspendInterval");
             _SunnyExplorerPlantName = new GenericSetting<string>("", this, "SunnyExplorerPlantName");
@@ -130,6 +135,20 @@ namespace PVSettings
             LoadingEnergyEvents = false;
 
             CheckProtocolDeviceGroups();
+
+            _DatabaseVersions = new ObservableCollection<string>();
+            SelectDatabaseVersions();
+        }
+
+        private void SelectDatabaseVersions()
+        {
+            _DatabaseVersions.Clear();
+
+            if (DatabaseType == "MySql")
+            {
+                _DatabaseVersions.Add("5.0");
+                _DatabaseVersions.Add("5.6");
+            }
         }
 
         private void CheckProtocolDeviceGroups()
@@ -584,7 +603,43 @@ namespace PVSettings
         public String DatabaseType
         {
             get { return _DatabaseType.Value; }
-            set { _DatabaseType.Value = value; }
+            set 
+            {
+                String old = _DatabaseType.Value;
+                _DatabaseType.Value = value;
+                SelectDatabaseVersions();
+                if (old != value)
+                    if (_DatabaseVersions.Count > 0)                    
+                        DatabaseVersion = _DatabaseVersions[0];
+                    else
+                        DatabaseVersion = "";
+            }
+        }
+
+        public ObservableCollection<String> DatabaseVersions
+        {
+            get
+            {
+                return _DatabaseVersions;
+            }
+        }
+
+        private GenericSetting<string> _DatabaseVersion;
+        public String DatabaseVersion
+        {
+            get 
+            {
+                if (_DatabaseVersion.Value == "")
+                {
+                    if (_DatabaseVersions.Count > 0)
+                        return _DatabaseVersions[0];
+                    else
+                        return "";
+                }
+                else
+                    return _DatabaseVersion.Value; 
+            }
+            set { _DatabaseVersion.Value = value; }
         }
 
         private GenericSetting<string> _ProviderType;
@@ -754,6 +809,28 @@ namespace PVSettings
         {
             get { return _InverterStopTime.Value; }
             set { _InverterStopTime.Value = value; }
+        }
+
+        private GenericSetting<bool> _MeterHistoryTimeLineAdjust;
+        public bool MeterHistoryTimeLineAdjust
+        {
+            get { return _MeterHistoryTimeLineAdjust.Value; }
+            set 
+            { _MeterHistoryTimeLineAdjust.Value = value; }
+        }
+
+        private GenericSetting<Int32?> _MeterHistoryStartMinute;
+        public Int32? MeterHistoryStartMinute
+        {
+            get { return _MeterHistoryStartMinute.Value; }
+            set { _MeterHistoryStartMinute.Value = value; }
+        }
+
+        private GenericSetting<Int32?> _MeterHistoryEndMinute;
+        public Int32? MeterHistoryEndMinute
+        {
+            get { return _MeterHistoryEndMinute.Value; }
+            set { _MeterHistoryEndMinute.Value = value; }
         }
 
         private GenericSetting<TimeSpan?> _ServiceWakeInterval;

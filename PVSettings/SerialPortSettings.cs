@@ -169,6 +169,7 @@ namespace PVSettings
                 list.Add("2400");
                 list.Add("4800");
                 list.Add("9600");
+                list.Add("19200");
                 list.Add("57600");
                 list.Add("115200");
                 list.Add("230400");

@@ -269,7 +269,7 @@ namespace PVService
                 LogMessage("StartService: connecting to database: " + GlobalSettings.TheDB.ConnectionString, LogEntryType.Information);
                 PVSettings.VersionManager vm = new VersionManager();
                 GenConnection con = GlobalSettings.TheDB.NewConnection();
-                vm.UpdateVersion(con, GlobalSettings.ApplicationSettings.DatabaseType);
+                vm.UpdateVersion(con);
                 con.Close();
                 con.Dispose();
             }

@@ -48,7 +48,7 @@
         <name value="ReceiveHeader" />
         <type value ="Read" />
         <element value="0x02" excludefromchecksum="true"/>
-        <element value="0x05" />
+        <element value="0x06" />
         <element type="BYTE[1]" name="Address" />     
       </message>
       <message>

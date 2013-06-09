@@ -1129,23 +1129,30 @@
                         <ComboBoxItem Content="SQL Server" />
                     </ComboBox>
                     <Label Content="Database Type" Height="28" Name="label1" IsEnabled="True" HorizontalContentAlignment="Right" Canvas.Left="82" Canvas.Top="52" />
-                    <ComboBox Height="23" Name="cbxProviderType" Width="174" Text="{Binding Path=ProviderType, Converter={StaticResource NullableValueConverter}}" IsEditable="True" Canvas.Left="171" Canvas.Top="84" ToolTip="Proprietary for database specific provider - OleDb for generic database access via OleDb">
+                    <ComboBox Height="23" Width="174" Text="{Binding Path=DatabaseVersion, Converter={StaticResource NullableValueConverter}}" ItemsSource="{Binding Path=DatabaseVersions}" IsEditable="True" 
+                              Canvas.Left="171" Canvas.Top="82" ToolTip="Database Type" />
+                        
+                    <Label Content="Database Version" Height="28" IsEnabled="True" HorizontalContentAlignment="Right" Canvas.Left="65" Canvas.Top="78" />
+                    <ComboBox Height="23" Name="cbxProviderType" Width="174" Text="{Binding Path=ProviderType, Converter={StaticResource NullableValueConverter}}" 
+                              IsEditable="True" Canvas.Left="171" Canvas.Top="110" ToolTip="Proprietary for database specific provider - OleDb for generic database access via OleDb">
                         <ComboBoxItem Content="OleDb" />
                         <ComboBoxItem Content="Proprietary" />
                     </ComboBox>
-                    <Label Content="Provider Type" Height="28" IsEnabled="True" Name="label2"  HorizontalContentAlignment="Right" Canvas.Left="83" Canvas.Top="82" />
-                    <ComboBox Height="23" Name="cbxOleDbProvider" Width="174" Text="{Binding Path=OleDbName, Converter={StaticResource NullableValueConverter}}" IsEditable="True" Canvas.Left="171" Canvas.Top="142" ToolTip="Only used when Provider Name is System.Data.OleDb">
+                    <Label Content="Provider Type" Height="28" IsEnabled="True" Name="label2"  HorizontalContentAlignment="Right" Canvas.Left="83" Canvas.Top="107" />
+                    <ComboBox Height="23" Name="cbxOleDbProvider" Width="174" Text="{Binding Path=OleDbName, Converter={StaticResource NullableValueConverter}}" 
+                              IsEditable="True" Canvas.Left="171" Canvas.Top="172" ToolTip="Only used when Provider Name is System.Data.OleDb">
                         <ComboBoxItem Content="Microsoft.ACE.OLEDB.12.0" />
                         <ComboBoxItem Content="Microsoft.Jet.OLEDB.4.0" />
                     </ComboBox>
-                    <Label Content="OleDb Name" Height="28" IsEnabled="True" Name="label7" HorizontalContentAlignment="Right" Canvas.Left="91" Canvas.Top="140" />
-                    <ComboBox Height="23" Name="cbxProvider" Width="174" Text="{Binding Path=ProviderName, Converter={StaticResource NullableValueConverter}}" IsEditable="True" Canvas.Left="171" Canvas.Top="113" ToolTip="Registered name of the .Net provider">
+                    <Label Content="OleDb Name" Height="28" IsEnabled="True" Name="label7" HorizontalContentAlignment="Right" Canvas.Left="91" Canvas.Top="170" />
+                    <ComboBox Height="23" Name="cbxProvider" Width="174" Text="{Binding Path=ProviderName, Converter={StaticResource NullableValueConverter}}" 
+                              IsEditable="True" Canvas.Left="171" Canvas.Top="140" ToolTip="Registered name of the .Net provider">
                         <ComboBoxItem Content="MySql.Data.MySQLClient" />
                         <ComboBoxItem Content="System.Data.OleDb" />
                         <ComboBoxItem Content="System.Data.SQLite" />
                         <ComboBoxItem Content="System.Data.SqlClient" />
                     </ComboBox>
-                    <Label Content="Provider Name" Height="28" IsEnabled="True" Name="label8" HorizontalContentAlignment="Right" Canvas.Left="81" Canvas.Top="111" />
+                    <Label Content="Provider Name" Height="28" IsEnabled="True" Name="label8" HorizontalContentAlignment="Right" Canvas.Left="81" Canvas.Top="138" />
                     <TextBox Height="23" Name="txtUserName" Width="154" Text="{Binding Path=UserName, Converter={StaticResource NullableValueConverter}}" Canvas.Left="517" Canvas.Top="25" ToolTip="Used when the database requires a login username" />
                     <Label Content="User Name" Height="28" IsEnabled="True" Name="label4" HorizontalContentAlignment="Right" Canvas.Left="447" Canvas.Top="21" />
                     <TextBox Height="23" Name="txtPassword" Width="154" Text="{Binding Path=Password, Converter={StaticResource NullableValueConverter}}" Canvas.Left="517" Canvas.Top="54" ToolTip="Used when the database requires a login password" />

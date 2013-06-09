@@ -727,9 +727,9 @@ namespace PVSettings
                 return
                     "CREATE TABLE `devicereading_energy` " +
                     "( " +
-                        "`ReadingEnd` DATETIME(3) NOT NULL, " +
+                        "`ReadingEnd` DATETIME NOT NULL, " +
                         "`DeviceFeature_Id` MEDIUMINT UNSIGNED NOT NULL, " +
-                        "`ReadingStart` DATETIME(3) NOT NULL, " +
+                        "`ReadingStart` DATETIME NOT NULL, " +
                         "`EnergyTotal` DOUBLE NULL, " +
                         "`EnergyToday` DOUBLE NULL, " +
                         "`EnergyDelta` FLOAT NULL, " +
@@ -761,6 +761,40 @@ namespace PVSettings
                     "from devicereading_energy r, devicefeature f " +
                     "where r.DeviceFeature_Id = f.Id " +
                     "group by f.Device_Id, DATE(r.ReadingEnd) ";
+            }
+        }
+    }
+
+    internal class MySql_5_6_DDL : MySql_DDL
+    {
+        public override string Table_devicereading_energy_2000
+        {
+            get
+            {
+                return
+                    "CREATE TABLE `devicereading_energy` " +
+                    "( " +
+                        "`ReadingEnd` DATETIME(3) NOT NULL, " +
+                        "`DeviceFeature_Id` MEDIUMINT UNSIGNED NOT NULL, " +
+                        "`ReadingStart` DATETIME(3) NOT NULL, " +
+                        "`EnergyTotal` DOUBLE NULL, " +
+                        "`EnergyToday` DOUBLE NULL, " +
+                        "`EnergyDelta` FLOAT NULL, " +
+                        "`CalcEnergyDelta` FLOAT NULL, " +
+                        "`HistEnergyDelta` FLOAT NULL, " +
+                        "`Mode` MEDIUMINT NULL, " +
+                        "`ErrorCode` MEDIUMINT NULL, " +
+                        "`Power` MEDIUMINT NULL, " +
+                        "`Volts` FLOAT NULL, " +
+                        "`Amps` FLOAT NULL, " +
+                        "`Frequency` FLOAT NULL, " +
+                        "`Temperature` FLOAT NULL, " +
+                        "`MinPower` MEDIUMINT NULL, " +
+                        "`MaxPower` MEDIUMINT NULL, " +
+                        "PRIMARY KEY (`ReadingEnd`, `DeviceFeature_Id` ) , " +
+                        "CONSTRAINT `uk_devicereading_energy` UNIQUE (`DeviceFeature_Id`, `ReadingEnd`) , " +
+                        "CONSTRAINT `fk_devicereadingenergy_devicefeature` FOREIGN KEY (DeviceFeature_Id) REFERENCES `devicefeature` (Id) " +
+                    ") ENGINE=InnoDB DEFAULT CHARSET=latin1 ";
             }
         }
     }
@@ -3107,23 +3141,35 @@ namespace PVSettings
             }
         }
 
-        public bool UpdateTo_1_3_5_4(GenConnection con, String databaseType)
+        private DDL SelectDDL(String databaseType)
         {
             DDL DDL;
+
+            if (databaseType == "MySql")
+                if (GlobalSettings.ApplicationSettings.DatabaseVersion == "5.6")
+                    DDL = new MySql_5_6_DDL();
+                else
+                    DDL = new MySql_DDL();
+            else if (databaseType == "Jet")
+                DDL = new Jet_DDL();
+            else if (databaseType == "SQLite")
+                DDL = new SQLite_DDL();
+            else if (databaseType == "SQL Server")
+                DDL = new SQLServer_DDL();
+            else
+                throw new Exception("Unexpected database type: " + databaseType);
+            return DDL;
+        }
+
+        public bool UpdateTo_1_3_5_4(GenConnection con, String databaseType)
+        {
             int res;
 
             res = Version.CompareVersion( "1", "3", "5", "4");
             if (res >= 0)
                 return false;
-            
-            if (databaseType == "MySql")
-                DDL = new MySql_DDL();
-            else if (databaseType == "Jet")
-                DDL = new Jet_DDL();
-            else if (databaseType == "SQLite")
-                DDL = new SQLite_DDL();
-            else
-                throw new Exception("Unexpected database type: " + databaseType);
+
+            DDL DDL = SelectDDL(databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_3_5_4", "Updating database structure to suit version 1.3.5.4", LogEntryType.Information);
 
@@ -3143,22 +3189,14 @@ namespace PVSettings
         }
 
         public bool UpdateTo_1_3_6_0(GenConnection con, String databaseType)
-        {
-            DDL DDL;
+        {            
             int res;
             
             res = Version.CompareVersion("1", "3", "6", "0");
             if (res >= 0)
-                return false;            
+                return false;
 
-            if (databaseType == "MySql")
-                DDL = new MySql_DDL();
-            else if (databaseType == "Jet")
-                DDL = new Jet_DDL();
-            else if (databaseType == "SQLite")
-                DDL = new SQLite_DDL();
-            else
-                throw new Exception("Unexpected database type: " + databaseType);
+            DDL DDL = SelectDDL(databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_3_6_0", "Updating database structure to suit version 1.3.6.0", LogEntryType.Information);
 
@@ -3186,21 +3224,13 @@ namespace PVSettings
 
         public bool UpdateTo_1_4_0_0(GenConnection con, String databaseType)
         {
-            DDL DDL;
             int res;
             
             res = Version.CompareVersion("1", "4", "0", "0");
             if (res >= 0)
-                return false;           
+                return false;
 
-            if (databaseType == "MySql")
-                DDL = new MySql_DDL();
-            else if (databaseType == "Jet")
-                DDL = new Jet_DDL();
-            else if (databaseType == "SQLite")
-                DDL = new SQLite_DDL();
-            else
-                throw new Exception("Unexpected database type: " + databaseType);
+            DDL DDL = SelectDDL(databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_4_0_0", "Updating database structure to suit version 1.4.0.1", LogEntryType.Information);
 
@@ -3231,21 +3261,13 @@ namespace PVSettings
 
         public bool UpdateTo_1_4_0_1(GenConnection con, String databaseType)
         {
-            DDL DDL;
             int res;
 
             res = Version.CompareVersion("1", "4", "0", "1");
                 if (res >= 0)
                     return false;
-            
-            if (databaseType == "MySql")
-                DDL = new MySql_DDL();
-            else if (databaseType == "Jet")
-                DDL = new Jet_DDL();
-            else if (databaseType == "SQLite")
-                DDL = new SQLite_DDL();
-            else
-                throw new Exception("Unexpected database type: " + databaseType);
+
+            DDL DDL = SelectDDL(databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_4_0_1", "Updating database structure to suit version 1.4.0.1", LogEntryType.Information);
 
@@ -3276,21 +3298,13 @@ namespace PVSettings
 
         public bool UpdateTo_1_4_0_3(GenConnection con, String databaseType)
         {
-            DDL DDL;
             int res;
 
             res = Version.CompareVersion("1", "4", "0", "3");
                 if (res >= 0)
                     return false;
-            
-            if (databaseType == "MySql")
-                DDL = new MySql_DDL();
-            else if (databaseType == "Jet")
-                DDL = new Jet_DDL();
-            else if (databaseType == "SQLite")
-                DDL = new SQLite_DDL();
-            else
-                throw new Exception("Unexpected database type: " + databaseType);
+
+            DDL DDL = SelectDDL(databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_4_0_3", "Updating database structure to suit version 1.4.0.3", LogEntryType.Information);
 
@@ -3345,7 +3359,6 @@ namespace PVSettings
 
         public bool UpdateTo_1_4_2_1(GenConnection con, String databaseType)
         {
-            DDL DDL;
             int res;
 
             res = Version.CompareVersion("1", "4", "2", "1");
@@ -3354,16 +3367,7 @@ namespace PVSettings
             
             bool success = true;
 
-            if (databaseType == "MySql")
-                DDL = new MySql_DDL();
-            else if (databaseType == "Jet")
-                DDL = new Jet_DDL();
-            else if (databaseType == "SQLite")
-                DDL = new SQLite_DDL();
-            else if (databaseType == "SQL Server")
-                DDL = new SQLServer_DDL();
-            else
-                throw new Exception("Unexpected database type: " + databaseType);
+            DDL DDL = SelectDDL(databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_4_2_1", "Updating database structure to suit version 1.4.2.1", LogEntryType.Information);
 
@@ -3377,7 +3381,6 @@ namespace PVSettings
 
         public bool UpdateTo_1_5_0_0(GenConnection con, String databaseType)
         {
-            DDL DDL;
             int res;
 
             res = Version.CompareVersion("1", "5", "0", "0");
@@ -3386,16 +3389,7 @@ namespace PVSettings
             
             bool success = true;
 
-            if (databaseType == "MySql")
-                DDL = new MySql_DDL();
-            else if (databaseType == "Jet")
-                DDL = new Jet_DDL();
-            else if (databaseType == "SQLite")
-                DDL = new SQLite_DDL();
-            else if (databaseType == "SQL Server")
-                DDL = new SQLServer_DDL();
-            else
-                throw new Exception("Unexpected database type: " + databaseType);
+            DDL DDL = SelectDDL(databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_5_0_0", "Updating database structure to suit version 1.5.0.0", LogEntryType.Information);
 
@@ -3442,7 +3436,6 @@ namespace PVSettings
 
         public bool UpdateTo_1_7_0_0(GenConnection con, String databaseType)
         {
-            DDL DDL;
             int res;
 
             res = Version.CompareVersion("1", "7", "0", "0");
@@ -3451,16 +3444,7 @@ namespace PVSettings
             
             bool success = true;
 
-            if (databaseType == "MySql")
-                DDL = new MySql_DDL();
-            else if (databaseType == "Jet")
-                DDL = new Jet_DDL();
-            else if (databaseType == "SQLite")
-                DDL = new SQLite_DDL();
-            else if (databaseType == "SQL Server")
-                DDL = new SQLServer_DDL();
-            else
-                throw new Exception("Unexpected database type: " + databaseType);
+            DDL DDL = SelectDDL(databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_7_0_0", "Updating database structure to suit version 1.7.0.0", LogEntryType.Information);
 
@@ -3478,7 +3462,6 @@ namespace PVSettings
 
         public bool UpdateTo_1_7_1_0(GenConnection con, String databaseType)
         {
-            DDL DDL;
             int res;
 
             res = Version.CompareVersion("1", "7", "1", "0");
@@ -3487,16 +3470,7 @@ namespace PVSettings
             
             bool success = true;
 
-            if (databaseType == "MySql")
-                DDL = new MySql_DDL();
-            else if (databaseType == "Jet")
-                DDL = new Jet_DDL();
-            else if (databaseType == "SQLite")
-                DDL = new SQLite_DDL();
-            else if (databaseType == "SQL Server")
-                DDL = new SQLServer_DDL();
-            else
-                throw new Exception("Unexpected database type: " + databaseType);
+            DDL DDL = SelectDDL(databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_7_1_0", "Updating database structure to suit version 1.7.1.0", LogEntryType.Information);
 
@@ -3516,7 +3490,6 @@ namespace PVSettings
 
         public bool UpdateTo_1_8_3_0(GenConnection con, String databaseType)
         {
-            DDL DDL;
             int res;
 
             res = Version.CompareVersion("1", "8", "3", "0");
@@ -3525,16 +3498,7 @@ namespace PVSettings
             
             bool success = true;
 
-            if (databaseType == "MySql")
-                DDL = new MySql_DDL();
-            else if (databaseType == "Jet")
-                DDL = new Jet_DDL();
-            else if (databaseType == "SQLite")
-                DDL = new SQLite_DDL();
-            else if (databaseType == "SQL Server")
-                DDL = new SQLServer_DDL();
-            else
-                throw new Exception("Unexpected database type: " + databaseType);
+            DDL DDL = SelectDDL(databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_8_3_0", "Updating database structure to suit version 1.8.3.0", LogEntryType.Information);
 
@@ -3561,7 +3525,6 @@ namespace PVSettings
 
         public bool UpdateTo_1_8_3_6(GenConnection con, String databaseType)
         {
-            DDL DDL;
             int res;
 
             res = Version.CompareVersion("1", "8", "3", "6");
@@ -3570,16 +3533,7 @@ namespace PVSettings
             
             bool success = true;
 
-            if (databaseType == "MySql")
-                DDL = new MySql_DDL();
-            else if (databaseType == "Jet")
-                DDL = new Jet_DDL();
-            else if (databaseType == "SQLite")
-                DDL = new SQLite_DDL();
-            else if (databaseType == "SQL Server")
-                DDL = new SQLServer_DDL();
-            else
-                throw new Exception("Unexpected database type: " + databaseType);
+            DDL DDL = SelectDDL(databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_8_3_6", "Updating database structure to suit version 1.8.3.6", LogEntryType.Information);
 
@@ -3610,7 +3564,6 @@ namespace PVSettings
 
         public bool UpdateTo_1_9_0_2(GenConnection con, String databaseType)
         {
-            DDL DDL;
             int res;
 
             res = Version.CompareVersion("1", "9", "0", "2");
@@ -3619,16 +3572,7 @@ namespace PVSettings
             
             bool success = true;
 
-            if (databaseType == "MySql")
-                DDL = new MySql_DDL();
-            else if (databaseType == "Jet")
-                DDL = new Jet_DDL();
-            else if (databaseType == "SQLite")
-                DDL = new SQLite_DDL();
-            else if (databaseType == "SQL Server")
-                DDL = new SQLServer_DDL();
-            else
-                throw new Exception("Unexpected database type: " + databaseType);
+            DDL DDL = SelectDDL(databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_1_9_0_2", "Updating database structure to suit version 1.9.0.2", LogEntryType.Information);
 
@@ -3643,7 +3587,6 @@ namespace PVSettings
 
         public bool UpdateTo_2_0_0_0(GenConnection con, String databaseType)
         {
-            DDL DDL;
             int res;
 
             res = Version.CompareVersion("2", "0", "0", "0");
@@ -3652,16 +3595,7 @@ namespace PVSettings
             
             bool success = true;
 
-            if (databaseType == "MySql")
-                DDL = new MySql_DDL();
-            else if (databaseType == "Jet")
-                DDL = new Jet_DDL();
-            else if (databaseType == "SQLite")
-                DDL = new SQLite_DDL();
-            else if (databaseType == "SQL Server")
-                DDL = new SQLServer_DDL();
-            else
-                throw new Exception("Unexpected database type: " + databaseType);
+            DDL DDL = SelectDDL(databaseType);
 
             GlobalSettings.LogMessage("UpdateTo_2_0_0_0", "Updating database structure to suit version 2.0.0.0", LogEntryType.Information);
 
@@ -3731,7 +3665,10 @@ namespace PVSettings
             DDL DDL;
             
             if (databaseType == "MySql")
-                DDL = new MySql_DDL();
+                if (GlobalSettings.ApplicationSettings.DatabaseVersion == "5.6")
+                    DDL = new MySql_5_6_DDL();
+                else
+                    DDL = new MySql_DDL();
             else if (databaseType == "Jet")
                 DDL = new Jet_DDL();
             else if (databaseType == "SQLite")
@@ -3778,36 +3715,38 @@ namespace PVSettings
             }
         }
 
-        public void UpdateVersion(GenConnection con, String databaseType)
+        public void UpdateVersion(GenConnection con)
         {
-            if (GetCurrentVersion(con, databaseType, out Version))
+            
+
+            if (GetCurrentVersion(con, GlobalSettings.ApplicationSettings.DatabaseType, out Version))
             {
 
-                if (databaseType != "SQL Server")
+                if (GlobalSettings.ApplicationSettings.DatabaseType != "SQL Server")
                 {
-                    UpdateTo_1_3_5_4(con, databaseType);
-                    UpdateTo_1_3_6_0(con, databaseType);
-                    UpdateTo_1_4_0_0(con, databaseType);
-                    UpdateTo_1_4_0_1(con, databaseType);
-                    UpdateTo_1_4_0_3(con, databaseType);
+                    UpdateTo_1_3_5_4(con, GlobalSettings.ApplicationSettings.DatabaseType);
+                    UpdateTo_1_3_6_0(con, GlobalSettings.ApplicationSettings.DatabaseType);
+                    UpdateTo_1_4_0_0(con, GlobalSettings.ApplicationSettings.DatabaseType);
+                    UpdateTo_1_4_0_1(con, GlobalSettings.ApplicationSettings.DatabaseType);
+                    UpdateTo_1_4_0_3(con, GlobalSettings.ApplicationSettings.DatabaseType);
                 }
 
-                UpdateTo_1_4_1_9(con, databaseType);
-                UpdateTo_1_4_2_1(con, databaseType);
-                UpdateTo_1_5_0_0(con, databaseType);
+                UpdateTo_1_4_1_9(con, GlobalSettings.ApplicationSettings.DatabaseType);
+                UpdateTo_1_4_2_1(con, GlobalSettings.ApplicationSettings.DatabaseType);
+                UpdateTo_1_5_0_0(con, GlobalSettings.ApplicationSettings.DatabaseType);
 
-                if (databaseType == "SQL Server")
-                    UpdateTo_1_5_0_2(con, databaseType);
+                if (GlobalSettings.ApplicationSettings.DatabaseType == "SQL Server")
+                    UpdateTo_1_5_0_2(con, GlobalSettings.ApplicationSettings.DatabaseType);
 
-                UpdateTo_1_7_0_0(con, databaseType);
-                UpdateTo_1_7_1_0(con, databaseType);
-                UpdateTo_1_8_3_0(con, databaseType);
-                UpdateTo_1_8_3_6(con, databaseType);
-                UpdateTo_1_9_0_2(con, databaseType);
-                UpdateTo_2_0_0_0(con, databaseType);
+                UpdateTo_1_7_0_0(con, GlobalSettings.ApplicationSettings.DatabaseType);
+                UpdateTo_1_7_1_0(con, GlobalSettings.ApplicationSettings.DatabaseType);
+                UpdateTo_1_8_3_0(con, GlobalSettings.ApplicationSettings.DatabaseType);
+                UpdateTo_1_8_3_6(con, GlobalSettings.ApplicationSettings.DatabaseType);
+                UpdateTo_1_9_0_2(con, GlobalSettings.ApplicationSettings.DatabaseType);
+                UpdateTo_2_0_0_0(con, GlobalSettings.ApplicationSettings.DatabaseType);
             }
             else
-                PopulateEmptyDatabase(con, databaseType);
+                PopulateEmptyDatabase(con, GlobalSettings.ApplicationSettings.DatabaseType);
         }
 
     }

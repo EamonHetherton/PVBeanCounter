@@ -130,6 +130,11 @@ namespace PVSettings
         {
             ApplicationSettings = (ApplicationSettings)root;
             SerialPort = null;
+
+            _DeviceGroupName = new GenericSetting<String>("", this, "DeviceGroupName");
+            _Enabled = new GenericSetting<bool>(true, this, "Enabled");
+            _Name = new GenericSetting<String>("", this, "Name");
+
             String deviceGroupName = DeviceGroupName;
             DeviceGroup = ApplicationSettings.DeviceManagementSettings.GetDeviceGroup(deviceGroupName);           
             ProtocolSettings = ApplicationSettings.DeviceManagementSettings.GetProtocol(DeviceGroup.Protocol);
@@ -284,11 +289,12 @@ namespace PVSettings
             }
         }
 
+        private GenericSetting<string> _DeviceGroupName;
         public String DeviceGroupName
         {
             get
             {
-                string val = GetValue("devicegroupname");
+                string val = _DeviceGroupName.Value;
                 if (val == "")
                 {
                     val = GetValue("protocol");
@@ -296,7 +302,7 @@ namespace PVSettings
                         val = "Modbus";
                     else
                     {
-                        SetValue("devicegroupname", val, "DeviceGroupName", true);
+                        _DeviceGroupName.SetValue(val, true);
                         DeleteElement("protocol");
                     }
                 }
@@ -305,7 +311,8 @@ namespace PVSettings
             }
             set
             {
-                SetValue("devicegroupname", value, "DeviceGroupName");
+
+                _DeviceGroupName.Value = value;
                 DeviceGroup = ApplicationSettings.DeviceManagementSettings.GetDeviceGroup(value);
                 ProtocolSettings = ApplicationSettings.DeviceManagementSettings.GetProtocol(DeviceGroup.Protocol);
                 DoPropertyChanged("DeviceListItems");
@@ -332,17 +339,18 @@ namespace PVSettings
         {
             String newName = MackayFisher.Utilities.UniqueNameResolver<DeviceManagerSettings>.ResolveUniqueName(
                         DeviceGroupName, ApplicationSettings.DeviceManagerList.GetEnumerator(), this);
-            SetValue("name", newName, "Name", true);
+            _Name.SetValue(newName, true);
             HasAutoName = true;
             DoPropertyChanged("Description");
             return newName;
         }
 
+        private GenericSetting<string> _Name;
         public String Name
         {
             get
             {
-                String val = GetValue("name");
+                String val = _Name.Value;
                 if (val == "")
                     return SetAutoName();
                 else                
@@ -351,9 +359,8 @@ namespace PVSettings
 
             set
             {
-                SetValue("name", 
-                    MackayFisher.Utilities.UniqueNameResolver<DeviceManagerSettings>.ResolveUniqueName( value, ApplicationSettings.DeviceManagerList.GetEnumerator(), this), 
-                    "Name");
+                _Name.Value = 
+                    MackayFisher.Utilities.UniqueNameResolver<DeviceManagerSettings>.ResolveUniqueName( value, ApplicationSettings.DeviceManagerList.GetEnumerator(), this);
                 HasAutoName = (value == null || value == "" || value == DeviceGroupName);
                 DoPropertyChanged("Description");
             }
@@ -437,17 +444,11 @@ namespace PVSettings
             }
         }
 
+        private GenericSetting<bool> _Enabled;
         public bool Enabled
         {
-            get
-            {
-                return GetValue("enabled") == "true";
-            }
-
-            set
-            {
-                SetValue("enabled", value ? "true" : "false", "Enabled");
-            }
+            get { return _Enabled.Value; }
+            set { _Enabled.Value = value; } 
         }
 
         // Used with Listener device managers

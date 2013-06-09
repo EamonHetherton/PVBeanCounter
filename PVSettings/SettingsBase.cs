@@ -274,6 +274,29 @@ namespace PVSettings
             }
         }
 
+        public void SetValue(T value, bool suppressChange)
+        {
+            _Value = value;
+            haveValue = true;
+
+            if (value == null)
+                _settings.SetValue(_elementName, "", _propertyName);
+            else if (coreType == typeof(bool))
+                _settings.SetValue(_elementName, value.ToString().ToLower(), _propertyName);
+            else if (coreType == typeof(DateTime))
+            {
+                string temp;
+                TypeConverter conv = TypeDescriptor.GetConverter(typeof(DateTime?));
+
+                DateTime? date = (DateTime?)conv.ConvertFrom(value);  // conv needed if T is DateTime rather than DateTime?
+                temp = GenericStrings.ToString(date);
+
+                _settings.SetValue(_elementName, temp, _propertyName, suppressChange);
+            }
+            else
+                _settings.SetValue(_elementName, value.ToString(), _propertyName, suppressChange);
+        }
+
         public T Value
         {
             get
@@ -327,25 +350,7 @@ namespace PVSettings
             }
             set
             {
-                _Value = value;
-                haveValue = true;
-
-                if (value == null)
-                    _settings.SetValue(_elementName, "", _propertyName);
-                else if (coreType == typeof(bool))
-                    _settings.SetValue(_elementName, value.ToString().ToLower(), _propertyName);
-                else if (coreType == typeof(DateTime))
-                {
-                    string temp;
-                    TypeConverter conv = TypeDescriptor.GetConverter(typeof(DateTime?));
-                    
-                    DateTime? date = (DateTime?)conv.ConvertFrom(value);  // conv needed if T is DateTime rather than DateTime?
-                    temp = GenericStrings.ToString(date);
-                    
-                    _settings.SetValue(_elementName, temp, _propertyName);
-                }
-                else
-                    _settings.SetValue(_elementName, value.ToString(), _propertyName);
+                SetValue(value, false);
             }
         }
 
