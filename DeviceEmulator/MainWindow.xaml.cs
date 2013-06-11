@@ -195,7 +195,7 @@ namespace DeviceEmulator
         }
 
         SystemServices Services;
-        String LogFileName = @"C:\PVRecords\emulatorLog.txt";
+        String LogFileName = @"D:\PVRecords\emulatorLog.txt";
 
         public MainWindow()
         {

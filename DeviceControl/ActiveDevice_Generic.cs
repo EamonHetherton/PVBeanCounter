@@ -347,7 +347,6 @@ namespace Device
 
                     reading.EnergyDelta = EstEnergy.LastEnergyDelta_Power;
 
-                    reading.Power = (int?)InverterAlgorithm.PowerAC1;
                     if (InverterAlgorithm.PowerAC1High.HasValue)
                         if (InverterAlgorithm.PowerAC1.HasValue)
                             reading.Power = (Int32?)(InverterAlgorithm.PowerAC1.Value + InverterAlgorithm.PowerAC1High.Value * 65536);
@@ -361,11 +360,11 @@ namespace Device
                     reading.Frequency = (float?)InverterAlgorithm.Frequency;                   
 
                     if (GlobalSettings.SystemServices.LogTrace)
-                        LogMessage("ExtractFeatureReading - FeatureType: " + featureType + " - FeatureId: " + featureId
+                        LogMessage("ExtractFeatureReading - FeatureType: " + featureType + " - FeatureId: " + featureId + " - ReadingEnd: " + reading.ReadingEnd
                             + " - EnergyToday: " + reading.EnergyToday
                             + " - EnergyTotal: " + reading.EnergyTotal
                             + " - CalculatedEnergy: " + EstEnergy.EstimateEnergySumOfDeltas
-                            + " - Power: " + reading.Power
+                            + " - PowerInternal: " + reading.PowerInternal
                             + " - Mode: " + reading.Mode
                             + " - FreqAC: " + reading.Frequency
                             + " - Volts: " + reading.Volts
@@ -403,8 +402,8 @@ namespace Device
                         return;
                     }
                     if (GlobalSettings.SystemServices.LogTrace)
-                        LogMessage("ExtractFeatureReading - FeatureType: " + featureType + " - FeatureId: " + featureId
-                            + " - Power: " + reading.Power
+                        LogMessage("ExtractFeatureReading - FeatureType: " + featureType + " - FeatureId: " + featureId + " - ReadingEnd: " + reading.ReadingEnd
+                            + " - PowerInternal: " + reading.PowerInternal
                             + " - Mode: " + reading.Mode
                             + " - FreqAC: " + reading.Frequency
                             + " - Volts: " + reading.Volts
@@ -448,7 +447,7 @@ namespace Device
                     return;
                 }
                 if (GlobalSettings.SystemServices.LogTrace)
-                    LogMessage("ExtractFeatureReading - FeatureType: " + featureType + " - FeatureId: " + featureId
+                    LogMessage("ExtractFeatureReading - FeatureType: " + featureType + " - FeatureId: " + featureId + " - ReadingEnd: " + reading.ReadingEnd
                         + " - Mode: " + reading.Mode
                         + " - Volts: " + reading.Volts
                         + " - Current: " + reading.Amps
@@ -547,10 +546,6 @@ namespace Device
                     return false;
                 }
 
-                int curPower = (int)((InverterAlgorithm.PowerAC1.HasValue ? InverterAlgorithm.PowerAC1.Value : 0)
-                    + (InverterAlgorithm.PowerAC2.HasValue ? (int)InverterAlgorithm.PowerAC2.Value : 0)
-                    + (InverterAlgorithm.PowerAC3.HasValue ? (int)InverterAlgorithm.PowerAC3.Value : 0));
-
                 //if (dbWrite)
                 {                                        
                     foreach (FeatureSettings fs in DeviceSettings.FeatureList)
@@ -561,6 +556,11 @@ namespace Device
                 if (EmitEvents)
                 {
                     stage = "energy";
+
+                    int curPower = (int)((InverterAlgorithm.PowerAC1.HasValue ? InverterAlgorithm.PowerAC1.Value : 0)
+                        + (InverterAlgorithm.PowerAC2.HasValue ? (int)InverterAlgorithm.PowerAC2.Value : 0)
+                        + (InverterAlgorithm.PowerAC3.HasValue ? (int)InverterAlgorithm.PowerAC3.Value : 0));
+
                     EnergyEventStatus status = FindFeatureStatus(FeatureType.YieldAC, 0);
                     status.SetEventReading(curTime, 0.0, curPower, (int)duration.TotalSeconds, true);
                     DeviceManager.ManagerManager.EnergyEvents.ScanForEvents();

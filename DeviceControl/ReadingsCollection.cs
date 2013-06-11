@@ -551,7 +551,7 @@ namespace DeviceDataRecorders
 
 
         // AlignIntervals will slice readings at Interval boundaries
-        private void AlignIntervals(bool sliceGapFillReadings)
+        private void AlignIntervals()
         {
             int i = 0;  // position in Readings
             ReadingBase reading;
@@ -562,7 +562,7 @@ namespace DeviceDataRecorders
                 {
                     reading = Readings.Values[i];
 
-                    if (!sliceGapFillReadings && reading.IsHistoryReading())
+                    if (reading.IsHistoryReading())
                     {
                         // do not split GapFillReadings (from history) - they are expected to span multiple intervals and conform with required alignment
                         i++;
@@ -606,23 +606,18 @@ namespace DeviceDataRecorders
                 }
             }
         }
-       
+
         public void ConsolidateIntervals(DateTime consolidateTo)
         {
-            AlignIntervals(false); // This chops on interval boundaries for all but GapFillReading (history) readings
+            AlignIntervals(); // This chops on interval boundaries for all but GapFillReading (history) readings
 
             int i = 0;  // position in Readings
-            
             ReadingBase reading;
-            ReadingBase prevReading = null;
-            int prevReadingInterval = -1;
-            
             int currentInterval = -1;
-
             ReadingBase accumReading = null;
-            bool replaceReadings = false;
-            bool suppressAccum = false; // set to true when GapFillReading occurs in the interval - no accum allowed
 
+            string stage = "initial";
+            
             bool haveMutex = false;
             try
             {
@@ -630,72 +625,71 @@ namespace DeviceDataRecorders
                 haveMutex = true;
 
                 while (i < Readings.Count)
-                {              
-                    reading = Readings.Values[i];
+                {
+                    stage = "get reading";
+                    reading = Readings.Values[i++];
 
+                    stage = "intervals";
                     int readingInterval = DDP.GetIntervalNo(reading.ReadingEnd);  // end time interval of current reading
                     int readingStartInterval = DDP.GetIntervalNo(reading.ReadingStart, false);
 
-                    if (readingInterval != readingStartInterval || reading.IsHistoryReading())
-                    {
-                        // reading crosses interval boundary - do not consolidate - probably history record
-                        // GapFillReading should not be merged with regular readings - needs to retain the history signature for future history adjustments
-                        accumReading = null;
-                        replaceReadings = false;
-                        currentInterval = readingInterval;
-                        suppressAccum = true;
-                        i++;                        
-                        continue;
-                    }
-
                     if (readingInterval > currentInterval) // new interval detected
                     {
-                        suppressAccum = false;
-                        if (replaceReadings)
+                        // write prev accumulation if any
+                        if (accumReading != null)
                         {
+                            stage = "add accum";
                             // finalise previous consolidated interval
                             AddReading(accumReading, AddReadingMode.InsertReplace);
-                            replaceReadings = false;
+                            accumReading = null; 
                         }
 
+                        stage = "check end";
+                        // check exit point
                         if (reading.ReadingStart >= consolidateTo)
                             return;
 
+                        stage = "check history";
+                        // bypass history entries
+                        if (readingInterval != readingStartInterval || reading.IsHistoryReading())
+                        {
+                            // reading crosses interval boundary - do not consolidate - probably history record
+                            // GapFillReading should not be merged with regular readings - needs to retain the history signature for future history adjustments
+                            currentInterval = readingInterval;
+                            
+                            continue;
+                        }
+
+                        stage = "check full interval";
                         // end time is end of interval on first reading in interval - no accum required
                         if (DDP.GetDateTime(readingInterval) == reading.ReadingEnd)
                         {
-                            replaceReadings = false;
-                            i++;
                             currentInterval = readingInterval;
                             continue;
                         }
-                        accumReading = DDP.NewReadingGeneric(DDP.GetDateTime(readingInterval), DDP.IntervalDuration);
-                        replaceReadings = true;
                         currentInterval = readingInterval;
                     }
-                    i++;
-
-                    if (!suppressAccum)
+                    if (accumReading == null)
                     {
-                        if (prevReading != null)
-                            accumReading.AccumulateReading(prevReading, true, readingInterval != prevReadingInterval);
-                        prevReading = reading;
-                        prevReadingInterval = readingInterval;
+                        stage = "new accum";
+                        accumReading = DDP.NewReadingGeneric(DDP.GetDateTime(readingInterval), DDP.IntervalDuration);
                     }
-                }
-                if (prevReading != null)
-                    accumReading.AccumulateReading(prevReading, true, true);
+                    if (GlobalSettings.SystemServices.LogTrace)
+                        GlobalSettings.LogMessage("ReadingsCollection.ConsolidateIntervals", "AccumulateReading", LogEntryType.Trace);
+                    stage = "accumulate";
+                    accumReading.AccumulateReading(reading, true, UpdateMode.Replace, false);                    
+                }  //end while
 
-                if (replaceReadings)
+                if (accumReading != null)
                 {
+                    stage = "end accum";
                     // finalise last consolidated interval
                     AddReading(accumReading, AddReadingMode.InsertReplace);
-                    replaceReadings = false;
                 }
             }
             catch (Exception e)
             {
-                GlobalSettings.LogMessage("ReadingsCollection.ConsolidateIntervals", "Exception: " + e.Message);
+                GlobalSettings.LogMessage("ReadingsCollection.ConsolidateIntervals", "Stage: " + stage + " - Exception: " + e.Message, LogEntryType.Information);
                 throw e;
             }
             finally

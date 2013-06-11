@@ -36,7 +36,7 @@ namespace DeviceDataRecorders
         public virtual int QueryInterval { get; set; }
         public int RecordingInterval { get; set; }
         public bool EnforceRecordingInterval { get; set; }
-        public bool UseCalculateFromPrevious { get; set; }
+        public bool UseCalculateFromPrevious { get; set; }  // DMF - NOT USED - always false!!!
 
         public float CalibrationFactor { get; set; }
         
@@ -167,7 +167,7 @@ namespace DeviceDataRecorders
             if (VoltsInternal != other.VoltsInternal
                 || AmpsInternal != other.AmpsInternal
                 || FrequencyInternal != other.FrequencyInternal
-                || PowerInternal != other.PowerInternal
+                || _PowerInternal != other._PowerInternal
                 || EnergyDeltaInternal != other.EnergyDeltaInternal
                 || CalibrationDeltaInternal != other.CalibrationDeltaInternal)
                 return false;
@@ -270,24 +270,25 @@ namespace DeviceDataRecorders
             }
         }
 
-        private int? PowerInternal = null;
+        private int? _PowerInternal = null;
         public int? Power 
         {
             get
             {
-                if (PowerInternal.HasValue)
-                    return PowerInternal;
+                if (_PowerInternal.HasValue)
+                    return _PowerInternal;
                 else
                     return AveragePower;
             }
 
             set
             {
-                PowerInternal = value;
+                _PowerInternal = value;
                 if (!AttributeRestoreMode) UpdatePending = true;
             }
         }
 
+        public int? PowerInternal { get { return _PowerInternal; } }
         
         public int AveragePower 
         {
@@ -298,22 +299,6 @@ namespace DeviceDataRecorders
         }
         
         private Double? EnergyDeltaInternal = null;
-
-        /*
-        private Double? EnergyDeltaInternal
-        {
-            get { return _EnergyDeltaInternal; }
-            set
-            {
-                _EnergyDeltaInternal = value;
-                if (FeatureType == PVSettings.FeatureType.YieldDC && value.HasValue)
-                {
-                    int i;
-                    i = 0;
-                }
-            }
-        }
-        */
 
         public Double? EnergyDeltaNullable
         {
@@ -580,7 +565,7 @@ namespace DeviceDataRecorders
                 newRec.CalibrationDeltaInternal = CalibrationDeltaInternal * factor;
             if (HistEnergyDeltaInternal.HasValue)
                 newRec.HistEnergyDeltaInternal = HistEnergyDeltaInternal * factor;
-            newRec.PowerInternal = PowerInternal;
+            newRec._PowerInternal = _PowerInternal;
             newRec.ModeInternal = ModeInternal;
             newRec.ErrorCodeInternal = ErrorCodeInternal;
             newRec.VoltsInternal = VoltsInternal;
@@ -603,92 +588,152 @@ namespace DeviceDataRecorders
             return newRec;
         }
 
-        public override void AccumulateReading(ReadingBase readingGeneric, bool useTemperature, bool updatePower, bool accumulateDuration = false, Double operationFactor = 1.0)
+        public override void AccumulateReading(ReadingBase readingGeneric, bool useTemperature, UpdateMode updatePower, bool accumulateDuration = false, Double operationFactor = 1.0)
         {
-            if (GlobalSettings.SystemServices.LogDetailTrace)
-                GlobalSettings.LogMessage("AccumulateReading", "TRACE Enter consolidation loop - Start: " 
-                    + readingGeneric.ReadingStart + " - End: " + readingGeneric.ReadingEnd + " - updatePower: " 
-                    + updatePower.ToString() + " - accumulateDuration: " + accumulateDuration.ToString(), LogEntryType.DetailTrace);
-            EnergyReading reading = (EnergyReading)readingGeneric;
-            if (accumulateDuration)
-                Duration += reading.DurationInternal;
-            if (reading.Amps.HasValue)
-                Amps = reading.Amps.Value;
-
-            if (updatePower)
+            string stage = "initial";
+            try
             {
-                if (reading.Power.HasValue)
-                    if (Power.HasValue)
-                        Power += reading.Power.Value;
-                    else
-                        Power = reading.Power.Value;
+                EnergyReading reading = (EnergyReading)readingGeneric;
 
-                if (reading.MinPower.HasValue)
+                if (GlobalSettings.SystemServices.LogTrace)
+                    GlobalSettings.LogMessage("AccumulateReading", "Accumulating - FeatureType: "
+                        + DeviceDetailPeriods.FeatureType + " - FeatureId: " + DeviceDetailPeriods.FeatureId
+                        + " - ReadingEnd: " + reading.ReadingEnd
+                        + " - Duration: " + reading.Duration
+                        + " - EnergyToday: " + reading.EnergyToday
+                        + " - EnergyTotal: " + reading.EnergyTotal
+                        + " - EnergyDelta: " + reading.EnergyDelta
+                        + " - TotalReadingDelta: " + reading.TotalReadingDelta
+                        + " - PowerInternal: " + reading.PowerInternal
+                        + " - Mode: " + reading.Mode
+                        + " - FreqAC: " + reading.Frequency
+                        + " - Volts: " + reading.Volts
+                        + " - Current: " + reading.Amps
+                        + " - Temperature: " + reading.Temperature
+                        + " - updatePower: " + updatePower.ToString() + " - accumulateDuration: " + accumulateDuration.ToString()
+                        , LogEntryType.Trace);
+
+                if (accumulateDuration)
+                    Duration += reading.DurationInternal;
+                if (reading.Amps.HasValue)
+                    Amps = reading.Amps.Value;
+
+                stage = "before power";
+
+                if (updatePower == UpdateMode.Add)
                 {
-                    if (MinPower.HasValue)
-                        MinPower = Math.Min(MinPower.Value, reading.MinPower.Value);
-                    else
-                        MinPower = reading.MinPower;
+                    if (reading._PowerInternal.HasValue)
+                        if (_PowerInternal.HasValue)
+                            _PowerInternal += reading._PowerInternal.Value;
+                        else
+                            _PowerInternal = reading._PowerInternal.Value;
+
+                    if (reading.MinPower.HasValue)
+                    {
+                        if (MinPower.HasValue)
+                            MinPower = Math.Min(MinPower.Value, reading.MinPower.Value);
+                        else
+                            MinPower = reading.MinPower;
+                    }
+
+                    if (reading.MaxPower.HasValue)
+                    {
+                        if (MaxPower.HasValue)
+                            MaxPower = Math.Max(MaxPower.Value, reading.MaxPower.Value);
+                        else
+                            MaxPower = reading.MaxPower;
+                    }
+                }
+                else if (updatePower == UpdateMode.Replace)
+                {
+                    if (reading._PowerInternal.HasValue)
+                        _PowerInternal = reading._PowerInternal.Value;
+
+                    if (reading.MinPower.HasValue)
+                    {
+                        if (MinPower.HasValue)
+                            MinPower = Math.Min(MinPower.Value, reading.MinPower.Value);
+                        else
+                            MinPower = reading.MinPower;
+                    }
+
+                    if (reading.MaxPower.HasValue)
+                    {
+                        if (MaxPower.HasValue)
+                            MaxPower = Math.Max(MaxPower.Value, reading.MaxPower.Value);
+                        else
+                            MaxPower = reading.MaxPower;
+                    }
                 }
 
-                if (reading.MaxPower.HasValue)
-                {
-                    if (MaxPower.HasValue)
-                        MaxPower = Math.Max(MaxPower.Value, reading.MaxPower.Value);
+                stage = "after power";
+
+                if (reading.Volts.HasValue)
+                    Volts = reading.Volts.Value;
+
+                if (reading.ErrorCode.HasValue)
+                    ErrorCode = reading.ErrorCode.Value;
+
+                if (reading.Mode.HasValue)
+                    Mode = reading.Mode.Value;
+
+                if (reading.Frequency.HasValue)
+                    Frequency = reading.Frequency;
+
+                if (useTemperature && reading.Temperature.HasValue)
+                    Temperature = reading.Temperature.Value;
+
+                if (reading.EnergyDeltaInternal.HasValue)
+                    if (EnergyDeltaInternal.HasValue)
+                        EnergyDeltaInternal += reading.EnergyDeltaInternal.Value * operationFactor;
                     else
-                        MaxPower = reading.MaxPower;
-                }
+                        EnergyDeltaInternal = reading.EnergyDeltaInternal.Value * operationFactor;
+
+                if (reading.CalibrationDeltaInternal.HasValue)
+                    if (CalibrationDeltaInternal.HasValue)
+                        CalibrationDeltaInternal += reading.CalibrationDeltaInternal.Value * operationFactor;
+                    else
+                        CalibrationDeltaInternal = reading.CalibrationDeltaInternal.Value * operationFactor;
+
+                if (reading.HistEnergyDelta.HasValue)
+                    if (HistEnergyDelta.HasValue)
+                        HistEnergyDelta += reading.HistEnergyDelta.Value * operationFactor;
+                    else
+                        HistEnergyDelta = reading.HistEnergyDelta.Value * operationFactor;
+
+                if (reading.EnergyToday.HasValue)
+                    if (EnergyToday.HasValue)
+                        EnergyToday = Math.Max(EnergyToday.Value, reading.EnergyToday.Value);
+                    else
+                        EnergyToday = reading.EnergyToday;
+
+                if (reading.EnergyTotal.HasValue)
+                    if (EnergyTotal.HasValue)
+                        EnergyTotal = Math.Max(EnergyTotal.Value, reading.EnergyTotal.Value);
+                    else
+                        EnergyTotal = reading.EnergyTotal;
+
+                if (GlobalSettings.SystemServices.LogTrace)
+                    GlobalSettings.LogMessage("AccumulateReading", "Accumulation Result"
+                        + " - ReadingEnd: " + ReadingEnd
+                        + " - Duration: " + Duration
+                        + " - EnergyToday: " + EnergyToday
+                        + " - EnergyTotal: " + EnergyTotal
+                        + " - EnergyDelta: " + EnergyDelta
+                        + " - TotalReadingDelta: " + TotalReadingDelta
+                        + " - PowerInternal: " + PowerInternal
+                        + " - Mode: " + Mode
+                        + " - FreqAC: " + Frequency
+                        + " - Volts: " + Volts
+                        + " - Current: " + Amps
+                        + " - Temperature: " + Temperature
+                        , LogEntryType.Trace);
             }
-
-            if (reading.Volts.HasValue)
-                Volts = reading.Volts.Value;
-
-            if (reading.ErrorCode.HasValue)
-                ErrorCode = reading.ErrorCode.Value;
-
-            if (reading.Mode.HasValue)
-                Mode = reading.Mode.Value;
-
-            if (reading.Frequency.HasValue)
-                Frequency = reading.Frequency;
-
-            if (useTemperature && reading.Temperature.HasValue)
-                Temperature = reading.Temperature.Value;
-
-            if (reading.EnergyToday.HasValue)
-                EnergyToday = reading.EnergyToday.Value;
-            if (reading.EnergyTotal.HasValue)
-                EnergyTotal = reading.EnergyTotal.Value;
-            
-            if (reading.EnergyDeltaInternal.HasValue)
-                if (EnergyDeltaInternal.HasValue)
-                    EnergyDeltaInternal += reading.EnergyDeltaInternal.Value * operationFactor;
-                else
-                    EnergyDeltaInternal = reading.EnergyDeltaInternal.Value * operationFactor;
-                
-            if (reading.CalibrationDeltaInternal.HasValue)
-                if (CalibrationDeltaInternal.HasValue)
-                    CalibrationDeltaInternal += reading.CalibrationDeltaInternal.Value * operationFactor;
-                else
-                    CalibrationDeltaInternal = reading.CalibrationDeltaInternal.Value * operationFactor;
-
-            if (reading.HistEnergyDelta.HasValue)
-                if (HistEnergyDelta.HasValue)
-                    HistEnergyDelta += reading.HistEnergyDelta.Value * operationFactor;
-                else
-                    HistEnergyDelta = reading.HistEnergyDelta.Value * operationFactor;
-
-            if (reading.EnergyToday.HasValue)
-                if (EnergyToday.HasValue)
-                    EnergyToday = Math.Max(EnergyToday.Value, reading.EnergyToday.Value);
-                else
-                    EnergyToday = reading.EnergyToday;
-
-            if (reading.EnergyTotal.HasValue)
-                if (EnergyTotal.HasValue)
-                    EnergyTotal = Math.Max(EnergyTotal.Value, reading.EnergyTotal.Value);
-                else
-                    EnergyTotal = reading.EnergyTotal;
+            catch (Exception e)
+            {
+                GlobalSettings.LogMessage("AccumulateReading", "Stage: " + stage + " - Exception: " + e.Message, LogEntryType.Information);
+                throw e;
+            }
         }
 
         #region HistoryCalcs
@@ -848,7 +893,7 @@ namespace DeviceDataRecorders
                     cmd.AddParameterWithValue("@ErrorCode", null);
                 
                 stage = "Power";
-                cmd.AddParameterWithValue("@Power", PowerInternal);
+                cmd.AddParameterWithValue("@Power", _PowerInternal);
                 
                 stage = "Volts";
                 cmd.AddRoundedParameterWithValue("@Volts", VoltsInternal, 2);
@@ -913,7 +958,8 @@ namespace DeviceDataRecorders
                     GlobalSettings.LogMessage("EnergyReading.PersistReadingSub", "ReadingEnd: " + ReadingEndInternal + " - " + 
                         (useInsert ? "Insert" : "Update") + " - EnergyTotal: " + EnergyTotal +
                         " - EnergyToday: " + EnergyToday +
-                        " - Power: " + Power +
+                        " - Power: " + _PowerInternal +
+                        " - AveragePower: " + AveragePower +
                         " - Calc Adjust: " + CalibrationDelta +
                         " - Hist Adjust: " + HistEnergyDelta, LogEntryType.Trace);
                 UpdatePending = false;

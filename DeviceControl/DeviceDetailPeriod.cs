@@ -551,7 +551,9 @@ namespace DeviceDataRecorders
                 if (thisReading.ReadingEnd > endTime)
                     thisReading = reading.Clone(endTime, endTime - thisReading.ReadingStart);
 
-                newReading.AccumulateReading(thisReading, true, accumulateDuration);
+                if (GlobalSettings.SystemServices.LogTrace)
+                    GlobalSettings.LogMessage("MergeReadings", "AccumulateReading", LogEntryType.Trace);
+                newReading.AccumulateReading(thisReading, true, UpdateMode.Replace, accumulateDuration);
 
                 // If the Output time on an existing reading aligns with an interval end, this entry may already be in the DB
                 // mark new entry with existing status as they share the same DB key
@@ -855,10 +857,10 @@ namespace DeviceDataRecorders
 
                 if (currentStart == reading.ReadingStart && intervalEnd >= reading.ReadingEnd)  // no division required - reading fits in one consolidation interval
                 {
-                    if (GlobalSettings.SystemServices.LogDetailTrace)
-                        GlobalSettings.LogMessage("ConsolidateReading", "TRACE AccumulateReading no split" , LogEntryType.DetailTrace);
+                    if (GlobalSettings.SystemServices.LogTrace)
+                        GlobalSettings.LogMessage("ConsolidateReading", "AccumulateReading no split" , LogEntryType.Trace);
                     // note - AccumulateDuration must be false for multi device consolidations - it is only used for single device reading merge
-                    toReading.AccumulateReading(reading, useTemperature, false, false, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
+                    toReading.AccumulateReading(reading, useTemperature, UpdateMode.NoUpdate, false, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
                 }
                 else
                 {
@@ -868,11 +870,11 @@ namespace DeviceDataRecorders
                     else
                         duration = intervalEnd - currentStart; // beginning or middle of spanned reading
                     TDeviceReading intervalReading = reading.Clone(intervalEnd, duration); // get time adjusted reading
-                    if (GlobalSettings.SystemServices.LogDetailTrace)
-                        GlobalSettings.LogMessage("ConsolidateReading", "TRACE AccumulateReading with split Start: " 
-                            + intervalReading.ReadingStart + " - End: " + intervalReading.ReadingEnd, LogEntryType.DetailTrace);
+                    if (GlobalSettings.SystemServices.LogTrace)
+                        GlobalSettings.LogMessage("ConsolidateReading", "AccumulateReading with split Start: " 
+                            + intervalReading.ReadingStart + " - End: " + intervalReading.ReadingEnd, LogEntryType.Trace);
                     // note - AccumulateDuration must be false for multi device consolidations - it is only used for single device reading merge
-                    toReading.AccumulateReading(intervalReading, useTemperature, false, false, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
+                    toReading.AccumulateReading(intervalReading, useTemperature, UpdateMode.NoUpdate, false, operation == ConsolidateDeviceSettings.OperationType.Subtract ? -1.0 : 1.0);
                 }
 
                 currentStart = intervalEnd; // prepare for next interval iteration

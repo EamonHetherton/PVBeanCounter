@@ -95,7 +95,7 @@
         <register>
           <type value="bytes" />
           <size value="2" />
-          <registervalue value="0x13 05" />
+          <registervalue value="0x13 03" />
           <binding value="Request" />
         </register>
       </message>
@@ -108,7 +108,7 @@
         </register>
         <register>
           <type value="uint16" />
-          <scale value="100" />
+          <scale value="1000" />
           <content value="EnergyTodayAC" />
         </register>
       </message>
@@ -130,7 +130,7 @@
         <register>
           <type value="bytes" />
           <size value="2" />
-          <registervalue value="0x12 0A" />
+          <registervalue value="0x10 09" />
           <binding value="Request" />
         </register>
       </message>
@@ -143,7 +143,7 @@
         </register>
         <register>
           <type value="uint16" />
-          <scale value="10" />
+          <scale value="1" />
           <content value="PowerAC" />
         </register>
       </message>

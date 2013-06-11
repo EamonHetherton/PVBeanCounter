@@ -4,10 +4,10 @@
     # arguments for the WiX Toolset are stored here.
 
     candleArgs: 
-    lightArgs: "<projectname>.wixobj" -out "PV Bean Counter Installer - v2.0.0.5.msi" <extensions> -sice:ICE27
+    lightArgs: "<projectname>.wixobj" -out "PV Bean Counter Installer - v2.0.0.6.msi" <extensions> -sice:ICE27
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-    <Product Id="9799DC8E-506B-429E-83CE-0D0EB3C3961E" Name="PV Bean Counter" Language="1033" Version="2.0.0.5" Manufacturer="Mackay-Fisher" UpgradeCode="94B6A6FB-3567-4617-B52A-DAE65CF113EB">
+    <Product Id="9799DC8E-506B-429E-83CE-0D0EB3C3961E" Name="PV Bean Counter" Language="1033" Version="2.0.0.6" Manufacturer="Mackay-Fisher" UpgradeCode="94B6A6FB-3567-4617-B52A-DAE65CF113EB">
         <Package Description="Test file in a Product" Comments="Simple test" InstallerVersion="200" Compressed="yes" />
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
         <?define SolutionConfig = "Release" ?>
